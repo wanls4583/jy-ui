@@ -1,0 +1,19 @@
+* {
+    zoom: 1;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: $text-color;
+}
+
+ul,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+button:focus {
+    outline: none !important;
+}

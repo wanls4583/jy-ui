@@ -1,0 +1,285 @@
+@import 'theme';
+@import 'reset';
+
+.song-display {
+    &-block {
+        display: block;
+    }
+
+    &-inline-block {
+        display: inline-block;
+    }
+
+    &-inline {
+        display: inline;
+    }
+}
+
+// 栅格
+.song-row {
+
+    // ie8不支持::的模式
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    // 默认ie7content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
+    // 所以不要给col添加padding或者border，否则宽度将不准确
+    @for $i from 1 through 11 {
+        .song-col-#{$i} {
+            width: $i/12*100%;
+            float: left;
+        }
+
+        // 列偏移
+        .song-col-offset-#{$i} {
+            margin-left: $i/12*100%;
+        }
+    }
+}
+
+// 字体颜色
+.song-color {
+    &-text {
+        color: $text-color;
+    }
+
+    &-title {
+        color: $title-color;
+    }
+
+    &-blue {
+        color: $blue-color;
+    }
+
+    &-light {
+        color: $light-color;
+    }
+
+    &-link {
+        color: $link-color;
+    }
+
+    &-success {
+        color: $success-color;
+    }
+
+    &-warn {
+        color: $warn-color;
+    }
+
+    &-danger {
+        color: $danger-color;
+    }
+}
+
+// 背景颜色
+.song-bgcolor {
+    &-blue {
+        background-color: $blue-color;
+    }
+
+    &-light {
+        background-color: $light-color;
+    }
+
+    &-link {
+        background-color: $link-color;
+    }
+
+    &-success {
+        background-color: $success-color;
+    }
+
+    &-warn {
+        background-color: $warn-color;
+    }
+
+    &-danger {
+        background-color: $danger-color;
+    }
+}
+
+// border颜色
+.song-border {
+    border: 1px solid $light-color;
+
+    &-blue {
+        border-color: $blue-color;
+    }
+
+    &-light {
+        border-color: $light-color;
+    }
+
+    &-success {
+        border-color: $success-color;
+    }
+
+    &-warn {
+        border-color: $warn-color;
+    }
+
+    &-danger {
+        border-color: $danger-color;
+    }
+}
+
+// 按钮
+.song-btn {
+    display: inline-block;
+    height: $btn-height - 2px;
+    line-height: $btn-height - 2px;
+    padding: 0 $pd15;
+    background-color: $blue-color;
+    border: 1px solid $blue-color;
+    border-radius: 2px;
+    font-size: $btn-font-size;
+    color: $white-color;
+    vertical-align: middle;
+    cursor: pointer;
+    width: auto;
+    // 解决ie7按钮变宽的bug
+    overflow: visible;
+
+    &:hover {
+        opacity: 0.85;
+    }
+
+    &:active {
+        opacity: 1;
+    }
+
+    $list: (lg, $btn-lg-height, $btn-lg-font-size),
+    (sm, $btn-sm-height, $btn-sm-font-size),
+    (xs, $btn-xs-height, $btn-xs-font-size);
+
+    @each $size,
+    $height,
+    $font in $list {
+        &-#{$size} {
+            height: $height;
+            line-height: $height - 2px;
+            font-size: $font;
+        }
+    }
+
+    $list: (plain, transparent, $gray-color, $text-color),
+    (link, $link-color, $link-color, $white-color),
+    (success, $success-color, $success-color, $white-color),
+    (warn, $warn-color, $warn-color, $white-color),
+    (danger, $danger-color, $danger-color, $white-color);
+
+    @each $i,
+    $bgColor,
+    $brColor,
+    $textColor in $list {
+        &-#{$i} {
+            background-color: $bgColor;
+            border-color: $brColor;
+            color: $textColor;
+        }
+
+        @if $i==plain {
+            &-#{$i}:hover {
+                border-color: $blue-color;
+            }
+        }
+    }
+}
+
+// 表单项
+.song-form-item {
+    position: relative;
+    clear: both;
+
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .song-form-label {
+        float: left;
+        width: 80px;
+        margin: 0 $pd15;
+        padding: 9px 0;
+        line-height: 20px;
+        text-align: right;
+    }
+
+    // 使用margin-left实现的话，在ie6,ie7中，song-input-block前面会有一段空白
+    .song-input-block {
+        position: absolute;
+        z-index: 1;
+        left: 110px + $pd15;
+        right: 0;
+        overflow: visible;
+    }
+
+    .song-inline {
+
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        position: relative;
+        display: inline-block;
+
+        .song-input-block {
+            width: 190px;
+        }
+    }
+
+    .song-input {
+        display: block;
+        width: 100%;
+        margin-left: -$pd15;
+        height: $input-height - 2px;
+        line-height: $input-height - 2px;
+        padding: 0 0 0 $pd15;
+        border: 1px solid $light-color;
+        border-radius: 2px;
+        outline: none;
+    }
+}
+
+// 字段集区块
+.song-field {
+    padding: 0;
+    border: 1px solid $light-color;
+
+    &.song-field-title {
+        border-style: none;
+        border-top-style: solid;
+    }
+
+    legend {
+        margin-left: $pd15;
+        font-size: 20px;
+        font-weight: 300;
+        color: $title-color;
+    }
+
+    .song-field-box {
+        padding: $pd15;
+    }
+}
+
+// 分割线
+hr {
+    // !important解决ie8以下默认样式问题
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid $light-color;
+    // 解决ie7以下始终有一根黑线的问题
+    color: #fff;
+}

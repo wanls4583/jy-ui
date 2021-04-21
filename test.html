@@ -1,0 +1,176 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-04-20 16:01:12
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/song-ui.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .song-field {
+            margin-bottom: 50px;
+        }
+
+        .color-cont {
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .col-cont {
+            padding: 10px;
+            background-color: #5FB878;
+            border: 1px solid #fff;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <fieldset class="song-field">
+        <legend>栅格系统</legend>
+        <div class="song-field-box">
+            <div class="song-row">
+                <div class="song-col-1 song-border-success">
+                    <div class="col-cont">1</div>
+                </div>
+                <div class="song-col-11 song-border-success">
+                    <div class="col-cont">11</div>
+                </div>
+            </div>
+            <div class="song-row">
+                <div class="song-col-2 song-border-success">
+                    <div class="col-cont">2</div>
+                </div>
+                <div class="song-col-10 song-border-success">
+                    <div class="col-cont">10</div>
+                </div>
+            </div>
+            <div class="song-row">
+                <div class="song-col-3 song-border-success">
+                    <div class="col-cont">3</div>
+                </div>
+                <div class="song-col-9 song-border-success">
+                    <div class="col-cont">9</div>
+                </div>
+            </div>
+            <div class="song-row">
+                <div class="song-col-4 song-border-success">
+                    <div class="col-cont">4</div>
+                </div>
+                <div class="song-col-8 song-border-success">
+                    <div class="col-cont">8</div>
+                </div>
+            </div>
+            <div class="song-row">
+                <div class="song-col-5 song-border-success">
+                    <div class="col-cont">5</div>
+                </div>
+                <div class="song-col-7 song-border-success">
+                    <div class="col-cont">7</div>
+                </div>
+            </div>
+            <div class="song-row">
+                <div class="song-col-6 song-border-success">
+                    <div class="col-cont">6</div>
+                </div>
+                <div class="song-col-6 song-border-success">
+                    <div class="col-cont">6</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>颜色</legend>
+        <div class="song-field-box">
+            <span class="color-cont song-bgcolor-success">#009688</span>
+            <span class="color-cont song-bgcolor-link">#5FB878</span>
+            <span class="color-cont song-bgcolor-blue">#1E9FFF</span>
+            <span class="color-cont" style="background-color: #333333;">#333333</span>
+            <span class="color-cont" style="background-color: #666666;">#666666</span>
+            <span class="color-cont" style="background-color: #999999;">#999999</span>
+            <span class="color-cont song-bgcolor-light" style="color: #333;">#EEEEEE</span>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>按钮</legend>
+        <div class="song-field-box">
+            <div>
+                <button class="song-btn">默认按钮</button>
+                <button class="song-btn song-btn-plain">原始按钮</button>
+                <button class="song-btn song-btn-success">成功按钮</button>
+                <button class="song-btn song-btn-warn">暖色按钮</button>
+                <button class="song-btn song-btn-danger">警告按钮</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="song-btn song-btn-lg">大型按钮</button>
+                <button class="song-btn">默认按钮</button>
+                <button class="song-btn song-btn-sm">小型按钮</button>
+                <button class="song-btn song-btn-xs">迷你按钮</button>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>表单</legend>
+        <div class="song-field-box">
+            <div class="song-form-item">
+                <label for="" class="song-form-label">输入框</label>
+                <div class="song-input-block">
+                    <input type="text" class="song-input">
+                </div>
+            </div>
+            <div class="song-form-item">
+                <div class="song-inline">
+                    <label for="" class="song-form-label">输入框</label>
+                    <div class="song-input-block">
+                        <input type="text" class="song-input">
+                    </div>
+                </div>
+                <div class="song-inline">
+                    <label for="" class="song-form-label">输入框</label>
+                    <div class="song-input-block">
+                        <input type="text" class="song-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>辅助线</legend>
+        <div class="song-field-box">
+            <hr>
+            <hr class="song-border-light">
+            <hr class="song-border-success">
+            <hr class="song-border-warn">
+            <hr class="song-border-danger">
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>默认字段集区块</legend>
+        <div class="song-field-box">
+            <span>内容区域</span>
+        </div>
+    </fieldset>
+    <fieldset class="song-field song-field-title">
+        <legend>标题字段集区块</legend>
+        <div class="song-field-box">
+            <span>内容区域</span>
+        </div>
+    </fieldset>
+</body>
+
+</html>
