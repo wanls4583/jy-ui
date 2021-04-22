@@ -5,6 +5,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-size: 14px;
   color: #666666;
 }
 
@@ -16,6 +17,26 @@ p {
 
 button:focus {
   outline: none !important;
+}
+
+i {
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'iconfont';
+  /* project id 2505561 */
+  src: url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.eot");
+  src: url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.eot?#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.woff2") format("woff2"), url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.woff") format("woff"), url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.ttf") format("truetype"), url("//at.alicdn.com/t/font_2505561_ssotcsy5p1.svg#iconfont") format("svg");
+}
+
+.song-icon {
+  font-family: "iconfont" !important;
+  font-size: 24px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .song-display-block {
@@ -220,8 +241,8 @@ button:focus {
   height: 36px;
   line-height: 36px;
   padding: 0 15px;
-  background-color: #1E9FFF;
-  border: 1px solid #1E9FFF;
+  background-color: #009688;
+  border: 1px solid #009688;
   border-radius: 2px;
   font-size: 14px;
   color: #ffffff;
@@ -257,19 +278,19 @@ button:focus {
   font-size: 12px;
 }
 
-.song-btn-plain {
+.song-btn-primary {
   background-color: transparent;
-  border-color: #999999;
+  border-color: #d2d2d2;
   color: #666666;
 }
 
-.song-btn-plain:hover {
-  border-color: #1E9FFF;
+.song-btn-primary:hover {
+  border-color: #009688;
 }
 
-.song-btn-link {
-  background-color: #5FB878;
-  border-color: #5FB878;
+.song-btn-normal {
+  background-color: #1E9FFF;
+  border-color: #1E9FFF;
   color: #ffffff;
 }
 
@@ -285,6 +306,17 @@ button:focus {
   color: #ffffff;
 }
 
+.song-btn-disabled {
+  background-color: transparent;
+  border-color: #eeeeee;
+  color: #c2c2c2;
+}
+
+.song-btn-disabled:hover {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
 .song-btn-danger {
   background-color: #FF5722;
   border-color: #FF5722;
@@ -294,6 +326,7 @@ button:focus {
 .song-form-item {
   position: relative;
   clear: both;
+  margin-bottom: 15px;
 }
 
 .song-form-item:before, .song-form-item:after {
@@ -302,48 +335,183 @@ button:focus {
   clear: both;
 }
 
-.song-form-item .song-form-label {
+.song-form-label {
   float: left;
   width: 80px;
   margin: 0 15px;
   padding: 9px 0;
   line-height: 20px;
+  color: #333333;
   text-align: right;
 }
 
-.song-form-item .song-input-block {
-  position: absolute;
-  z-index: 1;
-  left: 125px;
-  right: 0;
-  overflow: visible;
-}
-
-.song-form-item .song-inline {
+.song-input-block {
   position: relative;
-  display: inline-block;
+  margin-left: 110px;
+  *margin-left: 0;
 }
 
-.song-form-item .song-inline:before, .song-form-item .song-inline:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-
-.song-form-item .song-inline .song-input-block {
+.song-input-inline {
+  position: relative;
+  float: left;
   width: 190px;
 }
 
-.song-form-item .song-input {
+.song-inline {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  margin-right: 10px;
+}
+
+.song-input {
   display: block;
   width: 100%;
-  margin-left: -15px;
-  height: 36px;
+  height: 38px;
   line-height: 36px;
+  margin-left: 0;
   padding: 0 0 0 15px;
   border: 1px solid #eeeeee;
   border-radius: 2px;
   outline: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  *padding-left: 0 !important;
+  _padding-left: 15px;
+}
+
+.song-form-switch {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  height: 22px;
+  line-height: 22px;
+  margin-top: 8px;
+  padding-right: 5px;
+  padding-left: 25px;
+  border: 1px solid #d2d2d2;
+  border-radius: 22px;
+  font-size: 12px;
+  color: #d2d2d2;
+  text-align: right;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-form-switch i {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #d2d2d2;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+.song-form-switch.song-disabled {
+  cursor: not-allowed;
+}
+
+.song-form-switch.song-selected {
+  padding-left: 5px;
+  padding-right: 25px;
+  background-color: #5FB878;
+  border-color: #eeeeee;
+  color: #ffffff;
+  text-align: left;
+}
+
+.song-form-switch.song-selected i {
+  left: 100%;
+  margin-left: -21px;
+  background-color: #ffffff;
+}
+
+.song-form-checkbox {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  line-height: 18px;
+  margin-top: 10px;
+  margin-right: 15px;
+  padding-left: 25px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-form-checkbox i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.song-form-checkbox.song-disabled {
+  color: #c2c2c2;
+  border-color: #c2c2c2;
+  cursor: not-allowed;
+}
+
+.song-form-checkbox.song-checked i {
+  background-color: #5FB878;
+  border-color: #5FB878;
+}
+
+.song-form-radio {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  line-height: 20px;
+  margin-top: 10px;
+  margin-right: 15px;
+  padding-left: 25px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-form-radio i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  _width: 18px;
+  _height: 18px;
+  line-height: 13px;
+  border: 2px solid #d2d2d2;
+  border-radius: 50%;
+  font-family: "iconfont";
+  font-size: 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.song-form-radio.song-disabled {
+  border-color: #c2c2c2;
+  cursor: not-allowed;
+}
+
+.song-form-radio.song-selected i {
+  border-color: #5FB878;
+  color: #5FB878;
 }
 
 .song-field {

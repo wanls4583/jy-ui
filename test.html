@@ -100,21 +100,20 @@
             <span class="color-cont song-bgcolor-success">#009688</span>
             <span class="color-cont song-bgcolor-link">#5FB878</span>
             <span class="color-cont song-bgcolor-blue">#1E9FFF</span>
-            <span class="color-cont" style="background-color: #333333;">#333333</span>
-            <span class="color-cont" style="background-color: #666666;">#666666</span>
-            <span class="color-cont" style="background-color: #999999;">#999999</span>
-            <span class="color-cont song-bgcolor-light" style="color: #333;">#EEEEEE</span>
+            <span class="color-cont song-bgcolor-warn">#FFB800</span>
+            <span class="color-cont song-bgcolor-danger">#FF5722</span>
         </div>
     </fieldset>
     <fieldset class="song-field">
         <legend>按钮</legend>
         <div class="song-field-box">
             <div>
+                <button class="song-btn song-btn-primary">原始按钮</button>
                 <button class="song-btn">默认按钮</button>
-                <button class="song-btn song-btn-plain">原始按钮</button>
-                <button class="song-btn song-btn-success">成功按钮</button>
+                <button class="song-btn song-btn-normal">百搭按钮</button>
                 <button class="song-btn song-btn-warn">暖色按钮</button>
                 <button class="song-btn song-btn-danger">警告按钮</button>
+                <button class="song-btn song-btn-disabled">禁用按钮</button>
             </div>
             <div style="margin-top: 20px;">
                 <button class="song-btn song-btn-lg">大型按钮</button>
@@ -127,23 +126,74 @@
     <fieldset class="song-field">
         <legend>表单</legend>
         <div class="song-field-box">
+            <div style="margin:15px 0;">块级输入框</div>
             <div class="song-form-item">
-                <label for="" class="song-form-label">输入框</label>
+                <label for="" class="song-form-label">文本框</label>
                 <div class="song-input-block">
                     <input type="text" class="song-input">
                 </div>
             </div>
             <div class="song-form-item">
+                <label for="" class="song-form-label">密码框</label>
+                <div class="song-input-block">
+                    <input type="password" class="song-input">
+                </div>
+            </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">开关</label>
+                <div class="song-input-block">
+                    <div class="song-form-switch">
+                        <i></i>
+                        <span>OFF</span>
+                    </div>
+                </div>
+            </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">单选</label>
+                <div class="song-input-block">
+                    <div class="song-form-radio">
+                        <i></i>
+                        <span>A</span>
+                    </div>
+                    <div class="song-form-radio">
+                        <i></i>
+                        <span>B</span>
+                    </div>
+                    <div class="song-form-radio song-disabled">
+                        <i></i>
+                        <span>C</span>
+                    </div>
+                </div>
+            </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">多选</label>
+                <div class="song-input-block">
+                    <div class="song-form-checkbox">
+                        <i></i>
+                        <span>A</span>
+                    </div>
+                    <div class="song-form-checkbox">
+                        <i></i>
+                        <span>B</span>
+                    </div>
+                    <div class="song-form-checkbox song-disabled">
+                        <i></i>
+                        <span>C</span>
+                    </div>
+                </div>
+            </div>
+            <div style="margin:15px 0;">行级输入框</div>
+            <div class="song-form-item">
                 <div class="song-inline">
-                    <label for="" class="song-form-label">输入框</label>
-                    <div class="song-input-block">
+                    <label for="" class="song-form-label">文本框</label>
+                    <div class="song-input-inline">
                         <input type="text" class="song-input">
                     </div>
                 </div>
                 <div class="song-inline">
-                    <label for="" class="song-form-label">输入框</label>
-                    <div class="song-input-block">
-                        <input type="text" class="song-input">
+                    <label for="" class="song-form-label">密码框</label>
+                    <div class="song-input-inline">
+                        <input type="password" class="song-input">
                     </div>
                 </div>
             </div>
@@ -172,5 +222,32 @@
         </div>
     </fieldset>
 </body>
+<script src="jquery-1.12.4.min.js"></script>
+<script>
+    $('.song-form-switch').on('click', function () {
+        var $this = $(this);
+        if ($this.hasClass('song-disabled')) {
+            return;
+        }
+        $this.toggleClass('song-selected');
+        $this.find('span').html($this.hasClass('song-selected') ? 'ON' : 'OFF')
+    });
+    $('.song-form-checkbox').on('click', function () {
+        var $this = $(this);
+        if ($this.hasClass('song-disabled')) {
+            return;
+        }
+        $this.toggleClass('song-checked');
+        $this.find('i').html($this.hasClass('song-checked') ? '✔' : '');
+    });
+    $('.song-form-radio').on('click', function () {
+        var $this = $(this);
+        if ($this.hasClass('song-disabled')) {
+            return;
+        }
+        $this.toggleClass('song-selected');
+        $this.find('i').html($this.hasClass('song-selected') ? '●' : '');
+    });
+</script>
 
 </html>
