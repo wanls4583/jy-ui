@@ -146,21 +146,25 @@
                         <i></i>
                         <span>OFF</span>
                     </div>
+                    <div class="song-form-switch song-switch-disabled">
+                        <i></i>
+                        <span>OFF</span>
+                    </div>
                 </div>
             </div>
             <div class="song-form-item">
                 <label for="" class="song-form-label">单选</label>
                 <div class="song-input-block">
                     <div class="song-form-radio">
-                        <i></i>
+                        <i>&#xe619;</i>
                         <span>A</span>
                     </div>
                     <div class="song-form-radio">
-                        <i></i>
+                        <i>&#xe619;</i>
                         <span>B</span>
                     </div>
-                    <div class="song-form-radio song-disabled">
-                        <i></i>
+                    <div class="song-form-radio song-radio-disabled">
+                        <i>&#xe619;</i>
                         <span>C</span>
                     </div>
                 </div>
@@ -176,10 +180,23 @@
                         <i></i>
                         <span>B</span>
                     </div>
-                    <div class="song-form-checkbox song-disabled">
+                    <div class="song-form-checkbox song-checkbox-disabled">
                         <i></i>
                         <span>C</span>
                     </div>
+                </div>
+            </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">选择框</label>
+                <div class="song-input-block">
+                    <select name="city" class="song-select">
+                        <option value=""></option>
+                        <option value="0">北京</option>
+                        <option value="1">上海</option>
+                        <option value="2">广州</option>
+                        <option value="3">深圳</option>
+                        <option value="4">杭州</option>
+                    </select>
                 </div>
             </div>
             <div style="margin:15px 0;">行级输入框</div>
@@ -226,28 +243,57 @@
 <script>
     $('.song-form-switch').on('click', function () {
         var $this = $(this);
-        if ($this.hasClass('song-disabled')) {
+        if ($this.hasClass('song-switch-disabled')) {
             return;
         }
-        $this.toggleClass('song-selected');
-        $this.find('span').html($this.hasClass('song-selected') ? 'ON' : 'OFF')
+        $this.toggleClass('song-switch-selected');
+        $this.find('span').html($this.hasClass('song-switch-selected') ? 'ON' : 'OFF')
     });
     $('.song-form-checkbox').on('click', function () {
         var $this = $(this);
-        if ($this.hasClass('song-disabled')) {
+        if ($this.hasClass('song-checkbox-disabled')) {
             return;
         }
-        $this.toggleClass('song-checked');
-        $this.find('i').html($this.hasClass('song-checked') ? '✔' : '');
+        $this.toggleClass('song-checkbox-checked');
+        if ($this.hasClass('song-checkbox-checked')) {
+            $this.find('i').html('&#xe609;');
+        } else {
+            $this.find('i').html('');
+        }
     });
     $('.song-form-radio').on('click', function () {
         var $this = $(this);
-        if ($this.hasClass('song-disabled')) {
+        if ($this.hasClass('song-radio-disabled')) {
             return;
         }
-        $this.toggleClass('song-selected');
-        $this.find('i').html($this.hasClass('song-selected') ? '●' : '');
+        $this.toggleClass('song-radio-selected');
+        if ($this.hasClass('song-radio-selected')) {
+            $this.find('i').html('&#xe61c;');
+        } else {
+            $this.find('i').html('&#xe619;');
+        }
     });
+    $('.song-select').each(function (i, dom) {
+        var $dom = $(dom);
+        var html =
+            '<div class="song-select-wrap">\
+                <div class="song-select-title">\
+                    <input type="text" class="song-input" placeholder="请选择" readonly>\
+                    <i>&#xe69b;</i>\
+                </div>\
+            </div>'
+        var $wrap = $(html);
+        html = '<dl class="song-select-dl">';
+        $dom.find('option').each(function (i, opt) {
+            var text = $(opt).text();
+            html += '<dd class="' + (!text ? 'song-color-holder' : '') + '" data-value="' + $(opt).attr('value') + '">' + (text || '请选择') + '</dd>'
+        });
+        html += '</dl>'
+        $wrap.append(html);
+        $wrap.insertAfter($dom);
+        $wrap.parents('.song-form-item').css({ 'z-index': 1 });
+    });
+
 </script>
 
 </html>

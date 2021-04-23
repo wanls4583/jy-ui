@@ -4,12 +4,12 @@
 @font-face {
     font-family: 'iconfont';
     /* project id 2505561 */
-    src: url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.eot');
-    src: url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.eot?#iefix') format('embedded-opentype'),
-        url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.woff2') format('woff2'),
-        url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.woff') format('woff'),
-        url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.ttf') format('truetype'),
-        url('//at.alicdn.com/t/font_2505561_ssotcsy5p1.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_2505561_369fclw5uwj.eot');
+    src: url('//at.alicdn.com/t/font_2505561_369fclw5uwj.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_2505561_369fclw5uwj.woff2') format('woff2'),
+        url('//at.alicdn.com/t/font_2505561_369fclw5uwj.woff') format('woff'),
+        url('//at.alicdn.com/t/font_2505561_369fclw5uwj.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_2505561_369fclw5uwj.svg#iconfont') format('svg');
 }
 
 .song-icon {
@@ -63,12 +63,21 @@
 
 // 字体颜色
 .#{$prefix}-color {
+
     &-text {
         color: $text-color;
     }
 
     &-title {
         color: $title-color;
+    }
+
+    &-holder {
+        color: $holder-color;
+    }
+
+    &-gray {
+        color: $gray-color;
     }
 
     &-blue {
@@ -191,7 +200,7 @@
     (normal, $blue-color, $blue-color, $white-color),
     (success, $success-color, $success-color, $white-color),
     (warn, $warn-color, $warn-color, $white-color),
-    (disabled, transparent, $light-color, $disabled-color),
+    (disabled, transparent, $disabled-color, $disabled-text-color),
     (danger, $danger-color, $danger-color, $white-color);
 
     @each $i,
@@ -275,7 +284,6 @@
     width: 100%;
     height: $input-height;
     line-height: $input-height - 2px;
-    margin-left: 0;
     padding: 0 0 0 $pd15;
     border: 1px solid $light-color;
     border-radius: 2px;
@@ -316,11 +324,18 @@
         transition: all 0.1s;
     }
 
-    &.song-disabled {
+    // ie6多类选择器是或的关系，不是与的关系，song-disabled这种类名容易被其他样式覆盖
+    &.song-switch-disabled {
+        border-color: $disabled-color;
+        color: $disabled-text-color;
         cursor: not-allowed;
+
+        i {
+            background-color: $disabled-color;
+        }
     }
 
-    &.song-selected {
+    &.song-switch-selected {
         padding-left: 5px;
         padding-right: 25px;
         background-color: $link-color;
@@ -358,17 +373,21 @@
         border-radius: 2px;
         text-align: center;
         line-height: 16px;
+        font-family: 'iconfont';
         font-size: 12px;
         color: $white-color;
     }
 
-    &.song-disabled {
-        color: $disabled-color;
-        border-color: $disabled-color;
+    &.song-checkbox-disabled {
+        color: $disabled-text-color;
         cursor: not-allowed;
+
+        i {
+            border-color: $disabled-color;
+        }
     }
 
-    &.song-checked {
+    &.song-checkbox-checked {
         i {
             background-color: $link-color;
             border-color: $link-color;
@@ -392,31 +411,82 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 16px;
-        height: 16px;
-        _width: 18px;
-        _height: 18px;
-        line-height: 13px;
-        border: 2px solid $gray-color;
-        border-radius: 50%;
-        font-family: "iconfont";
+        font-family: 'iconfont';
         font-size: 20px;
-        text-align: center;
-        overflow: hidden;
+        color: $gray-color;
     }
 
-    &.song-disabled {
-        border-color: $disabled-color;
+    &.song-radio-disabled {
+        color: $disabled-text-color;
         cursor: not-allowed;
+
+        i {
+            color: $disabled-color;
+        }
     }
 
-    &.song-selected {
+    &.song-radio-selected {
         i {
-            border-color: $link-color;
             color: $link-color;
         }
     }
 }
+
+// 选择框
+.song-select {
+    display: none !important;
+
+    &-wrap {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    &-title {
+        position: relative;
+
+        .song-input {
+            cursor: pointer;
+        }
+
+        i {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            margin-top: -6px;
+            font-size: 12px;
+            line-height: 12px;
+            font-family: 'iconfont';
+        }
+    }
+
+    &-dl {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        margin-top: 4px;
+        background-color: $white-color;
+        border: 1px solid $gray-color;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+        box-sizing: border-box;
+
+        dd {
+            line-height: 36px;
+            padding-left: $pd15;
+
+            &:hover {
+                background-color: $light-color;
+            }
+
+            &.song-select-active {
+                background-color: $link-color;
+            }
+        }
+    }
+}
+
 
 // 字段集区块
 .#{$prefix}-field {
