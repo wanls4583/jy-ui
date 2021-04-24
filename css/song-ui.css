@@ -25,6 +25,11 @@ i {
   font-style: normal;
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+  display: none;
+}
+
 @font-face {
   font-family: 'iconfont';
   /* project id 2505561 */
@@ -432,7 +437,7 @@ i {
   background-color: #eeeeee;
 }
 
-.song-form-switch.song-switch-selected {
+.song-form-switch.song-switch-checked {
   padding-left: 5px;
   padding-right: 25px;
   background-color: #5FB878;
@@ -441,7 +446,7 @@ i {
   text-align: left;
 }
 
-.song-form-switch.song-switch-selected i {
+.song-form-switch.song-switch-checked i {
   left: 100%;
   margin-left: -21px;
   background-color: #ffffff;
@@ -524,7 +529,7 @@ i {
   color: #eeeeee;
 }
 
-.song-form-radio.song-radio-selected i {
+.song-form-radio.song-radio-checked i {
   color: #5FB878;
 }
 
@@ -557,6 +562,7 @@ i {
 }
 
 .song-select-dl {
+  display: none;
   position: absolute;
   top: 100%;
   left: 0;
@@ -574,6 +580,7 @@ i {
 .song-select-dl dd {
   line-height: 36px;
   padding-left: 15px;
+  cursor: pointer;
 }
 
 .song-select-dl dd:hover {
@@ -582,6 +589,7 @@ i {
 
 .song-select-dl dd.song-select-active {
   background-color: #5FB878;
+  color: #ffffff;
 }
 
 .song-field {

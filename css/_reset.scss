@@ -24,3 +24,9 @@ button:focus {
 i {
     font-style: normal;
 }
+
+// ie6不支持属性选择器
+input[type="checkbox"],
+input[type="radio"] {
+    // display: none;
+}
