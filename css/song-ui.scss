@@ -438,6 +438,15 @@
     z-index: 1;
     width: 100%;
 
+    &.song-select-disabled {
+        .song-select-title {
+            .song-input {
+                cursor: not-allowed;
+                color: $disabled-text-color;
+            }
+        }
+    }
+
     .song-select-title {
         position: relative;
 

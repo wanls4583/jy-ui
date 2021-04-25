@@ -540,6 +540,11 @@ select {
   width: 100%;
 }
 
+.song-form-select.song-select-disabled .song-select-title .song-input {
+  cursor: not-allowed;
+  color: #c2c2c2;
+}
+
 .song-form-select .song-select-title {
   position: relative;
 }

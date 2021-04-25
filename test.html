@@ -188,6 +188,19 @@
                     </select>
                 </div>
             </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">禁用选择框</label>
+                <div class="song-input-block">
+                    <select name="city" disabled>
+                        <option value=""></option>
+                        <option value="0">北京</option>
+                        <option value="1">上海</option>
+                        <option value="2">广州</option>
+                        <option value="3">深圳</option>
+                        <option value="4">杭州</option>
+                    </select>
+                </div>
+            </div>
             <div style="margin:15px 0;">行级输入框</div>
             <div class="song-form-item">
                 <div class="song-inline">
@@ -238,14 +251,15 @@
         renderSelect();
     });
     //渲染开关
-    function renderSwitch() {
+    function renderSwitch(fresh) {
         var inputs = $('input[type="checkbox"][song-skin="switch"]');
         inputs.each(function (i, input) {
-            if (input.renderedSongUi) {
+            if (input.renderedSongUi && !fresh) {
                 return;
             }
             var $input = $(input);
             var classNames = '';
+            input.$ui && input.$ui.remove();
             if ($input.prop('disabled')) {
                 classNames += ' song-switch-disabled';
             }
@@ -259,6 +273,7 @@
                 </div>');
             $html.insertAfter(input);
             $html[0].$input = $input;
+            $input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
@@ -281,13 +296,14 @@
         }
     }
     // 渲染复选框
-    function renderCheckbox() {
+    function renderCheckbox(fresh) {
         var inputs = $('input[type="checkbox"]');
         inputs.each(function (i, input) {
-            if (input.renderedSongUi) {
+            if (input.renderedSongUi && !fresh) {
                 return;
             }
             var $input = $(input);
+            input.$ui && input.$ui.remove();
             if ($input.attr('song-skin') == 'switch') {
                 return;
             }
@@ -306,6 +322,7 @@
 
             $html.insertAfter(input);
             $html[0].$input = $input;
+            $input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
@@ -329,14 +346,15 @@
         }
     }
     // 渲染单选按钮
-    function renderRadio() {
+    function renderRadio(fresh) {
         var inputs = $('input[type="radio"]');
         inputs.each(function (i, input) {
-            if (input.renderedSongUi) {
+            if (input.renderedSongUi && !fresh) {
                 return false;
             }
             var $input = $(input);
             var classNames = '';
+            input.$ui && input.$ui.remove();
             if ($input.prop('disabled')) {
                 classNames += ' song-radio-disabled';
             }
@@ -351,6 +369,7 @@
             var $html = $(html);
             $html.insertAfter(input);
             $html[0].$input = $input;
+            $input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
@@ -375,14 +394,15 @@
         }
     }
     // 渲染下拉选择框
-    function renderSelect() {
+    function renderSelect(fresh) {
         $('select').each(function (i, select) {
-            if (select.renderedSongUi) {
+            if (select.renderedSongUi && !fresh) {
                 return;
             }
             var $select = $(select);
             var search = $select.attr('song-search') === undefined ? false : true;
             var classNames = '';
+            select.$ui && select.$ui.remove();
             if ($select.prop('disabled')) {
                 classNames += ' song-select-disabled';
             }
@@ -414,6 +434,7 @@
             $html.append(html);
             $html.insertAfter($select);
             $html[0].$select = $select;
+            select.$ui = $html;
             _bindEvent($html);
             $select.hide();
             select.renderedSongUi = true;
@@ -425,7 +446,7 @@
             var $cont = $dom.find('.song-select-dl');
             var $input = $dom.find('.song-input');
             $title.on('click', function () {
-                if ($(this).hasClass('song-select-disabled')) {
+                if ($dom.hasClass('song-select-disabled')) {
                     return;
                 }
                 if ($cont.is(':visible')) {
@@ -439,7 +460,8 @@
                 }
             });
             $title.on('blur', function () {
-                $input.val($cont.find('.song-select-active').text()).blur();
+                var $dd = $cont.find('.song-select-active');
+                $input.val($dd.val() && $dd.text() || '').blur();
                 $cont.hide();
             });
             $cont.find('dd').on('click', function () {
