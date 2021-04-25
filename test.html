@@ -468,9 +468,9 @@
                 var $this = $(this);
                 var value = $this.attr('data-value');
                 $cont.find('.song-select-active').removeClass('song-select-active');
+                $this.addClass('song-select-active');
                 $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                 $dom[0].$select.val(value);
-                $this.addClass('song-select-active');
                 $cont.hide();
             });
             if (search) {
