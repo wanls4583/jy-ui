@@ -21,7 +21,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.#{$prefix}-display {
+.song-display {
     &-block {
         display: block;
     }
@@ -36,7 +36,7 @@
 }
 
 // 栅格
-.#{$prefix}-row {
+.song-row {
 
     // ie8不支持::的模式
     &:before,
@@ -49,20 +49,20 @@
     // 默认ie7content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
     // 所以不要给col添加padding或者border，否则宽度将不准确
     @for $i from 1 through 11 {
-        .#{$prefix}-col-#{$i} {
+        .song-col-#{$i} {
             width: $i/12*100%;
             float: left;
         }
 
         // 列偏移
-        .#{$prefix}-col-offset-#{$i} {
+        .song-col-offset-#{$i} {
             margin-left: $i/12*100%;
         }
     }
 }
 
 // 字体颜色
-.#{$prefix}-color {
+.song-color {
 
     &-text {
         color: $text-color;
@@ -106,7 +106,7 @@
 }
 
 // 背景颜色
-.#{$prefix}-bgcolor {
+.song-bgcolor {
     &-blue {
         background-color: $blue-color;
     }
@@ -133,7 +133,7 @@
 }
 
 // border颜色
-.#{$prefix}-border {
+.song-border {
     border: 1px solid $light-color;
 
     &-blue {
@@ -158,7 +158,7 @@
 }
 
 // 按钮
-.#{$prefix}-btn {
+.song-btn {
     display: inline-block;
     height: $btn-height - 2px;
     line-height: $btn-height - 2px;
@@ -229,7 +229,7 @@
 }
 
 // 表单项
-.#{$prefix}-form-item {
+.song-form-item {
     position: relative;
     clear: both;
     margin-bottom: $pd15;
@@ -244,7 +244,7 @@
 }
 
 // 表单项label
-.#{$prefix}-form-label {
+.song-form-label {
     float: left;
     width: 80px;
     margin: 0 $pd15;
@@ -255,7 +255,7 @@
 }
 
 // 块级包裹
-.#{$prefix}-input-block {
+.song-input-block {
     position: relative;
     margin-left: 110px;
     // 在ie6,ie7中，zoom:1触发了BFC
@@ -263,14 +263,14 @@
 }
 
 // 内联包裹
-.#{$prefix}-input-inline {
+.song-input-inline {
     position: relative;
     float: left;
     width: 190px;
 }
 
 // 内联组合包裹
-.#{$prefix}-inline {
+.song-inline {
     position: relative;
     display: inline-block;
     // ie6、ie7下inline-block只是触发layout，使元素可以设置宽高等属性，block元素还是会占一行
@@ -279,7 +279,7 @@
 }
 
 // 输入框
-.#{$prefix}-input {
+.song-input {
     display: block;
     width: 100%;
     height: $input-height;
@@ -497,11 +497,11 @@
 
 
 // 字段集区块
-.#{$prefix}-field {
+.song-field {
     padding: 0;
     border: 1px solid $light-color;
 
-    &.#{$prefix}-field-title {
+    &.song-field-title {
         border-style: none;
         border-top-style: solid;
     }
@@ -513,7 +513,7 @@
         color: $title-color;
     }
 
-    .#{$prefix}-field-box {
+    .song-field-box {
         padding: $pd15;
     }
 }
