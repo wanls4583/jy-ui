@@ -433,16 +433,12 @@
 }
 
 // 选择框
-.song-select {
-    display: none !important;
+.song-form-select {
+    position: relative;
+    z-index: 1;
+    width: 100%;
 
-    &-wrap {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-    }
-
-    &-title {
+    .song-select-title {
         position: relative;
 
         .song-input {
@@ -460,7 +456,7 @@
         }
     }
 
-    &-dl {
+    .song-select-dl {
         display: none;
         position: absolute;
         top: 100%;

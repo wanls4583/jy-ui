@@ -27,6 +27,7 @@ i {
 
 // ie6不支持属性选择器
 input[type="checkbox"],
-input[type="radio"] {
-    // display: none;
+input[type="radio"],
+select {
+    display: none;
 }

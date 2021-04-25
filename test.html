@@ -165,7 +165,20 @@
             <div class="song-form-item">
                 <label for="" class="song-form-label">选择框</label>
                 <div class="song-input-block">
-                    <select name="city" class="song-select">
+                    <select name="city">
+                        <option value=""></option>
+                        <option value="0">北京</option>
+                        <option value="1">上海</option>
+                        <option value="2">广州</option>
+                        <option value="3">深圳</option>
+                        <option value="4">杭州</option>
+                    </select>
+                </div>
+            </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">搜索选择框</label>
+                <div class="song-input-block">
+                    <select name="city" song-search>
                         <option value=""></option>
                         <option value="0">北京</option>
                         <option value="1">上海</option>
@@ -222,11 +235,15 @@
         renderSwitch();
         renderCheckbox();
         renderRadio();
+        renderSelect();
     });
     //渲染开关
     function renderSwitch() {
         var inputs = $('input[type="checkbox"][song-skin="switch"]');
         inputs.each(function (i, input) {
+            if (input.renderedSongUi) {
+                return;
+            }
             var $input = $(input);
             var classNames = '';
             if ($input.prop('disabled')) {
@@ -242,8 +259,9 @@
                 </div>');
             $html.insertAfter(input);
             $html[0].$input = $input;
-            $input.hide();
             _bindEvent($html);
+            $input.hide();
+            input.renderedSongUi = true;
         });
         function _bindEvent($dom) {
             $dom.on('click', function () {
@@ -288,9 +306,9 @@
 
             $html.insertAfter(input);
             $html[0].$input = $input;
+            _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
-            _bindEvent($html);
         });
 
         function _bindEvent($dom) {
@@ -333,9 +351,9 @@
             var $html = $(html);
             $html.insertAfter(input);
             $html[0].$input = $input;
+            _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
-            _bindEvent($html);
         });
         //绑定事件
         function _bindEvent($dom) {
@@ -356,53 +374,98 @@
             });
         }
     }
-    $('.song-select').each(function (i, dom) {
-        var $dom = $(dom);
-        var html =
-            '<div class="song-select-wrap">\
-                <div class="song-select-title">\
-                    <input type="text" class="song-input" placeholder="请选择" readonly>\
-                    <i>&#xe69b;</i>\
-                </div>\
-            </div>'
-        var $wrap = $(html);
-        var $cont = null;
-        var $title = $wrap.find('.song-select-title');
-        var $input = $wrap.find('.song-input');
-        html = '<dl class="song-select-dl">';
-        $dom.find('option').each(function (i, opt) {
-            var $opt = $(opt);
-            var text = $opt.text();
-            var value = $opt.val();
+    // 渲染下拉选择框
+    function renderSelect() {
+        $('select').each(function (i, select) {
+            if (select.renderedSongUi) {
+                return;
+            }
+            var $select = $(select);
+            var search = $select.attr('song-search') === undefined ? false : true;
             var classNames = '';
-            if (!text) {
-                classNames += ' song-color-holder';
+            if ($select.prop('disabled')) {
+                classNames += ' song-select-disabled';
             }
-            if ($dom.val() == value) {
-                $input.attr('data-value', $dom.val());
-                $input.val(text);
-                classNames += ' song-select-active';
+            var $html = $(
+                '<div class="song-form-select ' + classNames + '">\
+                    <div class="song-select-title">\
+                        <input type="text" class="song-input" placeholder="请选择" '+ (search ? '' : 'readonly') + '>\
+                        <i>&#xe69b;</i>\
+                    </div>\
+                </div>');
+            var html = '<dl class="song-select-dl">';
+            var $input = $html.find('input');
+            $select.find('option').each(function (i, opt) {
+                var $opt = $(opt);
+                var text = $opt.text();
+                var value = $opt.val();
+                var classNames = '';
+                if (!text) {
+                    classNames += ' song-color-holder';
+                }
+                if ($select.val() == value) {
+                    $input.attr('data-value', $select.val());
+                    $input.val(text);
+                    classNames += ' song-select-active';
+                }
+                html += '<dd class="' + classNames + '" data-value="' + value + '">' + (text || '请选择') + '</dd>';
+            });
+            html += '</dl>';
+            $html.append(html);
+            $html.insertAfter($select);
+            $html[0].$select = $select;
+            _bindEvent($html);
+            $select.hide();
+            select.renderedSongUi = true;
+        });
+        // 绑定事件
+        function _bindEvent($dom) {
+            var search = $dom[0].$select.attr('song-search') === undefined ? false : true;
+            var $title = $dom.find('.song-select-title');
+            var $cont = $dom.find('.song-select-dl');
+            var $input = $dom.find('.song-input');
+            $title.on('click', function () {
+                if ($(this).hasClass('song-select-disabled')) {
+                    return;
+                }
+                if ($cont.is(':visible')) {
+                    $title.trigger('blur');
+                } else {
+                    // 其他选择框都收起
+                    $('.song-select-dl').hide().parents('.song-form-item').css({ 'z-index': '1' });
+                    $title.parents('.song-form-item').css({ 'z-index': '99' });
+                    $cont.find('dd').show();
+                    $cont.show();
+                }
+            });
+            $title.on('blur', function () {
+                $input.val($cont.find('.song-select-active').text()).blur();
+                $cont.hide();
+            });
+            $cont.find('dd').on('click', function () {
+                var $this = $(this);
+                var value = $this.attr('data-value');
+                $cont.find('.song-select-active').removeClass('song-select-active');
+                $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
+                $dom[0].$select.val(value);
+                $this.addClass('song-select-active');
+                $cont.hide();
+            });
+            if (search) {
+                $input.on('input propertychange', function () {
+                    var title = $(this).val();
+                    $cont.find('dd').each(function (i, dd) {
+                        var $dd = $(dd);
+                        if ($dd.text().indexOf(title) == -1) {
+                            $dd.hide();
+                        } else {
+                            $dd.show();
+                        }
+                    });
+                });
             }
-            html += '<dd class="' + classNames + '" data-value="' + value + '">' + (text || '请选择') + '</dd>';
-        });
-        html += '</dl>';
-        $cont = $(html);
-        $wrap.append($cont);
-        $wrap.insertAfter($dom);
-        $wrap.parents('.song-form-item').css({ 'z-index': 1 });
-        $title.on('click', function () {
-            $cont.toggle();
-        });
-        $cont.on('click', function () {
-            $cont.toggle();
-        });
-        $cont.find('dd').on('click', function () {
-            var $this = $(this);
-            $cont.find('.song-select-active').removeClass('song-select-active');
-            $input.val($this.text()).attr('data-value', $this.attr('data-value'));
-            $this.addClass('song-select-active');
-        });
-    });
+        }
+    }
 
 </script>
 

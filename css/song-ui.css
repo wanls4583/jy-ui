@@ -26,7 +26,8 @@ i {
 }
 
 input[type="checkbox"],
-input[type="radio"] {
+input[type="radio"],
+select {
   display: none;
 }
 
@@ -533,25 +534,21 @@ input[type="radio"] {
   color: #5FB878;
 }
 
-.song-select {
-  display: none !important;
-}
-
-.song-select-wrap {
+.song-form-select {
   position: relative;
   z-index: 1;
   width: 100%;
 }
 
-.song-select-title {
+.song-form-select .song-select-title {
   position: relative;
 }
 
-.song-select-title .song-input {
+.song-form-select .song-select-title .song-input {
   cursor: pointer;
 }
 
-.song-select-title i {
+.song-form-select .song-select-title i {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -561,7 +558,7 @@ input[type="radio"] {
   font-family: 'iconfont';
 }
 
-.song-select-dl {
+.song-form-select .song-select-dl {
   display: none;
   position: absolute;
   top: 100%;
@@ -577,17 +574,17 @@ input[type="radio"] {
           box-sizing: border-box;
 }
 
-.song-select-dl dd {
+.song-form-select .song-select-dl dd {
   line-height: 36px;
   padding-left: 15px;
   cursor: pointer;
 }
 
-.song-select-dl dd:hover {
+.song-form-select .song-select-dl dd:hover {
   background-color: #eeeeee;
 }
 
-.song-select-dl dd.song-select-active {
+.song-form-select .song-select-dl dd.song-select-active {
   background-color: #5FB878;
   color: #ffffff;
 }
