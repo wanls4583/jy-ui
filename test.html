@@ -180,8 +180,8 @@
                 <div class="song-input-block">
                     <select name="city" song-search>
                         <option value=""></option>
-                        <option value="0">北京</option>
-                        <option value="1">上海</option>
+                        <option value="0">北京1</option>
+                        <option value="1" selected>上海</option>
                         <option value="2">广州</option>
                         <option value="3">深圳</option>
                         <option value="4">杭州</option>
@@ -193,9 +193,9 @@
                 <div class="song-input-block">
                     <select name="city" disabled>
                         <option value=""></option>
-                        <option value="0">北京</option>
+                        <option value="0">北京2</option>
                         <option value="1">上海</option>
-                        <option value="2">广州</option>
+                        <option value="2" selected>广州</option>
                         <option value="3">深圳</option>
                         <option value="4">杭州</option>
                     </select>
@@ -245,11 +245,23 @@
 <script>
     //必须房贷ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
-        renderSwitch();
-        renderCheckbox();
-        renderRadio();
-        renderSelect();
+        render();
     });
+    // 渲染页面ui
+    function render(tagName) {
+        tagName = tagName && tagName.toLowerCase() || '';
+        switch (tagName) {
+            case 'switch': renderSwitch(true); break;
+            case 'radiao': renderRadio(true); break;
+            case 'checkbox': renderCheckbox(true); break;
+            case 'select': renderSelect(true); break;
+            default:
+                renderSwitch(true);
+                renderRadio(true);
+                renderCheckbox(true);
+                renderSelect(true);
+        }
+    }
     //渲染开关
     function renderSwitch(fresh) {
         var inputs = $('input[type="checkbox"][song-skin="switch"]');
@@ -290,56 +302,6 @@
                     $this[0].$input.prop('checked', true);
                 } else {
                     $this.find('span').html('OFF');
-                    $this[0].$input.prop('checked', false);
-                }
-            });
-        }
-    }
-    // 渲染复选框
-    function renderCheckbox(fresh) {
-        var inputs = $('input[type="checkbox"]');
-        inputs.each(function (i, input) {
-            if (input.renderedSongUi && !fresh) {
-                return;
-            }
-            var $input = $(input);
-            input.$ui && input.$ui.remove();
-            if ($input.attr('song-skin') == 'switch') {
-                return;
-            }
-            var classNames = '';
-            if ($input.prop('disabled')) {
-                classNames += ' song-checkbox-disabled';
-            }
-            if ($input.prop('checked')) {
-                classNames += ' song-checkbox-checked';
-            }
-            var $html = $(
-                '<div class="song-form-checkbox ' + classNames + '">\
-                    <i>'+ ($input.prop('checked') ? '&#xe609;' : '') + '</i>\
-                    <span>'+ $input.attr('title') + '</span>\
-                </div>');
-
-            $html.insertAfter(input);
-            $html[0].$input = $input;
-            $input.$ui = $html;
-            _bindEvent($html);
-            $input.hide();
-            input.renderedSongUi = true;
-        });
-
-        function _bindEvent($dom) {
-            $dom.on('click', function () {
-                var $this = $(this);
-                if ($this.hasClass('song-checkbox-disabled')) {
-                    return;
-                }
-                $this.toggleClass('song-checkbox-checked');
-                if ($this.hasClass('song-checkbox-checked')) {
-                    $this.find('i').html('&#xe609;');
-                    $this[0].$input.prop('checked', true);
-                } else {
-                    $this.find('i').html('');
                     $this[0].$input.prop('checked', false);
                 }
             });
@@ -390,6 +352,56 @@
                 $this.addClass('song-radio-checked');
                 $this.find('i').html('&#xe61c;');
                 $this[0].$input.prop('checked', true);
+            });
+        }
+    }
+    // 渲染复选框
+    function renderCheckbox(fresh) {
+        var inputs = $('input[type="checkbox"]');
+        inputs.each(function (i, input) {
+            if (input.renderedSongUi && !fresh) {
+                return;
+            }
+            var $input = $(input);
+            input.$ui && input.$ui.remove();
+            if ($input.attr('song-skin') == 'switch') {
+                return;
+            }
+            var classNames = '';
+            if ($input.prop('disabled')) {
+                classNames += ' song-checkbox-disabled';
+            }
+            if ($input.prop('checked')) {
+                classNames += ' song-checkbox-checked';
+            }
+            var $html = $(
+                '<div class="song-form-checkbox ' + classNames + '">\
+                    <i>'+ ($input.prop('checked') ? '&#xe609;' : '') + '</i>\
+                    <span>'+ $input.attr('title') + '</span>\
+                </div>');
+
+            $html.insertAfter(input);
+            $html[0].$input = $input;
+            $input.$ui = $html;
+            _bindEvent($html);
+            $input.hide();
+            input.renderedSongUi = true;
+        });
+
+        function _bindEvent($dom) {
+            $dom.on('click', function () {
+                var $this = $(this);
+                if ($this.hasClass('song-checkbox-disabled')) {
+                    return;
+                }
+                $this.toggleClass('song-checkbox-checked');
+                if ($this.hasClass('song-checkbox-checked')) {
+                    $this.find('i').html('&#xe609;');
+                    $this[0].$input.prop('checked', true);
+                } else {
+                    $this.find('i').html('');
+                    $this[0].$input.prop('checked', false);
+                }
             });
         }
     }
@@ -458,11 +470,15 @@
                     $cont.find('dd').show();
                     $cont.show();
                 }
+                return false;
             });
             $title.on('blur', function () {
                 var $dd = $cont.find('.song-select-active');
-                $input.val($dd.val() && $dd.text() || '').blur();
+                $input.val($dd.attr('data-value') && $dd.text() || '');
                 $cont.hide();
+                setTimeout(function () {
+                    $input.blur()
+                }, 50);
             });
             $cont.find('dd').on('click', function () {
                 var $this = $(this);
@@ -473,6 +489,7 @@
                 $dom[0].$select.val(value);
                 $cont.hide();
             });
+            // 可搜索
             if (search) {
                 $input.on('input propertychange', function () {
                     var title = $(this).val();
@@ -485,6 +502,13 @@
                         }
                     });
                 });
+            }
+            // 点击页面收起下拉框
+            if (!renderSelect.bindedBodyEvent) {
+                $(document.body).on('click', function (e) {
+                    $('.song-form-select:visible').find('.song-select-title').trigger('blur');
+                });
+                renderSelect.bindedBodyEvent = true;
             }
         }
     }
