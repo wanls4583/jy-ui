@@ -252,7 +252,8 @@
     var form = {
         render: render,
         on: on,
-        trigger: trigger
+        trigger: trigger,
+        getJsonFromForm: getJsonFromForm
     }
     //必须房贷ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
@@ -283,6 +284,52 @@
                 arr[i](event);
             }
         }
+    }
+    // 获取纯数字
+    function getNum(str, noParse, dot) {
+        if (typeof str == 'number') {
+            str = str.toString();
+        }
+        if (dot === undefined) {
+            dot = 2;
+        }
+        str = (str || '') + '';
+        str = str.replace(/\,/g, '');
+        str = str.replace(/。/g, '.');
+        var reg = new RegExp('\\-?\\d+' + (dot ? '(\\.\\d{0,' + dot + '})?' : ''));
+        reg = str.match(reg);
+        if (noParse) {
+            return reg && reg[0] || (str == '-' ? '-' : '');
+        } else {
+            return reg && Number(reg[0]) || 0;
+        }
+    }
+    // 获取表单数据
+    function getJsonFromForm(fromId) {
+        var $form = $(fromId);
+        var data = {};
+        $form.find('input', function (i, input) {
+            var $input = $(input);
+            var name = $input.attr('name');
+            var value = $input.val();
+            if (input.type == 'text' || input.type == 'hidden') {
+                name && (data[name] = value);
+            } else if (input.type == 'radio' || input.type == 'checkbox') {
+                $input.prop('checked') && name && (data[name] = value);
+            }
+        });
+        $form.find('select', function (i, select) {
+            var $select = $(select);
+            var name = $select.attr('name');
+            var value = $select.val();
+            name && (data[name] = value);
+        });
+        $form.find('textarea', function (i, textarea) {
+            var $textarea = $(textarea);
+            var name = $textarea.attr('name');
+            var value = $textarea.val();
+            name && (data[name] = value);
+        });
     }
     // 渲染页面ui
     function render(tagName) {
