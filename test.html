@@ -126,102 +126,107 @@
     <fieldset class="song-field">
         <legend>表单</legend>
         <div class="song-field-box">
-            <div style="margin:15px 0;">块级输入框</div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">文本框</label>
-                <div class="song-input-block">
-                    <input type="text" class="song-input">
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">密码框</label>
-                <div class="song-input-block">
-                    <input type="password" class="song-input">
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">开关</label>
-                <div class="song-input-block">
-                    <input type="checkbox" name="s1" song-skin="switch" checked>
-                    <input type="checkbox" name="s2" song-skin="switch" disabled>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">单选</label>
-                <div class="song-input-block">
-                    <input type="radio" name="r1" title="男" value="男" checked>
-                    <input type="radio" name="r1" title="女" value="女">
-                    <input type="radio" name="r1" title="第三性别" value="第三性别" disabled>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">多选</label>
-                <div class="song-input-block">
-                    <input type="checkbox" name="c1" title="广州" value="广州" checked>
-                    <input type="checkbox" name="c1" title="深圳" value="深圳">
-                    <input type="checkbox" name="c1" title="北京" value="北京" disabled>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">选择框</label>
-                <div class="song-input-block">
-                    <select name="city">
-                        <option value=""></option>
-                        <option value="0">北京</option>
-                        <option value="1">上海</option>
-                        <option value="2">广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
-                    </select>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">搜索选择框</label>
-                <div class="song-input-block">
-                    <select name="city" song-search>
-                        <option value=""></option>
-                        <option value="0">北京1</option>
-                        <option value="1" selected>上海</option>
-                        <option value="2">广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
-                    </select>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">禁用选择框</label>
-                <div class="song-input-block">
-                    <select name="city" disabled>
-                        <option value=""></option>
-                        <option value="0">北京2</option>
-                        <option value="1">上海</option>
-                        <option value="2" selected>广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
-                    </select>
-                </div>
-            </div>
-            <div class="song-form-item">
-                <label for="" class="song-form-label">文本域</label>
-                <div class="song-input-block">
-                    <textarea class="song-textarea"></textarea>
-                </div>
-            </div>
-            <div style="margin:15px 0;">行级输入框</div>
-            <div class="song-form-item">
-                <div class="song-inline">
+            <form action="javascript:;" class="song-form" id="form1">
+                <div style="margin:15px 0;">块级输入框</div>
+                <div class="song-form-item">
                     <label for="" class="song-form-label">文本框</label>
-                    <div class="song-input-inline">
-                        <input type="text" class="song-input">
+                    <div class="song-input-block">
+                        <input type="text" class="song-input" name="in1">
                     </div>
                 </div>
-                <div class="song-inline">
+                <div class="song-form-item">
                     <label for="" class="song-form-label">密码框</label>
-                    <div class="song-input-inline">
-                        <input type="password" class="song-input">
+                    <div class="song-input-block">
+                        <input type="password" class="song-input" name="pw1">
                     </div>
                 </div>
-            </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">开关</label>
+                    <div class="song-input-block">
+                        <input type="checkbox" name="s1" song-skin="switch" checked>
+                        <input type="checkbox" name="s2" song-skin="switch" disabled>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">单选</label>
+                    <div class="song-input-block">
+                        <input type="radio" name="r1" title="男" value="男" checked>
+                        <input type="radio" name="r1" title="女" value="女">
+                        <input type="radio" name="r1" title="第三性别" value="第三性别" disabled>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">多选</label>
+                    <div class="song-input-block">
+                        <input type="checkbox" name="c1" title="广州" value="广州" checked>
+                        <input type="checkbox" name="c1" title="深圳" value="深圳">
+                        <input type="checkbox" name="c1" title="北京" value="北京" disabled>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">选择框</label>
+                    <div class="song-input-block">
+                        <select name="city1">
+                            <option value=""></option>
+                            <option value="0">北京</option>
+                            <option value="1">上海</option>
+                            <option value="2">广州</option>
+                            <option value="3">深圳</option>
+                            <option value="4">杭州</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">搜索选择框</label>
+                    <div class="song-input-block">
+                        <select name="city2" song-search>
+                            <option value=""></option>
+                            <option value="0">北京1</option>
+                            <option value="1" selected>上海</option>
+                            <option value="2">广州</option>
+                            <option value="3">深圳</option>
+                            <option value="4">杭州</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">禁用选择框</label>
+                    <div class="song-input-block">
+                        <select name="city3" disabled>
+                            <option value=""></option>
+                            <option value="0">北京2</option>
+                            <option value="1">上海</option>
+                            <option value="2" selected>广州</option>
+                            <option value="3">深圳</option>
+                            <option value="4">杭州</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">文本域</label>
+                    <div class="song-input-block">
+                        <textarea class="song-textarea"></textarea>
+                    </div>
+                </div>
+                <div style="margin:15px 0;">行级输入框</div>
+                <div class="song-form-item">
+                    <div class="song-inline">
+                        <label for="" class="song-form-label">文本框</label>
+                        <div class="song-input-inline">
+                            <input type="text" class="song-input">
+                        </div>
+                    </div>
+                    <div class="song-inline">
+                        <label for="" class="song-form-label">密码框</label>
+                        <div class="song-input-inline">
+                            <input type="password" class="song-input">
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center">
+                    <button type="submit" class="song-btn">保存</button>
+                </div>
+            </form>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -250,6 +255,7 @@
 <script src="jquery-1.12.4.min.js"></script>
 <script>
     var form = {
+        init: init,
         render: render,
         on: on,
         trigger: trigger,
@@ -257,6 +263,7 @@
     }
     //必须房贷ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
+        form.init();
         form.render();
         form.on('switch', function (event) {
             console.log(event);
@@ -270,7 +277,20 @@
         form.on('select', function (event) {
             console.log(event);
         });
+        form.on('submit', function (data) {
+            console.log(data);
+        });
     });
+    function init() {
+        $(document.body).delegate('button[type="submit"]', 'click', function () {
+            var $form = $(this).parents('form');
+            var filter = $(this).attr('song-filter');
+            if ($form.length) {
+                var data = form.getJsonFromForm($form);
+                form.trigger(filter ? 'submit(' + filter + ')' : 'submit', data);
+            }
+        });
+    }
     // 监听事件
     function on(filter, callback) {
         on[filter] = on[filter] || [];
@@ -308,28 +328,29 @@
     function getJsonFromForm(fromId) {
         var $form = $(fromId);
         var data = {};
-        $form.find('input', function (i, input) {
+        $form.find('input').each(function (i, input) {
             var $input = $(input);
             var name = $input.attr('name');
             var value = $input.val();
-            if (input.type == 'text' || input.type == 'hidden') {
+            if (input.type == 'text' || input.type == 'hidden' || input.type == 'password') {
                 name && (data[name] = value);
             } else if (input.type == 'radio' || input.type == 'checkbox') {
-                $input.prop('checked') && name && (data[name] = value);
+                $input.prop('checked') && name && (data[name] ? data[name].push(value) : data[name] = [value]);
             }
         });
-        $form.find('select', function (i, select) {
+        $form.find('select').each(function (i, select) {
             var $select = $(select);
             var name = $select.attr('name');
             var value = $select.val();
             name && (data[name] = value);
         });
-        $form.find('textarea', function (i, textarea) {
+        $form.find('textarea').each(function (i, textarea) {
             var $textarea = $(textarea);
             var name = $textarea.attr('name');
             var value = $textarea.val();
             name && (data[name] = value);
         });
+        return data;
     }
     // 渲染页面ui
     function render(tagName) {
