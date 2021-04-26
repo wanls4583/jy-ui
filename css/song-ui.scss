@@ -295,6 +295,23 @@
     _padding-left: $pd15;
 }
 
+// 文本域
+.song-textarea {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: 20px;
+    min-height: 100px;
+    padding: 6px 10px;
+    resize: vertical;
+    border: 1px solid $light-color;
+    border-radius: 2px;
+    outline: none;
+    box-sizing: border-box;
+    *padding: 0 !important;
+    _padding: 6px 10px;
+}
+
 // 开关
 .song-form-switch {
     position: relative;

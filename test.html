@@ -201,6 +201,12 @@
                     </select>
                 </div>
             </div>
+            <div class="song-form-item">
+                <label for="" class="song-form-label">文本域</label>
+                <div class="song-input-block">
+                    <textarea class="song-textarea"></textarea>
+                </div>
+            </div>
             <div style="margin:15px 0;">行级输入框</div>
             <div class="song-form-item">
                 <div class="song-inline">
@@ -243,10 +249,41 @@
 </body>
 <script src="jquery-1.12.4.min.js"></script>
 <script>
+    var form = {
+        render: render,
+        on: on,
+        trigger: trigger
+    }
     //必须房贷ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
-        render();
+        form.render();
+        form.on('switch', function (event) {
+            console.log(event);
+        });
+        form.on('radio', function (event) {
+            console.log(event);
+        });
+        form.on('checkbox', function (event) {
+            console.log(event);
+        });
+        form.on('select', function (event) {
+            console.log(event);
+        });
     });
+    // 监听事件
+    function on(filter, callback) {
+        on[filter] = on[filter] || [];
+        on[filter].push(callback);
+    }
+    // 触发事件
+    function trigger(filter, event) {
+        var arr = on[filter];
+        if (arr) {
+            for (var i = 0; i < arr.length; i++) {
+                arr[i](event);
+            }
+        }
+    }
     // 渲染页面ui
     function render(tagName) {
         tagName = tagName && tagName.toLowerCase() || '';
@@ -270,8 +307,12 @@
                 return;
             }
             var $input = $(input);
+            var ignore = $input.attr('song-ignore') === undefined ? false : true;
             var classNames = '';
             input.$ui && input.$ui.remove();
+            if (ignore) {
+                return;
+            }
             if ($input.prop('disabled')) {
                 classNames += ' song-switch-disabled';
             }
@@ -293,6 +334,7 @@
         function _bindEvent($dom) {
             $dom.on('click', function () {
                 var $this = $(this);
+                var filter = this.$input.attr('song-filter');
                 if ($this.hasClass('song-switch-disabled')) {
                     return;
                 }
@@ -304,6 +346,10 @@
                     $this.find('span').html('OFF');
                     $this[0].$input.prop('checked', false);
                 }
+                form.trigger(filter ? 'switch(' + filter + ')' : 'switch', {
+                    data: $this[0].$input.prop('checked'),
+                    dom: $this[0].$input[0]
+                });
             });
         }
     }
@@ -315,8 +361,12 @@
                 return false;
             }
             var $input = $(input);
+            var ignore = $input.attr('song-ignore') === undefined ? false : true;
             var classNames = '';
             input.$ui && input.$ui.remove();
+            if (ignore) {
+                return;
+            }
             if ($input.prop('disabled')) {
                 classNames += ' song-radio-disabled';
             }
@@ -340,6 +390,7 @@
         function _bindEvent($dom) {
             $dom.on('click', function () {
                 var $this = $(this);
+                var filter = this.$input.attr('song-filter');
                 if ($this.hasClass('song-radio-disabled')) {
                     return;
                 }
@@ -348,10 +399,14 @@
                     if ($_this[0].$input.attr('name') == $this[0].$input.attr('name')) {
                         $_this.removeClass('song-radio-checked').find('i').html('&#xe619;');
                     }
-                })
+                });
                 $this.addClass('song-radio-checked');
                 $this.find('i').html('&#xe61c;');
                 $this[0].$input.prop('checked', true);
+                form.trigger(filter ? 'radio(' + filter + ')' : 'radio', {
+                    data: $this[0].$input.val(),
+                    dom: $this[0].$input[0]
+                });
             });
         }
     }
@@ -363,7 +418,11 @@
                 return;
             }
             var $input = $(input);
+            var ignore = $input.attr('song-ignore') === undefined ? false : true;
             input.$ui && input.$ui.remove();
+            if (ignore) {
+                return;
+            }
             if ($input.attr('song-skin') == 'switch') {
                 return;
             }
@@ -391,6 +450,8 @@
         function _bindEvent($dom) {
             $dom.on('click', function () {
                 var $this = $(this);
+                var filter = this.$input.attr('song-filter');
+                var data = [];
                 if ($this.hasClass('song-checkbox-disabled')) {
                     return;
                 }
@@ -402,6 +463,16 @@
                     $this.find('i').html('');
                     $this[0].$input.prop('checked', false);
                 }
+                $('.song-checkbox-checked').each(function (i, radio) {
+                    var $_this = $(this);
+                    if ($_this[0].$input.attr('name') == $this[0].$input.attr('name')) {
+                        data.push($_this[0].$input.val());
+                    }
+                });
+                form.trigger(filter ? 'checkbox(' + filter + ')' : 'checkbox', {
+                    data: data,
+                    dom: $this[0].$input[0]
+                });
             });
         }
     }
@@ -412,9 +483,13 @@
                 return;
             }
             var $select = $(select);
+            var ignore = $select.attr('song-ignore') === undefined ? false : true;
             var search = $select.attr('song-search') === undefined ? false : true;
             var classNames = '';
             select.$ui && select.$ui.remove();
+            if (ignore) {
+                return;
+            }
             if ($select.prop('disabled')) {
                 classNames += ' song-select-disabled';
             }
@@ -483,11 +558,16 @@
             $cont.find('dd').on('click', function () {
                 var $this = $(this);
                 var value = $this.attr('data-value');
+                var filter = $dom[0].$select.attr('song-filter') || '';
                 $cont.find('.song-select-active').removeClass('song-select-active');
                 $this.addClass('song-select-active');
                 $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                 $dom[0].$select.val(value);
                 $cont.hide();
+                form.trigger(filter ? 'select(' + filter + ')' : 'select', {
+                    data: value,
+                    dom: $dom[0].$select[0]
+                });
             });
             // 可搜索
             if (search) {
