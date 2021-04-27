@@ -61,102 +61,6 @@
     }
 }
 
-// 字体颜色
-.song-color {
-
-    &-text {
-        color: $text-color;
-    }
-
-    &-title {
-        color: $title-color;
-    }
-
-    &-holder {
-        color: $holder-color;
-    }
-
-    &-gray {
-        color: $gray-color;
-    }
-
-    &-blue {
-        color: $blue-color;
-    }
-
-    &-light {
-        color: $light-color;
-    }
-
-    &-link {
-        color: $link-color;
-    }
-
-    &-success {
-        color: $success-color;
-    }
-
-    &-warn {
-        color: $warn-color;
-    }
-
-    &-danger {
-        color: $danger-color;
-    }
-}
-
-// 背景颜色
-.song-bgcolor {
-    &-blue {
-        background-color: $blue-color;
-    }
-
-    &-light {
-        background-color: $light-color;
-    }
-
-    &-link {
-        background-color: $link-color;
-    }
-
-    &-success {
-        background-color: $success-color;
-    }
-
-    &-warn {
-        background-color: $warn-color;
-    }
-
-    &-danger {
-        background-color: $danger-color;
-    }
-}
-
-// border颜色
-.song-border {
-    border: 1px solid $light-color;
-
-    &-blue {
-        border-color: $blue-color;
-    }
-
-    &-light {
-        border-color: $light-color;
-    }
-
-    &-success {
-        border-color: $success-color;
-    }
-
-    &-warn {
-        border-color: $warn-color;
-    }
-
-    &-danger {
-        border-color: $danger-color;
-    }
-}
-
 // 按钮
 .song-btn {
     display: inline-block;
@@ -302,14 +206,16 @@
     height: auto;
     line-height: 20px;
     min-height: 100px;
+    _height: 100px;
     padding: 6px 10px;
+    *padding: 0 !important;
+    _padding: 6px 10px;
     resize: vertical;
     border: 1px solid $light-color;
     border-radius: 2px;
     outline: none;
     box-sizing: border-box;
-    *padding: 0 !important;
-    _padding: 6px 10px;
+    overflow: hidden;
 }
 
 // 开关
@@ -544,4 +450,101 @@ hr {
     border-bottom: 1px solid $light-color;
     // 解决ie7以下始终有一根黑线的问题
     color: #fff;
+}
+
+
+// 字体颜色
+.song-color {
+
+    &-text {
+        color: $text-color;
+    }
+
+    &-title {
+        color: $title-color;
+    }
+
+    &-holder {
+        color: $holder-color;
+    }
+
+    &-gray {
+        color: $gray-color;
+    }
+
+    &-blue {
+        color: $blue-color;
+    }
+
+    &-light {
+        color: $light-color;
+    }
+
+    &-link {
+        color: $link-color;
+    }
+
+    &-success {
+        color: $success-color;
+    }
+
+    &-warn {
+        color: $warn-color;
+    }
+
+    &-danger {
+        color: $danger-color;
+    }
+}
+
+// 背景颜色
+.song-bgcolor {
+    &-blue {
+        background-color: $blue-color;
+    }
+
+    &-light {
+        background-color: $light-color;
+    }
+
+    &-link {
+        background-color: $link-color;
+    }
+
+    &-success {
+        background-color: $success-color;
+    }
+
+    &-warn {
+        background-color: $warn-color;
+    }
+
+    &-danger {
+        background-color: $danger-color;
+    }
+}
+
+// border颜色
+.song-border {
+    border: 1px solid $light-color;
+
+    &-blue {
+        border-color: $blue-color;
+    }
+
+    &-light {
+        border-color: $light-color;
+    }
+
+    &-success {
+        border-color: $success-color;
+    }
+
+    &-warn {
+        border-color: $warn-color;
+    }
+
+    &-danger {
+        border: 1px solid $danger-color;
+    }
 }

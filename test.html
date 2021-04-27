@@ -126,18 +126,36 @@
     <fieldset class="song-field">
         <legend>表单</legend>
         <div class="song-field-box">
-            <form action="javascript:;" class="song-form" id="form1">
+            <form action="javascript:;" class="song-form" id="form1" style="width: 625px;">
                 <div style="margin:15px 0;">块级输入框</div>
                 <div class="song-form-item">
-                    <label for="" class="song-form-label">文本框</label>
+                    <label for="" class="song-form-label">姓名</label>
                     <div class="song-input-block">
-                        <input type="text" class="song-input" name="in1">
+                        <input type="text" class="song-input" name="in1" song-verify="required">
                     </div>
                 </div>
                 <div class="song-form-item">
-                    <label for="" class="song-form-label">密码框</label>
+                    <label for="" class="song-form-label">手机号</label>
                     <div class="song-input-block">
-                        <input type="password" class="song-input" name="pw1">
+                        <input type="text" class="song-input" name="in2" song-verify="phone">
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">身份证</label>
+                    <div class="song-input-block">
+                        <input type="text" class="song-input" name="in3" song-verify="identify">
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">邮箱</label>
+                    <div class="song-input-block">
+                        <input type="text" class="song-input" name="in4" song-verify="email">
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label">年龄</label>
+                    <div class="song-input-block">
+                        <input type="text" class="song-input" name="in5" song-verify="required|number">
                     </div>
                 </div>
                 <div class="song-form-item">
@@ -259,7 +277,34 @@
         render: render,
         on: on,
         trigger: trigger,
-        getJsonFromForm: getJsonFromForm
+        verify: verify,
+        getJsonFromForm: getJsonFromForm,
+        verifyRules: {
+            required: {
+                msg: '必填项不能为空',
+                rule: /[\s\S]+/
+            },
+            number: {
+                msg: '请输入数字',
+                rule: /\-?\d+(\.\d*)?/
+            },
+            int: {
+                msg: '请输入整数',
+                rule: /\-?\d+/
+            },
+            phone: {
+                msg: '请输入手机号',
+                rule: /^1(3|4|5|6|7|8|9)\d{9}$/
+            },
+            email: {
+                msg: '请输入邮箱',
+                rule: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+            },
+            identify: {
+                msg: '请输入身份证',
+                rule: /(^\d{15}$)|(^\d{17}([0-9]|X)$)/i
+            }
+        }
     }
     //必须房贷ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
@@ -285,7 +330,7 @@
         $(document.body).delegate('button[type="submit"]', 'click', function () {
             var $form = $(this).parents('form');
             var filter = $(this).attr('song-filter');
-            if ($form.length) {
+            if ($form.length & form.verify($form)) {
                 var data = form.getJsonFromForm($form);
                 form.trigger(filter ? 'submit(' + filter + ')' : 'submit', data);
             }
@@ -304,6 +349,43 @@
                 arr[i](event);
             }
         }
+    }
+    // 验证
+    function verify(formId) {
+        var $form = $(formId || 'form');
+        var pass = true;
+        $form.find('input,textarea').each(function (i, input) {
+            if (input.type == 'text' || input.type == 'password' || input.tagName.toLowerCase() == 'textarea') {
+                var $input = $(input);
+                var verifyRules = $input.attr('song-verify') || '';
+                verifyRules = verifyRules.split('|');
+                for (var i = 0; i < verifyRules.length; i++) {
+                    var verifyRule = form.verifyRules[verifyRules[i]];
+                    if (pass && verifyRule) {
+                        pass = verifyRule.verify ? verifyRule.verify($input.val()) : verifyRule.rule.test($input.val());
+                        if (!pass) {
+                            console.log(verifyRule.msg);
+                            $input.addClass('song-border-danger');
+                        } else {
+                            $input.removeClass('song-border-danger');
+                        }
+                    }
+                }
+            }
+        });
+        pass && $form.find('select').each(function (i, select) {
+            var $select = $(select);
+            var verifyRule = $select.attr('song-verify');
+            if (form.verifyRules[verifyRule]) {
+                var pass = form.verifyRules[verifyRule]($select.val());
+                if (!pass) {
+                    select.$ui && select.$ui.find('.song-input').addClass('song-border-danger');
+                } else {
+                    select.$ui && select.$ui.find('.song-input').removeClass('song-border-danger');
+                }
+            }
+        });
+        return pass
     }
     // 获取纯数字
     function getNum(str, noParse, dot) {
@@ -334,7 +416,9 @@
             var value = $input.val();
             if (input.type == 'text' || input.type == 'hidden' || input.type == 'password') {
                 name && (data[name] = value);
-            } else if (input.type == 'radio' || input.type == 'checkbox') {
+            } else if (input.type == 'radio') {
+                $input.prop('checked') && name && (data[name] = [value]);
+            } else if (input.type == 'checkbox') {
                 $input.prop('checked') && name && (data[name] ? data[name].push(value) : data[name] = [value]);
             }
         });
