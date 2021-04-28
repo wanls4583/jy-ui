@@ -4,7 +4,7 @@
  * @Description: 
  */
 !(function (window) {
-    var form = {
+    var Form = {
         init: init,
         render: render,
         on: on,
@@ -40,17 +40,17 @@
     }
     //必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
     $(function () {
-        form.init();
-        form.render();
+        Form.init();
+        Form.render();
     });
     // 初始化
     function init() {
         $(document.body).delegate('button[type="submit"]', 'click', function () {
             var $form = $(this).parents('form');
             var filter = $(this).attr('song-filter');
-            if ($form.length & form.verify($form)) {
-                var data = form.getJsonFromForm($form);
-                form.trigger(filter ? 'submit(' + filter + ')' : 'submit', data);
+            if ($form.length & Form.verify($form)) {
+                var data = Form.getJsonFromForm($form);
+                Form.trigger(filter ? 'submit(' + filter + ')' : 'submit', data);
             }
         });
     }
@@ -78,7 +78,7 @@
                 var verifyRules = $input.attr('song-verify') || '';
                 verifyRules = verifyRules.split('|');
                 for (var i = 0; i < verifyRules.length; i++) {
-                    var verifyRule = form.verifyRules[verifyRules[i]];
+                    var verifyRule = Form.verifyRules[verifyRules[i]];
                     if (pass && verifyRule) {
                         pass = verifyRule.verify ? verifyRule.verify($input.val()) : verifyRule.rule.test($input.val());
                         if (!pass) {
@@ -94,8 +94,8 @@
         pass && $form.find('select').each(function (i, select) {
             var $select = $(select);
             var verifyRule = $select.attr('song-verify');
-            if (form.verifyRules[verifyRule]) {
-                var pass = form.verifyRules[verifyRule]($select.val());
+            if (Form.verifyRules[verifyRule]) {
+                var pass = Form.verifyRules[verifyRule]($select.val());
                 if (!pass) {
                     select.$ui && select.$ui.find('.song-input').addClass('song-border-danger');
                 } else {
@@ -225,7 +225,7 @@
                     $this.find('span').html('OFF');
                     $this[0].$input.prop('checked', false);
                 }
-                form.trigger(filter ? 'switch(' + filter + ')' : 'switch', {
+                Form.trigger(filter ? 'switch(' + filter + ')' : 'switch', {
                     data: $this[0].$input.prop('checked'),
                     dom: $this[0].$input[0]
                 });
@@ -282,7 +282,7 @@
                 $this.addClass('song-radio-checked');
                 $this.find('i').html('&#xe61c;');
                 $this[0].$input.prop('checked', true);
-                form.trigger(filter ? 'radio(' + filter + ')' : 'radio', {
+                Form.trigger(filter ? 'radio(' + filter + ')' : 'radio', {
                     data: $this[0].$input.val(),
                     dom: $this[0].$input[0]
                 });
@@ -348,7 +348,7 @@
                         data.push($_this[0].$input.val());
                     }
                 });
-                form.trigger(filter ? 'checkbox(' + filter + ')' : 'checkbox', {
+                Form.trigger(filter ? 'checkbox(' + filter + ')' : 'checkbox', {
                     data: data,
                     dom: $this[0].$input[0]
                 });
@@ -447,7 +447,7 @@
                 $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                 $dom[0].$select.val(value);
                 $cont.hide();
-                form.trigger(filter ? 'select(' + filter + ')' : 'select', {
+                Form.trigger(filter ? 'select(' + filter + ')' : 'select', {
                     data: value,
                     dom: $dom[0].$select[0]
                 });
@@ -476,13 +476,13 @@
         }
     }
     if ("object" == typeof module && module && "object" == typeof module.exports) {
-        module.exports = form;
+        module.exports = Form;
     } else if ("function" == typeof define && define.amd) {
         define("form", ['jquery'], function () {
-            return form;
+            return Form;
         });
     } else if (window && window.document) {
         window.SongUi = window.SongUi || {};
-        window.SongUi.form = form;
+        window.SongUi.Form = Form;
     }
 })(window)
