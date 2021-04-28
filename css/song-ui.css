@@ -34,8 +34,8 @@ select {
 @font-face {
   font-family: 'iconfont';
   /* project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_369fclw5uwj.eot");
-  src: url("//at.alicdn.com/t/font_2505561_369fclw5uwj.eot?#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_369fclw5uwj.woff2") format("woff2"), url("//at.alicdn.com/t/font_2505561_369fclw5uwj.woff") format("woff"), url("//at.alicdn.com/t/font_2505561_369fclw5uwj.ttf") format("truetype"), url("//at.alicdn.com/t/font_2505561_369fclw5uwj.svg#iconfont") format("svg");
+  src: url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.eot");
+  src: url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.eot?#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.woff2") format("woff2"), url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.woff") format("woff"), url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.ttf") format("truetype"), url("//at.alicdn.com/t/font_2505561_7dgr30m9g2o.svg#iconfont") format("svg");
 }
 
 .song-icon {
@@ -448,7 +448,7 @@ select {
   left: 0;
   top: 0;
   font-family: 'iconfont';
-  font-size: 20px;
+  font-size: 22px;
   color: #d2d2d2;
 }
 
