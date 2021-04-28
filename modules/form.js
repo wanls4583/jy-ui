@@ -38,11 +38,6 @@
             }
         }
     }
-    //必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
-    $(function () {
-        Form.init();
-        Form.render();
-    });
     // 初始化
     function init() {
         $(document.body).delegate('button[type="submit"]', 'click', function () {
@@ -475,13 +470,21 @@
             }
         }
     }
-    if ("object" == typeof module && module && "object" == typeof module.exports) {
-        module.exports = Form;
-    } else if ("function" == typeof define && define.amd) {
-        define("form", ['jquery'], function () {
+    if ("function" == typeof define && define.amd) {
+        define("form", ['jquery'], function ($) {
+            // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
+            $(function () {
+                Form.init();
+                Form.render();
+            });
             return Form;
         });
     } else if (window && window.document) {
+        // 必须放在ready里面去执行， ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
+        $(function () {
+            Form.init();
+            Form.render();
+        });
         window.SongUi = window.SongUi || {};
         window.SongUi.Form = Form;
     }

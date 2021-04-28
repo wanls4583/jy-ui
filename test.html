@@ -247,6 +247,15 @@
             </form>
         </div>
     </fieldset>
+    <fieldset class="song-field song-field-title">
+        <legend>弹框</legend>
+        <div class="song-field-box">
+            <button class="song-btn" onclick="openAlert()">提示框</button>
+            <button class="song-btn" onclick="openMsg()">提示文字</button>
+            <button class="song-btn" onclick="openConfirm()">确认框</button>
+            <button class="song-btn" onclick="openDialog()">自定义框</button>
+        </div>
+    </fieldset>
     <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">
@@ -272,6 +281,7 @@
 </body>
 <script src="jquery-1.12.4.min.js"></script>
 <script src="./modules/form.js"></script>
+<script src="./modules/dialog.js"></script>
 <script>
     SongUi.Form.on('switch', function (event) {
         console.log(event);
@@ -288,6 +298,32 @@
     SongUi.Form.on('submit', function (data) {
         console.log(data);
     });
+    function openAlert() {
+        SongUi.Dialog.alert('信息');
+    }
+    function openMsg() {
+        SongUi.Dialog.msg('信息');
+    }
+    function openConfirm() {
+        SongUi.Dialog.confirm('确认框');
+    }
+    function openDialog() {
+        openDialog.index = SongUi.Dialog.open({
+            title: '自定义框',
+            icon: 'success',
+            content: '<div>自定义内容</div>',
+            btn: ['按钮1', '按钮2', '按钮3'],
+            yes: function () {
+                SongUi.Dialog.close(openDialog.index);
+            },
+            cancel: function () {
+                SongUi.Dialog.close(openDialog.index);
+            },
+            btn2: function () {
+                SongUi.Dialog.close(openDialog.index);
+            }
+        });
+    }
 </script>
 
 </html>
