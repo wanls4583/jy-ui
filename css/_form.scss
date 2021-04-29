@@ -74,6 +74,8 @@
     position: relative;
     clear: both;
     margin-bottom: $pd15;
+    // i7以下不支持before，after，用zoom触发haslayout清除内部浮动
+    *zoom: 1;
 
     &:before,
     &:after {
@@ -101,6 +103,7 @@
     margin-left: 110px;
     // 在ie6,ie7中，zoom:1触发了BFC
     *margin-left: 0;
+    *zoom: 1;
 }
 
 // 内联包裹
@@ -160,6 +163,12 @@
     position: relative;
     display: inline-block;
     *display: inline;
+
+    // ie7中，由于*display:inline使元素变成内联元素后，ie7以上使用height将无法触发haslayout，必须使用zoom触发haslayout
+    *+html & {
+        zoom: 1;
+    }
+
     height: 22px;
     line-height: 22px;
     margin-top: 8px;
@@ -216,6 +225,7 @@
     position: relative;
     display: inline-block;
     *display: inline;
+    *zoom: 1;
     line-height: 18px;
     margin-top: 10px;
     margin-right: $pd15;
@@ -260,6 +270,7 @@
     position: relative;
     display: inline-block;
     *display: inline;
+    *zoom: 1;
     line-height: 20px;
     margin-top: 10px;
     margin-right: $pd15;

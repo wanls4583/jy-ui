@@ -28,7 +28,7 @@
                 </div>\
             </div>'
         );
-        var $content = $('<div class="song-layer-content"><div style="overflow:hidden">' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
+        var $content = $('<div class="song-layer-content"><div style="overflow:hidden;">' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
         var $footer = $('<div class="song-layer-footer"></div>');
         if (option.shadow !== false) {
             $container.append($shadow);
@@ -48,10 +48,15 @@
             $layer.append($content);
             $layer.append($footer);
         }
+        // 在特定容器里打开
         if ($container[0] != window.document.body) {
             $shadow.addClass('song-layer-absolute');
             $layer.addClass('song-layer-absolute');
-        };
+        } else if (window.document.documentMode <= 6 && option.type != 'msg') {
+            //ie6不支持fixed，以下css防止页面滚动
+            document.body.overflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+        }
         if (option.icon) {
             var icon = '';
             var color = '';
@@ -84,10 +89,6 @@
             }, option.duration);
         }
         $container.append($layer);
-        // ie7必须显示设置dialog的宽度，否则内部div宽度撑不开
-        $layer.css({
-            width: $layer.outerWidth() + 'px'
-        });
         setPosition(layerIndex, option.offset || 'center');
         _bindEvent();
         Dialog.layerIndex++;
@@ -155,14 +156,24 @@
     function close(layerIndex) {
         $('.song-layer.song-layer' + layerIndex).remove();
         $('.song-layer-shadow.song-layer' + layerIndex).remove();
+        if (window.document.documentMode <= 6 && document.body.overflow !== undefined) {
+            document.body.style.overflow = document.body.overflow;
+        }
     }
     // 设置位置
     function setPosition(layerIndex, offset) {
         var $layer = $('.song-layer.song-layer' + layerIndex);
         var ie6MarginTop = 0;
         if ($layer.length) {
-            if (window.document.documentMode <= 6) { //i6以下
+            if (window.document.documentMode <= 6) { //i6以下没有fixed定位
+                // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
+                // ie6以下只认document.body.scrollTop
                 ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
+                $('.song-layer-shadow.song-layer' + layerIndex).css({
+                    marginTop: ie6MarginTop + 'px',
+                    width: $(window.document.body).outerWidth() + 'px',
+                    height: $(window.document.body).outerHeight() + 'px'
+                });
             }
             if ('string' == typeof offset) {
                 var width = $layer.outerWidth();
@@ -204,7 +215,7 @@
                         $layer.css({
                             top: '50%',
                             bottom: 'auto',
-                            marginTop: '-' + (height / 2 + ie6MarginTop) + 'px'
+                            marginTop: (ie6MarginTop - height / 2) + 'px'
                         });
                         break;
                     case 'bottom':

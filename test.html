@@ -299,7 +299,7 @@
         console.log(data);
     });
     function openAlert() {
-        SongUi.Dialog.alert('信息');
+        SongUi.Dialog.alert('信息', {icon: 'warn'});
     }
     function openMsg() {
         SongUi.Dialog.msg('信息');
@@ -311,7 +311,7 @@
         openDialog.index = SongUi.Dialog.open({
             title: '自定义框',
             icon: 'success',
-            content: '<div>自定义内容</div>',
+            content: '自定义内容',
             btn: ['按钮1', '按钮2', '按钮3'],
             yes: function () {
                 SongUi.Dialog.close(openDialog.index);

@@ -26,6 +26,7 @@
     border: 1px solid $light-color;
     border-radius: 2px;
     box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+    *zoom: 1;
 
     &.song-layer-absolute {
         position: absolute;
@@ -56,9 +57,9 @@
 
     .song-layer-title {
         position: relative;
-        height: 50px;
-        line-height: 49px;
-        padding: 0 $pd20;
+        // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout是元素具有一个最小的宽度（50%）
+        line-height: 16px;
+        padding: 17px 120px 17px 20px;
         font-size: 16px;
         color: $title-color;
         background-color: $white-color;
@@ -82,7 +83,7 @@
     .song-layer-op {
         position: absolute;
         right: 0px;
-        top: 15px;
+        top: 16px;
         line-height: 20px;
         margin-right: $pd10;
         font-size: 20px;

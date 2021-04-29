@@ -39,6 +39,8 @@
 
 // 栅格
 .song-row {
+    // ie6只能用zoom来清除内部浮动，ie7可以用oveflow或者zoom来清除
+    *zoom: 1;
 
     // ie8不支持::的模式
     &:before,

@@ -1,7 +1,3 @@
-* {
-  zoom: 1;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -122,6 +118,7 @@ select {
   position: relative;
   clear: both;
   margin-bottom: 15px;
+  *zoom: 1;
 }
 
 .song-form-item:before, .song-form-item:after {
@@ -144,6 +141,7 @@ select {
   position: relative;
   margin-left: 110px;
   *margin-left: 0;
+  *zoom: 1;
 }
 
 .song-input-inline {
@@ -214,6 +212,10 @@ select {
           user-select: none;
 }
 
+* + html .song-form-switch {
+  zoom: 1;
+}
+
 .song-form-switch i {
   position: absolute;
   top: 3px;
@@ -255,6 +257,7 @@ select {
   position: relative;
   display: inline-block;
   *display: inline;
+  *zoom: 1;
   line-height: 18px;
   margin-top: 10px;
   margin-right: 15px;
@@ -299,6 +302,7 @@ select {
   position: relative;
   display: inline-block;
   *display: inline;
+  *zoom: 1;
   line-height: 20px;
   margin-top: 10px;
   margin-right: 15px;
@@ -417,7 +421,6 @@ select {
   position: fixed;
   _position: absolute;
   top: 0;
-  _top: expression(documentElement.scrollTop + documentElement.clientHeight-this.offsetHeight);
   left: 0;
   z-index: 1;
   width: 100%;
@@ -442,6 +445,7 @@ select {
   border-radius: 2px;
   -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
           box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+  *zoom: 1;
 }
 
 .song-layer.song-layer-absolute {
@@ -474,9 +478,8 @@ select {
 
 .song-layer .song-layer-title {
   position: relative;
-  height: 50px;
-  line-height: 49px;
-  padding: 0 20px;
+  line-height: 16px;
+  padding: 17px 120px 17px 20px;
   font-size: 16px;
   color: #333333;
   background-color: #ffffff;
@@ -500,7 +503,7 @@ select {
 .song-layer .song-layer-op {
   position: absolute;
   right: 0px;
-  top: 15px;
+  top: 16px;
   line-height: 20px;
   margin-right: 10px;
   font-size: 20px;
@@ -549,6 +552,10 @@ select {
 
 .song-display-inline {
   display: inline;
+}
+
+.song-row {
+  *zoom: 1;
 }
 
 .song-row:before, .song-row:after {
