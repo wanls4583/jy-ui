@@ -4,6 +4,11 @@
  * @Description: 
  */
 !(function (window) {
+    var closeIcon = '&#xe735;';
+    var successIcon = '&#xe615;';
+    var warnIcon = '&#xe60a;';
+    var errorIcon = '&#xe60b;';
+    var questionIcon = '&#xe613;';
     var Dialog = {
         layerIndex: 0,
         open: open,
@@ -24,7 +29,7 @@
             '<div class="song-layer-title">\
                 <span>' + (option.title || '信息') + '</span>\
                 <div class="song-layer-op">\
-                    <i class="song-op-close song-icon">&#xe735;</i>\
+                    <i class="song-op-close song-icon">' + closeIcon + '</i>\
                 </div>\
             </div>'
         );
@@ -61,19 +66,19 @@
             var color = '';
             switch (option.icon) {
                 case 'success':
-                    icon = '&#xe615;';
+                    icon = successIcon;
                     color = 'song-color-success';
                     break;
                 case 'warn':
-                    icon = '&#xe60a;';
+                    icon = warnIcon;
                     color = 'song-color-warn';
                     break;
                 case 'error':
-                    icon = '&#xe60b;';
+                    icon = errorIcon;
                     color = 'song-color-danger';
                     break;
                 case 'question':
-                    icon = '&#xe613;';
+                    icon = questionIcon;
                     color = 'song-color-warn';
                     break;
             }
