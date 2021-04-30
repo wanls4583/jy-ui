@@ -8,6 +8,7 @@
         layerIndex: 0,
         open: open,
         alert: alert,
+        confirm: confirm,
         msg: msg,
         close: close,
         setPosition: setPosition
@@ -133,6 +134,21 @@
             content: content,
             btn: ['确定'],
             yes: yes
+        }
+        option = option && _assign(_option, option) || _option;
+        open(option);
+    }
+    // 确认弹框
+    function confirm(content, option) {
+        var yes = function (index) {
+            close(index)
+        };
+        var _option = {
+            title: '信息',
+            type: 'alert',
+            content: content,
+            btn: ['确定', '取消'],
+            cancel: yes
         }
         option = option && _assign(_option, option) || _option;
         open(option);

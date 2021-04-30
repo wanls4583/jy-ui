@@ -305,7 +305,11 @@
         SongUi.Dialog.msg('信息');
     }
     function openConfirm() {
-        SongUi.Dialog.confirm('确认框');
+        SongUi.Dialog.confirm('确认框', {
+            yes: function(index) {
+                SongUi.Dialog.close(index);
+            }
+        });
     }
     function openDialog() {
         openDialog.index = SongUi.Dialog.open({
