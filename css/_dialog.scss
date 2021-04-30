@@ -42,15 +42,9 @@
 
     &.song-layer-msg {
         color: $white-color;
-        // ie6,ie7,ie8不支持rgba
-        background-color: #{'#000000\9'};
         background-color: rgba(0, 0, 0, 0.6);
         border-style: none;
         box-shadow: none;
-
-        .song-layer-content {
-            padding: $pd10 $pd20;
-        }
     }
 
     .song-layer-title {
@@ -69,6 +63,10 @@
         line-height: 24px;
         padding: $pd20;
         overflow: auto;
+    }
+
+    &.song-layer-msg .song-layer-content {
+        padding: $pd10 $pd20;
     }
 
     .song-layer-footer {
@@ -105,9 +103,11 @@
     .song-layer-icon {
         position: absolute;
         top: 16px;
+        // ie6 line-height无法去除，导致有4px的偏差;
+        _top: 12px;
         left: 15px;
-        width: 30px;
-        height: 30px;
+        // ie6绝对定位不包括padding-left
+        _left: -40px;
         line-height: 30px;
         font-family: 'iconfont';
         font-size: 30px;
