@@ -8,7 +8,8 @@
     height: 100%;
     background-color: #000000;
     opacity: 0.3;
-    *filter: #{'alpha(opacity: 40)'};
+    // ie6，ie7，ie8不支持opacity
+    filter: #{'alpha(opacity: 40)'};
 
     &.song-layer-absolute {
         position: absolute;
@@ -26,7 +27,6 @@
     border: 1px solid $light-color;
     border-radius: 2px;
     box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
-    *zoom: 1;
 
     &.song-layer-absolute {
         position: absolute;
@@ -49,10 +49,12 @@
     }
 
     &.song-layer-translucent {
-        background-color: rgba(0, 0, 0, 0.5);
-        *background-color: #000000;
-        color: $white-color;
         line-height: 20px;
+        color: $white-color;
+        background-color: rgba(0, 0, 0, 0.5);
+        // ie6,ie7,ie8不支持rgba
+        background-color: #000000\9;
+        border-style: none;
     }
 
     .song-layer-title {
