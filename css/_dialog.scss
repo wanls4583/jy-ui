@@ -103,7 +103,7 @@
     .song-layer-icon {
         position: absolute;
         top: 16px;
-        // ie6 line-height无法去除，导致有4px的偏差;
+        // ie6 由于song-layer-content没有layout，导致有4px的偏差;
         _top: 12px;
         left: 15px;
         // ie6绝对定位不包括padding-left
