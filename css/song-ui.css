@@ -70,7 +70,7 @@ select {
 }
 
 .song-btn-primary {
-  background-color: transparent;
+  background-color: #ffffff;
   border-color: #d2d2d2;
   color: #666666;
 }
@@ -98,7 +98,7 @@ select {
 }
 
 .song-btn-disabled {
-  background-color: transparent;
+  background-color: #ffffff;
   border-color: #eeeeee;
   color: #c2c2c2;
 }
@@ -280,7 +280,7 @@ select {
   text-align: center;
   line-height: 16px;
   font-family: 'iconfont';
-  font-size: 12px;
+  font-size: 14px;
   color: #ffffff;
 }
 
@@ -453,41 +453,39 @@ select {
 
 .song-layer.song-layer-alert {
   width: 300px;
-  line-height: 30px;
 }
 
 .song-layer.song-layer-confirm {
   width: 300px;
-  line-height: 30px;
 }
 
 .song-layer.song-layer-msg {
-  line-height: 30px;
-  border: 1px solid #d2d2d2;
+  color: #ffffff;
+  background-color: #000000	;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-style: none;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 
-.song-layer.song-layer-translucent {
-  line-height: 20px;
-  color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.5);
-  background-color: #000000\9;
-  border-style: none;
+.song-layer.song-layer-msg .song-layer-content {
+  padding: 10px 20px;
 }
 
 .song-layer .song-layer-title {
   position: relative;
   line-height: 16px;
-  padding: 17px 120px 17px 20px;
+  padding: 17px 95px 17px 20px;
   font-size: 16px;
   color: #333333;
-  background-color: #ffffff;
+  background-color: #f6f6f6;
   border-bottom: 1px solid #eeeeee;
 }
 
 .song-layer .song-layer-content {
-  padding: 15px 20px;
+  position: relative;
+  line-height: 24px;
+  padding: 20px;
   overflow: auto;
 }
 
@@ -504,13 +502,16 @@ select {
   position: absolute;
   right: 0px;
   top: 16px;
-  line-height: 20px;
-  margin-right: 10px;
-  font-size: 20px;
   white-space: nowrap;
 }
 
 .song-layer .song-layer-op i {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 20px;
+  margin-right: 15px;
   color: #333333;
   cursor: pointer;
 }
@@ -520,17 +521,20 @@ select {
 }
 
 .song-layer .song-layer-icon {
-  float: left;
-  margin-right: 10px;
+  position: absolute;
+  top: 16px;
+  left: 15px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   font-family: 'iconfont';
   font-size: 30px;
 }
 
 @font-face {
-  font-family: 'iconfont';
-  /* project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.eot");
-  src: url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.eot?#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.woff2") format("woff2"), url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.woff") format("woff"), url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.ttf") format("truetype"), url("//at.alicdn.com/t/font_2505561_yko71jf1u2e.svg#iconfont") format("svg");
+  font-family: "iconfont";
+  /* Project id 2505561 */
+  src: url("//at.alicdn.com/t/font_2505561_qywoee4zn9.woff2?t=1619766530509") format("woff2"), url("//at.alicdn.com/t/font_2505561_qywoee4zn9.woff?t=1619766530509") format("woff"), url("//at.alicdn.com/t/font_2505561_qywoee4zn9.ttf?t=1619766530509") format("truetype");
 }
 
 .song-icon {

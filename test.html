@@ -298,15 +298,31 @@
     SongUi.Form.on('submit', function (data) {
         console.log(data);
     });
-    function openAlert() {
-        SongUi.Dialog.alert('信息', {icon: 'warn'});
+    function openAlert(icon) {
+        SongUi.Dialog.alert('点击确认更改图标', {
+            icon: icon,
+            yes: function (index) {
+                SongUi.Dialog.close(index);
+                switch (icon) {
+                    case 'success':
+                        openAlert('error'); break;
+                    case 'error':
+                        openAlert('warn'); break;
+                    case 'warn':
+                        openAlert('question'); break;
+                    case 'question': break;
+                    default:
+                        openAlert('success'); break;
+                }
+            }
+        });
     }
     function openMsg() {
         SongUi.Dialog.msg('信息');
     }
     function openConfirm() {
         SongUi.Dialog.confirm('确认框', {
-            yes: function(index) {
+            yes: function (index) {
                 SongUi.Dialog.close(index);
             }
         });

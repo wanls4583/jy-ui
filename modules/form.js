@@ -4,6 +4,10 @@
  * @Description: 
  */
 !(function (window) {
+    var checkedIcon = '&#xe737;';
+    var downIcon = '&#xe74b;';
+    var radioIcon = '&#xe61c;';
+    var radioedIcon = '&#xe619;';
     var Form = {
         init: init,
         render: render,
@@ -249,7 +253,7 @@
             }
             var html =
                 '<div class="song-form-radio ' + classNames + '">\
-                    <i>' + ($input.prop('checked') ? '&#xe61c;' : '&#xe619;') + '</i>\
+                    <i>' + ($input.prop('checked') ? radioIcon : radioedIcon) + '</i>\
                     <span>' + $input.attr('title') + '</span>\
                 </div>';
             var $html = $(html);
@@ -271,11 +275,11 @@
                 $('.song-form-radio').each(function (i, radio) {
                     var $_this = $(this);
                     if ($_this[0].$input.attr('name') == $this[0].$input.attr('name')) {
-                        $_this.removeClass('song-radio-checked').find('i').html('&#xe619;');
+                        $_this.removeClass('song-radio-checked').find('i').html(radioedIcon);
                     }
                 });
                 $this.addClass('song-radio-checked');
-                $this.find('i').html('&#xe61c;');
+                $this.find('i').html(radioIcon);
                 $this[0].$input.prop('checked', true);
                 Form.trigger(filter ? 'radio(' + filter + ')' : 'radio', {
                     data: $this[0].$input.val(),
@@ -309,7 +313,7 @@
             }
             var $html = $(
                 '<div class="song-form-checkbox ' + classNames + '">\
-                    <i>' + ($input.prop('checked') ? '&#xe609;' : '') + '</i>\
+                    <i>' + ($input.prop('checked') ? checkedIcon : '') + '</i>\
                     <span>' + $input.attr('title') + '</span>\
                 </div>');
 
@@ -331,7 +335,7 @@
                 }
                 $this.toggleClass('song-checkbox-checked');
                 if ($this.hasClass('song-checkbox-checked')) {
-                    $this.find('i').html('&#xe609;');
+                    $this.find('i').html(checkedIcon);
                     $this[0].$input.prop('checked', true);
                 } else {
                     $this.find('i').html('');
@@ -371,7 +375,7 @@
                 '<div class="song-form-select ' + classNames + '">\
                     <div class="song-select-title">\
                         <input type="text" class="song-input" placeholder="请选择" ' + (search ? '' : 'readonly') + '>\
-                        <i>&#xe69b;</i>\
+                        <i>' + downIcon + '</i>\
                     </div>\
                 </div>');
             var html = '<dl class="song-select-dl">';
@@ -415,7 +419,7 @@
                 } else {
                     // 其他选择框都收起
                     $('.song-select-dl').hide().parents('.song-form-item').css({
-                        'z-index': '1'
+                        'z-index': 'auto'
                     });
                     $title.parents('.song-form-item').css({
                         'z-index': '99'
@@ -429,6 +433,9 @@
                 var $dd = $cont.find('.song-select-active');
                 $input.val($dd.attr('data-value') && $dd.text() || '');
                 $cont.hide();
+                $title.parents('.song-form-item').css({
+                    'z-index': 'auto'
+                });
                 setTimeout(function () {
                     $input.blur()
                 }, 50);

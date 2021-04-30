@@ -34,42 +34,40 @@
 
     &.song-layer-alert {
         width: 300px;
-        line-height: 30px;
     }
 
     &.song-layer-confirm {
         width: 300px;
-        line-height: 30px;
     }
 
     &.song-layer-msg {
-        line-height: 30px;
-        border: 1px solid $gray-color;
-        box-shadow: none;
-    }
-
-    &.song-layer-translucent {
-        line-height: 20px;
         color: $white-color;
-        background-color: rgba(0, 0, 0, 0.5);
         // ie6,ie7,ie8不支持rgba
-        background-color: #000000\9;
+        background-color: #{'#000000\9'};
+        background-color: rgba(0, 0, 0, 0.6);
         border-style: none;
+        box-shadow: none;
+
+        .song-layer-content {
+            padding: $pd10 $pd20;
+        }
     }
 
     .song-layer-title {
         position: relative;
         // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout是元素具有一个最小的宽度（50%）
         line-height: 16px;
-        padding: 17px 120px 17px 20px;
+        padding: 17px 95px 17px 20px;
         font-size: 16px;
         color: $title-color;
-        background-color: $white-color;
+        background-color: $lighter-color;
         border-bottom: 1px solid $light-color;
     }
 
     .song-layer-content {
-        padding: $pd15 $pd20;
+        position: relative;
+        line-height: 24px;
+        padding: $pd20;
         overflow: auto;
     }
 
@@ -86,12 +84,15 @@
         position: absolute;
         right: 0px;
         top: 16px;
-        line-height: 20px;
-        margin-right: $pd10;
-        font-size: 20px;
         white-space: nowrap;
 
         i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            line-height: 20px;
+            margin-right: $pd15;
             color: $title-color;
             cursor: pointer;
 
@@ -102,8 +103,12 @@
     }
 
     .song-layer-icon {
-        float: left;
-        margin-right: 10px;
+        position: absolute;
+        top: 16px;
+        left: 15px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
         font-family: 'iconfont';
         font-size: 30px;
     }

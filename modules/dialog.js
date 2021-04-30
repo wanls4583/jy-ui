@@ -15,7 +15,6 @@
     };
     // 打开弹框
     function open(option) {
-        option.title = option.title || '信息';
         option.type = option.type || 'dialog';
         var layerIndex = Dialog.layerIndex;
         var $container = $(option.container || window.document.body);
@@ -23,13 +22,13 @@
         var $layer = $('<div class="song-layer song-layer-' + option.type + ' song-layer' + layerIndex + '"></div>');
         var $title = $(
             '<div class="song-layer-title">\
-                <span>' + option.title + '</span>\
+                <span>' + (option.title || '信息') + '</span>\
                 <div class="song-layer-op">\
-                    <i class="song-op-close song-icon">&#xe6df;</i>\
+                    <i class="song-op-close song-icon">&#xe735;</i>\
                 </div>\
             </div>'
         );
-        var $content = $('<div class="song-layer-content"><div style="overflow:hidden;">' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
+        var $content = $('<div class="song-layer-content">' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div>');
         var $footer = $('<div class="song-layer-footer"></div>');
         if (option.shadow !== false) {
             $container.append($shadow);
@@ -41,12 +40,11 @@
             }
             $footer.append(btnHtml);
         }
-        if (option.type == 'msg') {
-            $layer.addClass('song-layer-translucent');
-            $layer.append($content);
-        } else {
+        if (option.title !== false) {
             $layer.append($title);
-            $layer.append($content);
+        }
+        $layer.append($content);
+        if (option.btn) {
             $layer.append($footer);
         }
         // 在特定容器里打开
@@ -79,7 +77,9 @@
                     color = 'song-color-warn';
                     break;
             }
-            $content.prepend('<i class="song-layer-icon ' + color + '">' + icon + '</i>');
+            $content.prepend('<i class="song-layer-icon ' + color + '">' + icon + '</i>').css({
+                paddingLeft: '55px'
+            });
             if (option.type == 'msg') {
                 $layer.removeClass('song-layer-translucent');
             }
@@ -159,6 +159,7 @@
             close(index)
         };
         var _option = {
+            title: false,
             type: 'msg',
             duration: 3000,
             shadow: false,

@@ -37,11 +37,11 @@
         }
     }
 
-    $list: (primary, transparent, $gray-color, $text-color),
+    $list: (primary, $white-color, $gray-color, $text-color),
     (normal, $blue-color, $blue-color, $white-color),
     (success, $success-color, $success-color, $white-color),
     (warn, $warn-color, $warn-color, $white-color),
-    (disabled, transparent, $disabled-color, $disabled-text-color),
+    (disabled, $white-color, $light-color, $disabled-text-color),
     (danger, $danger-color, $danger-color, $white-color);
 
     @each $i,
@@ -195,12 +195,12 @@
 
     // ie6多类选择器是或的关系，不是与的关系，song-disabled这种类名容易被其他样式覆盖
     &.song-switch-disabled {
-        border-color: $disabled-color;
+        border-color: $light-color;
         color: $disabled-text-color;
         cursor: not-allowed;
 
         i {
-            background-color: $disabled-color;
+            background-color: $light-color;
         }
     }
 
@@ -244,7 +244,7 @@
         text-align: center;
         line-height: 16px;
         font-family: 'iconfont';
-        font-size: 12px;
+        font-size: 14px;
         color: $white-color;
     }
 
@@ -253,7 +253,7 @@
         cursor: not-allowed;
 
         i {
-            border-color: $disabled-color;
+            border-color: $light-color;
         }
     }
 
@@ -292,7 +292,7 @@
         cursor: not-allowed;
 
         i {
-            color: $disabled-color;
+            color: $light-color;
         }
     }
 
