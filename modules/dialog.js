@@ -33,7 +33,7 @@
                 </div>\
             </div>'
         );
-        var $content = $('<div class="song-layer-content">' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div>');
+        var $content = $('<div class="song-layer-content"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
         var $footer = $('<div class="song-layer-footer"></div>');
         if (option.shadow !== false) {
             $container.append($shadow);
