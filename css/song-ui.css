@@ -462,6 +462,8 @@ select {
 .song-layer.song-layer-msg {
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.6);
+  background-color: #000000\0/;
+  *background-color: #000000;
   border-style: none;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -528,14 +530,6 @@ select {
   line-height: 30px;
   font-family: 'iconfont';
   font-size: 30px;
-}
-
-@font-face {
-  font-family: 'iconfont';
-  /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.eot?t=1619767651870");
-  /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.eot?t=1619767651870#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.woff2?t=1619767651870") format("woff2"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.woff?t=1619767651870") format("woff"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.ttf?t=1619767651870") format("truetype");
 }
 
 .song-icon {

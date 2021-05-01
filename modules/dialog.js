@@ -52,12 +52,6 @@
         if (option.btn) {
             $layer.append($footer);
         }
-        // ie8以下不支持rgba
-        if (option.type == 'msg' && window.document.documentMode <= 8) {
-            $layer.css({
-                backgroundColor: '#000000'
-            });
-        }
         // 在特定容器里打开
         if ($container[0] != window.document.body) {
             $shadow.addClass('song-layer-absolute');

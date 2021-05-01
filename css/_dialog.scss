@@ -43,6 +43,9 @@
     &.song-layer-msg {
         color: $white-color;
         background-color: rgba(0, 0, 0, 0.6);
+        // 只兼容ie8的样式，在属性值后面加\0/
+        background-color: #{'#000000\\0/'};
+        *background-color: #000000;
         border-style: none;
         box-shadow: none;
     }
