@@ -81,7 +81,9 @@
                     if (pass && verifyRule) {
                         pass = verifyRule.verify ? verifyRule.verify($input.val()) : verifyRule.rule.test($input.val());
                         if (!pass) {
-                            console.log(verifyRule.msg);
+                            window.SongUi && window.SongUi.Dialog && window.SongUi.Dialog.msg(verifyRule.msg, {
+                                icon: 'error'
+                            });
                             $input.addClass('song-border-danger');
                         } else {
                             $input.removeClass('song-border-danger');

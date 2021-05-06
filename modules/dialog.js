@@ -86,7 +86,7 @@
                 paddingLeft: '55px'
             });
             if (option.type == 'msg') {
-                $layer.removeClass('song-layer-translucent');
+                $layer.removeClass('song-layer-msg').addClass('song-layer-msg-with-icon');
             }
         }
         if (option.duration) {

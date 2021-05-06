@@ -469,6 +469,12 @@ select {
           box-shadow: none;
 }
 
+.song-layer.song-layer-msg-with-icon {
+  border: 1px solid #d2d2d2;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .song-layer .song-layer-title {
   position: relative;
   line-height: 16px;
@@ -488,6 +494,10 @@ select {
 
 .song-layer.song-layer-msg .song-layer-content {
   padding: 10px 20px;
+}
+
+.song-layer.song-layer-msg .song-layer-icon {
+  top: 6px;
 }
 
 .song-layer .song-layer-footer {

@@ -50,6 +50,11 @@
         box-shadow: none;
     }
 
+    &.song-layer-msg-with-icon {
+        border: 1px solid $gray-color;
+        box-shadow: none;
+    }
+
     .song-layer-title {
         position: relative;
         // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout是元素具有一个最小的宽度（50%）
@@ -70,6 +75,10 @@
 
     &.song-layer-msg .song-layer-content {
         padding: $pd10 $pd20;
+    }
+
+    &.song-layer-msg .song-layer-icon {
+        top: 6px;
     }
 
     .song-layer-footer {
