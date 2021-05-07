@@ -366,6 +366,7 @@
             }
         });
     }
+    renderTable();
     function renderTable() {
         var data = [{ user: '李松', sex: '男', age: 30 }];
         for (var i = 1; i < 10; i++) {
@@ -374,6 +375,7 @@
         SongUi.Table.render({
             elem: '#table',
             data: data,
+            defaultToolbar: true,
             cols: [{
                 title: '用户',
                 field: 'user',
@@ -394,11 +396,11 @@
                 }
             }]
         });
-        SongUi.Table.on('edit', function(obj) {
+        SongUi.Table.on('edit', function (obj) {
             SongUi.Dialog.msg('eidt');
             console.log(obj);
         });
-        SongUi.Table.on('del', function(obj) {
+        SongUi.Table.on('del', function (obj) {
             SongUi.Dialog.msg('del');
             console.log(obj);
         });

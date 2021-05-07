@@ -262,12 +262,15 @@
             a[key] = b[key];
         }
     }
+
+    if (window && window.document) {
+        window.SongUi = window.SongUi || {};
+        window.SongUi.Dialog = Dialog;
+    }
+
     if ("function" == typeof define && define.amd) {
         define("dialog", ['jquery'], function () {
             return Dialog;
         });
-    } else if (window && window.document) {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Dialog = Dialog;
     }
 })(window)

@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-size: 14px;
-    color: $text-color;
+    color: $color-666;
 }
 
 ul,
@@ -11,6 +11,10 @@ dd,
 p {
     margin: 0;
     padding: 0;
+}
+
+li {
+    list-style: none;
 }
 
 button:focus {

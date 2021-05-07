@@ -506,22 +506,22 @@
             }
         }
     }
-    if ("function" == typeof define && define.amd) {
-        define("form", ['jquery'], function ($) {
-            // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
-            $(function () {
-                Form.init();
-                Form.render();
-            });
-            return Form;
-        });
-    } else if (window && window.document) {
-        // 必须放在ready里面去执行， ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
-        $(function () {
-            Form.init();
-            Form.render();
-        });
+
+    // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
+    $(function () {
+        Form.init();
+        Form.render();
+    });
+
+    if (window && window.document) {
         window.SongUi = window.SongUi || {};
         window.SongUi.Form = Form;
+    }
+
+    if ("function" == typeof define && define.amd) {
+        define("form", ['jquery'], function ($) {
+
+            return Form;
+        });
     }
 })(window)

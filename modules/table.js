@@ -4,6 +4,10 @@
  * @Description: 
  */
 !(function () {
+    var $ = window.$;
+    var filterIcon = '&#xe61d;';
+    var exprotsIcon = '&#xe618;';
+    var printIcon = '&#xe62c;';
     var Table = {
         render: render,
         on: on,
@@ -35,11 +39,12 @@
         var cols = option.cols;
         var $view = $('<div class="song-table-view"></div>')
         var $table = $('<table class="song-table"></table>');
+        var $toolbar = $('<div class="song-table-toolbar song-row"></div>');
         var $tr = $('<tr></tr>');
         for (var i = 0; i < cols.length; i++) {
             var col = cols[i];
             var $cell = $('<div class="cell">' + col.title + '</div>');
-            var $th = $('<th></th>');
+            var $th = $('<th data-field="' + col.field + '"></th>');
             $th.append($cell);
             $tr.append($th);
             if (col.hidden) {
@@ -72,14 +77,39 @@
             });
         }
         if ($elem.attr('song-filter')) {
-            $table.attr('song-filter', $elem.attr('song-filter'));
+            $view.attr('song-filter', $elem.attr('song-filter'));
+        }
+        if (option.toolbar) {
+            $toolbar.append(option.toolbar);
+        }
+        if (option.defaultToolbar) {
+            var defaultToolbar = option.defaultToolbar;
+            var $tool = $('<div class="song-table-tool-self"></div>');
+            if (defaultToolbar === true) {
+                defaultToolbar = ['filter', 'exprots', 'print']
+            }
+            for (var i = 0; i < defaultToolbar.length; i++) {
+                switch (defaultToolbar[i]) {
+                    case 'filter':
+                        $tool.append('<div title="筛选" class="song-table-tool song-icon song-display-inline-block" song-event="filter">' + filterIcon + '</div>');
+                        break;
+                    case 'exprots':
+                        $tool.append('<div title="导出" class="song-table-tool song-icon song-display-inline-block" song-event="exprots">' + exprotsIcon + '</div>');
+                        break;
+                    case 'print':
+                        $tool.append('<div title="打印" class="song-table-tool song-icon song-display-inline-block" song-event="print">' + printIcon + '</div>');
+                        break;
+                }
+            }
+            $toolbar.append($tool);
+            $view.append($toolbar);
         }
         $elem.replaceWith($view);
         $view.css({
             width: $view.width() + 'px'
         });
         $view.append($table);
-        bindEvent($table);
+        bindEvent($view, cols);
     }
 
     function createTd(cols, data, $table) {
@@ -89,7 +119,7 @@
             for (var j = 0; j < cols.length; j++) {
                 var col = cols[j];
                 var $cell = $('<div class="cell">' + (col.template ? col.template(item, i, col) : (col.field ? item[col.field] : '')) + '</div>');
-                var $td = $('<td data-filed="' + col.field + '"></td>');
+                var $td = $('<td data-field="' + col.field + '"></td>');
                 $td.append($cell);
                 $tr.append($td);
                 $td[0].data = item;
@@ -119,9 +149,9 @@
         })
     }
 
-    function bindEvent($table) {
-        var filter = $table.attr('song-filter');
-        $table.on('click', function (e) {
+    function bindEvent($view, cols) {
+        var filter = $view.attr('song-filter');
+        $view.on('click', function (e) {
             var $target = $(e.target);
             var event = $target.attr('song-event');
             if (event) {
@@ -133,18 +163,56 @@
                 }
                 Table.trigger(event, {
                     dom: $target[0],
-                    data: $target.parents('td')[0].data
+                    data: $target.parents('td')[0] && $target.parents('td')[0].data || null
                 });
+            }
+        });
+        Table.on('filter', function (e) {
+            if ($view.find('.song-table-filter').length > 0) {
+                $view.find('.song-table-filter').toggle();
+            } else {
+                createFilter($view, e.dom, cols);
+            }
+        });
+        Table.on('exports', function (e) {
+            console.log('exports')
+        });
+        Table.on('print', function (e) {
+            console.log('print')
+        });
+    }
+
+    // 过滤列表
+    function createFilter($view, dom, cols) {
+        var filter = $view.attr('song-filter');
+        var $filter = $('<ul class="song-table-filter"></ul>');
+        for (var i = 0; i < cols.length; i++) {
+            var col = cols[i];
+            $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col.field + '" checked song-filter="' + filter + '"></li>');
+        }
+        $(dom).append($filter);
+        SongUi.Form.render('checkbox');
+        SongUi.Form.on('checkbox(' + filter + ')', function (e) {
+            var $input = $(e.dom);
+            var value = $input.val();
+            var checked = $input.prop('checked');
+            if (checked) {
+                $view.find('[data-field="' + value + '"]').show();
+            } else {
+                $view.find('[data-field="' + value + '"]').hide();
             }
         });
     }
 
-    if ("function" == typeof define && define.amd) {
-        define("table", ['jquery'], function () {
-            return Table;
-        });
-    } else if (window && window.document) {
+    if (window && window.document) {
         window.SongUi = window.SongUi || {};
         window.SongUi.Table = Table;
+    }
+
+    if ("function" == typeof define && define.amd) {
+        define("table", ['jquery'], function (_$) {
+            $ = _$;
+            return Table;
+        });
     }
 })(window)

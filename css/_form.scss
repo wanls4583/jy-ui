@@ -37,11 +37,11 @@
         }
     }
 
-    $list: (primary, $white-color, $gray-color, $text-color),
+    $list: (primary, $white-color, $gray-color, $color-666),
     (normal, $blue-color, $blue-color, $white-color),
     (success, $success-color, $success-color, $white-color),
     (warn, $warn-color, $warn-color, $white-color),
-    (disabled, $white-color, $light-color, $disabled-text-color),
+    (disabled, $white-color, $light-color, $disabled-color),
     (danger, $danger-color, $danger-color, $white-color);
 
     @each $i,
@@ -93,7 +93,7 @@
     margin: 0 $pd15;
     padding: 9px 0;
     line-height: 20px;
-    color: $title-color;
+    color: $color-333;
     text-align: right;
 }
 
@@ -119,6 +119,7 @@
     display: inline-block;
     // ie6、ie7下inline-block只是触发layout，使元素可以设置宽高等属性，block元素还是会占一行
     *display: inline;
+    *zoom: 1;
     margin-right: $pd10;
 }
 
@@ -196,7 +197,7 @@
     // ie6多类选择器是或的关系，不是与的关系，song-disabled这种类名容易被其他样式覆盖
     &.song-switch-disabled {
         border-color: $light-color;
-        color: $disabled-text-color;
+        color: $disabled-color;
         cursor: not-allowed;
 
         i {
@@ -249,7 +250,7 @@
     }
 
     &.song-checkbox-disabled {
-        color: $disabled-text-color;
+        color: $disabled-color;
         cursor: not-allowed;
 
         i {
@@ -288,7 +289,7 @@
     }
 
     &.song-radio-disabled {
-        color: $disabled-text-color;
+        color: $disabled-color;
         cursor: not-allowed;
 
         i {
@@ -313,7 +314,7 @@
         .song-select-title {
             .song-input {
                 cursor: not-allowed;
-                color: $disabled-text-color;
+                color: $disabled-color;
             }
         }
     }
@@ -380,7 +381,7 @@
         margin-left: $pd15;
         font-size: 20px;
         font-weight: 300;
-        color: $title-color;
+        color: $color-333;
     }
 
     .song-field-box {

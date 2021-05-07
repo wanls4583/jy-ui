@@ -13,6 +13,10 @@ p {
   padding: 0;
 }
 
+li {
+  list-style: none;
+}
+
 button:focus {
   outline: none !important;
 }
@@ -154,6 +158,7 @@ select {
   position: relative;
   display: inline-block;
   *display: inline;
+  *zoom: 1;
   margin-right: 10px;
 }
 
@@ -544,17 +549,16 @@ select {
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.eot?t=1619767651870");
+  src: url("//at.alicdn.com/t/font_2505561_kz83krz4mt.eot?t=1620370376489");
   /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.eot?t=1619767651870#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.woff2?t=1619767651870") format("woff2"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.woff?t=1619767651870") format("woff"), url("//at.alicdn.com/t/font_2505561_zjfsg8lmjfd.ttf?t=1619767651870") format("truetype");
+  src: url("//at.alicdn.com/t/font_2505561_kz83krz4mt.eot?t=1620370376489#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_kz83krz4mt.woff2?t=1620370376489") format("woff2"), url("//at.alicdn.com/t/font_2505561_kz83krz4mt.woff?t=1620370376489") format("woff"), url("//at.alicdn.com/t/font_2505561_kz83krz4mt.ttf?t=1620370376489") format("truetype");
 }
 
 .song-icon {
   font-family: "iconfont" !important;
-  font-size: 24px;
+  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
 
@@ -564,6 +568,8 @@ select {
 
 .song-display-inline-block {
   display: inline-block;
+  *display: inline;
+  *zoom: 1;
 }
 
 .song-display-inline {
@@ -788,6 +794,57 @@ hr {
   width: 100%;
   overflow: auto;
   border: 1px solid #eeeeee;
+}
+
+.song-table-toolbar {
+  position: relative;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eeeeee;
+  border-right: 1px solid #eeeeee;
+}
+
+.song-table-tool-self {
+  float: right;
+}
+
+.song-table-tool {
+  position: relative;
+  padding: 4px;
+  margin-left: 10px;
+  border: 1px solid #d2d2d2;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-table-tool:hover {
+  border-color: #999999;
+}
+
+.song-table-filter {
+  position: absolute;
+  right: -1px;
+  top: 100%;
+  margin-top: 5px;
+  background-color: #ffffff;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.song-table-filter li {
+  padding: 10px 15px;
+}
+
+.song-table-filter li:hover {
+  background-color: #f6f6f6;
+}
+
+.song-table-filter li .song-form-checkbox {
+  margin: 0;
 }
 
 .song-table th {
