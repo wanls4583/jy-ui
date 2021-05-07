@@ -37,7 +37,8 @@
             return;
         }
         var cols = option.cols;
-        var $view = $('<div class="song-table-view"></div>')
+        var $view = $('<div class="song-table-view"></div>');
+        var $tableBody = $('<div class="song-table-body"></div>')
         var $table = $('<table class="song-table"></table>');
         var $toolbar = $('<div class="song-table-toolbar song-row"></div>');
         var $tr = $('<tr></tr>');
@@ -105,10 +106,11 @@
             $view.append($toolbar);
         }
         $elem.replaceWith($view);
-        $view.css({
-            width: $view.width() + 'px'
+        $view.append($tableBody);
+        $tableBody.css({
+            width: $tableBody.width() + 'px'
         });
-        $view.append($table);
+        $tableBody.append($table);
         bindEvent($view, cols);
     }
 

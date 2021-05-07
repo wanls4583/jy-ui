@@ -188,15 +188,20 @@ hr {
     color: $color-666;
 
     &-view {
+        width: 100%;
+        border: 1px solid $light-color;
+    }
+
+    &-body {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
         width: 100%;
         overflow: auto;
-        border: 1px solid $light-color;
     }
 
     &-toolbar {
         position: relative;
+        z-index: 1;
         padding: $pd10 $pd15;
         border-bottom: 1px solid $light-color;
         border-right: 1px solid $light-color;

@@ -790,14 +790,19 @@ hr {
 }
 
 .song-table-view {
+  width: 100%;
+  border: 1px solid #eeeeee;
+}
+
+.song-table-body {
   position: relative;
   width: 100%;
   overflow: auto;
-  border: 1px solid #eeeeee;
 }
 
 .song-table-toolbar {
   position: relative;
+  z-index: 1;
   padding: 10px 15px;
   border-bottom: 1px solid #eeeeee;
   border-right: 1px solid #eeeeee;
