@@ -195,12 +195,16 @@ hr {
     td {
         // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8以下不支持background-clip
         // position: relative;
+        padding: 5px 15px;
+        border-right: 1px solid $light-color;
+        border-bottom: 1px solid $light-color;
         min-height: 28px;
         *height: 28px;
         line-height: 28px;
-        padding: 5px 15px;
         font-size: 14px;
-        border-right: 1px solid $light-color;
-        border-bottom: 1px solid $light-color;
+
+        .cell {
+            position: relative;
+        }
     }
 }

@@ -260,7 +260,7 @@
         <legend>表格</legend>
         <div class="song-field-box">
             <div style="margin:15px 0;">静态表格</div>
-            <table class="song-table" rules=”cols”>
+            <table class="song-table">
                 <tr>
                     <th>姓名</th>
                     <th>年龄</th>
@@ -272,6 +272,9 @@
                     <td>湖南</td>
                 </tr>
             </table>
+            <div style="margin:15px 0;">动态表格</div>
+            <button class="song-btn" onclick="renderTable()">动态生成</button>
+            <table id="table" song-filter="table"></table>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -300,6 +303,7 @@
 <script src="jquery-1.12.4.min.js"></script>
 <script src="./modules/form.js"></script>
 <script src="./modules/dialog.js"></script>
+<script src="./modules/table.js"></script>
 <script>
     SongUi.Form.on('switch', function (event) {
         console.log(event);
@@ -361,6 +365,23 @@
                 SongUi.Dialog.close(openDialog.index);
             }
         });
+    }
+    function renderTable() {
+        var data = [{ user: '李松', sex: '男', age: 30 }];
+        SongUi.Table.render({
+            elem: '#table',
+            data: data,
+            cols: [{
+                title: '用户',
+                field: 'user'
+            }, {
+                title: '性别',
+                field: 'sex'
+            }, {
+                title: '年龄',
+                field: 'age'
+            }]
+        })
     }
 </script>
 
