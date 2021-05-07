@@ -680,11 +680,11 @@ select {
 }
 
 hr {
+  height: 1px;
   border-top: none !important;
   border-left: none !important;
   border-right: none !important;
   border-bottom: 1px solid #eeeeee;
-  color: #fff;
 }
 
 .song-color-text {
@@ -773,5 +773,34 @@ hr {
 
 .song-border-danger {
   border: 1px solid #FF5722;
+}
+
+.song-table {
+  width: 100%;
+  _width: auto;
+  _zoom: 1;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #666666;
+  border-left: 1px solid #eeeeee;
+  border-top: 1px solid #eeeeee;
+}
+
+.song-table th {
+  text-align: left;
+  font-weight: normal;
+  background-color: #f6f6f6;
+}
+
+.song-table th,
+.song-table td {
+  min-height: 28px;
+  *height: 28px;
+  line-height: 28px;
+  padding: 5px 15px;
+  font-size: 14px;
+  border-right: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
 }
 /*# sourceMappingURL=song-ui.css.map */

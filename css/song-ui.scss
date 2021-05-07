@@ -51,8 +51,8 @@
         clear: both;
     }
 
-    // 默认ie7content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
-    // 所以不要给col添加padding或者border，否则宽度将不准确
+    // ie7默认content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
+    // 在ie6下，百分比宽度将包括父容器的padding和border，所以不要给col添加padding或者border，否则宽度将不准确
     @for $i from 1 through 11 {
         .song-col-#{$i} {
             width: $i/12*100%;
@@ -68,13 +68,13 @@
 
 // 分割线
 hr {
+    height: 1px;
     // !important解决ie8以下默认样式问题
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
     border-bottom: 1px solid $light-color;
-    // 解决ie7以下始终有一根黑线的问题
-    color: #fff;
+    // ie7以下使用color可以更改hr颜色
 }
 
 // 字体颜色
@@ -170,5 +170,37 @@ hr {
 
     &-danger {
         border: 1px solid $danger-color;
+    }
+}
+
+.song-table {
+    width: 100%;
+    // ie6下百分比宽度将包括父容器的padding，所以不能100%，改用zoom:1撑开父容器（ie7也可以使用该方法）
+    _width: auto;
+    _zoom: 1;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: $text-color;
+    border-left: 1px solid $light-color;
+    border-top: 1px solid $light-color;
+
+    th {
+        text-align: left;
+        font-weight: normal;
+        background-color: $lighter-color;
+    }
+
+    th,
+    td {
+        // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8以下不支持background-clip
+        // position: relative;
+        min-height: 28px;
+        *height: 28px;
+        line-height: 28px;
+        padding: 5px 15px;
+        font-size: 14px;
+        border-right: 1px solid $light-color;
+        border-bottom: 1px solid $light-color;
     }
 }

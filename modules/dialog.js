@@ -27,7 +27,7 @@
         var $layer = $('<div class="song-layer song-layer-' + option.type + ' song-layer' + layerIndex + '"></div>');
         var $title = $(
             '<div class="song-layer-title">\
-                <span>' + (option.title || '信息') + '</span>\
+                <span>' + option.title + '</span>\
                 <div class="song-layer-op">\
                     <i class="song-op-close song-icon">' + closeIcon + '</i>\
                 </div>\
@@ -45,7 +45,7 @@
             }
             $footer.append(btnHtml);
         }
-        if (option.title !== false) {
+        if (option.title) {
             $layer.append($title);
         }
         $layer.append($content);

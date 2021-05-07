@@ -57,7 +57,7 @@
 
     .song-layer-title {
         position: relative;
-        // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout是元素具有一个最小的宽度（50%）
+        // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout使元素撑开父容器
         line-height: 16px;
         padding: 17px 95px 17px 20px;
         font-size: 16px;
