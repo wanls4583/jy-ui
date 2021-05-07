@@ -140,7 +140,7 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("dialog", ['jquery'], function () {
+        define("table", ['jquery'], function () {
             return Table;
         });
     } else if (window && window.document) {
