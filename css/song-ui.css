@@ -776,15 +776,18 @@ hr {
 }
 
 .song-table {
-  width: 100%;
   _width: auto;
   _zoom: 1;
-  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
   color: #666666;
-  border-left: 1px solid #eeeeee;
-  border-top: 1px solid #eeeeee;
+}
+
+.song-table-view {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid #eeeeee;
 }
 
 .song-table th {
@@ -807,5 +810,7 @@ hr {
 .song-table th .cell,
 .song-table td .cell {
   position: relative;
+  margin: 0 -15px;
+  padding: 0 15px;
 }
 /*# sourceMappingURL=song-ui.css.map */

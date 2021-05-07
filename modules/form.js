@@ -49,7 +49,10 @@
             var filter = $(this).attr('song-filter');
             if ($form.length & Form.verify($form)) {
                 var data = Form.getJsonFromForm($form);
-                Form.trigger(filter ? 'submit(' + filter + ')' : 'submit', data);
+                if (filter) {
+                    Form.trigger('submit(' + filter + ')', data);
+                }
+                Form.trigger('submit', data);
             }
         });
     }
@@ -226,7 +229,13 @@
                     $this.find('span').html('OFF');
                     $this[0].$input.prop('checked', false);
                 }
-                Form.trigger(filter ? 'switch(' + filter + ')' : 'switch', {
+                if (filter) {
+                    Form.trigger('switch(' + filter + ')', {
+                        data: $this[0].$input.prop('checked'),
+                        dom: $this[0].$input[0]
+                    });
+                }
+                Form.trigger('switch', {
                     data: $this[0].$input.prop('checked'),
                     dom: $this[0].$input[0]
                 });
@@ -283,7 +292,13 @@
                 $this.addClass('song-radio-checked');
                 $this.find('i').html(radioIcon);
                 $this[0].$input.prop('checked', true);
-                Form.trigger(filter ? 'radio(' + filter + ')' : 'radio', {
+                if (filter) {
+                    Form.trigger('radio(' + filter + ')', {
+                        data: $this[0].$input.val(),
+                        dom: $this[0].$input[0]
+                    });
+                }
+                Form.trigger('radio', {
                     data: $this[0].$input.val(),
                     dom: $this[0].$input[0]
                 });
@@ -349,7 +364,13 @@
                         data.push($_this[0].$input.val());
                     }
                 });
-                Form.trigger(filter ? 'checkbox(' + filter + ')' : 'checkbox', {
+                if (filter) {
+                    Form.trigger('checkbox(' + filter + ')', {
+                        data: data,
+                        dom: $this[0].$input[0]
+                    });
+                }
+                Form.trigger('checkbox', {
                     data: data,
                     dom: $this[0].$input[0]
                 });
@@ -451,7 +472,13 @@
                 $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                 $dom[0].$select.val(value);
                 $cont.hide();
-                Form.trigger(filter ? 'select(' + filter + ')' : 'select', {
+                if (filter) {
+                    Form.trigger('select(' + filter + ')', {
+                        data: value,
+                        dom: $dom[0].$select[0]
+                    });
+                }
+                Form.trigger('select', {
                     data: value,
                     dom: $dom[0].$select[0]
                 });

@@ -368,20 +368,40 @@
     }
     function renderTable() {
         var data = [{ user: '李松', sex: '男', age: 30 }];
+        for (var i = 1; i < 10; i++) {
+            data[i] = data[0];
+        }
         SongUi.Table.render({
             elem: '#table',
             data: data,
             cols: [{
                 title: '用户',
-                field: 'user'
+                field: 'user',
+                minWidth: 100
             }, {
                 title: '性别',
-                field: 'sex'
+                field: 'sex',
+                width: 50
             }, {
                 title: '年龄',
-                field: 'age'
+                field: 'age',
+                width: 50
+            }, {
+                title: '操作',
+                width: 120,
+                template: function (rowData, index, col) {
+                    return '<button class="song-btn song-btn-xs" song-event="edit" style="margin-right:10px">修改</button><button class="song-btn song-btn-xs song-btn-danger" song-event="del">删除</button>';
+                }
             }]
-        })
+        });
+        SongUi.Table.on('edit', function(obj) {
+            SongUi.Dialog.msg('eidt');
+            console.log(obj);
+        });
+        SongUi.Table.on('del', function(obj) {
+            SongUi.Dialog.msg('del');
+            console.log(obj);
+        });
     }
 </script>
 
