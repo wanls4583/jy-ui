@@ -12,6 +12,7 @@
         init: init,
         render: render,
         on: on,
+        once: once,
         trigger: trigger,
         verify: verify,
         getJsonFromForm: getJsonFromForm,
@@ -60,6 +61,10 @@
     function on(filter, callback) {
         on[filter] = on[filter] || [];
         on[filter].push(callback);
+    }
+    // 只监听一次
+    function once(filter, callback) {
+        on[filter] = [callback];
     }
     // 触发事件
     function trigger(filter, event) {
@@ -208,7 +213,7 @@
                 </div>');
             $html.insertAfter(input);
             $html[0].$input = $input;
-            $input.$ui = $html;
+            input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
@@ -265,12 +270,12 @@
             var html =
                 '<div class="song-form-radio ' + classNames + '">\
                     <i>' + ($input.prop('checked') ? radioIcon : radioedIcon) + '</i>\
-                    <span>' + $input.attr('title') + '</span>\
+                    <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                 </div>';
             var $html = $(html);
             $html.insertAfter(input);
             $html[0].$input = $input;
-            $input.$ui = $html;
+            input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;
@@ -309,10 +314,10 @@
     function renderCheckbox(fresh) {
         var inputs = $('input[type="checkbox"]');
         inputs.each(function (i, input) {
-            if (input.renderedSongUi && !fresh) {
+            var $input = $(input);
+            if (input.renderedSongUi && !fresh || $input.attr('song-skin') == 'switch') {
                 return;
             }
-            var $input = $(input);
             var ignore = $input.attr('song-ignore') === undefined ? false : true;
             input.$ui && input.$ui.remove();
             if (ignore) {
@@ -331,12 +336,12 @@
             var $html = $(
                 '<div class="song-form-checkbox ' + classNames + '">\
                     <i>' + ($input.prop('checked') ? checkedIcon : '') + '</i>\
-                    <span>' + $input.attr('title') + '</span>\
+                    <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                 </div>');
 
             $html.insertAfter(input);
             $html[0].$input = $input;
-            $input.$ui = $html;
+            input.$ui = $html;
             _bindEvent($html);
             $input.hide();
             input.renderedSongUi = true;

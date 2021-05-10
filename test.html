@@ -368,15 +368,19 @@
     }
     renderTable();
     function renderTable() {
-        var data = [{ user: '李松', sex: '男', age: 30 }];
-        for (var i = 1; i < 10; i++) {
-            data[i] = data[0];
-        }
+        data = [];
+        for (var i = 0; i < 10; i++) {
+            data.push({ user: '用户' + i, sex: '男', age: 30 });
+        };
         SongUi.Table.render({
             elem: '#table',
             data: data,
             defaultToolbar: true,
             cols: [{
+                type: 'checkbox'
+            }, {
+                type: 'radio'
+            }, {
                 title: '用户',
                 field: 'user',
                 minWidth: 100
@@ -402,6 +406,12 @@
         });
         SongUi.Table.on('del', function (obj) {
             SongUi.Dialog.msg('del');
+            console.log(obj);
+        });
+        SongUi.Table.on('radio', function (obj) {
+            console.log(obj);
+        });
+        SongUi.Table.on('checkbox', function (obj) {
             console.log(obj);
         });
     }
