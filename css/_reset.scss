@@ -25,9 +25,7 @@ i {
     font-style: normal;
 }
 
-// ie6不支持属性选择器
-input[type="checkbox"],
-input[type="radio"],
-select {
-    display: none;
+a {
+    text-decoration: none;
+    color: $color-666;
 }

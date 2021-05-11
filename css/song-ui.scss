@@ -273,3 +273,68 @@ hr {
         }
     }
 }
+
+.song-pager {
+    line-height: 30px;
+
+    &-total {
+        float: left;
+        margin-right: $pd10;
+    }
+
+    &-pre,
+    &-next,
+    &-num,
+    &-limits {
+        float: left;
+        padding: 0 $pd15;
+        border: 1px solid $light-color;
+    }
+
+    &-pre,
+    &-num {
+        border-right: none;
+    }
+
+    &-now {
+        color: $white-color;
+        background-color: $success-color;
+        border-color: $success-color;
+    }
+
+    &-limits {
+        height: 32px;
+        *height: auto;
+        padding: 0;
+        *margin-top: 5px;
+        margin-left: $pd10;
+        font-size: 14px;
+        outline: none;
+    }
+
+    &-jump {
+        float: left;
+        margin-left: $pd10;
+        color: $color-999;
+        input {
+            width: 30px;
+            _width: 50px;
+            height: 30px;
+            line-height: normal;
+            padding: 0 $pd15;
+            border: 1px solid $light-color;
+            vertical-align: middle;
+            outline: none;
+        }
+        button {
+            width: 40px;
+            height: 30px;
+            padding: 0;
+            margin-left: $pd15;
+            background-color: $white-color;
+            border: 1px solid $light-color;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    }
+}

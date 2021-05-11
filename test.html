@@ -277,6 +277,30 @@
             <table id="table" song-filter="table"></table>
         </div>
     </fieldset>
+    <fieldset class="song-field song-field-title">
+        <legend>分页</legend>
+        <div class="song-field-box">
+            <div class="song-pager song-row">
+                <span class="song-pager-total">共50条</span>
+                <a href="javascript:;" class="song-pager-pre song-pager-pre-disabled">上一页</a>
+                <a href="javascript:;" class="song-pager-num song-pager-now">1</a>
+                <a href="javascript:;" class="song-pager-num">2</a>
+                <a href="javascript:;" class="song-pager-num">3</a>
+                <a href="javascript:;" class="song-pager-next">下一页</a>
+                <select class="song-pager-limits" song-ignore>
+                    <option value="10">10条/每页</option>
+                    <option value="20">20条/每页</option>
+                    <option value="30">30条/每页</option>
+                </select>
+                <div class="song-pager-jump">
+                    <span>到</span>
+                    <input type="text">
+                    <span>页</span>
+                    <button>确定</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
     <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">

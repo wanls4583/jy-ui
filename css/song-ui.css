@@ -25,10 +25,9 @@ i {
   font-style: normal;
 }
 
-input[type="checkbox"],
-input[type="radio"],
-select {
-  display: none;
+a {
+  text-decoration: none;
+  color: #666666;
 }
 
 .song-btn {
@@ -874,5 +873,68 @@ hr {
   position: relative;
   margin: 0 -15px;
   padding: 0 15px;
+}
+
+.song-pager {
+  line-height: 30px;
+}
+
+.song-pager-total {
+  float: left;
+  margin-right: 10px;
+}
+
+.song-pager-pre, .song-pager-next, .song-pager-num, .song-pager-limits {
+  float: left;
+  padding: 0 15px;
+  border: 1px solid #eeeeee;
+}
+
+.song-pager-pre, .song-pager-num {
+  border-right: none;
+}
+
+.song-pager-now {
+  color: #ffffff;
+  background-color: #009688;
+  border-color: #009688;
+}
+
+.song-pager-limits {
+  height: 32px;
+  *height: auto;
+  padding: 0;
+  *margin-top: 5px;
+  margin-left: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.song-pager-jump {
+  float: left;
+  margin-left: 10px;
+  color: #999999;
+}
+
+.song-pager-jump input {
+  width: 30px;
+  _width: 50px;
+  height: 30px;
+  line-height: normal;
+  padding: 0 15px;
+  border: 1px solid #eeeeee;
+  vertical-align: middle;
+  outline: none;
+}
+
+.song-pager-jump button {
+  width: 40px;
+  height: 30px;
+  padding: 0;
+  margin-left: 15px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  vertical-align: middle;
+  cursor: pointer;
 }
 /*# sourceMappingURL=song-ui.css.map */
