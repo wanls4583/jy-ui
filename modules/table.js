@@ -42,6 +42,8 @@
             var $tableBody = $('<div class="song-table-body"></div>');
             $view[0].option = option;
             $view[0].$table = $table;
+            option.page = option.page || 1;
+            option.limit = option.limit || 20;
             filter && $view.attr('song-filter', filter);
             renderToolbar($view);
             renderTableHeader($view);
@@ -180,66 +182,75 @@
             var option = $view[0].option;
             var $table = $view[0].$table;
             if (option.data) {
-                option.loadedData = option.data.concat([]);
-                createTd(option.cols, option.data, filter, $table);
+                var start = (option.page - 1) * option.limit;
+                var end = option.page * option.limit;
+                option.loadedData = option.data.slice(start, end);
+                _createTd(option.cols, option.data, filter, $table);
                 complete && complete();
             } else {
-                get(option.request, function (res) {
-                    createTd(option.cols, res.data, filter, $table);
+                get(option, function (res) {
+                    _createTd(option.cols, res.data, filter, $table);
                     complete && complete();
                 });
             }
-        }
 
-        function createTd(cols, data, filter, $table) {
-            for (var index = 0; index < data.length; index++) {
-                var item = data[index];
-                var $tr = $('<tr data-index="' + index + '"></tr>');
-                for (var col_i = 0; col_i < cols.length; col_i++) {
-                    var col = cols[col_i];
-                    var $td = $('<td data-field="' + (col.field || '') + '"></td>');
-                    var $cell = null;
-                    if (!col.type || col.type == 'normal') {
-                        $cell = $('<div class="cell">' + (col.template ? col.template(item, index, col) : (col.field ? item[col.field] : '')) + '</div>');
-                    } else if (col.type == 'radio') {
-                        $cell = $('<div class="cell"><input type="radio" name="table_radio_' + filter + '" value="' + index + '" song-filter="table_radio_' + filter + '"/></div>');
-                    } else if (col.type == 'checkbox') {
-                        $cell = $('<div class="cell"><input type="checkbox" name="table_checkbox_' + filter + '" value="' + index + '" song-filter="table_checkbox_' + filter + '"/></div>');
-                    } else if (col.type == 'operate') {
-                        $cell = $('<div class="cell"></div>');
-                        if (col.btns) {
-                            for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
-                                var btn = col.btns[btn_i];
-                                $cell.append('<button class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
+            function _createTd(cols, data, filter, $table) {
+                for (var index = 0; index < data.length && index < option.limit; index++) {
+                    var item = data[index];
+                    var $tr = $('<tr data-index="' + index + '"></tr>');
+                    for (var col_i = 0; col_i < cols.length; col_i++) {
+                        var col = cols[col_i];
+                        var $td = $('<td data-field="' + (col.field || '') + '"></td>');
+                        var $cell = null;
+                        if (!col.type || col.type == 'normal') {
+                            $cell = $('<div class="cell">' + (col.template ? col.template(item, index, col) : (col.field ? item[col.field] : '')) + '</div>');
+                        } else if (col.type == 'radio') {
+                            $cell = $('<div class="cell"><input type="radio" name="table_radio_' + filter + '" value="' + index + '" song-filter="table_radio_' + filter + '"/></div>');
+                        } else if (col.type == 'checkbox') {
+                            $cell = $('<div class="cell"><input type="checkbox" name="table_checkbox_' + filter + '" value="' + index + '" song-filter="table_checkbox_' + filter + '"/></div>');
+                        } else if (col.type == 'operate') {
+                            $cell = $('<div class="cell"></div>');
+                            if (col.btns) {
+                                for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
+                                    var btn = col.btns[btn_i];
+                                    $cell.append('<button class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
+                                }
+                            } else {
+                                $cell.append(col.template(item, btn_i, col));
                             }
-                        } else {
-                            $cell.append(col.template(item, btn_i, col));
+                        }
+                        $td.append($cell);
+                        $tr.append($td);
+                        $td[0].data = item;
+                        if (col.hidden) {
+                            $td.hide();
                         }
                     }
-                    $td.append($cell);
-                    $tr.append($td);
-                    $td[0].data = item;
-                    if (col.hidden) {
-                        $td.hide();
-                    }
+                    $table.append($tr);
                 }
-                $table.append($tr);
             }
         }
 
+        function renderPage() {
+
+        }
+        
         function get(option, success, error) {
+            var data = option.reqeust.data || {};
+            data[option.reqeust.pageName || 'page'] = option.page;
+            data[option.reqeust.limitName || 'limit'] = option.limit;
             $.ajax({
-                url: option.url,
-                method: option.method || 'get',
-                dataType: option.dataType || 'json',
-                contentType: option.contentType || 'application/json',
-                data: option.data || {},
+                url: option.reqeust.url,
+                method: option.reqeust.method || 'get',
+                dataType: option.reqeust.dataType || 'json',
+                contentType: option.reqeust.contentType || 'application/json',
+                data: option.reqeust.data || {},
                 success: function (res) {
-                    option.success && option.success(res);
-                    success(option.parseData && option.parseData(res) || res);
+                    option.reqeust.success && option.reqeust.success(res);
+                    success(option.reqeust.parseData && option.reqeust.parseData(res) || res);
                 },
                 error: function (res) {
-                    option.error && option.error(res);
+                    option.reqeust.error && option.reqeust.error(res);
                     error && error(res);
                 }
             })
