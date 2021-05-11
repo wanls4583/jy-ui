@@ -306,19 +306,19 @@
 <script src="./modules/table.js"></script>
 <script>
     SongUi.Form.on('switch', function (event) {
-        window.console && console.log(event);
+        SongUi.Dialog.msg('switch')
     });
     SongUi.Form.on('radio', function (event) {
-        window.console && console.log(event);
+        SongUi.Dialog.msg('radio')
     });
     SongUi.Form.on('checkbox', function (event) {
-        window.console && console.log(event);
+        SongUi.Dialog.msg('checkbox')
     });
     SongUi.Form.on('select', function (event) {
-        window.console && console.log(event);
+        SongUi.Dialog.msg('select')
     });
     SongUi.Form.on('submit', function (data) {
-        window.console && console.log(data);
+        SongUi.Dialog.msg('submit')
     });
     function openAlert(icon) {
         SongUi.Dialog.alert('点击确认更改图标', {
@@ -408,17 +408,15 @@
         });
         SongUi.Table.on('edit', function (obj) {
             SongUi.Dialog.msg('eidt');
-            window.console && console.log(obj);
         });
         SongUi.Table.on('del', function (obj) {
             SongUi.Dialog.msg('del');
-            window.console && console.log(obj);
         });
         SongUi.Table.on('radio', function (obj) {
-            window.console && console.log(obj);
+            SongUi.Dialog.msg('radio');
         });
         SongUi.Table.on('checkbox', function (obj) {
-            window.console && console.log(obj);
+            SongUi.Dialog.msg('checkbox');
         });
     }
 </script>
