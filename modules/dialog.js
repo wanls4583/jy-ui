@@ -24,7 +24,7 @@
         var layerIndex = Dialog.layerIndex;
         var $container = $(option.container || window.document.body);
         var $shadow = $('<div class="song-layer-shadow song-layer' + layerIndex + '"></div>');
-        var $layer = $('<div class="song-layer song-layer-' + option.type + ' song-layer' + layerIndex + '"></div>');
+        var $layer = $('<div class="song-layer song-layer-' + option.type + ' song-layer' + layerIndex + '" song-index="' + layerIndex + '"></div>');
         var $title = $(
             '<div class="song-layer-title">\
                 <span>' + option.title + '</span>\
@@ -172,6 +172,9 @@
             yes: yes
         }
         option = option && _assign(_option, option) || _option;
+        if (!option.tipMore) {
+            closeAll('msg');
+        }
         open(option);
     }
     // 关闭弹框
@@ -180,6 +183,44 @@
         $('.song-layer-shadow.song-layer' + layerIndex).remove();
         if (window.document.documentMode <= 6 && document.body.overflow !== undefined) {
             document.body.style.overflow = document.body.overflow;
+        }
+    }
+    /**
+     * 关闭所有弹窗
+     * @param {String}} type 弹窗类型
+     */
+    function closeAll(type) {
+        if (type) {
+            switch (type) {
+                case 'msg':
+                    $('.song-layer-msg').remove();
+                    $('.song-layer-msg-with-icon').remove();
+                    break;
+                case 'dialog':
+                    $('.song-layer-dialog').each(function (i, dom) {
+                        var $dom = $(dom);
+                        var index = $dom.attr('song-index');
+                        $('.song-layer' + index).remove();
+                    });
+                    break;
+                case 'alert':
+                    $('.song-layer-alert').each(function (i, dom) {
+                        var $dom = $(dom);
+                        var index = $dom.attr('song-index');
+                        $('.song-layer' + index).remove();
+                    });
+                    break;
+                case 'confrim':
+                    $('.song-layer-confrim').each(function (i, dom) {
+                        var $dom = $(dom);
+                        var index = $dom.attr('song-index');
+                        $('.song-layer' + index).remove();
+                    });
+                    break;
+            }
+        } else {
+            $('.song-layer-shadow').remove();
+            $('.song-layer').remove();
         }
     }
     // 设置位置
