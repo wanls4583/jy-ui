@@ -40,10 +40,12 @@
             var $view = $('<div class="song-table-view"></div>');
             var $table = $('<table class="song-table"></table>');
             var $tableBody = $('<div class="song-table-body"></div>');
+            $view[0].option = option;
+            $view[0].$table = $table;
             filter && $view.attr('song-filter', filter);
-            renderToolbar(option, $view);
-            renderTableHeader(option, $table, $view);
-            renderTableBody(option, $table, $view, function () {
+            renderToolbar($view);
+            renderTableHeader($view);
+            renderTableBody($view, function () {
                 _mount();
             });
 
@@ -55,13 +57,14 @@
                 });
                 $tableBody.append($table);
                 Form.render();
-                bindEvent(option, $view);
+                bindEvent($view);
             }
         }
 
         // 渲染工具条
-        function renderToolbar(option, $view) {
+        function renderToolbar($view) {
             var $toolbar = $('<div class="song-table-toolbar song-row"></div>');
+            option = $view[0].option;
             if (option.defaultToolbar) {
                 var defaultToolbar = option.defaultToolbar;
                 var $tool = $('<div class="song-table-tool-self"></div>');
@@ -90,9 +93,11 @@
         }
 
         // 渲染表头
-        function renderTableHeader(option, $table, $view) {
+        function renderTableHeader($view) {
             var filter = $view.attr('song-filter') || '';
             var $tr = $('<tr></tr>');
+            var option = $view[0].option;
+            var $table = $view[0].$table;
             var cols = option.cols;
             for (var i = 0; i < cols.length; i++) {
                 var col = cols[i];
@@ -170,8 +175,10 @@
         }
 
         // 渲染表数据
-        function renderTableBody(option, $table, $view, complete) {
+        function renderTableBody($view, complete) {
             var filter = $view.attr('song-filter') || '';
+            var option = $view[0].option;
+            var $table = $view[0].$table;
             if (option.data) {
                 option.loadedData = option.data.concat([]);
                 createTd(option.cols, option.data, filter, $table);
@@ -238,7 +245,8 @@
             })
         }
 
-        function bindEvent(option, $view) {
+        function bindEvent($view) {
+            var option = $view[0].option;
             if (bindEvent.done) {
                 return;
             }
