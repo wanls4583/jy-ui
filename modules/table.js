@@ -182,11 +182,11 @@
             if (option.data) {
                 option.loadedData = option.data.concat([]);
                 createTd(option.cols, option.data, filter, $table);
-                complete()
+                complete && complete();
             } else {
                 get(option.request, function (res) {
                     createTd(option.cols, res.data, filter, $table);
-                    complete()
+                    complete && complete();
                 });
             }
         }
