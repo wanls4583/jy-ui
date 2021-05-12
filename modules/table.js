@@ -25,14 +25,15 @@
             var $view = $('<div class="song-table-view"></div>');
             var $table = $('<table class="song-table"></table>');
             var $tableBody = $('<div class="song-table-body"></div>');
-            $view[0].option = option;
-            $view[0].$table = $table;
+            option = Object.assign({}, option);
+            option.$view = $view;
+            option.$table = $table;
             option.page = option.page || 1;
             option.limit = option.limit || 20;
             filter && $view.attr('song-filter', filter);
-            renderToolbar($view);
-            renderTableHeader($view);
-            renderTableBody($view, function () {
+            renderToolbar(option);
+            renderTableHeader(option);
+            renderTableBody(option, function () {
                 _mount();
             });
 
@@ -44,14 +45,14 @@
                 });
                 $tableBody.append($table);
                 Form.render();
-                bindEvent($view);
+                bindEvent(option);
             }
         }
 
         // 渲染工具条
-        function renderToolbar($view) {
+        function renderToolbar(option) {
+            var $view = option.$view;
             var $toolbar = $('<div class="song-table-toolbar song-row"></div>');
-            option = $view[0].option;
             if (option.defaultToolbar) {
                 var defaultToolbar = option.defaultToolbar;
                 var $tool = $('<div class="song-table-tool-self"></div>');
@@ -80,11 +81,11 @@
         }
 
         // 渲染表头
-        function renderTableHeader($view) {
+        function renderTableHeader(option) {
+            var $view = option.$view;
+            var $table = option.$table;
             var filter = $view.attr('song-filter') || '';
             var $tr = $('<tr></tr>');
-            var option = $view[0].option;
-            var $table = $view[0].$table;
             var cols = option.cols;
             for (var i = 0; i < cols.length; i++) {
                 var col = cols[i];
@@ -162,10 +163,10 @@
         }
 
         // 渲染表数据
-        function renderTableBody($view, complete) {
+        function renderTableBody(option, complete) {
+            var $view = option.$view;
+            var $table = option.$table;
             var filter = $view.attr('song-filter') || '';
-            var option = $view[0].option;
-            var $table = $view[0].$table;
             if (option.data) {
                 var start = (option.page - 1) * option.limit;
                 var end = option.page * option.limit;
@@ -241,8 +242,8 @@
             })
         }
 
-        function bindEvent($view) {
-            var option = $view[0].option;
+        function bindEvent(option) {
+            var $view = option.$view
             if (bindEvent.done) {
                 return;
             }
