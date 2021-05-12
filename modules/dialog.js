@@ -4,12 +4,13 @@
  * @Description: 
  */
 !(function (window) {
-    function factory($) {
+    function factory($, Common) {
         var closeIcon = '&#xe735;';
         var successIcon = '&#xe615;';
         var warnIcon = '&#xe60a;';
         var errorIcon = '&#xe60b;';
         var questionIcon = '&#xe613;';
+        var ieVersion = Common.getIeVersion();
         var Dialog = {
             layerIndex: 0,
             open: open,
@@ -57,7 +58,7 @@
             if ($container[0] != window.document.body) {
                 $shadow.addClass('song-layer-absolute');
                 $layer.addClass('song-layer-absolute');
-            } else if (window.document.documentMode <= 6 && option.type != 'msg') {
+            } else if (ieVersion <= 6 && option.type != 'msg') {
                 //ie6不支持fixed，以下css防止页面滚动
                 document.body.overflow = document.body.style.overflow;
                 document.body.style.overflow = 'hidden';
@@ -182,7 +183,7 @@
         function close(layerIndex) {
             $('.song-layer.song-layer' + layerIndex).remove();
             $('.song-layer-shadow.song-layer' + layerIndex).remove();
-            if (window.document.documentMode <= 6 && document.body.overflow !== undefined) {
+            if (ieVersion <= 6 && document.body.overflow !== undefined) {
                 document.body.style.overflow = document.body.overflow;
             }
         }
@@ -229,7 +230,7 @@
             var $layer = $('.song-layer.song-layer' + layerIndex);
             var ie6MarginTop = 0;
             if ($layer.length) {
-                if (window.document.documentMode <= 6) { //i6以下没有fixed定位
+                if (ieVersion <= 6) { //i6以下没有fixed定位
                     // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
                     // ie6以下只认document.body.scrollTop
                     ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;

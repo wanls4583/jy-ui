@@ -8,6 +8,7 @@
         var filterIcon = '&#xe61d;';
         var exprotsIcon = '&#xe618;';
         var printIcon = '&#xe62c;';
+        var ieVersion = Common.getIeVersion();
         var Table = {
             render: render,
             on: Common.on,
@@ -103,7 +104,7 @@
                 }
                 if (col.minWidth) {
                     // ie7以下不支持min-width
-                    if (window.document.documentMode <= 7) {
+                    if (ieVersion <= 7) {
                         $cell.css({
                             width: col.minWidth + 'px'
                         });

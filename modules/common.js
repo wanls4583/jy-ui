@@ -9,6 +9,7 @@
             on: on,
             once: once,
             trigger: trigger,
+            getIeVersion: getIeVersion,
             getNum: getNum
         }
 
@@ -33,6 +34,20 @@
                     arr[i](event);
                 }
             }
+        }
+
+        // 获取ie版本
+        function getIeVersion() {
+            if (document.documentMode) {
+                return document.documentMode;
+            }
+            var version = 100;
+            var appVersion = navigator.appVersion;
+            var arr = appVersion.split(";");
+            if (arr.length > 1 && arr[1].indexOf('MSIE') > -1) {
+                version = parseInt(arr[1].replace(/\s|MSIE/g, ''));
+            }
+            return version
         }
 
         // 获取纯数字
