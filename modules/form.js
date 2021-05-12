@@ -114,25 +114,6 @@
         });
         return pass
     }
-    // 获取纯数字
-    function getNum(str, noParse, dot) {
-        if (typeof str == 'number') {
-            str = str.toString();
-        }
-        if (dot === undefined) {
-            dot = 2;
-        }
-        str = (str || '') + '';
-        str = str.replace(/\,/g, '');
-        str = str.replace(/。/g, '.');
-        var reg = new RegExp('\\-?\\d+' + (dot ? '(\\.\\d{0,' + dot + '})?' : ''));
-        reg = str.match(reg);
-        if (noParse) {
-            return reg && reg[0] || (str == '-' ? '-' : '');
-        } else {
-            return reg && Number(reg[0]) || 0;
-        }
-    }
     // 获取表单数据
     function getJsonFromForm(formId) {
         var $form = $(formId);

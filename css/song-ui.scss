@@ -277,22 +277,30 @@ hr {
 .song-pager {
     line-height: 30px;
 
-    &-total {
+    &-count {
         float: left;
         margin-right: $pd10;
     }
 
-    &-pre,
+    &-prev,
     &-next,
     &-num,
+    &-dot,
     &-limits {
         float: left;
         padding: 0 $pd15;
         border: 1px solid $light-color;
     }
 
-    &-pre,
-    &-num {
+    &-prev-disabled,
+    &-next-disabled {
+        color: $gray-color;
+        cursor: not-allowed;
+    }
+
+    &-prev,
+    &-num,
+    &-dot {
         border-right: none;
     }
 
@@ -304,33 +312,39 @@ hr {
 
     &-limits {
         height: 32px;
+        height: #{'auto\\0/'};
         *height: auto;
         padding: 0;
+        margin-top: #{'5px\\0/'};
         *margin-top: 5px;
         margin-left: $pd10;
         font-size: 14px;
         outline: none;
+        vertical-align: middle;
     }
 
     &-jump {
         float: left;
         margin-left: $pd10;
+        margin-right: $pd10;
         color: $color-999;
+
         input {
             width: 30px;
             _width: 50px;
             height: 30px;
-            line-height: normal;
+            line-height: 30px;
             padding: 0 $pd15;
             border: 1px solid $light-color;
             vertical-align: middle;
             outline: none;
         }
+
         button {
             width: 40px;
             height: 30px;
             padding: 0;
-            margin-left: $pd15;
+            margin-left: $pd10;
             background-color: $white-color;
             border: 1px solid $light-color;
             vertical-align: middle;

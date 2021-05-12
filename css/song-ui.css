@@ -879,18 +879,23 @@ hr {
   line-height: 30px;
 }
 
-.song-pager-total {
+.song-pager-count {
   float: left;
   margin-right: 10px;
 }
 
-.song-pager-pre, .song-pager-next, .song-pager-num, .song-pager-limits {
+.song-pager-prev, .song-pager-next, .song-pager-num, .song-pager-dot, .song-pager-limits {
   float: left;
   padding: 0 15px;
   border: 1px solid #eeeeee;
 }
 
-.song-pager-pre, .song-pager-num {
+.song-pager-prev-disabled, .song-pager-next-disabled {
+  color: #d2d2d2;
+  cursor: not-allowed;
+}
+
+.song-pager-prev, .song-pager-num, .song-pager-dot {
   border-right: none;
 }
 
@@ -902,17 +907,21 @@ hr {
 
 .song-pager-limits {
   height: 32px;
+  height: auto\0/;
   *height: auto;
   padding: 0;
+  margin-top: 5px\0/;
   *margin-top: 5px;
   margin-left: 10px;
   font-size: 14px;
   outline: none;
+  vertical-align: middle;
 }
 
 .song-pager-jump {
   float: left;
   margin-left: 10px;
+  margin-right: 10px;
   color: #999999;
 }
 
@@ -920,7 +929,7 @@ hr {
   width: 30px;
   _width: 50px;
   height: 30px;
-  line-height: normal;
+  line-height: 30px;
   padding: 0 15px;
   border: 1px solid #eeeeee;
   vertical-align: middle;
@@ -931,7 +940,7 @@ hr {
   width: 40px;
   height: 30px;
   padding: 0;
-  margin-left: 15px;
+  margin-left: 10px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   vertical-align: middle;
