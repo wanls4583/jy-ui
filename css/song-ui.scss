@@ -190,6 +190,21 @@ hr {
     &-view {
         width: 100%;
         border: 1px solid $light-color;
+
+        .song-pager {
+            padding: $pd10 0;
+
+            .song-pager-num,
+            .song-pager-dot,
+            .song-pager-prev,
+            .song-pager-next {
+                border: none;
+            }
+
+            .song-pager-dot {
+                padding: 0;
+            }
+        }
     }
 
     &-body {
@@ -274,67 +289,75 @@ hr {
     }
 }
 
-.song-pager {
-    line-height: 30px;
+@mixin song-pager($height: 30px) {
+    line-height: $height;
 
-    &-count {
+    .song-pager-count {
         float: left;
-        margin-right: $pd10;
+        margin-left: $pd10;
     }
 
-    &-prev,
-    &-next,
-    &-num,
-    &-dot,
-    &-limits {
+    .song-pager-prev {
+        margin-left: $pd10;
+        font-family: 'iconfont';
+    }
+
+    .song-pager-next {
+        font-family: 'iconfont';
+    }
+
+    .song-pager-prev,
+    .song-pager-next,
+    .song-pager-num,
+    .song-pager-dot,
+    .song-pager-limits {
         float: left;
-        padding: 0 $pd15;
+        padding: 0 $height/2;
         border: 1px solid $light-color;
     }
 
-    &-prev-disabled,
-    &-next-disabled {
+    .song-pager-prev-disabled,
+    .song-pager-next-disabled {
         color: $gray-color;
         cursor: not-allowed;
     }
 
-    &-prev,
-    &-num,
-    &-dot {
+    .song-pager-prev,
+    .song-pager-num,
+    .song-pager-dot {
         border-right: none;
     }
 
-    &-now {
+    .song-pager-now {
         color: $white-color;
         background-color: $success-color;
         border-color: $success-color;
     }
 
-    &-limits {
-        height: 32px;
+    .song-pager-limits {
+        height: $height + 2px;
         height: #{'auto\\0/'};
         *height: auto;
         padding: 0;
-        margin-top: #{'5px\\0/'};
-        *margin-top: 5px;
+        margin-top: ($height - 20px)/2#{'\\0/'};
+        *margin-top: ($height - 20px)/2;
         margin-left: $pd10;
         font-size: 14px;
         outline: none;
         vertical-align: middle;
     }
 
-    &-jump {
+    .song-pager-jump {
         float: left;
         margin-left: $pd10;
-        margin-right: $pd10;
         color: $color-999;
 
         input {
-            width: 30px;
+            width: $height;
             _width: 50px;
-            height: 30px;
-            line-height: 30px;
-            padding: 0 $pd15;
+            height: $height;
+            line-height: $height;
+            padding: 0 $pd10;
             border: 1px solid $light-color;
             vertical-align: middle;
             outline: none;
@@ -342,7 +365,7 @@ hr {
 
         button {
             width: 40px;
-            height: 30px;
+            height: $height;
             padding: 0;
             margin-left: $pd10;
             background-color: $white-color;
@@ -351,4 +374,12 @@ hr {
             cursor: pointer;
         }
     }
+}
+
+.song-pager {
+    @include song-pager;
+}
+
+.song-pager-small {
+    @include song-pager(26px);
 }

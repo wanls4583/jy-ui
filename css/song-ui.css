@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
   font-size: 14px;
   color: #666666;
 }
@@ -793,6 +794,21 @@ hr {
   border: 1px solid #eeeeee;
 }
 
+.song-table-view .song-pager {
+  padding: 10px 0;
+}
+
+.song-table-view .song-pager .song-pager-num,
+.song-table-view .song-pager .song-pager-dot,
+.song-table-view .song-pager .song-pager-prev,
+.song-table-view .song-pager .song-pager-next {
+  border: none;
+}
+
+.song-table-view .song-pager .song-pager-dot {
+  padding: 0;
+}
+
 .song-table-body {
   position: relative;
   width: 100%;
@@ -879,33 +895,49 @@ hr {
   line-height: 30px;
 }
 
-.song-pager-count {
+.song-pager .song-pager-count {
   float: left;
-  margin-right: 10px;
+  margin-left: 10px;
 }
 
-.song-pager-prev, .song-pager-next, .song-pager-num, .song-pager-dot, .song-pager-limits {
+.song-pager .song-pager-prev {
+  margin-left: 10px;
+  font-family: 'iconfont';
+}
+
+.song-pager .song-pager-next {
+  font-family: 'iconfont';
+}
+
+.song-pager .song-pager-prev,
+.song-pager .song-pager-next,
+.song-pager .song-pager-num,
+.song-pager .song-pager-dot,
+.song-pager .song-pager-limits {
   float: left;
   padding: 0 15px;
   border: 1px solid #eeeeee;
 }
 
-.song-pager-prev-disabled, .song-pager-next-disabled {
+.song-pager .song-pager-prev-disabled,
+.song-pager .song-pager-next-disabled {
   color: #d2d2d2;
   cursor: not-allowed;
 }
 
-.song-pager-prev, .song-pager-num, .song-pager-dot {
+.song-pager .song-pager-prev,
+.song-pager .song-pager-num,
+.song-pager .song-pager-dot {
   border-right: none;
 }
 
-.song-pager-now {
+.song-pager .song-pager-now {
   color: #ffffff;
   background-color: #009688;
   border-color: #009688;
 }
 
-.song-pager-limits {
+.song-pager .song-pager-limits {
   height: 32px;
   height: auto\0/;
   *height: auto;
@@ -918,27 +950,113 @@ hr {
   vertical-align: middle;
 }
 
-.song-pager-jump {
+.song-pager .song-pager-jump {
   float: left;
   margin-left: 10px;
-  margin-right: 10px;
   color: #999999;
 }
 
-.song-pager-jump input {
+.song-pager .song-pager-jump input {
   width: 30px;
   _width: 50px;
   height: 30px;
   line-height: 30px;
-  padding: 0 15px;
+  padding: 0 10px;
   border: 1px solid #eeeeee;
   vertical-align: middle;
   outline: none;
 }
 
-.song-pager-jump button {
+.song-pager .song-pager-jump button {
   width: 40px;
   height: 30px;
+  padding: 0;
+  margin-left: 10px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.song-pager-small {
+  line-height: 26px;
+}
+
+.song-pager-small .song-pager-count {
+  float: left;
+  margin-left: 10px;
+}
+
+.song-pager-small .song-pager-prev {
+  margin-left: 10px;
+  font-family: 'iconfont';
+}
+
+.song-pager-small .song-pager-next {
+  font-family: 'iconfont';
+}
+
+.song-pager-small .song-pager-prev,
+.song-pager-small .song-pager-next,
+.song-pager-small .song-pager-num,
+.song-pager-small .song-pager-dot,
+.song-pager-small .song-pager-limits {
+  float: left;
+  padding: 0 13px;
+  border: 1px solid #eeeeee;
+}
+
+.song-pager-small .song-pager-prev-disabled,
+.song-pager-small .song-pager-next-disabled {
+  color: #d2d2d2;
+  cursor: not-allowed;
+}
+
+.song-pager-small .song-pager-prev,
+.song-pager-small .song-pager-num,
+.song-pager-small .song-pager-dot {
+  border-right: none;
+}
+
+.song-pager-small .song-pager-now {
+  color: #ffffff;
+  background-color: #009688;
+  border-color: #009688;
+}
+
+.song-pager-small .song-pager-limits {
+  height: 28px;
+  height: auto\0/;
+  *height: auto;
+  padding: 0;
+  margin-top: 3px\0/;
+  *margin-top: 3px;
+  margin-left: 10px;
+  font-size: 14px;
+  outline: none;
+  vertical-align: middle;
+}
+
+.song-pager-small .song-pager-jump {
+  float: left;
+  margin-left: 10px;
+  color: #999999;
+}
+
+.song-pager-small .song-pager-jump input {
+  width: 26px;
+  _width: 50px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 10px;
+  border: 1px solid #eeeeee;
+  vertical-align: middle;
+  outline: none;
+}
+
+.song-pager-small .song-pager-jump button {
+  width: 40px;
+  height: 26px;
   padding: 0;
   margin-left: 10px;
   background-color: #ffffff;

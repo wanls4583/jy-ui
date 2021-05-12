@@ -273,7 +273,7 @@
                 </tr>
             </table>
             <div style="margin:15px 0;">动态表格</div>
-            <button class="song-btn" onclick="renderTable()">动态生成</button>
+            <!-- <button class="song-btn" onclick="renderTable()">动态生成</button> -->
             <table id="table" song-filter="table"></table>
         </div>
     </fieldset>
@@ -309,9 +309,9 @@
 <script src="jquery-1.12.4.min.js"></script>
 <script src="./modules/common.js"></script>
 <script src="./modules/form.js"></script>
+<script src="./modules/pager.js"></script>
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
-<script src="./modules/pager.js"></script>
 <script>
     SongUi.Form.on('switch', function (event) {
         SongUi.Dialog.msg('switch')
@@ -377,12 +377,13 @@
     renderTable();
     function renderTable() {
         data = [];
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 100; i++) {
             data.push({ user: '用户' + i, sex: '男', age: 30 });
         };
         SongUi.Table.render({
             elem: '#table',
             data: data,
+            limit: 10,
             defaultToolbar: true,
             cols: [{
                 type: 'checkbox'
