@@ -4,30 +4,15 @@
  * @Description: 
  */
 !(function () {
-    function factory($, Form) {
+    function factory($, Common, Form) {
         var filterIcon = '&#xe61d;';
         var exprotsIcon = '&#xe618;';
         var printIcon = '&#xe62c;';
         var Table = {
             render: render,
-            on: on,
-            trigger: trigger
-        }
-
-        // 监听事件
-        function on(filter, callback) {
-            on[filter] = on[filter] || [];
-            on[filter].push(callback);
-        }
-
-        // 触发事件
-        function trigger(filter, event) {
-            var arr = on[filter];
-            if (arr) {
-                for (var i = 0; i < arr.length; i++) {
-                    arr[i](event);
-                }
-            }
+            on: Common.on,
+            once: Common.once,
+            trigger: Common.trigger
         }
 
         // 渲染表格
@@ -234,7 +219,7 @@
         function renderPage() {
 
         }
-        
+
         function get(option, success, error) {
             var data = option.reqeust.data || {};
             data[option.reqeust.pageName || 'page'] = option.page;
@@ -318,11 +303,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['jquery', './form'], function ($, form) {
-            return factory($, form);
+        define("table", ['jquery', './common', './form'], function ($, Common, Form) {
+            return factory($, Common, Form);
         });
     } else {
         window.SongUi = window.SongUi || {};
-        window.SongUi.Table = factory(window.$, window.SongUi.Form);
+        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form);
     }
 })(window)

@@ -4,34 +4,21 @@
  * @Description: 
  */
 !(function () {
-    function factory($) {
+    function factory($, Common) {
         var Pager = {
             render: render,
-            on: on,
-            trigger: trigger
-        }
-
-        // 监听事件
-        function on(filter, callback) {
-            on[filter] = on[filter] || [];
-            on[filter].push(callback);
-        }
-
-        // 触发事件
-        function trigger(filter, event) {
-            var arr = on[filter];
-            if (arr) {
-                for (var i = 0; i < arr.length; i++) {
-                    arr[i](event);
-                }
-            }
+            on: Common.on,
+            once: Common.once,
+            trigger: Common.trigger
         }
 
         // 渲染
         function render(option) {
             var $elem = $(option.elem);
             var $pager = null;
-            option = _assign({}, option);
+            if (!option.$pager) {
+                Object.assign({}, option);
+            }
             option.count = option.count || 0;
             option.limit = option.limit || 10;
             option.pages = Math.ceil(option.count / option.limit) || 1;
@@ -40,6 +27,8 @@
             option.limits = option.limits || [10, 20, 50];
             option.groups = option.groups || 5;
             option.layout = option.layout || ['count', 'prev', 'page', 'next', 'limit', 'jump'];
+            option.prev = option.prev || '上一页';
+            option.next = option.next || '下一页';
             option.filter = $elem.attr('filter') || '';
             $pager = option.$pager || $('<div class="song-pager song-row"></div>');
             $pager[0].option = option;
@@ -53,14 +42,14 @@
                     $pager.append('<span class="song-pager-count">共' + option.count + '条</span>');
                 }
                 if (option.layout[layout_i] == 'prev') {
-                    $pager.append('<a href="javascript:;" class="song-pager-prev ' + (option.now == 1 ? 'song-pager-prev-disabled' : '') + '">' + (option.prev || '上一页') + '</a>');
+                    $pager.append('<a href="javascript:;" class="song-pager-prev ' + (option.now == 1 ? 'song-pager-prev-disabled' : '') + '">' + (option.prev) + '</a>');
                 }
                 if (option.layout[layout_i] == 'page') {
                     $pager.append('<div class="song-pager-nums"></div>')
                     renderNowPage(option);
                 }
                 if (option.layout[layout_i] == 'next') {
-                    $pager.append('<a href="javascript:;" class="song-pager-next ' + (option.now == option.pages ? 'song-pager-next-disabled' : '') + '">' + (option.next || '下一页') + '</a>');
+                    $pager.append('<a href="javascript:;" class="song-pager-next ' + (option.now == option.pages ? 'song-pager-next-disabled' : '') + '">' + (option.next) + '</a>');
                 }
                 if (option.layout[layout_i] == 'limit') {
                     var $select = $('<select class="song-pager-limits" song-ignore></select>');
@@ -83,7 +72,7 @@
             bindEvent(option);
             // 重置
             option.reset = function (_option) {
-                _assign(option, _option);
+                Object.assign(option, _option);
                 render(option);
             }
             return option;
@@ -193,20 +182,12 @@
         return Pager;
     }
 
-    // 拷贝属性
-    function _assign(a, b) {
-        for (var key in b) {
-            a[key] = b[key];
-        }
-        return a;
-    }
-
     if ("function" == typeof define && define.amd) {
-        define('pager', ['jquery', 'common'], function ($) {
-            return factory($);
+        define('pager', ['jquery', './common'], function ($, Common) {
+            return factory($, Common);
         });
     } else {
         window.SongUi = window.SongUi || {};
-        window.SongUi.Pager = factory(window.$);
+        window.SongUi.Pager = factory(window.$, window.SongUi.Common);
     }
 })(window)

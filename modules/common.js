@@ -7,6 +7,7 @@
     function factory($) {
         var Common = {
             on: on,
+            once: once,
             trigger: trigger,
             getNum: getNum
         }
@@ -15,6 +16,13 @@
         function on(filter, callback) {
             on[filter] = on[filter] || [];
             on[filter].push(callback);
+        }
+
+        // 监听事件
+        function once(filter, callback) {
+            if (!on[filter]) {
+                on[filter] = [callback];
+            }
         }
 
         // 触发事件
