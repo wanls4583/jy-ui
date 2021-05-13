@@ -782,8 +782,7 @@ hr {
 }
 
 .song-table {
-  _width: auto;
-  _zoom: 1;
+  width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
   color: #666666;
@@ -792,21 +791,6 @@ hr {
 .song-table-view {
   width: 100%;
   border: 1px solid #eeeeee;
-}
-
-.song-table-view .song-pager {
-  padding: 10px 0;
-}
-
-.song-table-view .song-pager .song-pager-num,
-.song-table-view .song-pager .song-pager-dot,
-.song-table-view .song-pager .song-pager-prev,
-.song-table-view .song-pager .song-pager-next {
-  border: none;
-}
-
-.song-table-view .song-pager .song-pager-dot {
-  padding: 0;
 }
 
 .song-table-body {
@@ -865,6 +849,21 @@ hr {
 
 .song-table-filter li .song-form-checkbox {
   margin: 0;
+}
+
+.song-table-pager .song-pager {
+  padding: 10px 0;
+}
+
+.song-table-pager .song-pager .song-pager-num,
+.song-table-pager .song-pager .song-pager-dot,
+.song-table-pager .song-pager .song-pager-prev,
+.song-table-pager .song-pager .song-pager-next {
+  border: none;
+}
+
+.song-table-pager .song-pager .song-pager-dot {
+  padding: 0;
 }
 
 .song-table th {

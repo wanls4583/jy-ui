@@ -179,11 +179,7 @@ hr {
 }
 
 .song-table {
-    // width: 100%;
-    // ie6下百分比宽度将包括父容器的padding，所以不能100%，改用zoom:1撑开父容器（ie7也可以使用该方法）
-    _width: auto;
-    _zoom: 1;
-    // table-layout: fixed;
+    width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     color: $color-666;
@@ -191,21 +187,6 @@ hr {
     &-view {
         width: 100%;
         border: 1px solid $light-color;
-
-        .song-pager {
-            padding: $pd10 0;
-
-            .song-pager-num,
-            .song-pager-dot,
-            .song-pager-prev,
-            .song-pager-next {
-                border: none;
-            }
-
-            .song-pager-dot {
-                padding: 0;
-            }
-        }
     }
 
     &-body {
@@ -260,6 +241,27 @@ hr {
 
             .song-form-checkbox {
                 margin: 0;
+            }
+        }
+    }
+
+    &-pager {
+        // text-align: center;
+        .song-pager {
+            // display: inline-block;
+            // *display: inline;
+            // *zoom: 1;
+            padding: $pd10 0;
+
+            .song-pager-num,
+            .song-pager-dot,
+            .song-pager-prev,
+            .song-pager-next {
+                border: none;
+            }
+
+            .song-pager-dot {
+                padding: 0;
             }
         }
     }

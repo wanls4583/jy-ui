@@ -22,6 +22,7 @@
             if (!option.$pager) {
                 Object.assign({}, option);
             }
+            option.firstRender = true;
             option.count = option.count || 0;
             option.limit = option.limit || 10;
             option.pages = Math.ceil(option.count / option.limit) || 1;
@@ -85,6 +86,7 @@
                 Object.assign(option, _option);
                 render(option);
             }
+            delete option.firstRender;
             return option;
         }
 
@@ -123,8 +125,11 @@
                         $nums.append('<a href="javascript:;" class="song-pager-num" data-page="' + (i + 1) + '">' + (i + 1) + '</a>');
                     }
                 }
-                $pager.find('.song-pager-now').removeClass('song-pager-now');
-                $pager.find('.song-pager-num[data-page="' + option.nowPage + '"]').addClass('song-pager-now');
+                // 首次渲染时不需要触发
+                if (!option.firstRender) {
+                    $pager.find('.song-pager-now').removeClass('song-pager-now');
+                    $pager.find('.song-pager-num[data-page="' + option.nowPage + '"]').addClass('song-pager-now');
+                }
             }
             $pager.find('.song-pager-input').val(option.nowPage);
             if (option.nowPage == 1) {

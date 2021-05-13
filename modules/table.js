@@ -33,6 +33,7 @@
             } else if (!$elem.length) {
                 return;
             }
+            option.$elem = $elem;
             option.$view = $view;
             option.$table = $table;
             option.$tableHeader = $tableHeader;
@@ -46,28 +47,11 @@
             filter && $view.attr('song-filter', filter);
             renderToolbar(option);
             renderTableHeader(option);
-            renderTableBody(option, function () {
-                _mount();
-            });
+            renderTableBody(option);
+            mount(option);
             if (option.page !== false) {
                 renderPage(option);
             }
-
-            function _mount() {
-                if (!$view.parent().length) {
-                    $view.insertAfter($elem);
-                    $elem.hide();
-                }
-                $view.append($tableMain);
-                $tableMain.css({
-                    width: $tableMain.width() + 'px'
-                });
-                $table.append($tableHeader);
-                $table.append($tableBody);
-                $tableMain.append($table);
-                bindEvent(option);
-            }
-
             // 重载表格
             option.reload = function (_option) {
                 option = Object.assign(option, _option || {});
@@ -75,6 +59,28 @@
             }
 
             return option;
+        }
+
+        // 挂载
+        function mount(option) {
+            var $elem = option.$elem;
+            var $view = option.$view;
+            var $tableMain = option.$tableMain;
+            var $table = option.$table;
+            var $tableHeader = option.$tableHeader;
+            var $tableBody = option.$tableBody;
+            if (!$view.parent().length) {
+                $view.insertAfter($elem);
+                $elem.hide();
+            }
+            $view.append($tableMain);
+            $tableMain.css({
+                width: $view.width() + 'px'
+            });
+            $table.append($tableHeader);
+            $table.append($tableBody);
+            $tableMain.append($table);
+            bindEvent(option);
         }
 
         // 渲染工具条
@@ -203,8 +209,12 @@
             } else {
                 httpGet(option, function (res) {
                     option.renderedData = res.data;
+                    option.loadedData = res.data;
                     _createTd();
                     complete && complete();
+                    option.pager.count != res.count && option.pager.reload({
+                        count: res.count
+                    });
                     Form.render();
                 });
             }
@@ -254,10 +264,12 @@
         // 渲染页码
         function renderPage(option) {
             var $view = option.$view;
-            var $pager = $('<div song-filter="table_pager_' + option.filter + '"></div>');
+            var $pager = $('<div class="song-table-pager"></div>');
+            var $elem = $('<div song-filter="table_pager_' + option.filter + '"></div>');
+            $pager.append($elem);
             $view.append($pager);
             option.pager = Pager.render({
-                elem: $pager[0],
+                elem: $elem[0],
                 nowPage: option.nowPage,
                 limit: option.limit,
                 size: 'small',
@@ -275,6 +287,22 @@
         }
 
         function httpGet(option, success, error) {
+            setTimeout(function () {
+                var temp = [];
+                var start = (option.nowPage - 1) * option.limit;
+                for (var i = start; i < start + option.limit; i++) {
+                    temp.push({
+                        user: '网络用户' + i,
+                        sex: '男',
+                        age: 26
+                    });
+                }
+                success({
+                    data: temp,
+                    count: 100
+                });
+            }, 100);
+            return
             var data = option.reqeust.data || {};
             data[option.reqeust.pageName || 'page'] = option.nowPage;
             data[option.reqeust.limitName || 'limit'] = option.limit;
@@ -302,6 +330,7 @@
             }
             bindEvent.done = true;
             var filter = $view.attr('song-filter');
+            // 表格中的所有点击事件
             $view.on('click', function (e) {
                 var $target = $(e.target);
                 var event = $target.attr('song-event');
