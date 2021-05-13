@@ -30,10 +30,11 @@
     }
 
     &-inline-block {
+        // ie7以下正常内联元素可用inline-block
         display: inline-block;
         // ie7以下div必须display:inline，否则div将占一行
         *display: inline;
-        // ie7以下由于*display:inline是元素成为内联元素，必须使用zoom:1重新触发layout
+        // ie7以下div使用zoom:1触发layout
         *zoom: 1;
     }
 

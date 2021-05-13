@@ -44,7 +44,8 @@
             }
             if (!option.$pager) {
                 option.$pager = $pager;
-                $elem.replaceWith($pager);
+                $pager.insertAfter($elem);
+                $elem.hide();
             }
             for (var layout_i = 0; layout_i < option.layout.length; layout_i++) {
                 if (option.layout[layout_i] == 'count') {
@@ -80,7 +81,7 @@
             }
             bindEvent(option);
             // 重置
-            option.reset = function (_option) {
+            option.reload = function (_option) {
                 Object.assign(option, _option);
                 render(option);
             }
@@ -186,7 +187,7 @@
                 var limit = Number($(this).val()) || 0;
                 Pager.trigger('limit(' + option.filter + ')', limit);
                 Pager.trigger('limit', limit);
-                option.reset({
+                option.reload({
                     limit: limit
                 });
             });

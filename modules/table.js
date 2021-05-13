@@ -22,15 +22,17 @@
         function render(option) {
             var $elem = $(option.elem);
             var filter = $elem.attr('song-filter') || '';
-            if (!$elem.length) {
-                return;
-            }
-            var $view = $('<div class="song-table-view"></div>');
+            var $view = option.$view || $('<div class="song-table-view"></div>');
             var $table = $('<table class="song-table"></table>');
             var $tableHeader = $('<thead></thead>');
             var $tableBody = $('<tbody></tbody>');
             var $tableMain = $('<div class="song-table-body"></div>');
-            option = Object.assign({}, option);
+            if (!option.reload) {
+                option = Object.assign({}, option);
+                $view.html('');
+            } else if (!$elem.length) {
+                return;
+            }
             option.$view = $view;
             option.$table = $table;
             option.$tableHeader = $tableHeader;
@@ -52,7 +54,10 @@
             }
 
             function _mount() {
-                $elem.replaceWith($view);
+                if (!$view.parent().length) {
+                    $view.insertAfter($elem);
+                    $elem.hide();
+                }
                 $view.append($tableMain);
                 $tableMain.css({
                     width: $tableMain.width() + 'px'
@@ -62,6 +67,14 @@
                 $tableMain.append($table);
                 bindEvent(option);
             }
+
+            // 重载表格
+            option.reload = function (_option) {
+                option = Object.assign(option, _option || {});
+                render(option);
+            }
+
+            return option;
         }
 
         // 渲染工具条
