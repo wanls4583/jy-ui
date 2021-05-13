@@ -4,13 +4,24 @@
  * @Description: 
  */
 !(function () {
-    function factory($, Common, Form, Pager) {
+    function factory($, Common, Form, Pager, Dialog) {
         var filterIcon = '&#xe61d;';
         var exprotsIcon = '&#xe618;';
         var printIcon = '&#xe62c;';
         var leftIcon = '&#xe733;';
         var rightIon = '&#xe734;';
         var ieVersion = Common.getIeVersion();
+        // 常用正则验证
+        var ruleMap = {
+            'require': {
+                reg: /[\s\S]+/,
+                msg: '必填项不能为空'
+            },
+            'number': {
+                reg: /\d+/,
+                msg: '请输入数字'
+            }
+        };
         var Table = {
             render: render,
             on: Common.on,
@@ -44,6 +55,7 @@
             option.filter = filter;
             option.renderedData = [];
             option.loadedData = [];
+            option.enterSave = option.enterSave || false;
             filter && $view.attr('song-filter', filter);
             renderToolbar(option);
             renderTableHeader(option);
@@ -52,13 +64,90 @@
             if (option.page !== false) {
                 renderPage(option);
             }
-            // 重载表格
+            // 是否伸展表格
+            if (option.stretch) {
+                $table.css({
+                    width: '100%'
+                });
+            }
+
             option.reload = function (_option) {
-                option = Object.assign(option, _option || {});
-                render(option);
+                reload(option, _option);
+            }
+
+            option.save = function (index) {
+                save(option, index);
             }
 
             return option;
+        }
+
+        // 重载表格
+        function reload(option, _option) {
+            option = Object.assign(option, _option || {});
+            render(option);
+        }
+
+        // 保存编辑中的数据
+        function save(option, index) {
+            var trs = option.$view.find('tr' + (index !== undefined ? '[data-index="' + index + '"]' : ''));
+            var pass = true;
+            trs.each(function (i, tr) {
+                var tr = trs[i];
+                if (tr.editing) {
+                    $(tr).find('td').each(function (j, td) {
+                        var col = td.col;
+                        if (td.editing) {
+                            var value = td.$input.val();
+                            // 验证输入内容
+                            if (col.editable.rules) {
+                                for (var i = 0; i < col.editable.rules.length; i++) {
+                                    var rule = col.editable.rules[i];
+                                    var msg = rule.msg;
+                                    if (typeof rule.type == 'string') {
+                                        rule = ruleMap[rule.type];
+                                        msg = msg || rule.msg;
+                                    }
+                                    if (typeof rule.reg == 'function') {
+                                        pass = rule.reg(value);
+                                    } else if (rule.reg) {
+                                        pass = rule.reg.test(value);
+                                    }
+                                    if (!pass) {
+                                        Dialog.msg(msg, {
+                                            icon: 'error'
+                                        });
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                if (!pass) {
+                    return false;
+                }
+            });
+            pass && trs.each(function (i, tr) {
+                var tr = trs[i];
+                if (tr.editing) {
+                    $(tr).find('td').each(function (j, td) {
+                        var col = td.col;
+                        if (td.editing) {
+                            var value = td.$input.val();
+                            if (col.editable.type == 'number') {
+                                value = Number(value) || 0;
+                            }
+                            tr.rowData[col.field] = value;
+                            td.colData = value;
+                            $(td).find('.cell').html(col.template ? col.template(td.colData, tr.index, col) : td.colData);
+                        }
+                        td.editing = false;
+                        td.$input = undefined;
+                    });
+                }
+                tr.editing = false;
+            });
         }
 
         // 挂载
@@ -75,12 +164,12 @@
             }
             $view.append($tableMain);
             $tableMain.css({
-                width: $view.width() + 'px'
+                width: $tableMain.width() + 'px'
             });
             $table.append($tableHeader);
             $table.append($tableBody);
             $tableMain.append($table);
-            bindEvent(option);
+            bindViewEvent(option);
         }
 
         // 渲染工具条
@@ -251,12 +340,16 @@
                         }
                         $td.append($cell);
                         $tr.append($td);
-                        $td[0].data = item;
+                        $tr[0].index = index;
+                        $tr[0].rowData = item;
+                        $td[0].colData = item[col.field];
+                        $td[0].col = col;
                         if (col.hidden) {
                             $td.hide();
                         }
                     }
                     $tableBody.append($tr);
+                    bindTrEvent(option, $tr, item);
                 }
             }
         }
@@ -323,12 +416,13 @@
             })
         }
 
-        function bindEvent(option) {
+        // 绑定容器的事件
+        function bindViewEvent(option) {
             var $view = option.$view
-            if (bindEvent.done) {
+            if (option.binded) {
                 return;
             }
-            bindEvent.done = true;
+            option.binded = true;
             var filter = $view.attr('song-filter');
             // 表格中的所有点击事件
             $view.on('click', function (e) {
@@ -347,20 +441,64 @@
                     });
                 }
             });
+            $view.on('keydown', function (e) {
+                var $tr = $(e.target).parents('tr');
+                if (e.keyCode == 13) {
+                    option.save($tr[0].index);
+                }
+            });
             Table.on('filter', function (e) {
                 if ($view.find('.song-table-filter').length > 0) {
                     $view.find('.song-table-filter').toggle();
                 } else {
-                    createFilter(option, $view, e.dom);
+                    createFilter(option, e.dom);
                 }
             });
             Table.on('exports', function (e) {});
             Table.on('print', function (e) {});
         }
 
-        // 过滤列表
-        function createFilter(option, $view, dom) {
-            var filter = $view.attr('song-filter');
+        // 绑定tr的事件
+        function bindTrEvent(option, $tr, data) {
+            var trigger = option.trigger || 'click';
+            var cols = option.cols;
+            $tr.on(trigger, function (e) {
+                if ($tr[0].editing) {
+                    return;
+                }
+                $tr[0].editing = true;
+                cols.map(function (col) {
+                    if (col.editable) {
+                        var editable = col.editable === true ? {} : col.editable;
+                        var $td = $tr.find('td[data-field="' + col.field + '"]');
+                        var $cell = $td.find('.cell');
+                        var width = $cell.width();
+                        var height = $cell.height() || 28;
+                        editable.type = editable.type || 'text';
+                        if (editable.type == 'text' || editable.type == 'number') {
+                            var $input = $('<input class="song-input" style="width:' + width + 'px;height:' + height + 'px;line-height:' + height + 'px;">');
+                            $input.val(data[col.field]);
+                            $cell.append($input);
+                            $input.on('input propertychange', function () {
+                                if (editable.type == 'number') {
+                                    var num = Common.getNum($input.val());
+                                    if (num !== $input.val()) {
+                                        $input.val(num);
+                                    }
+                                }
+                            });
+                            $td[0].$input = $input;
+                        }
+                        $td[0].editing = true;
+                    }
+                });
+            });
+        }
+
+        // 创建过滤列表
+        function createFilter(option, dom) {
+            var $view = option.$view;
+            var filter = option.filter;
             var $filter = $('<ul class="song-table-filter"></ul>');
             for (var i = 0; i < option.cols.length; i++) {
                 var col = option.cols[i];
@@ -386,11 +524,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['jquery', './common', './form', './pager'], function ($, Common, Form) {
-            return factory($, Common, Form, Pager);
+        define("table", ['jquery', './common', './form', './pager', 'dialog'], function ($, Common, Form, Dialog) {
+            return factory($, Common, Form, Pager, Dialog);
         });
     } else {
         window.SongUi = window.SongUi || {};
-        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form, window.SongUi.Pager);
+        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form, window.SongUi.Pager, window.SongUi.Dialog);
     }
 })(window)

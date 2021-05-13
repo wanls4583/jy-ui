@@ -387,6 +387,7 @@
             data: data,
             limit: 10,
             defaultToolbar: true,
+            stretch: true,
             cols: [{
                 type: 'checkbox'
             }, {
@@ -398,11 +399,18 @@
             }, {
                 title: '性别',
                 field: 'sex',
-                width: 50
+                width: 50,
+                editable: {
+                    rules: [{ type: 'require' }]
+                }
             }, {
                 title: '年龄',
                 field: 'age',
-                width: 50
+                width: 50,
+                editable: {
+                    type: 'number',
+                    rules: [{ type: 'number' }]
+                }
             }, {
                 type: 'operate',
                 title: '操作',

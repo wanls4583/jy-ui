@@ -179,7 +179,6 @@ hr {
 }
 
 .song-table {
-    width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     color: $color-666;
@@ -193,6 +192,7 @@ hr {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
         width: 100%;
+        min-width: 100%;
         overflow: auto;
     }
 
@@ -287,8 +287,21 @@ hr {
 
         .cell {
             position: relative;
-            margin: 0 #{-$pd15};
-            padding: 0 $pd15;
+            margin: -5px #{-$pd15};
+            padding: 5px $pd15;
+
+            .song-form-radio,
+            .song-form-checkbox {
+                margin: 0;
+            }
+
+            .song-input {
+                position: absolute;
+                top: 5px;
+                left: 15px;
+                _left: 0;
+                right: 15px;
+            }
         }
     }
 }

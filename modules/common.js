@@ -51,23 +51,20 @@
         }
 
         // 获取纯数字
-        function getNum(str, noParse, dot) {
-            if (typeof str == 'number') {
-                str = str.toString();
+        function getNum(value, dot) {
+            value = value.replace(/[^0123456789\.]/g, '');
+            var reg = /^\d+(\.\d*)?$/;
+            var r = reg.exec(value);
+            var num = r && r[0] || '';
+            if (dot !== undefined) { //整数
+                if (dot === 0 && num) {
+                    num = parseInt(num);
+                }
+                if (r && r[1] && r[1].length > (dot + 1)) {
+                    num = num.slice(0, num.length - (r[1].length - (dot + 1)));
+                }
             }
-            if (dot === undefined) {
-                dot = 2;
-            }
-            str = (str || '') + '';
-            str = str.replace(/\,/g, '');
-            str = str.replace(/。/g, '.');
-            var reg = new RegExp('\\-?\\d+' + (dot ? '(\\.\\d{0,' + dot + '})?' : ''));
-            reg = str.match(reg);
-            if (noParse) {
-                return reg && reg[0] || (str == '-' ? '-' : '');
-            } else {
-                return reg && Number(reg[0]) || 0;
-            }
+            return num;
         }
 
         if (!Array.prototype.indexOf) {
