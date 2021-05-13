@@ -287,22 +287,22 @@
         }
 
         function httpGet(option, success, error) {
-            setTimeout(function () {
-                var temp = [];
-                var start = (option.nowPage - 1) * option.limit;
-                for (var i = start; i < start + option.limit; i++) {
-                    temp.push({
-                        user: '网络用户' + i,
-                        sex: '男',
-                        age: 26
-                    });
-                }
-                success({
-                    data: temp,
-                    count: 100
-                });
-            }, 100);
-            return
+            // setTimeout(function () {
+            //     var temp = [];
+            //     var start = (option.nowPage - 1) * option.limit;
+            //     for (var i = start; i < start + option.limit; i++) {
+            //         temp.push({
+            //             user: '网络用户' + i,
+            //             sex: '男',
+            //             age: 26
+            //         });
+            //     }
+            //     success({
+            //         data: temp,
+            //         count: 100
+            //     });
+            // }, 100);
+            // return
             var data = option.reqeust.data || {};
             data[option.reqeust.pageName || 'page'] = option.nowPage;
             data[option.reqeust.limitName || 'limit'] = option.limit;

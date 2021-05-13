@@ -246,11 +246,12 @@ hr {
     }
 
     &-pager {
-        // text-align: center;
+        text-align: center;
+
         .song-pager {
-            // display: inline-block;
-            // *display: inline;
-            // *zoom: 1;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
             padding: $pd10 0;
 
             .song-pager-num,
@@ -348,6 +349,10 @@ hr {
         font-size: 14px;
         outline: none;
         vertical-align: middle;
+    }
+
+    .song-pager-nums {
+        float: left;
     }
 
     .song-pager-jump {
