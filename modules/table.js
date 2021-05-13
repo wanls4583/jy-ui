@@ -463,6 +463,9 @@
             var trigger = option.trigger || 'click';
             var cols = option.cols;
             $tr.on(trigger, function (e) {
+                if ($(e.target).attr('song-event')) {
+                    return;
+                }
                 if ($tr[0].editing) {
                     return;
                 }
