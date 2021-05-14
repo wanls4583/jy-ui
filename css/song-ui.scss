@@ -182,7 +182,7 @@ hr {
     width: 100%;
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
     table-layout: fixed;
-    border-collapse: collapse;
+    // border-collapse: collapse;
     border-spacing: 0;
     color: $color-666;
 
@@ -289,7 +289,6 @@ hr {
         .cell {
             position: relative;
             min-height: 28px;
-            *height: 28px;
             margin: -5px #{-$pd15};
             padding: 5px $pd15;
             // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
@@ -300,36 +299,27 @@ hr {
                 margin-top: 0;
             }
 
-            .song-form-select {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-            }
-
             .song-input {
-                border: none;
+                border: transparent;
             }
 
-            .song-table-input {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                background-color: $white-color;
-            }
-
-            .song-table-checkbox {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
+            .song-table-checkboxs {
                 padding-left: $pd10;
                 background-color: $white-color;
+            }
+        }
 
-                .song-form-checkbox {
-                    margin-top: 10px;
-                }
+        &.song-table-editting {
+            padding: 0;
+            border: 1px solid $link-color;
+
+            *+html & {
+                padding: 1px;
+            }
+
+            .cell {
+                margin: 0;
+                padding: 0;
             }
         }
     }

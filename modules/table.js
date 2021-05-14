@@ -510,7 +510,7 @@
                         if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                             var $input = $('<input class="song-table-input song-input">');
                             $input.val(data[col.field]);
-                            $cell.append($input);
+                            $cell.empty().append($input);
                             $input.on('input propertychange', function () {
                                 if (editable.type == 'number') {
                                     var num = Common.getNum($input.val());
@@ -526,7 +526,7 @@
                             col.select && col.select.map(function (item) {
                                 $select.append('<option value="' + item.value + '" ' + (item.value == data[col.field] ? 'selected' : '') + '>' + item.label + '</option>');
                             });
-                            $cell.append($select);
+                            $cell.empty().append($select);
                             Form.render('select(' + filter + ')');
                             Form.on('select(' + filter + ')', function (e) {
                                 $select[0].value = e.data;
@@ -535,11 +535,11 @@
                             $td[0].$select = $select;
                         } else if (editable.type == 'checkbox') { // 复选框编辑
                             var filter = 'table_checkbox_' + option.filter + '_' + $tr[0].index;
-                            var $checkbox = $('<div class="song-table-checkbox"></div>');
+                            var $checkbox = $('<div class="song-table-checkboxs"></div>');
                             col.checkbox && col.checkbox.map(function (item) {
                                 $checkbox.append('<input type="checkbox" song-filter="' + filter + '" title="' + item.label + '" value="' + item.value + '" ' + (data[col.field] && hasValue(data[col.field], item.value) > -1 ? 'checked' : '') + '/>');
                             });
-                            $cell.append($checkbox);
+                            $cell.empty().append($checkbox);
                             Form.render('checkbox(' + filter + ')');
                             Form.on('checkbox(' + filter + ')', function (e) {
                                 $checkbox[0].value = e.data;

@@ -783,7 +783,6 @@ hr {
 .song-table {
   width: 100%;
   table-layout: fixed;
-  border-collapse: collapse;
   border-spacing: 0;
   color: #666666;
 }
@@ -893,7 +892,6 @@ hr {
 .song-table td .cell {
   position: relative;
   min-height: 28px;
-  *height: 28px;
   margin: -5px -15px;
   padding: 5px 15px;
   *zoom: 1;
@@ -906,41 +904,32 @@ hr {
   margin-top: 0;
 }
 
-.song-table th .cell .song-form-select,
-.song-table td .cell .song-form-select {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-
 .song-table th .cell .song-input,
 .song-table td .cell .song-input {
-  border: none;
+  border: transparent;
 }
 
-.song-table th .cell .song-table-input,
-.song-table td .cell .song-table-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: #ffffff;
-}
-
-.song-table th .cell .song-table-checkbox,
-.song-table td .cell .song-table-checkbox {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+.song-table th .cell .song-table-checkboxs,
+.song-table td .cell .song-table-checkboxs {
   padding-left: 10px;
   background-color: #ffffff;
 }
 
-.song-table th .cell .song-table-checkbox .song-form-checkbox,
-.song-table td .cell .song-table-checkbox .song-form-checkbox {
-  margin-top: 10px;
+.song-table th.song-table-editting,
+.song-table td.song-table-editting {
+  padding: 0;
+  border: 1px solid #5FB878;
+}
+
+* + html .song-table th.song-table-editting, * + html
+.song-table td.song-table-editting {
+  padding: 1px;
+}
+
+.song-table th.song-table-editting .cell,
+.song-table td.song-table-editting .cell {
+  margin: 0;
+  padding: 0;
 }
 
 .song-pager {
