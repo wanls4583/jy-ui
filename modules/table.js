@@ -64,12 +64,6 @@
             if (option.page !== false) {
                 renderPage(option);
             }
-            // 是否伸展表格
-            if (option.stretch) {
-                $table.css({
-                    width: '100%'
-                });
-            }
 
             option.reload = function (_option) {
                 reload(option, _option);
@@ -220,21 +214,10 @@
                     $th.hide();
                 }
                 if (col.width) {
-                    $cell.css({
-                        width: col.width + 'px'
+                    // ie6及以下使用的事border-box
+                    $th.css({
+                        width: (ieVersion <= 6 ? col.width + 30 : col.width) + 'px'
                     });
-                }
-                if (col.minWidth) {
-                    // ie7以下不支持min-width
-                    if (ieVersion <= 7) {
-                        $cell.css({
-                            width: col.minWidth + 'px'
-                        });
-                    } else {
-                        $cell.css({
-                            'min-width': col.minWidth + 'px'
-                        });
-                    }
                 }
                 // 单选
                 if (col.type == 'radio' && filter) {
@@ -479,7 +462,7 @@
                         var height = $cell.height() || 28;
                         editable.type = editable.type || 'text';
                         if (editable.type == 'text' || editable.type == 'number') {
-                            var $input = $('<input class="song-input" style="width:' + width + 'px;height:' + height + 'px;line-height:' + height + 'px;">');
+                            var $input = $('<input class="song-input" style="width:' + width + 'px;height:' + height + 'px;line-height:' + (height - 2) + 'px;">');
                             $input.val(data[col.field]);
                             $cell.append($input);
                             $input.on('input propertychange', function () {

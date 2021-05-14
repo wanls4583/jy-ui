@@ -495,6 +495,7 @@ a {
   line-height: 24px;
   padding: 20px;
   overflow: auto;
+  *zoom: 1;
 }
 
 .song-layer.song-layer-msg .song-layer-content {
@@ -540,7 +541,6 @@ a {
   position: absolute;
   top: 16px;
   left: 15px;
-  _left: -40px;
   line-height: 30px;
   font-family: 'iconfont';
   font-size: 30px;
@@ -782,6 +782,8 @@ hr {
 }
 
 .song-table {
+  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
   color: #666666;
@@ -895,6 +897,7 @@ hr {
   position: relative;
   margin: -5px -15px;
   padding: 5px 15px;
+  *zoom: 1;
 }
 
 .song-table th .cell .song-form-radio,
@@ -909,7 +912,6 @@ hr {
   position: absolute;
   top: 5px;
   left: 15px;
-  _left: 0;
   right: 15px;
 }
 

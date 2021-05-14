@@ -57,7 +57,7 @@
 
     .song-layer-title {
         position: relative;
-        // ie6以下不能用height是定义song-layer-title的高度，否则将触发haslayout使元素撑开父容器
+        // ie6及以下不能用height是定义song-layer-title的高度，否则将触发haslayout使元素撑开父容器
         line-height: 16px;
         padding: 17px 95px 17px 20px;
         font-size: 16px;
@@ -71,6 +71,8 @@
         line-height: 24px;
         padding: $pd20;
         overflow: auto;
+        // ie6及以下触发了hasLayout后，父元素如果是absolute，其宽度将被撑开
+        *zoom: 1;
     }
 
     &.song-layer-msg .song-layer-content {
@@ -116,8 +118,6 @@
         position: absolute;
         top: 16px;
         left: 15px;
-        // ie6绝对定位不包括padding-left
-        _left: -40px;
         line-height: 30px;
         font-family: 'iconfont';
         font-size: 30px;
