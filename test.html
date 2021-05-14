@@ -380,7 +380,9 @@
     function renderTable() {
         data = [];
         for (var i = 0; i < 100; i++) {
-            data.push({ user: '用户' + i, sex: '男', age: 30 });
+            var sex = Math.ceil(Math.random() * 2);
+            var age = Math.ceil(Math.random() * 100);
+            data.push({ user: '用户' + i, sex: sex, age: age });
         };
         SongUi.Table.render({
             elem: '#table',
@@ -397,17 +399,42 @@
             }, {
                 title: '性别',
                 field: 'sex',
-                width: 50,
+                width: 100,
+                select: [{
+                    label: '男',
+                    value: 1
+                }, {
+                    label: '女',
+                    value: 2
+                }],
                 editable: {
+                    type: 'select',
                     rules: [{ type: 'require' }]
                 }
             }, {
                 title: '年龄',
                 field: 'age',
-                width: 50,
+                width: 100,
                 editable: {
                     type: 'number',
                     rules: [{ type: 'number' }]
+                }
+            }, {
+                title: '爱好',
+                field: 'like',
+                checkbox: [{
+                    label: '听歌',
+                    value: 1
+                }, {
+                    label: '游泳',
+                    value: 2
+                }, {
+                    label: '看小说',
+                    value: 3
+                }],
+                editable: {
+                    type: 'checkbox',
+                    rules: [{ type: 'require' }]
                 }
             }, {
                 type: 'operate',

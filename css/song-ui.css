@@ -166,6 +166,8 @@ a {
   display: block;
   width: 100%;
   height: 38px;
+  *height: 36px !important;
+  _height: 38px;
   line-height: 36px;
   padding: 0 0 0 15px;
   border: 1px solid #eeeeee;
@@ -200,6 +202,7 @@ a {
   position: relative;
   display: inline-block;
   *display: inline;
+  *zoom: 1;
   height: 22px;
   line-height: 22px;
   margin-top: 8px;
@@ -215,10 +218,6 @@ a {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-}
-
-* + html .song-form-switch {
-  zoom: 1;
 }
 
 .song-form-switch i {
@@ -883,18 +882,18 @@ hr {
 
 .song-table th,
 .song-table td {
+  line-height: 28px;
   padding: 5px 15px;
   border-right: 1px solid #eeeeee;
   border-bottom: 1px solid #eeeeee;
-  min-height: 28px;
-  *height: 28px;
-  line-height: 28px;
   font-size: 14px;
 }
 
 .song-table th .cell,
 .song-table td .cell {
   position: relative;
+  min-height: 28px;
+  *height: 28px;
   margin: -5px -15px;
   padding: 5px 15px;
   *zoom: 1;
@@ -904,15 +903,44 @@ hr {
 .song-table th .cell .song-form-checkbox,
 .song-table td .cell .song-form-radio,
 .song-table td .cell .song-form-checkbox {
-  margin: 0;
+  margin-top: 0;
+}
+
+.song-table th .cell .song-form-select,
+.song-table td .cell .song-form-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .song-table th .cell .song-input,
 .song-table td .cell .song-input {
+  border: none;
+}
+
+.song-table th .cell .song-table-input,
+.song-table td .cell .song-table-input {
   position: absolute;
-  top: 5px;
-  left: 15px;
-  right: 15px;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+}
+
+.song-table th .cell .song-table-checkbox,
+.song-table td .cell .song-table-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding-left: 10px;
+  background-color: #ffffff;
+}
+
+.song-table th .cell .song-table-checkbox .song-form-checkbox,
+.song-table td .cell .song-table-checkbox .song-form-checkbox {
+  margin-top: 10px;
 }
 
 .song-pager {

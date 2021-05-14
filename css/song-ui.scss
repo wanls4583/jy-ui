@@ -280,16 +280,16 @@ hr {
     td {
         // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8及以下不支持background-clip
         // position: relative;
+        line-height: 28px;
         padding: 5px $pd15;
         border-right: 1px solid $light-color;
         border-bottom: 1px solid $light-color;
-        min-height: 28px;
-        *height: 28px;
-        line-height: 28px;
         font-size: 14px;
 
         .cell {
             position: relative;
+            min-height: 28px;
+            *height: 28px;
             margin: -5px #{-$pd15};
             padding: 5px $pd15;
             // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
@@ -297,14 +297,39 @@ hr {
 
             .song-form-radio,
             .song-form-checkbox {
-                margin: 0;
+                margin-top: 0;
+            }
+
+            .song-form-select {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
             }
 
             .song-input {
+                border: none;
+            }
+
+            .song-table-input {
                 position: absolute;
-                top: 5px;
-                left: 15px;
-                right: 15px;
+                top: 0;
+                left: 0;
+                right: 0;
+                background-color: $white-color;
+            }
+
+            .song-table-checkbox {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                padding-left: $pd10;
+                background-color: $white-color;
+
+                .song-form-checkbox {
+                    margin-top: 10px;
+                }
             }
         }
     }

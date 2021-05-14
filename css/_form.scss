@@ -128,6 +128,8 @@
     display: block;
     width: 100%;
     height: $input-height;
+    *height: $input-height - 2px !important;
+    _height: $input-height;
     line-height: $input-height - 2px;
     padding: 0 0 0 $pd15;
     border: 1px solid $light-color;

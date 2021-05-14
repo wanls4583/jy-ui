@@ -90,31 +90,9 @@
                 var tr = trs[i];
                 if (tr.editing) {
                     $(tr).find('td').each(function (j, td) {
-                        var col = td.col;
-                        if (td.editing) {
-                            var value = td.$input.val();
-                            // 验证输入内容
-                            if (col.editable.rules) {
-                                for (var i = 0; i < col.editable.rules.length; i++) {
-                                    var rule = col.editable.rules[i];
-                                    var msg = rule.msg;
-                                    if (typeof rule.type == 'string') {
-                                        rule = ruleMap[rule.type];
-                                        msg = msg || rule.msg;
-                                    }
-                                    if (typeof rule.reg == 'function') {
-                                        pass = rule.reg(value);
-                                    } else if (rule.reg) {
-                                        pass = rule.reg.test(value);
-                                    }
-                                    if (!pass) {
-                                        Dialog.msg(msg, {
-                                            icon: 'error'
-                                        });
-                                        return false;
-                                    }
-                                }
-                            }
+                        pass = _verify(td);
+                        if (!pass) {
+                            return false;
                         }
                     });
                 }
@@ -126,22 +104,89 @@
                 var tr = trs[i];
                 if (tr.editing) {
                     $(tr).find('td').each(function (j, td) {
-                        var col = td.col;
-                        if (td.editing) {
-                            var value = td.$input.val();
-                            if (col.editable.type == 'number') {
-                                value = Number(value) || 0;
-                            }
-                            tr.rowData[col.field] = value;
-                            td.colData = value;
-                            $(td).find('.cell').html(col.template ? col.template(td.colData, tr.index, col) : td.colData);
-                        }
-                        td.editing = false;
-                        td.$input = undefined;
+                        _save(td, tr);
                     });
                 }
                 tr.editing = false;
             });
+
+            // 获取编辑中的数据
+            function _getValue(td, ifFormat) {
+                var value = null;
+                var col = td.col;
+                if (td.$input) {
+                    value = td.$input.val();
+                } else if (td.$select) {
+                    value = td.$select[0].value;
+                    if (ifFormat) {
+                        col.select.map(function (item) {
+                            if (item.value == value) {
+                                value = item.label;
+                            }
+                        });
+                    }
+                } else if (td.$checkbox) {
+                    value = td.$checkbox[0].value
+                    if (ifFormat) {
+                        var arr = [];
+                        value && col.checkbox.map(function (item) {
+                            if (hasValue(value, item.value) > -1) {
+                                arr.push(item.label);
+                            }
+                        });
+                        value = arr.join('、');
+                    }
+                }
+                return value;
+            }
+
+            // 验证输入的数据
+            function _verify(td) {
+                var pass = true;
+                var col = td.col;
+                if (td.editing) {
+                    var value = _getValue(td);
+                    // 验证输入内容
+                    if (col.editable.rules) {
+                        for (var i = 0; i < col.editable.rules.length; i++) {
+                            var rule = col.editable.rules[i];
+                            var msg = rule.msg;
+                            if (typeof rule.type == 'string') {
+                                rule = ruleMap[rule.type];
+                                msg = msg || rule.msg;
+                            }
+                            if (typeof rule.reg == 'function') {
+                                pass = rule.reg(value);
+                            } else if (rule.reg) {
+                                pass = rule.reg.test(String(value || ''));
+                            }
+                            if (!pass) {
+                                Dialog.msg(msg, {
+                                    icon: 'error'
+                                });
+                            }
+                        }
+                    }
+                }
+                return pass;
+            }
+
+            // 保存编辑的数据
+            function _save(td, tr) {
+                var col = td.col;
+                if (td.editing) {
+                    var value = _getValue(td);
+                    var fValue = _getValue(td, true);
+                    tr.rowData[col.field] = value;
+                    td.colData = value;
+                    $(td).find('.cell').html(col.template ? col.template(td.colData, tr.index, col) : fValue);
+                }
+                $(td).removeClass('song-table-editting');
+                td.editing = false;
+                td.$input = undefined;
+                td.$select = undefined;
+                td.$checkbox = undefined;
+            }
         }
 
         // 挂载
@@ -305,7 +350,26 @@
                         var $td = $('<td data-field="' + (col.field || '') + '"></td>');
                         var $cell = null;
                         if (!col.type || col.type == 'normal') {
-                            $cell = $('<div class="cell">' + (col.template ? col.template(item, index, col) : (col.field ? item[col.field] : '')) + '</div>');
+                            var html = item[col.field];
+                            if (col.template) { // 自定义渲染函数
+                                html = col.template(item, index, col);
+                            } else if (col.select) { // 下列列表中的数据
+                                html = '';
+                                col.select.map(function (obj) {
+                                    if (obj.value == item[col.field]) {
+                                        html = obj.label;
+                                    }
+                                });
+                            } else if (col.checkbox) { // 复选框中的数据
+                                html = '';
+                                col.checkbox.map(function (obj) {
+                                    if (obj.value == item[col.field]) {
+                                        html = ',' + obj.label;
+                                    }
+                                });
+                                html = html.slice(1);
+                            }
+                            $cell = $('<div class="cell">' + html + '</div>');
                         } else if (col.type == 'radio') {
                             $cell = $('<div class="cell"><input type="radio" name="table_radio_' + filter + '" value="' + index + '" song-filter="table_radio_' + filter + '"/></div>');
                         } else if (col.type == 'checkbox') {
@@ -363,22 +427,6 @@
         }
 
         function httpGet(option, success, error) {
-            // setTimeout(function () {
-            //     var temp = [];
-            //     var start = (option.nowPage - 1) * option.limit;
-            //     for (var i = start; i < start + option.limit; i++) {
-            //         temp.push({
-            //             user: '网络用户' + i,
-            //             sex: '男',
-            //             age: 26
-            //         });
-            //     }
-            //     success({
-            //         data: temp,
-            //         count: 100
-            //     });
-            // }, 100);
-            // return
             var data = option.reqeust.data || {};
             data[option.reqeust.pageName || 'page'] = option.nowPage;
             data[option.reqeust.limitName || 'limit'] = option.limit;
@@ -458,11 +506,9 @@
                         var editable = col.editable === true ? {} : col.editable;
                         var $td = $tr.find('td[data-field="' + col.field + '"]');
                         var $cell = $td.find('.cell');
-                        var width = $cell.width();
-                        var height = $cell.height() || 28;
                         editable.type = editable.type || 'text';
-                        if (editable.type == 'text' || editable.type == 'number') {
-                            var $input = $('<input class="song-input" style="width:' + width + 'px;height:' + height + 'px;line-height:' + (height - 2) + 'px;">');
+                        if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
+                            var $input = $('<input class="song-table-input song-input">');
                             $input.val(data[col.field]);
                             $cell.append($input);
                             $input.on('input propertychange', function () {
@@ -474,7 +520,34 @@
                                 }
                             });
                             $td[0].$input = $input;
+                        } else if (editable.type == 'select') { // 下拉框编辑
+                            var filter = 'table_select_' + option.filter + '_' + $tr[0].index;
+                            var $select = $('<select song-filter="' + filter + '"></select>');
+                            col.select && col.select.map(function (item) {
+                                $select.append('<option value="' + item.value + '" ' + (item.value == data[col.field] ? 'selected' : '') + '>' + item.label + '</option>');
+                            });
+                            $cell.append($select);
+                            Form.render('select(' + filter + ')');
+                            Form.on('select(' + filter + ')', function (e) {
+                                $select[0].value = e.data;
+                            });
+                            $select[0].value = data[col.field];
+                            $td[0].$select = $select;
+                        } else if (editable.type == 'checkbox') { // 复选框编辑
+                            var filter = 'table_checkbox_' + option.filter + '_' + $tr[0].index;
+                            var $checkbox = $('<div class="song-table-checkbox"></div>');
+                            col.checkbox && col.checkbox.map(function (item) {
+                                $checkbox.append('<input type="checkbox" song-filter="' + filter + '" title="' + item.label + '" value="' + item.value + '" ' + (data[col.field] && hasValue(data[col.field], item.value) > -1 ? 'checked' : '') + '/>');
+                            });
+                            $cell.append($checkbox);
+                            Form.render('checkbox(' + filter + ')');
+                            Form.on('checkbox(' + filter + ')', function (e) {
+                                $checkbox[0].value = e.data;
+                            });
+                            $checkbox[0].value = data[col.field];
+                            $td[0].$checkbox = $checkbox;
                         }
+                        $td.addClass('song-table-editting');
                         $td[0].editing = true;
                     }
                 });
@@ -507,6 +580,16 @@
         }
 
         return Table;
+    }
+
+    // 查找数组内容
+    function hasValue(arr, value) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     if ("function" == typeof define && define.amd) {
