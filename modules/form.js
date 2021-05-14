@@ -329,7 +329,7 @@
                     }
                     $('.song-checkbox-checked').each(function (i, radio) {
                         var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == $this[0].$input.attr('name')) {
+                        if ($_this[0].$input.attr('name') == $this[0].$input.attr('name') && $_this[0].$input.attr('song-filter') == $this[0].$input.attr('song-filter')) {
                             data.push($_this[0].$input.val());
                         }
                     });
