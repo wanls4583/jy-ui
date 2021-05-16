@@ -315,21 +315,6 @@
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
 <script>
-    SongUi.Form.on('switch', function (event) {
-        SongUi.Dialog.msg('switch')
-    });
-    SongUi.Form.on('radio', function (event) {
-        SongUi.Dialog.msg('radio')
-    });
-    SongUi.Form.on('checkbox', function (event) {
-        SongUi.Dialog.msg('checkbox')
-    });
-    SongUi.Form.on('select', function (event) {
-        SongUi.Dialog.msg('select')
-    });
-    SongUi.Form.on('submit', function (data) {
-        SongUi.Dialog.msg('submit')
-    });
     function openAlert(icon) {
         SongUi.Dialog.alert('点击确认更改图标', {
             icon: icon,
@@ -441,9 +426,6 @@
                 title: '操作',
                 width: 150,
                 btns: [{
-                    text: '修改',
-                    event: 'edit'
-                }, {
                     text: '删除',
                     event: 'del',
                     type: 'danger'
@@ -452,6 +434,9 @@
         });
         SongUi.Table.on('edit', function (obj) {
             SongUi.Dialog.msg('eidt');
+        });
+        SongUi.Table.on('save', function (obj) {
+            SongUi.Dialog.msg('save');
         });
         SongUi.Table.on('del', function (obj) {
             SongUi.Dialog.msg('del');

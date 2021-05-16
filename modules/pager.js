@@ -5,11 +5,12 @@
  */
 !(function () {
     function factory($, Common) {
+        var event = Common.getEvent();
         var Pager = {
             render: render,
-            on: Common.on,
-            once: Common.once,
-            trigger: Common.trigger
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger
         }
 
         // 渲染

@@ -6,35 +6,43 @@
 !(function () {
     function factory($) {
         var Common = {
-            on: on,
-            once: once,
-            trigger: trigger,
+            getEvent: getEvent,
             getIeVersion: getIeVersion,
             getNum: getNum
         }
 
-        // 监听事件
-        function on(filter, callback) {
-            on[filter] = on[filter] || [];
-            on[filter].push(callback);
-        }
 
-        // 监听事件
-        function once(filter, callback) {
-            if (!on[filter]) {
-                on[filter] = [callback];
+        function getEvent() {
+            // 监听事件
+            function on(filter, callback) {
+                on[filter] = on[filter] || [];
+                on[filter].push(callback);
             }
-        }
 
-        // 触发事件
-        function trigger(filter, event) {
-            var arr = on[filter];
-            if (arr) {
-                for (var i = 0; i < arr.length; i++) {
-                    arr[i](event);
+            // 监听事件
+            function once(filter, callback) {
+                if (!on[filter]) {
+                    on[filter] = [callback];
                 }
             }
+
+            // 触发事件
+            function trigger(filter, event) {
+                var arr = on[filter];
+                if (arr) {
+                    for (var i = 0; i < arr.length; i++) {
+                        arr[i](event);
+                    }
+                }
+            }
+
+            return {
+                on: on,
+                once: once,
+                trigger: trigger
+            }
         }
+
 
         // 获取ie版本
         function getIeVersion() {

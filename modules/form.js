@@ -9,12 +9,13 @@
         var downIcon = '&#xe74b;';
         var radioIcon = '&#xe61c;';
         var radioedIcon = '&#xe619;';
+        var event = Common.getEvent();
         var Form = {
             init: init,
             render: render,
-            on: Common.on,
-            once: Common.once,
-            trigger: Common.trigger,
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger,
             verify: verify,
             getJsonFromForm: getJsonFromForm,
             verifyRules: {

@@ -873,10 +873,13 @@ hr {
   padding: 0;
 }
 
+.song-table thead {
+  background-color: #f6f6f6;
+}
+
 .song-table th {
   text-align: left;
   font-weight: normal;
-  background-color: #f6f6f6;
 }
 
 .song-table th,

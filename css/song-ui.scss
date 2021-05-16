@@ -270,10 +270,13 @@ hr {
         }
     }
 
+    thead {
+        background-color: $lighter-color;
+    }
+
     th {
         text-align: left;
         font-weight: normal;
-        background-color: $lighter-color;
     }
 
     th,
