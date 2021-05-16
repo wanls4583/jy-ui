@@ -342,7 +342,6 @@ a {
 
 .song-form-select {
   position: relative;
-  z-index: 1;
   width: 100%;
 }
 
@@ -374,6 +373,7 @@ a {
   position: absolute;
   top: 100%;
   left: 0;
+  z-index: 1;
   width: 100%;
   margin-top: 4px;
   background-color: #ffffff;

@@ -361,7 +361,7 @@
             }
         });
     }
-    renderTable();
+    var table = renderTable();
     function renderTable() {
         data = [];
         for (var i = 0; i < 100; i++) {
@@ -369,7 +369,7 @@
             var age = Math.ceil(Math.random() * 100);
             data.push({ user: '用户' + i, sex: sex, age: age });
         };
-        SongUi.Table.render({
+        table = SongUi.Table.render({
             elem: '#table',
             data: data,
             limit: 10,
@@ -447,6 +447,7 @@
         SongUi.Table.on('checkbox', function (obj) {
             SongUi.Dialog.msg('checkbox');
         });
+        return table;
     }
     SongUi.Pager.render({
         elem: '#test_page',
