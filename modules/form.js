@@ -10,6 +10,7 @@
         var radioIcon = '&#xe61c;';
         var radioedIcon = '&#xe619;';
         var event = Common.getEvent();
+        var ieVersion = Common.getIeVersion();
         var Form = {
             init: init,
             render: render,
@@ -228,7 +229,7 @@
                     return;
                 }
                 if ($input.prop('disabled')) {
-                    classNames += ' song-radio-disabled';
+                    classNames += 'song-radio-disabled';
                 }
                 if ($input.prop('checked')) {
                     classNames += ' song-radio-checked';
@@ -250,13 +251,14 @@
             function _bindEvent($dom) {
                 $dom.on('click', function () {
                     var $this = $(this);
+                    var name = $this[0].$input.attr('name');
                     var filter = this.$input.attr('song-filter');
                     if ($this.hasClass('song-radio-disabled')) {
                         return;
                     }
                     $('div.song-form-radio').each(function (i, radio) {
                         var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == $this[0].$input.attr('name')) {
+                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('filter') == filter) {
                             $_this.removeClass('song-radio-checked').find('i').html(radioedIcon);
                         }
                     });
@@ -294,7 +296,7 @@
                 }
                 var classNames = '';
                 if ($input.prop('disabled')) {
-                    classNames += ' song-checkbox-disabled';
+                    classNames += 'song-checkbox-disabled';
                 }
                 if ($input.prop('checked')) {
                     classNames += ' song-checkbox-checked';
@@ -316,6 +318,7 @@
             function _bindEvent($dom) {
                 $dom.on('click', function () {
                     var $this = $(this);
+                    var name = this.$input.attr('name');
                     var filter = this.$input.attr('song-filter');
                     var data = [];
                     if ($this.hasClass('song-checkbox-disabled')) {
@@ -331,7 +334,7 @@
                     }
                     $('div.song-checkbox-checked').each(function (i, radio) {
                         var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == $this[0].$input.attr('name') && $_this[0].$input.attr('song-filter') == $this[0].$input.attr('song-filter')) {
+                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
                             data.push($_this[0].$input.val());
                         }
                     });
@@ -377,7 +380,7 @@
                     var value = $opt.val();
                     var classNames = '';
                     if (!text) {
-                        classNames += ' song-color-holder';
+                        classNames += 'song-color-holder';
                     }
                     if ($select.val() == value) {
                         $input.attr('data-value', $select.val());
@@ -409,12 +412,15 @@
                         $title.trigger('blur');
                     } else {
                         // 其他选择框都收起
-                        $('dl.song-select-dl').hide().parents('div.song-form-select').css({
-                            'z-index': 'auto'
-                        });
-                        $title.parents('div.song-form-select').css({
-                            'z-index': '99'
-                        });
+                        $('dl.song-select-dl').hide();
+                        if (ieVersion < 8) { // ie7及以下定位bugfix
+                            $('dl.song-select-dl').parent().parent().parent().css({
+                                'z-index': 'auto'
+                            });
+                            $title.parent().parent().parent().css({
+                                'z-index': '99'
+                            });
+                        }
                         $cont.find('dd').show();
                         $cont.show();
                     }
@@ -424,9 +430,11 @@
                     var $dd = $cont.find('dd.song-select-active');
                     $input.val($dd.attr('data-value') && $dd.text() || '');
                     $cont.hide();
-                    $title.parents('div.song-form-item').css({
-                        'z-index': 'auto'
-                    });
+                    if (ieVersion < 8) { // ie7及以下定位bugfix
+                        $title.parent().parent().parent().css({
+                            'z-index': 'auto'
+                        });
+                    }
                     setTimeout(function () {
                         $input.blur()
                     }, 50);

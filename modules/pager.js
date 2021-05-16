@@ -126,11 +126,8 @@
                         $nums.append('<a href="javascript:;" class="song-pager-num" data-page="' + (i + 1) + '">' + (i + 1) + '</a>');
                     }
                 }
-                // 首次渲染时不需要触发
-                if (!option.firstRender) {
-                    $pager.find('.song-pager-now').removeClass('song-pager-now');
-                    $pager.find('.song-pager-num[data-page="' + option.nowPage + '"]').addClass('song-pager-now');
-                }
+                $pager.find('.song-pager-now').removeClass('song-pager-now');
+                $pager.find('.song-pager-num[data-page="' + option.nowPage + '"]').addClass('song-pager-now');
             }
             $pager.find('.song-pager-input').val(option.nowPage);
             if (option.nowPage == 1) {
@@ -143,8 +140,11 @@
             } else {
                 $pager.find('.song-pager-next').removeClass('song-pager-next-disabled');
             }
-            Pager.trigger('page(' + option.filter + ')', option.nowPage);
-            Pager.trigger('page', option.nowPage);
+            // 首次渲染时不需要触发
+            if (!option.firstRender) {
+                Pager.trigger('page(' + option.filter + ')', option.nowPage);
+                Pager.trigger('page', option.nowPage);
+            }
         }
 
         // 绑定事件
@@ -155,41 +155,41 @@
             }
             $pager[0].binded = true;
             // 上一页
-            $pager.delegate('.song-pager-prev', 'click', function () {
+            $pager.delegate('a.song-pager-prev', 'click', function () {
                 if (option.nowPage > 1) {
                     option.nowPage--;
                     renderNowPage(option);
                 }
             });
             // 下一页
-            $pager.delegate('.song-pager-next', 'click', function () {
+            $pager.delegate('a.song-pager-next', 'click', function () {
                 if (option.nowPage < option.pages) {
                     option.nowPage++;
                     renderNowPage(option);
                 }
             });
             // 点击页码
-            $pager.delegate('.song-pager-num', 'click', function () {
+            $pager.delegate('a.song-pager-num', 'click', function () {
                 var $this = $(this);
                 var page = $this.attr('data-page');
                 option.nowPage = page;
                 renderNowPage(option);
             });
             // 跳转
-            $pager.delegate('.song-pager-confirm', 'click', function () {
+            $pager.delegate('button.song-pager-confirm', 'click', function () {
                 var page = $pager.find('.song-pager-input').val();
                 if (page >= 1 && page <= option.pages) {
                     option.nowPage = page;
                     renderNowPage(option);
                 }
             });
-            $pager.delegate('.song-pager-input', 'keydown', function (e) {
+            $pager.delegate('input.song-pager-input', 'keydown', function (e) {
                 if (e.keyCode == 13) {
-                    $pager.find('.song-pager-confirm').trigger('click');
+                    $pager.find('button.song-pager-confirm').trigger('click');
                 }
             });
             // 每页数量变化
-            $pager.delegate('.song-pager-limits', 'change', function () {
+            $pager.delegate('select.song-pager-limits', 'change', function () {
                 var limit = Number($(this).val()) || 0;
                 Pager.trigger('limit(' + option.filter + ')', limit);
                 Pager.trigger('limit', limit);

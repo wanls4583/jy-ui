@@ -184,6 +184,8 @@ hr {
     table-layout: fixed;
     // border-collapse: collapse;
     border-spacing: 0;
+    border-left: 1px solid $light-color;
+    border-top: 1px solid $light-color;
     color: $color-666;
 
     &-view {
@@ -203,7 +205,6 @@ hr {
         position: relative;
         z-index: 1;
         padding: $pd10 $pd15;
-        border-bottom: 1px solid $light-color;
         border-right: 1px solid $light-color;
     }
 

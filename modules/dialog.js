@@ -103,10 +103,10 @@
             return layerIndex;
 
             function _bindEvent() {
-                $title.find('.song-op-close').on('click', function () {
+                $title.find('i.song-op-close').on('click', function () {
                     close(layerIndex);
                 });
-                $footer.find('.song-btn').each(function (i) {
+                $footer.find('button.song-btn').each(function (i) {
                     var $this = $(this);
                     (function (i) {
                         $this.on('click', function () {
@@ -181,8 +181,8 @@
         }
         // 关闭弹框
         function close(layerIndex) {
-            $('.song-layer.song-layer' + layerIndex).remove();
-            $('.song-layer-shadow.song-layer' + layerIndex).remove();
+            $('div.song-layer.song-layer' + layerIndex).remove();
+            $('div.song-layer-shadow.song-layer' + layerIndex).remove();
             if (ieVersion <= 6 && document.body.overflow !== undefined) {
                 document.body.style.overflow = document.body.overflow;
             }
@@ -195,46 +195,46 @@
             if (type) {
                 switch (type) {
                     case 'msg':
-                        $('.song-layer-msg').remove();
-                        $('.song-layer-msg-with-icon').remove();
+                        $('div.song-layer-msg').remove();
+                        $('div.song-layer-msg-with-icon').remove();
                         break;
                     case 'dialog':
-                        $('.song-layer-dialog').each(function (i, dom) {
+                        $('div.song-layer-dialog').each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('.song-layer' + index).remove();
+                            $('div.song-layer' + index).remove();
                         });
                         break;
                     case 'alert':
-                        $('.song-layer-alert').each(function (i, dom) {
+                        $('div.song-layer-alert').each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('.song-layer' + index).remove();
+                            $('div.song-layer' + index).remove();
                         });
                         break;
                     case 'confrim':
-                        $('.song-layer-confrim').each(function (i, dom) {
+                        $('div.song-layer-confrim').each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('.song-layer' + index).remove();
+                            $('div.song-layer' + index).remove();
                         });
                         break;
                 }
             } else {
-                $('.song-layer-shadow').remove();
-                $('.song-layer').remove();
+                $('div.song-layer-shadow').remove();
+                $('div.song-layer').remove();
             }
         }
         // 设置位置
         function setPosition(layerIndex, offset) {
-            var $layer = $('.song-layer.song-layer' + layerIndex);
+            var $layer = $('div.song-layer.song-layer' + layerIndex);
             var ie6MarginTop = 0;
             if ($layer.length) {
                 if (ieVersion <= 6) { //i6以下没有fixed定位
                     // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
                     // ie6以下只认document.body.scrollTop
                     ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                    $('.song-layer-shadow.song-layer' + layerIndex).css({
+                    $('div.song-layer-shadow.song-layer' + layerIndex).css({
                         marginTop: ie6MarginTop + 'px',
                         width: $(window.document.body).outerWidth() + 'px',
                         height: $(window.document.body).outerHeight() + 'px'
