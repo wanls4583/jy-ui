@@ -1,0 +1,98 @@
+@mixin song-pager($height: 30px) {
+    line-height: $height;
+
+    .song-pager-count {
+        float: left;
+        margin-left: $pd10;
+    }
+
+    .song-pager-prev {
+        margin-left: $pd10;
+        font-family: 'iconfont';
+    }
+
+    .song-pager-next {
+        font-family: 'iconfont';
+    }
+
+    .song-pager-prev,
+    .song-pager-next,
+    .song-pager-num,
+    .song-pager-dot,
+    .song-pager-limits {
+        float: left;
+        padding: 0 $height/2;
+        border: 1px solid $light-color;
+    }
+
+    .song-pager-prev-disabled,
+    .song-pager-next-disabled {
+        color: $gray-color;
+        cursor: not-allowed;
+    }
+
+    .song-pager-prev,
+    .song-pager-num,
+    .song-pager-dot {
+        border-right: none;
+    }
+
+    .song-pager-now {
+        color: $white-color;
+        background-color: $success-color;
+        border-color: $success-color;
+    }
+
+    .song-pager-limits {
+        height: $height + 2px;
+        height: #{'auto\\0/'};
+        *height: auto;
+        padding: 0;
+        margin-top: ($height - 20px)/2#{'\\0/'};
+        *margin-top: ($height - 20px)/2;
+        margin-left: $pd10;
+        font-size: 14px;
+        outline: none;
+        vertical-align: middle;
+    }
+
+    .song-pager-nums {
+        float: left;
+    }
+
+    .song-pager-jump {
+        float: left;
+        margin-left: $pd10;
+        color: $color-999;
+
+        input {
+            width: $height;
+            _width: 50px;
+            height: $height;
+            line-height: $height;
+            padding: 0 $pd10;
+            border: 1px solid $light-color;
+            vertical-align: middle;
+            outline: none;
+        }
+
+        button {
+            width: 40px;
+            height: $height;
+            padding: 0;
+            margin-left: $pd10;
+            background-color: $white-color;
+            border: 1px solid $light-color;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    }
+}
+
+.song-pager {
+    @include song-pager;
+}
+
+.song-pager-small {
+    @include song-pager(26px);
+}

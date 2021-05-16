@@ -630,7 +630,7 @@
                 }
                 // 先保存真在编辑中的数据
                 var pass = option.save();
-                if (pass) {
+                if (pass && $td[0].songBindData.col.editable) {
                     option.edit($td[0].songBindData.rowDataIndex, $td[0].songBindData.col.field);
                 }
             });
