@@ -525,7 +525,7 @@
                             if (col.btns) {
                                 for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
                                     var btn = col.btns[btn_i];
-                                    $cell.append('<button class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
+                                    $cell.append('<button type="button" class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
                                 }
                             } else {
                                 $cell.append(col.template(item, btn_i, col));
