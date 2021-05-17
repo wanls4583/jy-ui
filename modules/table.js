@@ -14,6 +14,7 @@
             view: 'song-table-view',
             table: 'song-table',
             body: 'song-table-body',
+            tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             edit: 'song-table-editting',
@@ -213,6 +214,7 @@
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
                 td.songBindData.$checkbox = undefined;
+                // 触发保存事件
                 Table.trigger('save(' + option.filter + ')', {
                     data: td.colData,
                     dom: td
@@ -261,6 +263,7 @@
                         var $input = $('<input class="' + [tableClass.$input, 'song-input'].join(' ') + '">');
                         $input.val(data);
                         $input.on('input propertychange', function () {
+                            // 只可输入数字
                             if (editable.type == 'number') {
                                 var num = Common.getNum($input.val());
                                 if (num !== $input.val()) {
@@ -277,6 +280,7 @@
                             $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
                         });
                         $cell.empty().append($select);
+                        // 触发select事件
                         Form.render('select(' + filter + ')');
                         Form.on('select(' + filter + ')', function (e) {
                             $select[0].value = e.data;
@@ -290,6 +294,7 @@
                             $checkbox.append('<input type="checkbox" song-filter="' + filter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
                         });
                         $cell.empty().append($checkbox);
+                        // 触发checkbox事件
                         Form.render('checkbox(' + filter + ')');
                         Form.on('checkbox(' + filter + ')', function (e) {
                             $checkbox[0].value = e.data;
@@ -330,11 +335,13 @@
             var $table = option.$table;
             var $tableHeader = option.$tableHeader;
             var $tableBody = option.$tableBody;
+            // 已存在view，则不再插入
             if (!$view.parent().length) {
                 $view.insertAfter($elem);
                 $elem.hide();
             }
             $view.append($tableMain);
+            // 使tableMain中的内容可横向滚动
             $tableMain.css({
                 width: $tableMain.width() + 'px'
             });
@@ -351,19 +358,20 @@
             if (option.defaultToolbar) {
                 var defaultToolbar = option.defaultToolbar;
                 var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
+                // 默认工具条
                 if (defaultToolbar === true) {
                     defaultToolbar = ['filter', 'exprots', 'print']
                 }
                 for (var i = 0; i < defaultToolbar.length; i++) {
                     switch (defaultToolbar[i]) {
                         case 'filter':
-                            $tool.append('<div title="筛选" class="song-table-tool song-icon song-display-inline-block" song-event="filter">' + filterIcon + '</div>');
+                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="filter">' + filterIcon + '</div>');
                             break;
                         case 'exprots':
-                            $tool.append('<div title="导出" class="song-table-tool song-icon song-display-inline-block" song-event="exprots">' + exprotsIcon + '</div>');
+                            $tool.append('<div title="导出" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="exprots">' + exprotsIcon + '</div>');
                             break;
                         case 'print':
-                            $tool.append('<div title="打印" class="song-table-tool song-icon song-display-inline-block" song-event="print">' + printIcon + '</div>');
+                            $tool.append('<div title="打印" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="print">' + printIcon + '</div>');
                             break;
                     }
                 }
@@ -392,7 +400,7 @@
                     $th.hide();
                 }
                 if (col.width) {
-                    // ie6及以下使用的事border-box
+                    // ie6及以下使用的是border-box
                     $th.css({
                         width: (ieVersion <= 6 ? col.width + 30 : col.width) + 'px'
                     });
@@ -404,6 +412,7 @@
                             index: e.data,
                             data: option.renderedData[e.data]
                         }
+                        // 触发radio事件
                         Table.trigger('radio(' + filter + ')', option.renderedData[e.data]);
                         Table.trigger('radio', option.renderedData[e.data]);
                     });
@@ -420,6 +429,7 @@
                             index: e.data,
                             data: checkedData
                         }
+                        // 触发checkbox事件
                         Table.trigger('checkbox(' + filter + ')', checkedData);
                         Table.trigger('checkbox', checkedData);
                     });
@@ -437,6 +447,7 @@
                             index: index,
                             data: checkedData
                         }
+                        // 触发checkbox事件
                         Table.trigger('checkbox(' + filter + ')', checkedData);
                         Table.trigger('checkbox', checkedData);
                         Form.render('checkbox(table_checkbox_' + filter + ')');
@@ -520,6 +531,7 @@
                                 $cell.append(col.template(item, btn_i, col));
                             }
                         }
+                        // 缓存td对应的数据
                         $td[0].songBindData.colData = item[col.field];
                         $td[0].songBindData.col = col;
                         $td[0].songBindData.rowDataIndex = index;
@@ -530,6 +542,7 @@
                             $td.hide();
                         }
                     }
+                    // 缓存tr对应的数据
                     $tr[0].songBindData.rowDataIndex = index;
                     $tr[0].songBindData.rowData = item;
                     $tableBody.append($tr);
@@ -618,8 +631,8 @@
                 }
             });
             Table.on('filter', function (e) {
-                if ($view.find('ul.song-table-filter').length > 0) {
-                    $view.find('ul.song-table-filter').toggle();
+                if ($view.find('ul.' + tableClass.filter).length > 0) {
+                    $view.find('ul.' + tableClass.filter).toggle();
                 } else {
                     createFilter(option, e.dom);
                 }
@@ -659,6 +672,7 @@
                     $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col.field + '" checked song-filter="song_table_' + filter + '_filter"></li>');
                 }
             }
+            // 在工具图标下挂载
             $(dom).append($filter);
             Form.on('checkbox(song_table_' + filter + '_filter)', function (e) {
                 var $input = $(e.dom);
