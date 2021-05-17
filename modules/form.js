@@ -9,6 +9,21 @@
         var downIcon = '&#xe74b;';
         var radioIcon = '&#xe61c;';
         var radioedIcon = '&#xe619;';
+        var switchClass = 'song-form-switch';
+        var switchDisabled = 'song-switch-disabled';
+        var switchChecked = 'song-switch-checked';
+        var radioClass = 'song-form-radio';
+        var radioDisabled = 'song-radio-disabled';
+        var radioChecked = 'song-radio-checked';
+        var checkboxClass = 'song-form-checkbox';
+        var checkboxDisabled = 'song-checkbox-disabled';
+        var checkboxCheckd = 'song-checkbox-checked';
+        var selectClass = 'song-form-select';
+        var selectTitle = 'song-select-title';
+        var selectBody = 'song-select-dl';
+        var selectHolder = 'song-color-holder';
+        var selectDisabled = 'song-select-disabled';
+        var selectActive = 'song-select-active';
         var event = Common.getEvent();
         var ieVersion = Common.getIeVersion();
         var Form = {
@@ -22,7 +37,7 @@
             verifyRules: {
                 required: {
                     msg: '必填项不能为空',
-                    rule: /[\s\S]+/
+                    rule: /[\S]+/
                 },
                 number: {
                     msg: '请输入数字',
@@ -32,17 +47,25 @@
                     msg: '请输入整数',
                     rule: /\-?\d+/
                 },
+                date: {
+                    msg: '请输入正确的日期',
+                    rule: /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
+                },
                 phone: {
-                    msg: '请输入手机号',
+                    msg: '请输入正确的手机号',
                     rule: /^1(3|4|5|6|7|8|9)\d{9}$/
                 },
                 email: {
-                    msg: '请输入邮箱',
-                    rule: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+                    msg: '请输入正确的邮箱',
+                    rule: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
                 },
                 identify: {
-                    msg: '请输入身份证',
-                    rule: /(^\d{15}$)|(^\d{17}([0-9]|X)$)/i
+                    msg: '请输入正确的身份证',
+                    rule: /(^\d{15}$)|(^\d{17}(x|X|\d)$)/i
+                },
+                url: {
+                    rule: /^(#|(http(s?)):\/\/|\/\/)[^\s]+\.[^\s]+$/,
+                    msg: '请输入正确的链接'
                 }
             }
         }
@@ -64,6 +87,7 @@
         function verify(formId) {
             var $form = $(formId || 'form');
             var pass = true;
+            var dangerClass = 'song-border-danger';
             $form.find('input,textarea').each(function (i, input) {
                 if (input.type == 'text' || input.type == 'password' || input.tagName.toLowerCase() == 'textarea') {
                     var $input = $(input);
@@ -77,9 +101,9 @@
                                 window.SongUi && window.SongUi.Dialog && window.SongUi.Dialog.msg(verifyRule.msg, {
                                     icon: 'error'
                                 });
-                                $input.addClass('song-border-danger');
+                                $input.addClass(dangerClass);
                             } else {
-                                $input.removeClass('song-border-danger');
+                                $input.removeClass(dangerClass);
                             }
                         }
                     }
@@ -91,9 +115,9 @@
                 if (Form.verifyRules[verifyRule]) {
                     var pass = Form.verifyRules[verifyRule]($select.val());
                     if (!pass) {
-                        select.$ui && select.$ui.find('input.song-input').addClass('song-border-danger');
+                        select.$ui && select.$ui.find('input.song-input').addClass(dangerClass);
                     } else {
-                        select.$ui && select.$ui.find('input.song-input').removeClass('song-border-danger');
+                        select.$ui && select.$ui.find('input.song-input').removeClass(dangerClass);
                     }
                 }
             });
@@ -165,51 +189,50 @@
             inputs.each(function (i, input) {
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
-                var classNames = '';
+                var classNames = [switchClass];
+                // 删除已经渲染过的ui
                 input.$ui && input.$ui.remove();
+                // 忽略标签
                 if (ignore) {
                     return;
                 }
+                // 已禁用
                 if ($input.prop('disabled')) {
-                    classNames += ' song-switch-disabled';
+                    classNames.push(switchDisabled);
                 }
+                // 已选中
                 if ($input.prop('checked')) {
-                    classNames += ' song-switch-checked';
+                    classNames.push(switchChecked);
                 }
                 var $html = $(
-                    '<div class="song-form-switch ' + classNames + '">\
-                    <i></i>\
-                    <span>' + ($input.prop('checked') ? 'ON' : 'OFF') + '</span>\
-                </div>');
+                    '<div class="' + classNames.join(' ') + '">\
+                        <i></i>\
+                        <span>' + ($input.prop('checked') ? 'ON' : 'OFF') + '</span>\
+                    </div>');
                 $html.insertAfter(input);
                 $html[0].$input = $input;
                 input.$ui = $html;
-                _bindEvent($html);
                 $input.hide();
                 input.renderedSongUi = true;
+                _bindEvent($html);
             });
 
             function _bindEvent($dom) {
                 $dom.on('click', function () {
                     var $this = $(this);
                     var filter = this.$input.attr('song-filter');
-                    if ($this.hasClass('song-switch-disabled')) {
+                    var checked = this.$input.prop('checked');
+                    if (this.$input.prop('disabled')) {
                         return;
                     }
-                    $this.toggleClass('song-switch-checked');
-                    if ($this.hasClass('song-switch-checked')) {
-                        $this.find('span').html('ON');
-                        $this[0].$input.prop('checked', true);
-                    } else {
-                        $this.find('span').html('OFF');
-                        $this[0].$input.prop('checked', false);
-                    }
-                    if (filter) {
-                        Form.trigger('switch(' + filter + ')', {
-                            data: $this[0].$input.prop('checked'),
-                            dom: $this[0].$input[0]
-                        });
-                    }
+                    this.$input.prop('checked', !checked);
+                    $this.toggleClass(switchChecked);
+                    $this.find('span').html(checked ? 'OFF' : 'ON');
+                    // 触发switch事件
+                    filter && Form.trigger('switch(' + filter + ')', {
+                        data: $this[0].$input.prop('checked'),
+                        dom: $this[0].$input[0]
+                    });
                     Form.trigger('switch', {
                         data: $this[0].$input.prop('checked'),
                         dom: $this[0].$input[0]
@@ -223,29 +246,33 @@
             inputs.each(function (i, input) {
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
-                var classNames = '';
+                var classNames = [radioClass];
+                // 删除已经渲染过的ui
                 input.$ui && input.$ui.remove();
+                // 忽略标签
                 if (ignore) {
                     return;
                 }
+                // 已禁用
                 if ($input.prop('disabled')) {
-                    classNames += 'song-radio-disabled';
+                    classNames.push(radioDisabled);
                 }
+                // 已选中
                 if ($input.prop('checked')) {
-                    classNames += ' song-radio-checked';
+                    classNames.push(radioChecked);
                 }
                 var html =
-                    '<div class="song-form-radio ' + classNames + '">\
-                    <i>' + ($input.prop('checked') ? radioIcon : radioedIcon) + '</i>\
-                    <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
-                </div>';
+                    '<div class="' + classNames.join(' ') + '">\
+                        <i>' + ($input.prop('checked') ? radioIcon : radioedIcon) + '</i>\
+                        <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
+                    </div>';
                 var $html = $(html);
                 $html.insertAfter(input);
                 $html[0].$input = $input;
                 input.$ui = $html;
-                _bindEvent($html);
                 $input.hide();
                 input.renderedSongUi = true;
+                _bindEvent($html);
             });
             //绑定事件
             function _bindEvent($dom) {
@@ -253,66 +280,63 @@
                     var $this = $(this);
                     var name = $this[0].$input.attr('name');
                     var filter = this.$input.attr('song-filter');
-                    if ($this.hasClass('song-radio-disabled')) {
+                    if (this.$input.prop('disabled')) {
                         return;
                     }
-                    $('div.song-form-radio').each(function (i, radio) {
+                    // 同组的radio取消选中
+                    $('div.' + radioClass).each(function (i, radio) {
                         var $_this = $(this);
                         if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('filter') == filter) {
-                            $_this.removeClass('song-radio-checked').find('i').html(radioedIcon);
+                            $_this.removeClass(radioChecked).find('i').html(radioedIcon);
                         }
                     });
-                    $this.addClass('song-radio-checked');
+                    $this.addClass(radioChecked);
                     $this.find('i').html(radioIcon);
-                    $this[0].$input.prop('checked', true);
-                    if (filter) {
-                        Form.trigger('radio(' + filter + ')', {
-                            data: $this[0].$input.val(),
-                            dom: $this[0].$input[0]
-                        });
-                    }
+                    this.$input.prop('checked', true);
+                    // 触发radio事件
+                    filter && Form.trigger('radio(' + filter + ')', {
+                        data: this.$input.val(),
+                        dom: this.$input[0]
+                    });
                     Form.trigger('radio', {
-                        data: $this[0].$input.val(),
-                        dom: $this[0].$input[0]
+                        data: this.$input.val(),
+                        dom: this.$input[0]
                     });
                 });
             }
         }
         // 渲染复选框
         function renderCheckbox(filter) {
-            var inputs = $('input[type="checkbox"]' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            var inputs = $('input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : ''));
             inputs.each(function (i, input) {
                 var $input = $(input);
-                if ($input.attr('song-skin') == 'switch') {
-                    return;
-                }
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
+                var classNames = [checkboxClass];
+                // 删除已经渲染过的ui
                 input.$ui && input.$ui.remove();
+                // 忽略标签
                 if (ignore) {
                     return;
                 }
-                if ($input.attr('song-skin') == 'switch') {
-                    return;
-                }
-                var classNames = '';
+                // 已禁用
                 if ($input.prop('disabled')) {
-                    classNames += 'song-checkbox-disabled';
+                    classNames.push(checkboxDisabled);
                 }
+                // 已选中
                 if ($input.prop('checked')) {
-                    classNames += ' song-checkbox-checked';
+                    classNames.push(checkboxCheckd);
                 }
                 var $html = $(
-                    '<div class="song-form-checkbox ' + classNames + '">\
-                    <i>' + ($input.prop('checked') ? checkedIcon : '') + '</i>\
-                    <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
-                </div>');
-
+                    '<div class="' + classNames.join(' ') + '">\
+                        <i>' + ($input.prop('checked') ? checkedIcon : '') + '</i>\
+                        <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
+                    </div>');
                 $html.insertAfter(input);
                 $html[0].$input = $input;
                 input.$ui = $html;
-                _bindEvent($html);
                 $input.hide();
                 input.renderedSongUi = true;
+                _bindEvent($html);
             });
 
             function _bindEvent($dom) {
@@ -320,117 +344,121 @@
                     var $this = $(this);
                     var name = this.$input.attr('name');
                     var filter = this.$input.attr('song-filter');
+                    var checked = this.$input.prop('checked');
                     var data = [];
-                    if ($this.hasClass('song-checkbox-disabled')) {
+                    if (this.$input.prop('disabled')) {
                         return;
                     }
-                    $this.toggleClass('song-checkbox-checked');
-                    if ($this.hasClass('song-checkbox-checked')) {
-                        $this.find('i').html(checkedIcon);
-                        $this[0].$input.prop('checked', true);
-                    } else {
-                        $this.find('i').html('');
-                        $this[0].$input.prop('checked', false);
-                    }
-                    $('div.song-checkbox-checked').each(function (i, radio) {
+                    $this.toggleClass(checkboxCheckd);
+                    $this.find('i').html(checked ? '' : checkedIcon);
+                    this.$input.prop('checked', !checked);
+                    // 获取同组的选中数据
+                    $('div.' + checkboxCheckd).each(function (i, radio) {
                         var $_this = $(this);
                         if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
                             data.push($_this[0].$input.val());
                         }
                     });
-                    if (filter) {
-                        Form.trigger('checkbox(' + filter + ')', {
-                            data: data,
-                            dom: $this[0].$input[0]
-                        });
-                    }
+                    // 触发checkbox事件
+                    filter && Form.trigger('checkbox(' + filter + ')', {
+                        data: data,
+                        dom: this.$input[0]
+                    });
                     Form.trigger('checkbox', {
                         data: data,
-                        dom: $this[0].$input[0]
+                        dom: this.$input[0]
                     });
                 });
             }
         }
         // 渲染下拉选择框
         function renderSelect(filter) {
-            $('select' + (filter ? '[song-filter="' + filter + '"]' : '')).each(function (i, select) {
+            var selects = $('select' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            selects.each(function (i, select) {
                 var $select = $(select);
                 var ignore = $select.attr('song-ignore') === undefined ? false : true;
                 var search = $select.attr('song-search') === undefined ? false : true;
-                var classNames = '';
+                var classNames = [selectClass];
+                // 删除已经渲染过的ui
                 select.$ui && select.$ui.remove();
+                // 忽略标签
                 if (ignore) {
                     return;
                 }
+                // 已禁用
                 if ($select.prop('disabled')) {
-                    classNames += ' song-select-disabled';
+                    classNames.push(selectDisabled);
                 }
                 var $html = $(
-                    '<div class="song-form-select ' + classNames + '">\
-                    <div class="song-select-title">\
-                        <input type="text" class="song-input" placeholder="请选择" ' + (search ? '' : 'readonly') + '>\
-                        <i>' + downIcon + '</i>\
-                    </div>\
-                </div>');
-                var html = '<dl class="song-select-dl">';
+                    '<div class="' + classNames.join(' ') + '">\
+                        <div class="' + selectTitle + '">\
+                            <input type="text" class="song-input" placeholder="请选择" ' + (search ? '' : 'readonly') + '>\
+                            <i>' + downIcon + '</i>\
+                        </div>\
+                    </div>');
+                var dlHtml = '<dl class="' + selectBody + '">';
                 var $input = $html.find('input');
                 $select.find('option').each(function (i, opt) {
                     var $opt = $(opt);
                     var text = $opt.text();
                     var value = $opt.val();
-                    var classNames = '';
+                    var classNames = [];
                     if (!text) {
-                        classNames += 'song-color-holder';
+                        classNames.push(selectHolder);
                     }
                     if ($select.val() == value) {
                         $input.attr('data-value', $select.val());
                         $input.val(text);
-                        classNames += ' song-select-active';
+                        classNames.push(selectActive);
                     }
-                    html += '<dd class="' + classNames + '" data-value="' + value + '">' + (text || '请选择') + '</dd>';
+                    dlHtml += '<dd class="' + classNames.join(' ') + '" data-value="' + value + '">' + (text || '请选择') + '</dd>';
                 });
-                html += '</dl>';
-                $html.append(html);
+                dlHtml += '</dl>';
+                $html.append(dlHtml);
                 $html.insertAfter($select);
                 $html[0].$select = $select;
                 select.$ui = $html;
-                _bindEvent($html);
                 $select.hide();
                 select.renderedSongUi = true;
+                _bindEvent($html);
             });
             // 绑定事件
             function _bindEvent($dom) {
                 var search = $dom[0].$select.attr('song-search') === undefined ? false : true;
-                var $title = $dom.find('div.song-select-title');
-                var $cont = $dom.find('dl.song-select-dl');
-                var $input = $dom.find('input.song-input');
+                var $title = $dom.children('div.' + selectTitle);
+                var $cont = $dom.children('dl.' + selectBody);
+                var $input = $title.children('input.song-input');
+                // 打开，收起事件
                 $title.on('click', function () {
-                    if ($dom.hasClass('song-select-disabled')) {
+                    if ($dom[0].$select.prop('disabled')) {
                         return;
                     }
                     if ($cont.is(':visible')) {
                         $title.trigger('blur');
                     } else {
                         // 其他选择框都收起
-                        $('dl.song-select-dl').hide();
+                        $('dl.' + selectBody).hide();
                         if (ieVersion < 8) { // ie7及以下定位bugfix
-                            $('dl.song-select-dl').parent().parent().parent().css({
+                            $('dl.' + selectBody).parent().parent().parent().css({
                                 'z-index': 'auto'
                             });
                             $title.parent().parent().parent().css({
                                 'z-index': '99'
                             });
                         }
-                        $cont.find('dd').show();
+                        $cont.children('dd').show();
                         $cont.show();
                     }
                     return false;
                 });
+                // 失去焦点，收起
                 $title.on('blur', function () {
-                    var $dd = $cont.find('dd.song-select-active');
+                    var $dd = $cont.find('dd.' + selectActive);
+                    // 输入框显示已选中的项
                     $input.val($dd.attr('data-value') && $dd.text() || '');
                     $cont.hide();
-                    if (ieVersion < 8) { // ie7及以下定位bugfix
+                    // ie7及以下定位bugfix
+                    if (ieVersion < 8) {
                         $title.parent().parent().parent().css({
                             'z-index': 'auto'
                         });
@@ -439,21 +467,22 @@
                         $input.blur()
                     }, 50);
                 });
+                // 选中事件
                 $cont.find('dd').on('click', function () {
                     var $this = $(this);
                     var value = $this.attr('data-value');
                     var filter = $dom[0].$select.attr('song-filter') || '';
-                    $cont.find('dd.song-select-active').removeClass('song-select-active');
-                    $this.addClass('song-select-active');
+                    $cont.find('dd.' + selectActive).removeClass(selectActive);
+                    $this.addClass(selectActive);
+                    // 输入框显示已选中的项
                     $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                     $dom[0].$select.val(value);
                     $cont.hide();
-                    if (filter) {
-                        Form.trigger('select(' + filter + ')', {
-                            data: value,
-                            dom: $dom[0].$select[0]
-                        });
-                    }
+                    // 触发select事件
+                    filter && Form.trigger('select(' + filter + ')', {
+                        data: value,
+                        dom: $dom[0].$select[0]
+                    });
                     Form.trigger('select', {
                         data: value,
                         dom: $dom[0].$select[0]
@@ -463,7 +492,7 @@
                 if (search) {
                     $input.on('input propertychange', function () {
                         var title = $(this).val();
-                        $cont.find('dd').each(function (i, dd) {
+                        $cont.children('dd').each(function (i, dd) {
                             var $dd = $(dd);
                             if ($dd.text().indexOf(title) == -1) {
                                 $dd.hide();
@@ -476,7 +505,7 @@
                 // 点击页面收起下拉框
                 if (!renderSelect.bindedBodyEvent) {
                     $(document.body).on('click', function (e) {
-                        $('div.song-form-select:visible').find('div.song-select-title').trigger('blur');
+                        $('div.' + selectClass + ':visible').find('div.' + selectTitle).trigger('blur');
                     });
                     renderSelect.bindedBodyEvent = true;
                 }
@@ -493,7 +522,7 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("form", ['jquery', './common'], function ($, Common) {
+        define("form", ['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {

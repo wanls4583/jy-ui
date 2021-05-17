@@ -675,7 +675,7 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['jquery', './common', './form', './pager', 'dialog'], function ($, Common, Form, Dialog) {
+        define("table", ['./jquery', './common', './form', './pager', 'dialog'], function ($, Common, Form, Dialog) {
             return factory($, Common, Form, Pager, Dialog);
         });
     } else {
