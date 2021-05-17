@@ -10,6 +10,16 @@
         var warnIcon = '&#xe60a;';
         var errorIcon = '&#xe60b;';
         var questionIcon = '&#xe613;';
+        var layerClass = 'song-layer';
+        var layerShadow = 'song-layer-shadow';
+        var layerTitle = 'song-layer-title';
+        var layerFooter = 'song-layer-footer';
+        var layerBody = 'song-layer-content';
+        var layerDialog = 'song-layer-dialog';
+        var layerAlert = 'song-layer-alert';
+        var layerConfirm = 'song-layer-confirm';
+        var layerMsg = 'song-layer-msg';
+        var layerIconMsg = 'song-layer-msg-with-icon';
         var ieVersion = Common.getIeVersion();
         var Dialog = {
             layerIndex: 0,
@@ -25,18 +35,18 @@
             option.type = option.type || 'dialog';
             var layerIndex = Dialog.layerIndex;
             var $container = $(option.container || window.document.body);
-            var $shadow = $('<div class="song-layer-shadow song-layer' + layerIndex + '"></div>');
-            var $layer = $('<div class="song-layer song-layer-' + option.type + ' song-layer' + layerIndex + '" song-index="' + layerIndex + '"></div>');
+            var $shadow = $('<div class="' + [layerShadow, layerClass + layerIndex].join(' ') + '"></div>');
+            var $layer = $('<div class="' + [layerClass, layerClass + '-' + option.type, layerClass + layerIndex].join(' ') + '" song-index="' + layerIndex + '"></div>');
             var $title = $(
-                '<div class="song-layer-title">\
-                <span>' + option.title + '</span>\
-                <div class="song-layer-op">\
-                    <i class="song-op-close song-icon">' + closeIcon + '</i>\
-                </div>\
-            </div>'
+                '<div class="' + layerTitle + '">\
+                    <span>' + option.title + '</span>\
+                    <div class="song-layer-op">\
+                        <i class="song-op-close song-icon">' + closeIcon + '</i>\
+                    </div>\
+                </div>'
             );
-            var $content = $('<div class="song-layer-content"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
-            var $footer = $('<div class="song-layer-footer"></div>');
+            var $content = $('<div class="' + layerBody + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
+            var $footer = $('<div class="' + layerFooter + '"></div>');
             if (option.shadow !== false) {
                 $container.append($shadow);
             }
@@ -88,7 +98,7 @@
                     paddingLeft: '55px'
                 });
                 if (option.type == 'msg') {
-                    $layer.removeClass('song-layer-msg').addClass('song-layer-msg-with-icon');
+                    $layer.removeClass(layerMsg).addClass(layerIconMsg);
                 }
             }
             if (option.duration) {
@@ -181,8 +191,8 @@
         }
         // 关闭弹框
         function close(layerIndex) {
-            $('div.song-layer.song-layer' + layerIndex).remove();
-            $('div.song-layer-shadow.song-layer' + layerIndex).remove();
+            $('div.' + layerClass + '.' + layerClass + layerIndex).remove();
+            $('div.' + layerShadow + '.' + layerClass + layerIndex).remove();
             if (ieVersion <= 6 && document.body.overflow !== undefined) {
                 document.body.style.overflow = document.body.overflow;
             }
@@ -195,46 +205,46 @@
             if (type) {
                 switch (type) {
                     case 'msg':
-                        $('div.song-layer-msg').remove();
-                        $('div.song-layer-msg-with-icon').remove();
+                        $('div.' + layerMsg).remove();
+                        $('div.' + layerIconMsg).remove();
                         break;
                     case 'dialog':
-                        $('div.song-layer-dialog').each(function (i, dom) {
+                        $('div.' + layerDialog).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.song-layer' + index).remove();
+                            $('div.' + layerClass + index).remove();
                         });
                         break;
                     case 'alert':
-                        $('div.song-layer-alert').each(function (i, dom) {
+                        $('div.' + layerAlert).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.song-layer' + index).remove();
+                            $('div.' + layerClass + index).remove();
                         });
                         break;
                     case 'confrim':
-                        $('div.song-layer-confrim').each(function (i, dom) {
+                        $('div.' + layerConfirm).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.song-layer' + index).remove();
+                            $('div.' + layerClass + index).remove();
                         });
                         break;
                 }
             } else {
-                $('div.song-layer-shadow').remove();
-                $('div.song-layer').remove();
+                $('div.' + layerShadow).remove();
+                $('div.' + layerClass).remove();
             }
         }
         // 设置位置
         function setPosition(layerIndex, offset) {
-            var $layer = $('div.song-layer.song-layer' + layerIndex);
+            var $layer = $('div.' + layerClass + '.' + layerClass + layerIndex);
             var ie6MarginTop = 0;
             if ($layer.length) {
                 if (ieVersion <= 6) { //i6以下没有fixed定位
                     // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
                     // ie6以下只认document.body.scrollTop
                     ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                    $('div.song-layer-shadow.song-layer' + layerIndex).css({
+                    $('div.' + layerShadow + '.' + layerClass + layerIndex).css({
                         marginTop: ie6MarginTop + 'px',
                         width: $(window.document.body).outerWidth() + 'px',
                         height: $(window.document.body).outerHeight() + 'px'
