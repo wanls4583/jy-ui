@@ -10,6 +10,18 @@
         var printIcon = '&#xe62c;';
         var leftIcon = '&#xe733;';
         var rightIon = '&#xe734;';
+        var tableClass = {
+            view: 'song-table-view',
+            table: 'song-table',
+            body: 'song-table-body',
+            toolbar: 'song-table-toolbar',
+            toolbarSelf: 'song-table-tool-self',
+            edit: 'song-table-editting',
+            input: 'song-table-input',
+            checkboxs: 'song-table-checkboxs',
+            pager: 'song-table-pager',
+            filter: 'song-table-filter'
+        }
         var ieVersion = Common.getIeVersion();
         // 常用正则验证
         var ruleMap = {
@@ -34,11 +46,11 @@
         function render(option) {
             var $elem = $(option.elem);
             var filter = $elem.attr('song-filter') || '';
-            var $view = option.$view || $('<div class="song-table-view"></div>');
-            var $table = $('<table class="song-table"></table>');
+            var $view = option.$view || $('<div class="' + tableClass.view + '"></div>');
+            var $table = $('<table class="' + tableClass.table + '"></table>');
             var $tableHeader = $('<thead></thead>');
             var $tableBody = $('<tbody></tbody>');
-            var $tableMain = $('<div class="song-table-body"></div>');
+            var $tableMain = $('<div class="' + tableClass.body + '"></div>');
             if (!option.reload) {
                 option = Object.assign({}, option);
                 $view.html('');
@@ -196,7 +208,7 @@
                 td.songBindData.rowData[col.field] = value;
                 td.songBindData.colData = value;
                 td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.rowDataIndex, col) : fValue;
-                $td.removeClass('song-table-editting');
+                $td.removeClass(tableClass.edit);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
@@ -246,7 +258,7 @@
                     var $cell = $(td.children[0]);
                     editable.type = editable.type || 'text';
                     if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
-                        var $input = $('<input class="song-table-input song-input">');
+                        var $input = $('<input class="' + [tableClass.$input, 'song-input'].join(' ') + '">');
                         $input.val(data);
                         $input.on('input propertychange', function () {
                             if (editable.type == 'number') {
@@ -273,7 +285,7 @@
                         td.songBindData.$select = $select;
                     } else if (editable.type == 'checkbox') { // 复选框编辑
                         var filter = 'table_edit_checkbox_' + option.filter + '_' + Math.random();
-                        var $checkbox = $('<div class="song-table-checkboxs"></div>');
+                        var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
                         col.checkbox && col.checkbox.map(function (item) {
                             $checkbox.append('<input type="checkbox" song-filter="' + filter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
                         });
@@ -285,9 +297,9 @@
                         $checkbox[0].value = data;
                         td.songBindData.$checkbox = $checkbox;
                     }
-                    $(td).addClass('song-table-editting');
+                    $(td).addClass(tableClass.edit);
                     td.songBindData.editing = true;
-
+                    // 触发编辑事件
                     Table.trigger('edit(' + option.filter + ')', {
                         data: data,
                         dom: td
@@ -335,10 +347,10 @@
         // 渲染工具条
         function renderToolbar(option) {
             var $view = option.$view;
-            var $toolbar = $('<div class="song-table-toolbar song-row"></div>');
+            var $toolbar = $('<div class="' + [tableClass.toolbar, 'song-row'].join(' ') + '"></div>');
             if (option.defaultToolbar) {
                 var defaultToolbar = option.defaultToolbar;
-                var $tool = $('<div class="song-table-tool-self"></div>');
+                var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
                 if (defaultToolbar === true) {
                     defaultToolbar = ['filter', 'exprots', 'print']
                 }
@@ -529,7 +541,7 @@
         // 渲染页码
         function renderPage(option) {
             var $view = option.$view;
-            var $pager = $('<div class="song-table-pager"></div>');
+            var $pager = $('<div class="' + tableClass.pager + '"></div>');
             var $elem = $('<div song-filter="table_pager_' + option.filter + '"></div>');
             $pager.append($elem);
             $view.append($pager);
@@ -640,7 +652,7 @@
         function createFilter(option, dom) {
             var $view = option.$view;
             var filter = option.filter;
-            var $filter = $('<ul class="song-table-filter"></ul>');
+            var $filter = $('<ul class="' + tableClass.filter + '"></ul>');
             for (var i = 0; i < option.cols.length; i++) {
                 var col = option.cols[i];
                 if (!col.type || col.type == 'normal') {

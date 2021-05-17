@@ -35,9 +35,9 @@
                 return;
             }
             if (!option.$pager) {
+                option.firstRender = true;
                 Object.assign({}, option);
             }
-            option.firstRender = true;
             option.count = option.count || 0;
             option.limit = option.limit || 10;
             option.pages = Math.ceil(option.count / option.limit) || 1;
@@ -52,7 +52,6 @@
             option.filter = $elem.attr('song-filter') || '';
             $pager = option.$pager || $('<div class="' + [pagerClass, 'song-row'].join(' ') + '"></div>');
             $pager[0].option = option;
-            $pager.html('');
             switch (option.size) {
                 case 'small':
                     $pager.addClass('song-pager-small');
