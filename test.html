@@ -275,8 +275,12 @@
                 </table>
             </div>
             <div style="margin:15px 0;">动态表格</div>
-            <!-- <button class="song-btn" onclick="renderTable()">动态生成</button> -->
-            <table id="table" song-filter="table"></table>
+            <div style="margin:15px 0;">单选表格</div>
+            <table id="table1" song-filter="table1"></table>
+            <div style="margin:15px 0;">多选表格</div>
+            <table id="table2" song-filter="table2"></table>
+            <div style="margin:15px 0;">可编辑表格</div>
+            <table id="table3" song-filter="table3"></table>
         </div>
     </fieldset>
     <fieldset class="song-field song-field-title">
@@ -361,24 +365,125 @@
             }
         });
     }
-    var table = renderTable();
-    function renderTable() {
+    renderTable1();
+    renderTable2();
+    renderTable3();
+    // 单选表格
+    function renderTable1() {
         data = [];
         for (var i = 0; i < 1000; i++) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
-            data.push({ user: '用户' + i, sex: sex, age: age });
+            var like = Math.ceil(Math.random() * 3);
+            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
         };
         table = SongUi.Table.render({
-            elem: '#table',
+            elem: '#table1',
+            data: data,
+            limit: 10,
+            defaultToolbar: true,
+            cols: [{
+                type: 'radio'
+            }, {
+                title: '用户',
+                field: 'user'
+            }, {
+                title: '性别',
+                field: 'sex',
+                width: 100,
+                select: [{
+                    label: '男',
+                    value: 1
+                }, {
+                    label: '女',
+                    value: 2
+                }]
+            }, {
+                title: '年龄',
+                field: 'age',
+                width: 100
+            }, {
+                title: '爱好',
+                field: 'like',
+                checkbox: [{
+                    label: '听歌',
+                    value: 1
+                }, {
+                    label: '游泳',
+                    value: 2
+                }, {
+                    label: '看小说',
+                    value: 3
+                }]
+            }]
+        });
+        return table;
+    }
+    // 多选表格
+    function renderTable2() {
+        data = [];
+        for (var i = 0; i < 1000; i++) {
+            var sex = Math.ceil(Math.random() * 2);
+            var age = Math.ceil(Math.random() * 100);
+            var like = Math.ceil(Math.random() * 3);
+            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
+        };
+        table = SongUi.Table.render({
+            elem: '#table2',
             data: data,
             limit: 10,
             defaultToolbar: true,
             cols: [{
                 type: 'checkbox'
             }, {
-                type: 'radio'
+                title: '用户',
+                field: 'user'
             }, {
+                title: '性别',
+                field: 'sex',
+                width: 100,
+                select: [{
+                    label: '男',
+                    value: 1
+                }, {
+                    label: '女',
+                    value: 2
+                }]
+            }, {
+                title: '年龄',
+                field: 'age',
+                width: 100
+            }, {
+                title: '爱好',
+                field: 'like',
+                checkbox: [{
+                    label: '听歌',
+                    value: 1
+                }, {
+                    label: '游泳',
+                    value: 2
+                }, {
+                    label: '看小说',
+                    value: 3
+                }]
+            }]
+        });
+        return table;
+    }
+    function renderTable3() {
+        data = [];
+        for (var i = 0; i < 1000; i++) {
+            var sex = Math.ceil(Math.random() * 2);
+            var age = Math.ceil(Math.random() * 100);
+            var like = Math.ceil(Math.random() * 3);
+            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
+        };
+        table = SongUi.Table.render({
+            elem: '#table3',
+            data: data,
+            limit: 10,
+            defaultToolbar: true,
+            cols: [{
                 title: '用户',
                 field: 'user'
             }, {
@@ -432,23 +537,23 @@
                 }]
             }]
         });
-        SongUi.Table.on('edit', function (obj) {
-            SongUi.Dialog.msg('eidt');
-        });
-        SongUi.Table.on('save', function (obj) {
-            SongUi.Dialog.msg('save');
-        });
-        SongUi.Table.on('del', function (obj) {
-            SongUi.Dialog.msg('del');
-        });
-        SongUi.Table.on('radio', function (obj) {
-            SongUi.Dialog.msg('radio');
-        });
-        SongUi.Table.on('checkbox', function (obj) {
-            SongUi.Dialog.msg('checkbox');
-        });
         return table;
     }
+    SongUi.Table.on('edit(table3)', function (obj) {
+        SongUi.Dialog.msg('eidt');
+    });
+    SongUi.Table.on('save(table3)', function (obj) {
+        SongUi.Dialog.msg('save');
+    });
+    SongUi.Table.on('del(table3)', function (obj) {
+        SongUi.Dialog.msg('del');
+    });
+    SongUi.Table.on('radio(table1)', function (obj) {
+        SongUi.Dialog.msg('radio');
+    });
+    SongUi.Table.on('checkbox(table2)', function (obj) {
+        SongUi.Dialog.msg('checkbox');
+    });
     SongUi.Pager.render({
         elem: '#test_page',
         count: 100,

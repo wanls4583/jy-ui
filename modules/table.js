@@ -509,7 +509,7 @@
                             } else if (col.checkbox) { // 复选框中的数据
                                 html = '';
                                 col.checkbox.map(function (obj) {
-                                    if (obj.value == item[col.field]) {
+                                    if (hasValue(item[col.field], obj.value)) {
                                         html = ',' + obj.label;
                                     }
                                 });

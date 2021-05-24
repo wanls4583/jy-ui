@@ -286,7 +286,7 @@
                     // 同组的radio取消选中
                     $('div.' + radioClass).each(function (i, radio) {
                         var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('filter') == filter) {
+                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
                             $_this.removeClass(radioChecked).find('i').html(radioedIcon);
                         }
                     });
