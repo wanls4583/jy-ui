@@ -604,7 +604,7 @@
                 return;
             }
             option.binded = true;
-            var filter = $view.attr('song-filter');
+            var filter = option.filter;
             // 表格中的所有点击事件
             $view.on('click', function (e) {
                 var $target = $(e.target);
@@ -630,15 +630,15 @@
                     option.save();
                 }
             });
-            Table.on('filter', function (e) {
+            Table.on('filter(' + option.filter + ')', function (e) {
                 if ($view.find('ul.' + tableClass.filter).length > 0) {
                     $view.find('ul.' + tableClass.filter).toggle();
                 } else {
                     createFilter(option, e.dom);
                 }
             });
-            Table.on('exports', function (e) {});
-            Table.on('print', function (e) {});
+            Table.on('exports(' + option.filter + ')', function (e) {});
+            Table.on('print(' + option.filter + ')', function (e) {});
         }
 
         // 绑定表格体的事件
