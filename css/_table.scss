@@ -25,11 +25,15 @@
         position: relative;
         z-index: 1;
         padding: $pd10 $pd15;
+        padding-right: 130px;
         border-right: 1px solid $light-color;
     }
 
     &-tool-self {
-        float: right;
+        position: absolute;
+        right: $pd15;
+        top: 50%;
+        margin-top: -13px;
     }
 
     &-tool {

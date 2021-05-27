@@ -382,12 +382,14 @@
         };
         var table = SongUi.Table.render({
             elem: '#table1',
+            width: 1000,
             data: data,
             limit: 10,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="selected">获取选择的项</button>',
             cols: [{
-                type: 'radio'
+                type: 'radio',
+                width: 50
             }, {
                 title: '用户',
                 field: 'user'
@@ -437,12 +439,14 @@
         };
         var table = SongUi.Table.render({
             elem: '#table2',
+            width: 1000,
             data: data,
             limit: 10,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="checked">获取选择的项</button>',
             cols: [{
-                type: 'checkbox'
+                type: 'checkbox',
+                width: 50
             }, {
                 title: '用户',
                 field: 'user'
@@ -492,6 +496,7 @@
         };
         var table = SongUi.Table.render({
             elem: '#table3',
+            width: 1000,
             data: data,
             limit: 10,
             defaultToolbar: true,
@@ -500,6 +505,8 @@
             <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
             cols: [{
+                type: 'checkbox'
+            },{
                 title: '用户',
                 field: 'user'
             }, {

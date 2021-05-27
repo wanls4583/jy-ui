@@ -81,6 +81,12 @@
                 data: null
             };
             option.enterSave = option.enterSave || false;
+            option.width && $view.css({
+                width: option.width
+            });
+            option.height && $view.css({
+                height: option.height
+            });
             $view.attr('song-filter', option.filter);
             renderToolbar(option);
             renderTableHeader(option);
@@ -290,15 +296,6 @@
                         option.editedData.push(td.songBindData.rowData);
                     }
                 }
-                // 触发保存事件
-                // Table.trigger('save(' + option.filter + ')', {
-                //     data: td.colData,
-                //     dom: td
-                // });
-                // Table.trigger('save', {
-                //     data: td.colData,
-                //     dom: td
-                // });
             }
         }
 
@@ -380,15 +377,6 @@
                     }
                     $(td).addClass(tableClass.edit);
                     td.songBindData.editing = true;
-                    // 触发编辑事件
-                    // Table.trigger('edit(' + option.filter + ')', {
-                    //     data: data,
-                    //     dom: td
-                    // });
-                    // Table.trigger('edit', {
-                    //     data: data,
-                    //     dom: td
-                    // });
                 }
             }
         }
@@ -470,15 +458,19 @@
                 var col = cols[i];
                 var $cell = $('<div class="cell">' + (col.title || '') + '</div>');
                 var $th = $('<th data-field="' + (col.field || '') + '"></th>');
+                var width = col.width;
                 $th.append($cell);
                 $tr.append($th);
                 if (col.hidden) {
                     $th.hide();
                 }
-                if (col.width) {
+                if (col.type == 'radio' || col.type == 'checkbox') {
+                    width = 20;
+                }
+                if (width) {
                     // ie6及以下使用的是border-box
                     $th.css({
-                        width: (ieVersion <= 6 ? col.width + 30 : col.width) + 'px'
+                        width: (ieVersion <= 6 ? width + 30 : width) + 'px'
                     });
                 }
                 // 单选
@@ -488,14 +480,12 @@
                             index: e.data,
                             data: option.renderedData[e.data]
                         }
-                        // 触发radio事件
-                        // Table.trigger('radio(' + filter + ')', option.renderedData[e.data]);
-                        // Table.trigger('radio', option.renderedData[e.data]);
                     });
                 }
                 // 多选
                 if (col.type == 'checkbox' && filter) {
-                    $cell.html('<input type="checkbox" song-filter="table_checkbox_' + filter + '_all">');
+                    var $all = $('<input type="checkbox" song-filter="table_checkbox_' + filter + '_all">');
+                    $cell.html($all);
                     Form.once('checkbox(table_checkbox_' + filter + ')', function (e) {
                         var checkedData = [];
                         for (var i = 0; i < e.data.length; i++) {
@@ -505,9 +495,8 @@
                             index: e.data,
                             data: checkedData
                         }
-                        // 触发checkbox事件
-                        // Table.trigger('checkbox(' + filter + ')', checkedData);
-                        // Table.trigger('checkbox', checkedData);
+                        $all.prop('checked', checkedData.length == option.renderedData.length);
+                        Form.render('checkbox(table_checkbox_' + filter + '_all)');
                     });
                     // 全选或者全部选
                     Form.once('checkbox(table_checkbox_' + filter + '_all)', function (e) {
@@ -523,10 +512,7 @@
                             index: index,
                             data: checkedData
                         }
-                        // 触发checkbox事件
-                        // Table.trigger('checkbox(' + filter + ')', checkedData);
-                        // Table.trigger('checkbox', checkedData);
-                        // Form.render('checkbox(table_checkbox_' + filter + ')');
+                        Form.render('checkbox(table_checkbox_' + filter + ')');
                     });
                 }
             }
@@ -611,6 +597,7 @@
                             $cell.append(col.template(item, btn_i, col));
                         }
                     }
+                    col.event && $cell.attr('song-event', col.event);
                     // 缓存td对应的数据
                     $td[0].songBindData.colData = item[col.field];
                     $td[0].songBindData.col = col;
@@ -705,11 +692,9 @@
                     }
                     if ($tr[0] && $tr[0].songBindData) {
                         data.id = $tr[0].songBindData.id;
-                        data.index = $tr[0].songBindData.index;
                         data.data = $tr[0].songBindData.data;
                     }
                     filter && Table.trigger(event + '(' + filter + ')', data);
-                    Table.trigger(event, data);
                 }
             });
             $view.on('keydown', function (e) {
@@ -752,6 +737,14 @@
                 if (pass && $td[0].songBindData.col.editable) {
                     option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
                 }
+            });
+            option.$tableBody.find('tr').on('click', function () {
+                // 触发行点击事件
+                option.filter && Table.trigger('row(' + option.filter + ')', {
+                    dom: this,
+                    id: this.songBindData.id,
+                    data: this.songBindData.rowData
+                });
             });
         }
 

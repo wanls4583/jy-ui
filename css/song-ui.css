@@ -752,11 +752,15 @@ a {
   position: relative;
   z-index: 1;
   padding: 10px 15px;
+  padding-right: 130px;
   border-right: 1px solid #eeeeee;
 }
 
 .song-table-tool-self {
-  float: right;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  margin-top: -13px;
 }
 
 .song-table-tool {
