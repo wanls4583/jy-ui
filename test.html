@@ -497,8 +497,9 @@
         var table = SongUi.Table.render({
             elem: '#table3',
             width: 800,
+            height: 500,
             data: data,
-            limit: 10,
+            limit: 20,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="add">添加行</button>\
             <button class="song-btn song-btn-sm" song-event="getadd">获取添加的数据</button>\
@@ -506,7 +507,7 @@
             <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
             cols: [{
                 type: 'checkbox'
-            },{
+            }, {
                 title: '用户',
                 field: 'user'
             }, {

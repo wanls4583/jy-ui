@@ -95,6 +95,18 @@
             if (option.page !== false) {
                 renderPage(option);
             }
+            if (option.height) {
+                var h = option.height;
+                if (option.$toolbar) {
+                    h -= option.$toolbar.outerHeight();
+                }
+                if (option.$pager) {
+                    h -= option.$pager.outerHeight();
+                }
+                option.$tableMain.css({
+                    height: h + 'px'
+                });
+            }
 
             option.reload = function (_option) {
                 reload(option, _option);
@@ -150,7 +162,7 @@
             option.renderedData = option.renderedData.slice(0, index).concat(data).concat(option.renderedData.slice(index));
             createTd(option);
             Form.render();
-            data.map(function(item) {
+            data.map(function (item) {
                 option.addedData.push(item);
             });
         }
@@ -452,6 +464,7 @@
                 $toolbar.append($tool);
             }
             if (option.toolbar || option.defaultToolbar) {
+                option.$toolbar = $toolbar;
                 $toolbar.append(option.toolbar);
                 $view.append($toolbar);
             }
@@ -624,6 +637,11 @@
                             'border-right': 'none'
                         });
                     }
+                    if (index == data.length - 1) {
+                        $td.css({
+                            'border-bottom': 'none'
+                        });
+                    }
                 }
                 // 缓存tr对应的数据
                 $tr[0].songBindData.rowData = item;
@@ -649,6 +667,7 @@
             var $elem = $('<div song-filter="table_pager_' + option.filter + '"></div>');
             $pager.append($elem);
             $view.append($pager);
+            option.$pager = $pager;
             option.pager = Pager.render({
                 elem: $elem[0],
                 nowPage: option.nowPage,
