@@ -69,6 +69,17 @@
             option.filter = filter || 'table_' + Math.random();
             option.renderedData = [];
             option.loadedData = [];
+            option.addedData = [];
+            option.deletedData = [];
+            option.editedData = [];
+            option.checkedData = {
+                index: [],
+                data: []
+            };
+            option.selectedData = {
+                index: -1,
+                data: null
+            };
             option.enterSave = option.enterSave || false;
             $view.attr('song-filter', option.filter);
             renderToolbar(option);
@@ -83,12 +94,20 @@
                 reload(option, _option);
             }
 
-            option.save = function (rowDataIndex, field) {
-                return save(option, rowDataIndex, field);
+            option.addRow = function (_option) {
+                addRow(option, _option);
             }
 
-            option.edit = function (rowDataIndex, field) {
-                return edit(option, rowDataIndex, field);
+            option.deleteRow = function (id) {
+                deleteRow(option, id);
+            }
+
+            option.save = function (id, field) {
+                return save(option, id, field);
+            }
+
+            option.edit = function (id, field) {
+                return edit(option, id, field);
             }
 
             return option;
@@ -101,23 +120,66 @@
         }
 
         /**
+         * 添加数据行
+         * @param {*} option 
+         * @param {*} _option [{data, id, position}]
+         */
+        function addRow(option, _option) {
+            var data = _option.data instanceof Array ? _option.data : [_option.data];
+            var index = -2;
+            if (typeof _option.id == undefined) {
+                index = option.renderedData.length - 1;
+            } else {
+                for (var i = 0; i < option.renderedData.length; i++) {
+                    if (_option.id != undefined && option.renderedData[i]._song_table_id == _option.id) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            if (_option.position === undefined || _option.position == 'after') {
+                index++;
+            }
+            index = index < 0 ? option.renderedData.length : index;
+            option.renderedData = option.renderedData.slice(0, index).concat(data).concat(option.renderedData.slice(index));
+            createTd(option);
+            option.addedData.push(data);
+        }
+
+        /**
+         * 删除数据行
+         * @param {*} option
+         * @param {*} id
+         */
+        function deleteRow(option, id) {
+            for (var i = 0; i < option.renderedData.length; i++) {
+                if (id !== undefined && option.renderedData[i]._song_table_id == id) {
+                    option.deletedData.push(option.renderedData[i]);
+                    option.renderedData.splice(i, 1);
+                    createTd(option);
+                    return;
+                }
+            }
+        }
+
+        /**
          * 保存编辑中的数据
          * @param {Object} option 
-         * @param {Number} rowDataIndex 
+         * @param {Number} id 
          * @param {String} field 
          */
-        function save(option, rowDataIndex, field) {
+        function save(option, id, field) {
             var result = true;
             var tds = [];
-            if (rowDataIndex !== undefined) { // 保存某一行的数据
+            if (id !== undefined) { // 保存某一行的数据
                 if (field) {
-                    var td = getTdByPos(option, rowDataIndex, field);
+                    var td = getTdById(option, id, field);
                     if (!td) {
                         return;
                     }
                     tds = [td];
                 } else {
-                    tds = option.$tableBody.find('tr[data-index="' + rowDataIndex + '"]').find('td');
+                    tds = option.$tableBody.find('tr[data-id="' + id + '"]').find('td');
                 }
             } else { // 保存所有的数据
                 tds = option.$tableBody.find('td');
@@ -206,43 +268,57 @@
                 var $td = $(td);
                 var value = _getValue(td);
                 var fValue = _getValue(td, true);
+                var originValue = td.songBindData.colData;
                 td.songBindData.rowData[col.field] = value;
                 td.songBindData.colData = value;
-                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.rowDataIndex, col) : fValue;
+                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.id, col) : fValue;
                 $td.removeClass(tableClass.edit);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
                 td.songBindData.$checkbox = undefined;
+                // 值被修改过
+                if (String(originValue) != String(value)) {
+                    var pushed = true;
+                    for (var i = 0; i < option.editedData.length; i++) {
+                        if (option.editedData[0]._song_table_id == td.songBindData.rowData._song_table_id) {
+                            pushed = false;
+                            break;
+                        }
+                    }
+                    if (pushed) {
+                        option.editedData.push(td.songBindData.rowData);
+                    }
+                }
                 // 触发保存事件
-                Table.trigger('save(' + option.filter + ')', {
-                    data: td.colData,
-                    dom: td
-                });
-                Table.trigger('save', {
-                    data: td.colData,
-                    dom: td
-                });
+                // Table.trigger('save(' + option.filter + ')', {
+                //     data: td.colData,
+                //     dom: td
+                // });
+                // Table.trigger('save', {
+                //     data: td.colData,
+                //     dom: td
+                // });
             }
         }
 
         /**
          * 编辑数据
          * @param {Object} option 
-         * @param {Number} rowDataIndex 
+         * @param {Number} id 
          * @param {String} field 
          */
-        function edit(option, rowDataIndex, field) {
+        function edit(option, id, field) {
             var tds = [];
-            if (rowDataIndex !== undefined) { // 编辑某一行的数据
+            if (id !== undefined) { // 编辑某一行的数据
                 if (field) {
-                    var td = getTdByPos(option, rowDataIndex, field);
+                    var td = getTdById(option, id, field);
                     if (!td) {
                         return;
                     }
                     tds = [td];
                 } else {
-                    tds = option.$tableBody.find('tr[data-index="' + rowDataIndex + '"]').find('td');
+                    tds = option.$tableBody.find('tr[data-id="' + id + '"]').find('td');
                 }
             } else { // 编辑所有的数据
                 tds = option.$tableBody.find('td');
@@ -305,14 +381,14 @@
                     $(td).addClass(tableClass.edit);
                     td.songBindData.editing = true;
                     // 触发编辑事件
-                    Table.trigger('edit(' + option.filter + ')', {
-                        data: data,
-                        dom: td
-                    });
-                    Table.trigger('edit', {
-                        data: data,
-                        dom: td
-                    });
+                    // Table.trigger('edit(' + option.filter + ')', {
+                    //     data: data,
+                    //     dom: td
+                    // });
+                    // Table.trigger('edit', {
+                    //     data: data,
+                    //     dom: td
+                    // });
                 }
             }
         }
@@ -320,11 +396,11 @@
         /**
          * 获取td
          * @param {Object} option 
-         * @param {Number} rowDataIndex 
+         * @param {Number} id 
          * @param {String} field 
          */
-        function getTdByPos(option, rowDataIndex, field) {
-            return option.$tableBody.find('tr[data-index="' + rowDataIndex + '"]').find('td[data-field="' + field + '"]')[0];
+        function getTdById(option, id, field) {
+            return option.$tableBody.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
         }
 
         // 挂载
@@ -413,8 +489,8 @@
                             data: option.renderedData[e.data]
                         }
                         // 触发radio事件
-                        Table.trigger('radio(' + filter + ')', option.renderedData[e.data]);
-                        Table.trigger('radio', option.renderedData[e.data]);
+                        // Table.trigger('radio(' + filter + ')', option.renderedData[e.data]);
+                        // Table.trigger('radio', option.renderedData[e.data]);
                     });
                 }
                 // 多选
@@ -430,8 +506,8 @@
                             data: checkedData
                         }
                         // 触发checkbox事件
-                        Table.trigger('checkbox(' + filter + ')', checkedData);
-                        Table.trigger('checkbox', checkedData);
+                        // Table.trigger('checkbox(' + filter + ')', checkedData);
+                        // Table.trigger('checkbox', checkedData);
                     });
                     // 全选或者全部选
                     Form.once('checkbox(table_checkbox_' + filter + '_all)', function (e) {
@@ -448,9 +524,9 @@
                             data: checkedData
                         }
                         // 触发checkbox事件
-                        Table.trigger('checkbox(' + filter + ')', checkedData);
-                        Table.trigger('checkbox', checkedData);
-                        Form.render('checkbox(table_checkbox_' + filter + ')');
+                        // Table.trigger('checkbox(' + filter + ')', checkedData);
+                        // Table.trigger('checkbox', checkedData);
+                        // Form.render('checkbox(table_checkbox_' + filter + ')');
                     });
                 }
             }
@@ -459,19 +535,18 @@
 
         // 渲染表数据
         function renderTableBody(option, complete) {
-            var $tableBody = option.$tableBody;
             if (option.data) {
                 var start = (option.nowPage - 1) * option.limit;
                 var end = option.nowPage * option.limit;
                 option.renderedData = option.data.slice(start, end);
-                _createTd();
+                createTd(option);
                 complete && complete();
                 Form.render();
             } else {
                 httpGet(option, function (res) {
                     option.renderedData = res.data;
                     option.loadedData = res.data;
-                    _createTd();
+                    createTd(option);
                     complete && complete();
                     option.pager.count != res.count && option.pager.reload({
                         count: res.count
@@ -479,76 +554,90 @@
                     Form.render();
                 });
             }
+        }
 
-            function _createTd() {
-                var cols = option.cols;
-                var filter = option.filter;
-                var data = option.renderedData;
-                $tableBody.html('');
-                option.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-                for (var index = 0; index < data.length && index < option.limit; index++) {
-                    var item = data[index];
-                    var $tr = $('<tr data-index="' + index + '"></tr>');
-                    $tr[0].songBindData = {};
-                    for (var col_i = 0; col_i < cols.length; col_i++) {
-                        var col = cols[col_i];
-                        var $td = $('<td data-field="' + (col.field || '') + '"></td>');
-                        var $cell = null;
-                        $td[0].songBindData = {};
-                        if (!col.type || col.type == 'normal') {
-                            var html = item[col.field];
-                            if (col.template) { // 自定义渲染函数
-                                html = col.template(item, index, col);
-                            } else if (col.select) { // 下列列表中的数据
-                                html = '';
-                                col.select.map(function (obj) {
-                                    if (obj.value == item[col.field]) {
-                                        html = obj.label;
-                                    }
-                                });
-                            } else if (col.checkbox) { // 复选框中的数据
-                                html = '';
-                                col.checkbox.map(function (obj) {
-                                    if (hasValue(item[col.field], obj.value)) {
-                                        html = ',' + obj.label;
-                                    }
-                                });
-                                html = html.slice(1);
-                            }
-                            $cell = $('<div class="cell">' + html + '</div>');
-                        } else if (col.type == 'radio') {
-                            $cell = $('<div class="cell"><input type="radio" name="table_radio_' + filter + '" value="' + index + '" song-filter="table_radio_' + filter + '"/></div>');
-                        } else if (col.type == 'checkbox') {
-                            $cell = $('<div class="cell"><input type="checkbox" name="table_checkbox_' + filter + '" value="' + index + '" song-filter="table_checkbox_' + filter + '"/></div>');
-                        } else if (col.type == 'operate') {
-                            $cell = $('<div class="cell"></div>');
-                            if (col.btns) {
-                                for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
-                                    var btn = col.btns[btn_i];
-                                    $cell.append('<button type="button" class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
+        // 渲染内容
+        function createTd(option) {
+            var $tableBody = option.$tableBody;
+            var cols = option.cols;
+            var filter = option.filter;
+            var data = option.renderedData;
+            $tableBody.html('');
+            option.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
+            for (var index = 0; index < data.length; index++) {
+                var item = data[index];
+                var id = item.id === undefined ? index : item.id;
+                var $tr = $('<tr data-index="' + index + '" data-id="' + id + '"></tr>');
+                item._song_table_id = id;
+                $tr[0].songBindData = {};
+                for (var col_i = 0; col_i < cols.length; col_i++) {
+                    var col = cols[col_i];
+                    var $td = $('<td data-field="' + (col.field || '') + '"></td>');
+                    var $cell = null;
+                    $td[0].songBindData = {};
+                    if (!col.type || col.type == 'normal') {
+                        var html = item[col.field];
+                        if (col.template) { // 自定义渲染函数
+                            html = col.template(item, index, col);
+                        } else if (col.select) { // 下列列表中的数据
+                            html = '';
+                            col.select.map(function (obj) {
+                                if (obj.value == item[col.field]) {
+                                    html = obj.label;
                                 }
-                            } else {
-                                $cell.append(col.template(item, btn_i, col));
-                            }
+                            });
+                        } else if (col.checkbox) { // 复选框中的数据
+                            html = '';
+                            col.checkbox.map(function (obj) {
+                                if (hasValue(item[col.field], obj.value) > -1) {
+                                    html += ',' + obj.label;
+                                }
+                            });
+                            html = html.slice(1);
                         }
-                        // 缓存td对应的数据
-                        $td[0].songBindData.colData = item[col.field];
-                        $td[0].songBindData.col = col;
-                        $td[0].songBindData.rowDataIndex = index;
-                        $td[0].songBindData.rowData = item;
-                        $td.append($cell);
-                        $tr.append($td);
-                        if (col.hidden) {
-                            $td.hide();
+                        $cell = $('<div class="cell">' + html + '</div>');
+                    } else if (col.type == 'radio') {
+                        $cell = $('<div class="cell"><input type="radio" name="table_radio_' + filter + '" value="' + index + '" song-filter="table_radio_' + filter + '"/></div>');
+                    } else if (col.type == 'checkbox') {
+                        $cell = $('<div class="cell"><input type="checkbox" name="table_checkbox_' + filter + '" value="' + index + '" song-filter="table_checkbox_' + filter + '"/></div>');
+                    } else if (col.type == 'operate') {
+                        $cell = $('<div class="cell"></div>');
+                        if (col.btns) {
+                            for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
+                                var btn = col.btns[btn_i];
+                                $cell.append('<button type="button" class="song-btn song-btn-xs ' + (btn.type ? 'song-btn-' + btn.type : '') + '" song-event="' + btn.event + '" style="margin-right:10px">' + btn.text + '</button>');
+                            }
+                        } else {
+                            $cell.append(col.template(item, btn_i, col));
                         }
                     }
-                    // 缓存tr对应的数据
-                    $tr[0].songBindData.rowDataIndex = index;
-                    $tr[0].songBindData.rowData = item;
-                    $tableBody.append($tr);
+                    // 缓存td对应的数据
+                    $td[0].songBindData.colData = item[col.field];
+                    $td[0].songBindData.col = col;
+                    $td[0].songBindData.rowData = item;
+                    $td[0].songBindData.id = id;
+                    $td[0].songBindData.index = index;
+                    $td.append($cell);
+                    $tr.append($td);
+                    if (col.hidden) {
+                        $td.hide();
+                    }
                 }
-                bindTableBodyEvent(option);
+                // 缓存tr对应的数据
+                $tr[0].songBindData.rowData = item;
+                $tr[0].songBindData.id = id;
+                $tr[0].songBindData.index = index;
+                $tableBody.append($tr);
             }
+            option.checkedData = {
+                index: [],
+                data: []
+            };
+            option.selectedData = {
+                index: -1,
+                data: null
+            };
+            bindTableBodyEvent(option);
         }
 
         // 渲染页码
@@ -608,20 +697,25 @@
             // 表格中的所有点击事件
             $view.on('click', function (e) {
                 var $target = $(e.target);
+                var $tr = $target.parents('tr');
                 var event = $target.attr('song-event');
                 if (event) {
-                    filter && Table.trigger(event + '(' + filter + ')', {
+                    var data = {
                         dom: $target[0]
-                    });
-                    Table.trigger(event, {
-                        dom: $target[0]
-                    });
+                    }
+                    if ($tr[0] && $tr[0].songBindData) {
+                        data.id = $tr[0].songBindData.id;
+                        data.index = $tr[0].songBindData.index;
+                        data.data = $tr[0].songBindData.data;
+                    }
+                    filter && Table.trigger(event + '(' + filter + ')', data);
+                    Table.trigger(event, data);
                 }
             });
             $view.on('keydown', function (e) {
                 var $td = $(e.target).parents('td');
                 if ($td.length && e.keyCode == 13) {
-                    option.save($td[0].songBindData.rowDataIndex, $td[0].songBindData.field);
+                    option.save($td[0].songBindData.id, $td[0].songBindData.field);
                 }
             });
             // 点击表格之外的区域，自动保存编辑中的数据
@@ -656,7 +750,7 @@
                 // 先保存真在编辑中的数据
                 var pass = option.save();
                 if (pass && $td[0].songBindData.col.editable) {
-                    option.edit($td[0].songBindData.rowDataIndex, $td[0].songBindData.col.field);
+                    option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
                 }
             });
         }

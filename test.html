@@ -382,6 +382,7 @@
             data: data,
             limit: 10,
             defaultToolbar: true,
+            toolbar: '<button class="song-btn song-btn-sm" song-event="selected">获取选择的项</button>',
             cols: [{
                 type: 'radio'
             }, {
@@ -416,6 +417,9 @@
                     value: 3
                 }]
             }]
+        });
+        SongUi.Table.on('selected(table1)', function () {
+            SongUi.Dialog.alert(JSON.stringify(table.selectedData));
         });
         return table;
     }
@@ -488,6 +492,10 @@
             data: data,
             limit: 10,
             defaultToolbar: true,
+            toolbar: '<button class="song-btn song-btn-sm" song-event="add">添加行</button>\
+            <button class="song-btn song-btn-sm" song-event="getadd">获取添加的数据</button>\
+            <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
+            <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
             cols: [{
                 title: '用户',
                 field: 'user'
@@ -542,23 +550,28 @@
                 }]
             }]
         });
+        SongUi.Table.on('add(table3)', function (obj) {
+            var sex = Math.ceil(Math.random() * 2);
+            var age = Math.ceil(Math.random() * 100);
+            var like = Math.ceil(Math.random() * 3);
+            table.addRow({
+                data: { user: '新用户', sex: sex, age: age, like: [like] }
+            });
+        });
+        SongUi.Table.on('del(table3)', function (obj) {
+            table.deleteRow(obj.id);
+        });
+        SongUi.Table.on('getadd(table3)', function (obj) {
+            SongUi.Dialog.alert(JSON.stringify(table.addedData));
+        });
+        SongUi.Table.on('getdel(table3)', function (obj) {
+            SongUi.Dialog.alert(JSON.stringify(table.deletedData));
+        });
+        SongUi.Table.on('getedit(table3)', function (obj) {
+            SongUi.Dialog.alert(JSON.stringify(table.editedData));
+        });
         return table;
     }
-    SongUi.Table.on('edit(table3)', function (obj) {
-        SongUi.Dialog.msg('eidt');
-    });
-    SongUi.Table.on('save(table3)', function (obj) {
-        SongUi.Dialog.msg('save');
-    });
-    SongUi.Table.on('del(table3)', function (obj) {
-        SongUi.Dialog.msg('del');
-    });
-    SongUi.Table.on('radio(table1)', function (obj) {
-        SongUi.Dialog.msg('radio');
-    });
-    SongUi.Table.on('checkbox(table2)', function (obj) {
-        SongUi.Dialog.msg('checkbox');
-    });
     SongUi.Pager.render({
         elem: '#test_page',
         count: 100,
