@@ -319,6 +319,9 @@
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
 <script>
+    window.JSON = window.JSON || {
+        stringify: function (d) { return String(d) }
+    }
     function openAlert(icon) {
         SongUi.Dialog.alert('点击确认更改图标', {
             icon: icon,
