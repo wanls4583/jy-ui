@@ -4,8 +4,6 @@
     table-layout: fixed;
     // border-collapse: collapse;
     border-spacing: 0;
-    border-left: 1px solid $light-color;
-    border-top: 1px solid $light-color;
     color: $color-666;
 
     &-view {
@@ -13,12 +11,14 @@
         border: 1px solid $light-color;
     }
 
-    &-body {
+    &-main {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
         width: 100%;
         min-width: 100%;
         overflow: auto;
+        border-top: 1px solid $light-color;
+        border-bottom: 1px solid $light-color;
     }
 
     &-toolbar {
@@ -26,7 +26,6 @@
         z-index: 1;
         padding: $pd10 $pd15;
         padding-right: 130px;
-        border-right: 1px solid $light-color;
     }
 
     &-tool-self {

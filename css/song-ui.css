@@ -612,6 +612,7 @@ a {
   float: left;
   margin-left: 10px;
   color: #999999;
+  white-space: nowrap;
 }
 
 .song-pager .song-pager-jump input {
@@ -703,6 +704,7 @@ a {
   float: left;
   margin-left: 10px;
   color: #999999;
+  white-space: nowrap;
 }
 
 .song-pager-small .song-pager-jump input {
@@ -731,8 +733,6 @@ a {
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
-  border-left: 1px solid #eeeeee;
-  border-top: 1px solid #eeeeee;
   color: #666666;
 }
 
@@ -741,11 +741,13 @@ a {
   border: 1px solid #eeeeee;
 }
 
-.song-table-body {
+.song-table-main {
   position: relative;
   width: 100%;
   min-width: 100%;
   overflow: auto;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .song-table-toolbar {
@@ -753,7 +755,6 @@ a {
   z-index: 1;
   padding: 10px 15px;
   padding-right: 130px;
-  border-right: 1px solid #eeeeee;
 }
 
 .song-table-tool-self {

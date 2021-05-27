@@ -13,7 +13,7 @@
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
-            body: 'song-table-body',
+            body: 'song-table-main',
             tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
@@ -608,6 +608,11 @@
                     $tr.append($td);
                     if (col.hidden) {
                         $td.hide();
+                    }
+                    if (index == data.length - 1) {
+                        $td.css({
+                            'border-bottom': 'none'
+                        });
                     }
                 }
                 // 缓存tr对应的数据
