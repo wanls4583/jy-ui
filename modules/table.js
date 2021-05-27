@@ -434,6 +434,17 @@
             $table.append($tableHeader);
             $table.append($tableBody);
             $tableMain.append($table);
+            $tableHeader.find('th').each(function (i, th) {
+                var col = th.col;
+                var $th = $(th);
+                var $cell = $th.children('.cell');
+                if (!col.width && $cell[0].scrollWidth - 30 > $th.width()) {
+                    console.log($cell[0].scrollWidth, $th.width())
+                    $th.css({
+                        width: $cell[0].scrollWidth - 30 + 'px'
+                    });
+                }
+            });
             bindViewEvent(option);
         }
 
@@ -484,11 +495,15 @@
                 var width = col.width;
                 $th.append($cell);
                 $tr.append($th);
+                $th[0].col = col;
                 if (col.hidden) {
                     $th.hide();
                 }
                 if (col.type == 'radio' || col.type == 'checkbox') {
                     width = 20;
+                    $cell.css({
+                        overflow: 'visible'
+                    });
                 }
                 if (width) {
                     // ie6及以下使用的是border-box
@@ -619,6 +634,11 @@
                         } else {
                             $cell.append(col.template(item, btn_i, col));
                         }
+                    }
+                    if (col.type == 'radio' || col.type == 'checkbox') {
+                        $cell.css({
+                            overflow: 'visible'
+                        });
                     }
                     col.event && $cell.attr('song-event', col.event);
                     // 缓存td对应的数据

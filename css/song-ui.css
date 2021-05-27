@@ -856,6 +856,9 @@ a {
   margin: -5px -15px;
   padding: 5px 15px;
   *zoom: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .song-table th .cell .song-form-radio,
@@ -893,6 +896,8 @@ a {
 .song-table td.song-table-editting .cell {
   margin: 0;
   padding: 0;
+  overflow: visible;
+  white-space: normal;
 }
 
 @font-face {
