@@ -4,7 +4,13 @@
     table-layout: fixed;
     // border-collapse: collapse;
     border-spacing: 0;
+    overflow: hidden;
     color: $color-666;
+
+    &-static {
+        border-top: 1px solid $light-color;
+        border-left: 1px solid $light-color;
+    }
 
     &-view {
         width: 100%;
@@ -18,7 +24,6 @@
         min-width: 100%;
         overflow: auto;
         border-top: 1px solid $light-color;
-        border-bottom: 1px solid $light-color;
     }
 
     &-toolbar {

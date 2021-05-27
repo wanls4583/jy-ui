@@ -733,7 +733,13 @@ a {
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
+  overflow: hidden;
   color: #666666;
+}
+
+.song-table-static {
+  border-top: 1px solid #eeeeee;
+  border-left: 1px solid #eeeeee;
 }
 
 .song-table-view {
@@ -747,7 +753,6 @@ a {
   min-width: 100%;
   overflow: auto;
   border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
 }
 
 .song-table-toolbar {

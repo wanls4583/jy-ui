@@ -149,7 +149,10 @@
             index = index < 0 ? option.renderedData.length : index;
             option.renderedData = option.renderedData.slice(0, index).concat(data).concat(option.renderedData.slice(index));
             createTd(option);
-            option.addedData.push(data);
+            Form.render();
+            data.map(function(item) {
+                option.addedData.push(item);
+            });
         }
 
         /**
@@ -161,8 +164,15 @@
             for (var i = 0; i < option.renderedData.length; i++) {
                 if (id !== undefined && option.renderedData[i]._song_table_id == id) {
                     option.deletedData.push(option.renderedData[i]);
+                    for (var j = 0; j < option.addedData.length; j++) {
+                        if (option.addedData[j]._song_table_id == option.renderedData[i]._song_table_id) {
+                            option.addedData.splice(j, 1);
+                            break;
+                        }
+                    }
                     option.renderedData.splice(i, 1);
                     createTd(option);
+                    Form.render();
                     return;
                 }
             }
@@ -609,9 +619,9 @@
                     if (col.hidden) {
                         $td.hide();
                     }
-                    if (index == data.length - 1) {
+                    if (col_i == cols.length - 1) {
                         $td.css({
-                            'border-bottom': 'none'
+                            'border-right': 'none'
                         });
                     }
                 }
