@@ -637,7 +637,7 @@
                             'border-right': 'none'
                         });
                     }
-                    if (index == data.length - 1) {
+                    if (!option.height && index == data.length - 1) {
                         $td.css({
                             'border-bottom': 'none'
                         });
