@@ -661,7 +661,12 @@
                             'text-overflow': 'unset'
                         });
                     }
-                    col.event && $cell.attr('song-event', col.event);
+                    // 单元格事件
+                    if (col.event) {
+                        $cell.attr('song-event', col.event).css({
+                            'cursor': 'pointer'
+                        });
+                    }
                     // 缓存td对应的数据
                     $td[0].songBindData.colData = item[col.field];
                     $td[0].songBindData.col = col;
@@ -774,7 +779,7 @@
                     }
                     if ($tr[0] && $tr[0].songBindData) {
                         data.id = $tr[0].songBindData.id;
-                        data.data = $tr[0].songBindData.data;
+                        data.data = $tr[0].songBindData.rowData;
                     }
                     // 触发自定义事件
                     filter && Table.trigger(event + '(' + filter + ')', data);

@@ -529,7 +529,8 @@
                 type: 'checkbox'
             }, {
                 title: '用户',
-                field: 'user'
+                field: 'user',
+                event: 'name'
             }, {
                 title: '手机号',
                 field: 'phone',
@@ -610,6 +611,9 @@
         });
         SongUi.Table.on('getedit(table3)', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.editedData));
+        });
+        SongUi.Table.on('name(table3)', function (obj) {
+            SongUi.Dialog.alert(obj.data.user);
         });
         return table;
     }
