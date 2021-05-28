@@ -377,8 +377,10 @@
         for (var i = 0; i < 1000; i++) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
+            var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
-            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
+            var sign = '个性签名' + i;
+            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table1',
@@ -393,9 +395,13 @@
                 title: '用户',
                 field: 'user'
             }, {
+                title: '手机号',
+                field: 'phone',
+                width: 100
+            }, {
                 title: '性别',
                 field: 'sex',
-                width: 50,
+                width: 80,
                 select: [{
                     label: '男',
                     value: 1
@@ -406,7 +412,11 @@
             }, {
                 title: '年龄',
                 field: 'age',
-                width: 50
+                width: 80
+            }, {
+                title: '签名',
+                field: 'sign',
+                width: 80
             }, {
                 title: '爱好',
                 field: 'like',
@@ -433,8 +443,10 @@
         for (var i = 0; i < 1000; i++) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
+            var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
-            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
+            var sign = '个性签名' + i;
+            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table2',
@@ -449,9 +461,13 @@
                 title: '用户',
                 field: 'user'
             }, {
+                title: '手机号',
+                field: 'phone',
+                width: 100
+            }, {
                 title: '性别',
                 field: 'sex',
-                width: 50,
+                width: 80,
                 select: [{
                     label: '男',
                     value: 1
@@ -462,7 +478,11 @@
             }, {
                 title: '年龄',
                 field: 'age',
-                width: 50
+                width: 80
+            }, {
+                title: '签名',
+                field: 'sign',
+                width: 80
             }, {
                 title: '爱好',
                 field: 'like',
@@ -489,8 +509,10 @@
         for (var i = 0; i < 1000; i++) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
+            var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
-            data.push({ user: '用户' + i, sex: sex, age: age, like: [like] });
+            var sign = '个性签名' + i;
+            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table3',
@@ -509,9 +531,13 @@
                 title: '用户',
                 field: 'user'
             }, {
+                title: '手机号',
+                field: 'phone',
+                width: 100
+            }, {
                 title: '性别',
                 field: 'sex',
-                width: 50,
+                width: 80,
                 select: [{
                     label: '男',
                     value: 1
@@ -526,11 +552,15 @@
             }, {
                 title: '年龄',
                 field: 'age',
-                width: 50,
+                width: 80,
                 editable: {
                     type: 'number',
                     rules: [{ type: 'number' }]
                 }
+            }, {
+                title: '签名',
+                field: 'sign',
+                width: 80
             }, {
                 title: '爱好',
                 field: 'like',
@@ -552,11 +582,12 @@
             }, {
                 type: 'operate',
                 title: '操作',
-                width: 70,
+                width: 90,
                 btns: [{
                     text: '删除',
                     event: 'del',
-                    type: 'danger'
+                    type: 'danger',
+                    stop: true
                 }]
             }]
         });

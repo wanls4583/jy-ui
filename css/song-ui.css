@@ -736,11 +736,6 @@ a {
   color: #666666;
 }
 
-.song-table-static {
-  border-top: 1px solid #eeeeee;
-  border-left: 1px solid #eeeeee;
-}
-
 .song-table-view {
   width: 100%;
   border: 1px solid #eeeeee;
@@ -831,6 +826,40 @@ a {
   padding: 0;
 }
 
+.song-table-hover {
+  background-color: #f6f6f6;
+}
+
+.song-table-tip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 22px;
+  padding: 8px 15px;
+  margin: -1px 13px 0 -1px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+}
+
+.song-table-tip-close {
+  position: absolute;
+  right: -13px;
+  top: -13px;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #000000\0/;
+  *background-color: #000000;
+  font-family: 'iconfont';
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+}
+
 .song-table thead {
   background-color: #f6f6f6;
 }
@@ -843,7 +872,7 @@ a {
 .song-table th,
 .song-table td {
   line-height: 28px;
-  padding: 5px 15px;
+  padding: 0;
   border-right: 1px solid #eeeeee;
   border-bottom: 1px solid #eeeeee;
   font-size: 14px;
@@ -852,8 +881,8 @@ a {
 .song-table th .cell,
 .song-table td .cell {
   position: relative;
+  _width: 100%;
   min-height: 28px;
-  margin: -5px -15px;
   padding: 5px 15px;
   *zoom: 1;
   overflow: hidden;
@@ -879,9 +908,29 @@ a {
   background-color: #ffffff;
 }
 
+.song-table th .cell .song-table-tip-icon,
+.song-table td .cell .song-table-tip-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 24px;
+  line-height: 38px;
+  background-color: #ffffff;
+  border-left: 1px solid #eeeeee;
+  cursor: pointer;
+  font-family: 'iconfont';
+  font-size: 16px;
+  text-align: center;
+}
+
+.song-table th .cell .song-table-tip-icon:hover,
+.song-table td .cell .song-table-tip-icon:hover {
+  background-color: #f6f6f6;
+}
+
 .song-table th.song-table-editting,
 .song-table td.song-table-editting {
-  padding: 0;
   border: 1px solid #5FB878;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
           box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
@@ -898,6 +947,16 @@ a {
   padding: 0;
   overflow: visible;
   white-space: normal;
+}
+
+.song-table-static {
+  border-top: 1px solid #eeeeee;
+  border-left: 1px solid #eeeeee;
+}
+
+.song-table-static th,
+.song-table-static td {
+  padding: 5px 15px;
 }
 
 @font-face {

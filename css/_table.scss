@@ -6,11 +6,6 @@
     border-spacing: 0;
     color: $color-666;
 
-    &-static {
-        border-top: 1px solid $light-color;
-        border-left: 1px solid $light-color;
-    }
-
     &-view {
         width: 100%;
         border: 1px solid $light-color;
@@ -99,6 +94,40 @@
         }
     }
 
+    &-hover {
+        background-color: $lighter-color;
+    }
+
+    &-tip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        line-height: 22px;
+        padding: 8px $pd15;
+        margin: -1px 13px 0 -1px;
+        background-color: $white-color;
+        border: 1px solid $light-color;
+        box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
+
+        &-close {
+            position: absolute;
+            right: -13px;
+            top: -13px;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.6);
+            // 只兼容ie8的样式，在属性值后面加\0/
+            background-color: #{'#000000\\0/'};
+            *background-color: #000000;
+            font-family: 'iconfont';
+            color: $white-color;
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+
     thead {
         background-color: $lighter-color;
     }
@@ -113,15 +142,18 @@
         // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8及以下不支持background-clip
         // position: relative;
         line-height: 28px;
-        padding: 5px $pd15;
+        padding: 0;
         border-right: 1px solid $light-color;
         border-bottom: 1px solid $light-color;
         font-size: 14px;
 
         .cell {
             position: relative;
+            // ie6下内容会溢出到旁边的td
+            _width: 100%;
             min-height: 28px;
-            margin: -5px #{-$pd15};
+            // 定义了100%宽度后，ie6无法通过负边距延伸宽度
+            // margin: -5px #{-$pd15};
             padding: 5px $pd15;
             // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
             *zoom: 1;
@@ -138,14 +170,34 @@
                 border: transparent;
             }
 
+            // 复选框编辑容器
             .song-table-checkboxs {
                 padding-left: $pd10;
                 background-color: $white-color;
             }
+
+            // 文本溢出详情弹框
+            .song-table-tip-icon {
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 100%;
+                width: 24px;
+                line-height: $input-height;
+                background-color: $white-color;
+                border-left: 1px solid $light-color;
+                cursor: pointer;
+                font-family: 'iconfont';
+                font-size: 16px;
+                text-align: center;
+
+                &:hover {
+                    background-color: $lighter-color;
+                }
+            }
         }
 
         &.song-table-editting {
-            padding: 0;
             border: 1px solid $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
 
@@ -159,6 +211,16 @@
                 overflow: visible;
                 white-space: normal;
             }
+        }
+    }
+
+    &-static {
+        border-top: 1px solid $light-color;
+        border-left: 1px solid $light-color;
+
+        th,
+        td {
+            padding: 5px $pd15;
         }
     }
 }
