@@ -366,6 +366,7 @@ a {
   font-size: 12px;
   line-height: 12px;
   font-family: 'iconfont';
+  cursor: pointer;
 }
 
 .song-form-select .song-select-dl {
@@ -908,7 +909,6 @@ a {
 .song-table th .cell .song-table-checkboxs,
 .song-table td .cell .song-table-checkboxs {
   padding-left: 10px;
-  background-color: #ffffff;
 }
 
 .song-table th .cell .song-table-tip-icon,
@@ -937,6 +937,7 @@ a {
   border: 1px solid #5FB878;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
           box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
 }
 
 * + html .song-table th.song-table-editting, * + html
@@ -946,6 +947,7 @@ a {
 
 .song-table th.song-table-editting .cell,
 .song-table td.song-table-editting .cell {
+  width: 100% !important;
   margin: 0;
   padding: 0;
   overflow: visible;

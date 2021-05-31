@@ -181,7 +181,6 @@
             // 复选框编辑容器
             .song-table-checkboxs {
                 padding-left: $pd10;
-                background-color: $white-color;
             }
 
             // 文本溢出详情弹框
@@ -208,12 +207,14 @@
         &.song-table-editting {
             border: 1px solid $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
+            background-color: $white-color;
 
             *+html & {
                 padding: 1px;
             }
 
             .cell {
+                width: 100% !important;
                 margin: 0;
                 padding: 0;
                 overflow: visible;
