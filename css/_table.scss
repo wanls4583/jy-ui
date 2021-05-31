@@ -1,7 +1,7 @@
 .song-table {
-    width: 100%;
+    position: relative;
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
-    table-layout: fixed;
+    // table-layout: fixed;
     // border-collapse: collapse;
     border-spacing: 0;
     color: $color-666;
@@ -11,13 +11,21 @@
         border: 1px solid $light-color;
     }
 
+    &-header {
+        position: relative;
+        width: 100%;
+        min-width: 100%;
+        border-top: 1px solid $light-color;
+        background-color: $lighter-color;
+        overflow: hidden;
+    }
+
     &-main {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
         width: 100%;
         min-width: 100%;
         overflow: auto;
-        border-top: 1px solid $light-color;
         border-bottom: 1px solid $light-color;
     }
 
@@ -73,7 +81,7 @@
     }
 
     &-pager {
-        text-align: center;
+        // text-align: center;
 
         .song-pager {
             display: inline-block;
@@ -103,8 +111,8 @@
         top: 50%;
         left: 50%;
         line-height: 22px;
-        padding: 8px $pd15;
-        margin: -1px 13px 0 -1px;
+        padding: 7px $pd15 8px $pd15;
+        margin: 0 13px 0 -1px;
         background-color: $white-color;
         border: 1px solid $light-color;
         box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);

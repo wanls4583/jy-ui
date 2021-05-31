@@ -12,10 +12,12 @@
         var rightIon = '&#xe734;';
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
+        var ieVersion = Common.getIeVersion();
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
-            body: 'song-table-main',
+            tableHeader: 'song-table-header',
+            main: 'song-table-main',
             tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
@@ -52,12 +54,14 @@
         // 渲染表格
         function render(option) {
             var $elem = $(option.elem);
-            var filter = $elem.attr('song-filter') || '';
+            var filter = $elem.attr('song-filter') || Math.random();
             var $view = option.$view || $('<div class="' + tableClass.view + '"></div>');
             var $table = $('<table class="' + tableClass.table + '"></table>');
-            var $tableHeader = $('<thead></thead>');
             var $tableBody = $('<tbody></tbody>');
-            var $tableMain = $('<div class="' + tableClass.body + '"></div>');
+            var $header = $('<div class="' + tableClass.tableHeader + '"></div>')
+            var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
+            var $tableHeaderHead = $('<thead></thead>');
+            var $tableMain = $('<div class="' + tableClass.main + '"></div>');
             if (!option.reload) {
                 option = Object.assign({}, option);
                 $view.html('');
@@ -67,7 +71,9 @@
             option.$elem = $elem;
             option.$view = $view;
             option.$table = $table;
+            option.$header = $header;
             option.$tableHeader = $tableHeader;
+            option.$tableHeaderHead = $tableHeaderHead;
             option.$tableBody = $tableBody;
             option.$tableMain = $tableMain;
             option.nowPage = option.nowPage || 1;
@@ -94,15 +100,21 @@
                 height: option.height
             });
             $view.attr('song-filter', option.filter);
+            // 已存在view，则不再插入
+            if (!$view.parent().length) {
+                $view.insertAfter($elem);
+                $elem.hide();
+            }
             renderToolbar(option);
             renderTableHeader(option);
             renderTableBody(option);
-            mount(option);
+            bindViewEvent(option);
             if (option.page !== false) {
                 renderPage(option);
             }
             if (option.height) {
                 var h = option.height;
+                h -= option.$header.height();
                 if (option.$toolbar) {
                     h -= option.$toolbar.outerHeight();
                 }
@@ -423,43 +435,8 @@
             return option.$tableBody.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
         }
 
-        // 挂载
-        function mount(option) {
-            var $elem = option.$elem;
-            var $view = option.$view;
-            var $tableMain = option.$tableMain;
-            var $table = option.$table;
-            var $tableHeader = option.$tableHeader;
-            var $tableBody = option.$tableBody;
-            // 已存在view，则不再插入
-            if (!$view.parent().length) {
-                $view.insertAfter($elem);
-                $elem.hide();
-            }
-            $view.append($tableMain);
-            // 使tableMain中的内容可横向滚动
-            $tableMain.css({
-                width: $tableMain.width() + 'px'
-            });
-            $table.append($tableHeader);
-            $table.append($tableBody);
-            $tableMain.append($table);
-            $tableHeader.find('th').each(function (i, th) {
-                var col = th.songBindData.col;
-                var $th = $(th);
-                var $cell = $th.children('.cell');
-                if (!col.width && $cell[0].scrollWidth > $th.width()) {
-                    $th.css({
-                        width: $cell[0].scrollWidth + 4 + 'px'
-                    });
-                }
-            });
-            bindViewEvent(option);
-        }
-
         // 渲染工具条
         function renderToolbar(option) {
-            var $view = option.$view;
             var $toolbar = $('<div class="' + [tableClass.toolbar, 'song-row'].join(' ') + '"></div>');
             if (option.defaultToolbar) {
                 var defaultToolbar = option.defaultToolbar;
@@ -486,22 +463,21 @@
             if (option.toolbar || option.defaultToolbar) {
                 option.$toolbar = $toolbar;
                 $toolbar.append(option.toolbar);
-                $view.append($toolbar);
+                option.$view.prepend($toolbar);
             }
         }
 
         // 渲染表头
         function renderTableHeader(option) {
             var $view = option.$view;
-            var $tableHeader = option.$tableHeader;
             var filter = option.filter;
             var $tr = $('<tr></tr>');
             var cols = option.cols;
             for (var i = 0; i < cols.length; i++) {
                 var col = cols[i];
+                var width = col.width;
                 var $cell = $('<div class="cell">' + (col.title || '') + '</div>');
                 var $th = $('<th data-field="' + (col.field || '') + '"></th>');
-                var width = col.width;
                 $th.append($cell);
                 $tr.append($th);
                 $th[0].songBindData = {
@@ -512,15 +488,14 @@
                     $th.hide();
                 }
                 if (col.type == 'radio' || col.type == 'checkbox') {
-                    width = 50;
+                    width = 20;
                     $cell.css({
                         'text-overflow': 'unset'
                     });
                 }
                 if (width) {
-                    // ie6及以下使用的是border-box
-                    $th.css({
-                        width: width + 'px'
+                    $cell.css({
+                        'width': (ieVersion <= 6 ? width + 30 : width) + 'px'
                     });
                 }
                 // 单选
@@ -566,7 +541,10 @@
                     });
                 }
             }
-            $tableHeader.append($tr);
+            option.$tableHeaderHead.append($tr);
+            option.$tableHeader.append(option.$tableHeaderHead);
+            option.$header.append(option.$tableHeader);
+            option.$header.insertAfter(option.$toolbar);
         }
 
         // 渲染表数据
@@ -594,6 +572,13 @@
                     Form.render();
                 });
             }
+
+            option.$table.append(option.$tableBody);
+            option.$tableMain.append(option.$table);
+            option.$tableMain.insertAfter(option.$header);
+            option.$tableMain.css({
+                width: option.$view.width() + 'px'
+            });
         }
 
         // 渲染内容
@@ -602,6 +587,10 @@
             var cols = option.cols;
             var filter = option.filter;
             var data = option.renderedData;
+            var widths = [];
+            option.$tableHeaderHead.find('th').each(function (i, th) {
+                widths.push($(th).children('.cell').width());
+            });
             $tableBody.html('');
             option.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
             for (var index = 0; index < data.length; index++) {
@@ -656,6 +645,9 @@
                             $cell.append(col.template(item, btn_i, col));
                         }
                     }
+                    $cell.css({
+                        width: (ieVersion <= 6 ? widths[col_i] + 30 : widths[col_i]) + 'px'
+                    });
                     if (col.type == 'radio' || col.type == 'checkbox') {
                         $cell.css({
                             'text-overflow': 'unset'
@@ -678,11 +670,11 @@
                     if (col.hidden) {
                         $td.hide();
                     }
-                    if (col_i == cols.length - 1) {
-                        $td.css({
-                            'border-right': 'none'
-                        });
-                    }
+                    // if (col_i == cols.length - 1) {
+                    //     $td.css({
+                    //         'border-right': 'none'
+                    //     });
+                    // }
                     if (!option.height && index == data.length - 1) {
                         $td.css({
                             'border-bottom': 'none'
@@ -708,11 +700,9 @@
 
         // 渲染页码
         function renderPage(option) {
-            var $view = option.$view;
             var $pager = $('<div class="' + tableClass.pager + '"></div>');
             var $elem = $('<div song-filter="table_pager_' + option.filter + '"></div>');
             $pager.append($elem);
-            $view.append($pager);
             option.$pager = $pager;
             option.pager = Pager.render({
                 elem: $elem[0],
@@ -730,6 +720,7 @@
             Pager.on('limit(table_pager_' + option.filter + ')', function (limit) {
                 option.limit = limit;
             });
+            option.$pager.insertAfter(option.$tableMain);
         }
 
         function httpGet(option, success, error) {
@@ -755,7 +746,9 @@
 
         // 绑定容器的事件
         function bindViewEvent(option) {
-            var $view = option.$view
+            var $view = option.$view;
+            var $tableMain = option.$tableMain;
+            var $header = option.$header;
             // 点击表格之外的区域，自动保存编辑中的数据
             $(window.document.body).on('click', function (e) {
                 if ($(e.target).parents('tbody')[0] != option.$tableBody[0]) {
@@ -795,6 +788,11 @@
                 if ($td.length && e.keyCode == 13) {
                     option.save($td[0].songBindData.id, $td[0].songBindData.field);
                 }
+            });
+            $tableMain.on('scroll', function (e) {
+                $header.children('table').css({
+                    left: -$tableMain[0].scrollLeft + 'px'
+                });
             });
             // 筛选字段事件
             Table.on('filter(' + option.filter + ')', function (e) {
@@ -850,6 +848,7 @@
                 var $cell = $td.children('.cell');
                 if (col.type == 'text' && !this.songBindData.editing && $cell[0].scrollWidth > $td.width()) {
                     var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
+                    var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                     $cell.append($div);
                     // 点击打开内容详情弹框
                     $div.on('click', function () {
@@ -862,7 +861,7 @@
                         $(window.document.body).append($div);
                         songBindData.$tip = $div;
                         $div.css({
-                            top: offset.top,
+                            top: offset.top + (ieVersion <= 6 ? ie6MarginTop : 0),
                             left: offset.left
                         });
                         // 点击关闭弹框

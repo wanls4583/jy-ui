@@ -8,7 +8,8 @@
         var Common = {
             getEvent: getEvent,
             getIeVersion: getIeVersion,
-            getNum: getNum
+            getNum: getNum,
+            insertRule: insertRule
         }
 
 
@@ -56,6 +57,16 @@
                 version = parseInt(arr[1].replace(/\s|MSIE/g, ''));
             }
             return version
+        }
+
+        function insertRule(sheet, selectorText, cssText) {
+            //如果是非IE
+            if (sheet.insertRule) {
+                sheet.insertRule(selectorText + "{" + cssText + "}", 0);
+                //如果是IE
+            } else if (sheet.addRule) {
+                sheet.addRule(selectorText, cssText, 0);
+            }
         }
 
         // 获取纯数字

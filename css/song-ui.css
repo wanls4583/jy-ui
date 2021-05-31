@@ -730,8 +730,7 @@ a {
 }
 
 .song-table {
-  width: 100%;
-  table-layout: fixed;
+  position: relative;
   border-spacing: 0;
   color: #666666;
 }
@@ -741,12 +740,20 @@ a {
   border: 1px solid #eeeeee;
 }
 
+.song-table-header {
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+  border-top: 1px solid #eeeeee;
+  background-color: #f6f6f6;
+  overflow: hidden;
+}
+
 .song-table-main {
   position: relative;
   width: 100%;
   min-width: 100%;
   overflow: auto;
-  border-top: 1px solid #eeeeee;
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -804,10 +811,6 @@ a {
   margin: 0;
 }
 
-.song-table-pager {
-  text-align: center;
-}
-
 .song-table-pager .song-pager {
   display: inline-block;
   *display: inline;
@@ -835,8 +838,8 @@ a {
   top: 50%;
   left: 50%;
   line-height: 22px;
-  padding: 8px 15px;
-  margin: -1px 13px 0 -1px;
+  padding: 7px 15px 8px 15px;
+  margin: 0 13px 0 -1px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
