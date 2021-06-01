@@ -433,7 +433,7 @@
             }]
         });
         SongUi.Table.on('selected(table1)', function () {
-            SongUi.Dialog.alert(JSON.stringify(table.selectedData));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('radio')));
         });
         return table;
     }
@@ -500,7 +500,7 @@
             }]
         });
         SongUi.Table.on('checked(table2)', function () {
-            SongUi.Dialog.alert(JSON.stringify(table.checkedData));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('checkbox')));
         });
         return table;
     }
@@ -607,17 +607,18 @@
             table.deleteRow(obj.id);
         });
         SongUi.Table.on('getadd(table3)', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.addedData));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('add')));
         });
         SongUi.Table.on('getdel(table3)', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.deletedData));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('del')));
         });
         SongUi.Table.on('getedit(table3)', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.editedData));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
         });
         SongUi.Table.on('name(table3)', function (obj) {
             SongUi.Dialog.alert(obj.data.user);
         });
+        window.table = table;
         return table;
     }
     SongUi.Pager.render({

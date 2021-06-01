@@ -2,7 +2,7 @@
     position: relative;
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
     // table-layout: fixed;
-    border-collapse: collapse;
+    // border-collapse: collapse;
     border-spacing: 0;
     color: $color-666;
 
@@ -111,8 +111,8 @@
         top: 50%;
         left: 50%;
         line-height: 22px;
-        padding: 7px $pd15 8px $pd15;
-        margin: 0 13px 0 -1px;
+        padding: 8px $pd15 8px $pd15;
+        margin: -1px 13px 0 -1px;
         background-color: $white-color;
         border: 1px solid $light-color;
         box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
