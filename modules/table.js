@@ -354,6 +354,15 @@
                     if (pushed) {
                         option._editedData.push(td.songBindData.rowData);
                     }
+                    if (_data) {
+                        option._renderedData.splice(i, _data);
+                        $tr.replaceWith(createTr(option, _data, i));
+                        editFields.map(function (field) {
+                            edit(option, _data._song_table_id, field);
+                        });
+                        Form.render();
+                    }
+                    break;
                 }
             }
         }
@@ -511,6 +520,14 @@
                     break;
             }
             if (data) {
+                if (data.data) {
+                    data.data = _delInnerProperty(data.data);
+                } else {
+                    data = _delInnerProperty(data);
+                }
+            }
+
+            function _delInnerProperty(data) {
                 data = data.map(function (item) {
                     var obj = {};
                     for (var key in item) {
@@ -521,6 +538,7 @@
                     }
                     return obj;
                 });
+                return data;
             }
             return data;
         }
@@ -617,7 +635,9 @@
                             checkedData.push(option._renderedData[e.data[i]]);
                         }
                         option._checkedData = {
-                            index: e.data,
+                            index: e.data.map(function (index) {
+                                return Number(index)
+                            }),
                             data: checkedData
                         }
                         $all.prop('checked', checkedData.length == option._renderedData.length);
@@ -753,7 +773,6 @@
          */
         function createTr(option, data, rowIndex, widths) {
             var cols = option.cols;
-            var filter = option._filter;
             var id = data.id === undefined ? rowIndex : data.id;
             var $tr = $('<tr data-index="' + rowIndex + '" data-id="' + id + '"></tr>');
             if (!widths) {
