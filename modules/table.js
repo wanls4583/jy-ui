@@ -78,6 +78,7 @@
             option.$tableMain = $tableMain;
             option.nowPage = option.nowPage || 1;
             option.limit = option.limit || 20;
+            option.stretch = option.stretch || false;
             option.filter = filter || 'table_' + Math.random();
             option.renderedData = [];
             option.loadedData = [];
@@ -198,6 +199,12 @@
                     for (var j = 0; j < option.addedData.length; j++) {
                         if (option.addedData[j]._song_table_id == option.renderedData[i]._song_table_id) {
                             option.addedData.splice(j, 1);
+                            break;
+                        }
+                    }
+                    for (var j = 0; j < option.editedData.length; j++) {
+                        if (option.editedData[j]._song_table_id == option.renderedData[i]._song_table_id) {
+                            option.editedData.splice(j, 1);
                             break;
                         }
                     }
@@ -545,6 +552,34 @@
             option.$tableHeader.append(option.$tableHeaderHead);
             option.$header.append(option.$tableHeader);
             option.$header.insertAfter(option.$toolbar);
+            var hedaerWidth = option.$header.width();
+            var tableHeaderWidth = option.$tableHeader.width();
+            if (option.stretch && tableHeaderWidth < hedaerWidth) {
+                option.$tableHeader.css({
+                    width: hedaerWidth + 'px'
+                });
+                var ths = option.$tableHeaderHead.find('th');
+                var ws = [];
+                ths.each(function (i, th) {
+                    var $th = $(th);
+                    var $cell = $th.children('.cell');
+                    var tw = $th.width();
+                    var cw = $cell.width();
+                    var width = 0;
+                    if (option.stretch) {
+                        width = ieVersion <= 6 ? tw : tw - 30;
+                    } else {
+                        width = cw;
+                    }
+                    ws.push(width);
+                });
+                ths.each(function (i, th) {
+                    var $cell = $(th).children('.cell');
+                    $cell.css({
+                        width: ws[i] + 'px'
+                    })
+                });
+            }
         }
 
         // 渲染表数据
@@ -573,12 +608,19 @@
                 });
             }
 
+            var viewWidth = option.$view.width();
             option.$table.append(option.$tableBody);
             option.$tableMain.append(option.$table);
             option.$tableMain.insertAfter(option.$header);
             option.$tableMain.css({
-                width: option.$view.width() + 'px'
+                width: viewWidth + 'px'
             });
+            var tableWidth = option.$table.width();
+            if (option.stretch && tableWidth < viewWidth) {
+                option.$table.css({
+                    width: viewWidth + 'px'
+                });
+            }
         }
 
         // 渲染内容

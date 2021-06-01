@@ -450,6 +450,7 @@
         };
         var table = SongUi.Table.render({
             elem: '#table2',
+            stretch: true,
             width: 800,
             data: data,
             limit: 10,
@@ -595,9 +596,11 @@
         SongUi.Table.on('add(table3)', function (obj) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
+            var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
+            var sign = '个性签名' + i;
             table.addRow({
-                data: { user: '新用户', sex: sex, age: age, like: [like] }
+                data: { user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
         });
         SongUi.Table.on('del(table3)', function (obj) {
