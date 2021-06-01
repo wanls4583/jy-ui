@@ -839,8 +839,8 @@ a {
   top: 50%;
   left: 50%;
   line-height: 22px;
-  padding: 7px 15px 8px 15px;
-  margin: 0 13px 0 -1px;
+  padding: 8px 15px 8px 15px;
+  margin: -1px 13px 0 -1px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
