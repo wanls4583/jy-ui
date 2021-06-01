@@ -708,7 +708,6 @@
                 });
                 renderTr(option);
                 complete && complete();
-                Form.render();
             } else {
                 httpGet(option, function (res) {
                     option._renderedData = res.data;
@@ -720,7 +719,6 @@
                     option.pager.count != res.count && option.pager.reload({
                         count: res.count
                     });
-                    Form.render();
                 });
             }
 
@@ -750,9 +748,6 @@
             });
             $tableBody.html('');
             option.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-            for (var index = 0; index < data.length; index++) {
-                $tableBody.append(createTr(option, data[index], index, widths));
-            }
             option._checkedData = {
                 index: [],
                 data: []
@@ -761,7 +756,11 @@
                 index: -1,
                 data: null
             };
+            for (var index = 0; index < data.length; index++) {
+                $tableBody.append(createTr(option, data[index], index, widths));
+            }
             bindTableBodyEvent(option);
+            Form.render();
         }
 
         /**
