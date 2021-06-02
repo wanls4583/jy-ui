@@ -788,7 +788,7 @@ a {
   border-color: #999999;
 }
 
-.song-table-filter {
+.song-table-exports, .song-table-filter {
   position: absolute;
   right: -1px;
   top: 100%;
@@ -800,15 +800,15 @@ a {
   font-size: 14px;
 }
 
-.song-table-filter li {
+.song-table-exports li, .song-table-filter li {
   padding: 10px 15px;
 }
 
-.song-table-filter li:hover {
+.song-table-exports li:hover, .song-table-filter li:hover {
   background-color: #f6f6f6;
 }
 
-.song-table-filter li .song-form-checkbox {
+.song-table-exports li .song-form-checkbox, .song-table-filter li .song-form-checkbox {
   margin: 0;
 }
 

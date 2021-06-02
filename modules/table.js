@@ -6,7 +6,7 @@
 !(function () {
     function factory($, Common, Form, Pager, Dialog) {
         var filterIcon = '&#xe61d;';
-        var exprotsIcon = '&#xe618;';
+        var exportsIcon = '&#xe618;';
         var printIcon = '&#xe62c;';
         var leftIcon = '&#xe733;';
         var rightIon = '&#xe734;';
@@ -26,6 +26,7 @@
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
             filter: 'song-table-filter',
+            exports: 'song-table-exports',
             tipIcon: 'song-table-tip-icon',
             tip: 'song-table-tip',
             tipClose: 'song-table-tip-close',
@@ -76,6 +77,8 @@
             option.$tableHeaderHead = $tableHeaderHead;
             option.$tableBody = $tableBody;
             option.$tableMain = $tableMain;
+            option.$filter = null;
+            option.$exports = null;
             option.nowPage = option.nowPage || 1;
             option.limit = option.limit || 20;
             option.stretch = option.stretch || false;
@@ -564,15 +567,23 @@
                 var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
                 // 默认工具条
                 if (defaultToolbar === true) {
-                    defaultToolbar = ['filter', 'exprots', 'print']
+                    defaultToolbar = ['filter', 'exports', 'print']
                 }
                 for (var i = 0; i < defaultToolbar.length; i++) {
                     switch (defaultToolbar[i]) {
                         case 'filter':
-                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="filter">' + filterIcon + '</div>');
+                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="filter" song-stop="true">' + filterIcon + '</div>');
                             break;
-                        case 'exprots':
-                            $tool.append('<div title="导出" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="exprots">' + exprotsIcon + '</div>');
+                        case 'exports':
+                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="exports" song-stop="true">' + exportsIcon + '</div>');
+                            var $exports = $(
+                                '<ul class="' + tableClass.exports + '" style="display:none">\
+                                    <li song-stop="true" song-event="exports-excel">导出Excel文件</li>\
+                                    <li song-stop="true" song-event="exports-csv">导出Csv文件</li>\
+                                </ul>');
+                            $div.append($exports);
+                            $tool.append($div);
+                            option.$exports = $exports;
                             break;
                         case 'print':
                             $tool.append('<div title="打印" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="print">' + printIcon + '</div>');
@@ -649,6 +660,9 @@
                         option._checkedData = checkedData
                         Form.render('checkbox(table_checkbox_' + filter + ')');
                     });
+                }
+                if (col.type != 'text') {
+                    $th.addClass('song-table-col-' + col.type);
                 }
             }
             option.$tableHeaderHead.append($tr);
@@ -838,6 +852,9 @@
                     $cell.append(col.template(data, btn_i, col));
                 }
             }
+            if (col.type != 'text') {
+                $td.addClass('song-table-col-' + col.type);
+            }
             $cell.css({
                 width: (ieVersion <= 6 ? width + 30 : width) + 'px'
             });
@@ -920,6 +937,8 @@
                 if ($(e.target).parents('tbody')[0] != option.$tableBody[0]) {
                     option.save();
                 }
+                option.$exports && option.$exports.hide();
+                option.$filter && option.$filter.hide();
             });
             if (option.bindedViewEvent) {
                 return;
@@ -962,16 +981,32 @@
             });
             // 筛选字段事件
             Table.on('filter(' + option._filter + ')', function (e) {
-                if ($view.find('ul.' + tableClass.filter).length > 0) {
-                    $view.find('ul.' + tableClass.filter).toggle();
+                if (option.$filter) {
+                    option.$filter.toggle();
                 } else {
                     createFilter(option, e.dom);
                 }
+                option.$exports && option.$exports.hide();
             });
             // 导出事件
-            Table.on('exports(' + option._filter + ')', function (e) {});
+            Table.on('exports(' + option._filter + ')', function (e) {
+                option.$exports.toggle();
+                option.$filter && option.$filter.hide();
+            });
+            // 导出事件
+            Table.on('exports-excel(' + option._filter + ')', function (e) {
+                exportsExecl(option);
+                option.$exports.hide();
+            });
+            // 导出事件
+            Table.on('exports-csv(' + option._filter + ')', function (e) {
+                exportsCsv(option);
+                option.$exports.hide();
+            });
             // 打印事件
-            Table.on('print(' + option._filter + ')', function (e) {});
+            Table.on('print(' + option._filter + ')', function (e) {
+                print(option);
+            });
         }
 
         // 绑定表格体的事件
@@ -1051,6 +1086,7 @@
             var $view = option.$view;
             var filter = option._filter;
             var $filter = $('<ul class="' + tableClass.filter + '"></ul>');
+            option.$filter = $filter;
             for (var i = 0; i < option.cols.length; i++) {
                 var col = option.cols[i];
                 if (col.type == 'text') {
@@ -1083,6 +1119,120 @@
             }
         }
         return -1;
+    }
+
+    // 导出
+    function exportsExecl(option) {
+        if (window.btoa) {
+            var $table = $(option.$tableHeader[0].outerHTML);
+            $table.append(option.$table.html());
+            $table.find('.song-table-col-raido,.song-table-col-checkbox,.song-table-col-operate').remove();
+            $table.find('th,td').each(function (i, td) {
+                var $td = $(td);
+                $td.text($td.text());
+            });
+            // Worksheet名
+            const worksheet = 'Sheet1'
+            const uri = 'data:application/vnd.ms-excel;base64,';
+            // 下载的表格模板数据
+            const template = '<html xmlns:o="urn:schemas-microsoft-com:office:office"\
+            xmlns:x="urn:schemas-microsoft-com:office:excel" \
+            xmlns="http://www.w3.org/TR/REC-html40">\
+            <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\
+            <x:Name>' + worksheet + '</x:Name>\
+            <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>\
+            </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\
+            </head><body><table>' + $table.html() + '</table></body></html>';
+            window.location.href = uri + window.btoa(unescape(encodeURIComponent(template)));
+        } else {
+            Dialog.alert('该浏览器不支持导出，请更换谷歌浏览器', {
+                icon: 'error'
+            });
+        }
+    }
+
+    function exportsCsv(option) {
+        var cols = option.cols;
+        var title = '';
+        var dataStr = '';
+        cols.map(function (col) {
+            title += col.title + ',';
+        });
+        title = title.slice(0, -1) + '\n';
+        option._renderedData.map(function (data) {
+            var str = '';
+            cols.map(function (col) {
+                if (col.type == 'text') {
+                    var html = data[col.field];
+                    if (col.template) { // 自定义渲染函数
+                        html = col.template(data, id, col);
+                    } else if (col.select) { // 下列列表中的数据
+                        html = '';
+                        col.select.map(function (obj) {
+                            if (obj.value == data[col.field]) {
+                                html = obj.label;
+                            }
+                        });
+                    } else if (col.checkbox) { // 复选框中的数据
+                        html = '';
+                        col.checkbox.map(function (obj) {
+                            if (hasValue(data[col.field], obj.value) > -1) {
+                                html += '、' + obj.label;
+                            }
+                        });
+                        html = html.slice(1);
+                    }
+                    str += html + ',';
+                }
+            });
+            str = str.slice(0, -1) + '\n';
+            dataStr += str;
+        });
+
+        // encodeURIComponent解决中文乱码
+        const uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(dataStr);
+
+        // 通过创建a标签实现
+        const link = document.createElement("a");
+        link.href = uri;
+
+        // 对下载的文件命名
+        link.download = "下载.csv";
+        link.click();
+    }
+
+    // 打印
+    function print(option) {
+        if (window.print) {
+            var $table = $(option.$tableHeader[0].outerHTML);
+            var wind = window.open('打开窗口', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
+            var style = '<style>\
+            .song-table-col-radio,\
+            .song-table-col-checkbox,\
+            .song-table-col-operate{\
+                display:none;\
+            }\
+            table{\
+                width:100%;\
+                border-collapse:collapse;\
+                border-spacing:0;\
+            }\
+            th,td{\
+                padding:5px 10px;\
+                border:1px solid #ccc;\
+                font-weight:normal;\
+                color:#666;\
+                text-align:left;\
+            }</style>';
+            $table.append(option.$table.html());
+            wind.document.body.innerHTML = style + $table[0].outerHTML;
+            wind.print();
+            wind.close();
+        } else {
+            Dialog.alert('该浏览器不支持打印，请更换谷歌浏览器', {
+                icon: 'error'
+            });
+        }
     }
 
     if ("function" == typeof define && define.amd) {
