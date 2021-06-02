@@ -1108,6 +1108,120 @@
             Form.render('checkbox(song_table_' + filter + '_filter)');
         }
 
+        // 导出
+        function exportsExecl(option) {
+            if (window.btoa) {
+                var $table = $(option.$tableHeader[0].outerHTML);
+                $table.append(option.$table.html());
+                $table.find('.song-table-col-raido,.song-table-col-checkbox,.song-table-col-operate').remove();
+                $table.find('th,td').each(function (i, td) {
+                    var $td = $(td);
+                    $td.text($td.text());
+                });
+                // Worksheet名
+                var worksheet = 'Sheet1'
+                var uri = 'data:application/vnd.ms-excel;base64,';
+                // 下载的表格模板数据
+                var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office"\
+                xmlns:x="urn:schemas-microsoft-com:office:excel" \
+                xmlns="http://www.w3.org/TR/REC-html40">\
+                <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\
+                <x:Name>' + worksheet + '</x:Name>\
+                <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>\
+                </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\
+                </head><body><table>' + $table.html() + '</table></body></html>';
+                window.location.href = uri + window.btoa(unescape(encodeURIComponent(template)));
+            } else {
+                Dialog.alert('该浏览器不支持导出，请使用谷歌浏览器', {
+                    icon: 'error'
+                });
+            }
+        }
+
+        function exportsCsv(option) {
+            var cols = option.cols;
+            var title = '';
+            var dataStr = '';
+            cols.map(function (col) {
+                title += col.title + ',';
+            });
+            title = title.slice(0, -1) + '\n';
+            option._renderedData.map(function (data) {
+                var str = '';
+                cols.map(function (col) {
+                    if (col.type == 'text') {
+                        var html = data[col.field];
+                        if (col.template) { // 自定义渲染函数
+                            html = col.template(data, id, col);
+                        } else if (col.select) { // 下列列表中的数据
+                            html = '';
+                            col.select.map(function (obj) {
+                                if (obj.value == data[col.field]) {
+                                    html = obj.label;
+                                }
+                            });
+                        } else if (col.checkbox) { // 复选框中的数据
+                            html = '';
+                            col.checkbox.map(function (obj) {
+                                if (hasValue(data[col.field], obj.value) > -1) {
+                                    html += '、' + obj.label;
+                                }
+                            });
+                            html = html.slice(1);
+                        }
+                        str += html + ',';
+                    }
+                });
+                str = str.slice(0, -1) + '\n';
+                dataStr += str;
+            });
+
+            // encodeURIComponent解决中文乱码
+            var uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(dataStr);
+
+            // 通过创建a标签实现
+            var link = document.createElement("a");
+            link.href = uri;
+
+            // 对下载的文件命名
+            link.download = "下载.csv";
+            link.click();
+        }
+
+        // 打印
+        function print(option) {
+            if (window.print) {
+                var $table = $(option.$tableHeader[0].outerHTML);
+                var wind = window.open('打开窗口', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
+                var style = '<style>\
+                .song-table-col-radio,\
+                .song-table-col-checkbox,\
+                .song-table-col-operate{\
+                    display:none;\
+                }\
+                table{\
+                    width:100%;\
+                    border-collapse:collapse;\
+                    border-spacing:0;\
+                }\
+                th,td{\
+                    padding:5px 10px;\
+                    border:1px solid #ccc;\
+                    font-weight:normal;\
+                    color:#666;\
+                    text-align:left;\
+                }</style>';
+                $table.append(option.$table.html());
+                wind.document.body.innerHTML = style + $table[0].outerHTML;
+                wind.print();
+                wind.close();
+            } else {
+                Dialog.alert('该浏览器不支持打印，请使用谷歌浏览器', {
+                    icon: 'error'
+                });
+            }
+        }
+
         return Table;
     }
 
@@ -1121,122 +1235,8 @@
         return -1;
     }
 
-    // 导出
-    function exportsExecl(option) {
-        if (window.btoa) {
-            var $table = $(option.$tableHeader[0].outerHTML);
-            $table.append(option.$table.html());
-            $table.find('.song-table-col-raido,.song-table-col-checkbox,.song-table-col-operate').remove();
-            $table.find('th,td').each(function (i, td) {
-                var $td = $(td);
-                $td.text($td.text());
-            });
-            // Worksheet名
-            const worksheet = 'Sheet1'
-            const uri = 'data:application/vnd.ms-excel;base64,';
-            // 下载的表格模板数据
-            const template = '<html xmlns:o="urn:schemas-microsoft-com:office:office"\
-            xmlns:x="urn:schemas-microsoft-com:office:excel" \
-            xmlns="http://www.w3.org/TR/REC-html40">\
-            <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\
-            <x:Name>' + worksheet + '</x:Name>\
-            <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>\
-            </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\
-            </head><body><table>' + $table.html() + '</table></body></html>';
-            window.location.href = uri + window.btoa(unescape(encodeURIComponent(template)));
-        } else {
-            Dialog.alert('该浏览器不支持导出，请更换谷歌浏览器', {
-                icon: 'error'
-            });
-        }
-    }
-
-    function exportsCsv(option) {
-        var cols = option.cols;
-        var title = '';
-        var dataStr = '';
-        cols.map(function (col) {
-            title += col.title + ',';
-        });
-        title = title.slice(0, -1) + '\n';
-        option._renderedData.map(function (data) {
-            var str = '';
-            cols.map(function (col) {
-                if (col.type == 'text') {
-                    var html = data[col.field];
-                    if (col.template) { // 自定义渲染函数
-                        html = col.template(data, id, col);
-                    } else if (col.select) { // 下列列表中的数据
-                        html = '';
-                        col.select.map(function (obj) {
-                            if (obj.value == data[col.field]) {
-                                html = obj.label;
-                            }
-                        });
-                    } else if (col.checkbox) { // 复选框中的数据
-                        html = '';
-                        col.checkbox.map(function (obj) {
-                            if (hasValue(data[col.field], obj.value) > -1) {
-                                html += '、' + obj.label;
-                            }
-                        });
-                        html = html.slice(1);
-                    }
-                    str += html + ',';
-                }
-            });
-            str = str.slice(0, -1) + '\n';
-            dataStr += str;
-        });
-
-        // encodeURIComponent解决中文乱码
-        const uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(dataStr);
-
-        // 通过创建a标签实现
-        const link = document.createElement("a");
-        link.href = uri;
-
-        // 对下载的文件命名
-        link.download = "下载.csv";
-        link.click();
-    }
-
-    // 打印
-    function print(option) {
-        if (window.print) {
-            var $table = $(option.$tableHeader[0].outerHTML);
-            var wind = window.open('打开窗口', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
-            var style = '<style>\
-            .song-table-col-radio,\
-            .song-table-col-checkbox,\
-            .song-table-col-operate{\
-                display:none;\
-            }\
-            table{\
-                width:100%;\
-                border-collapse:collapse;\
-                border-spacing:0;\
-            }\
-            th,td{\
-                padding:5px 10px;\
-                border:1px solid #ccc;\
-                font-weight:normal;\
-                color:#666;\
-                text-align:left;\
-            }</style>';
-            $table.append(option.$table.html());
-            wind.document.body.innerHTML = style + $table[0].outerHTML;
-            wind.print();
-            wind.close();
-        } else {
-            Dialog.alert('该浏览器不支持打印，请更换谷歌浏览器', {
-                icon: 'error'
-            });
-        }
-    }
-
     if ("function" == typeof define && define.amd) {
-        define("table", ['./jquery', './common', './form', './pager', 'dialog'], function ($, Common, Form, Dialog) {
+        define("table", ['./jquery', './common', './form', './pager', './dialog'], function ($, Common, Form, Dialog) {
             return factory($, Common, Form, Pager, Dialog);
         });
     } else {
