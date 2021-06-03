@@ -4,11 +4,14 @@
     // table-layout: fixed;
     // border-collapse: collapse;
     border-spacing: 0;
+    background-color: $white-color;
     color: $color-666;
 
     &-view {
+        position: relative;
         width: 100%;
         border: 1px solid $light-color;
+        background-color: $white-color;
     }
 
     &-header {
@@ -137,6 +140,29 @@
         }
     }
 
+    &-fixed-l {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        border-top: 1px solid $light-color;
+        box-shadow: 1px 0 8px rgba(0, 0, 0, .08);
+    }
+
+    &-fixed-r {
+        position: absolute;
+        right: 0;
+        top: 0;
+        overflow: hidden;
+        border-top: 1px solid $light-color;
+        box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+    }
+
+    &-fixed-main {
+        overflow: hidden;
+        border-bottom: 1px solid $light-color;
+    }
+
     thead {
         background-color: $lighter-color;
     }
@@ -215,11 +241,21 @@
             }
 
             .cell {
-                width: 100% !important;
-                margin: 0;
-                padding: 0;
                 overflow: visible;
                 white-space: normal;
+            }
+
+            .song-table-input,
+            .song-form-select,
+            .song-table-checkboxs {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+            }
+
+            .song-table-checkboxs {
+                margin: 5px 0;
             }
         }
     }

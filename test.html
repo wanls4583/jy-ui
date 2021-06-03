@@ -527,15 +527,19 @@
             <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
             cols: [{
-                type: 'checkbox'
+                type: 'checkbox',
+                fixed: 'left'
             }, {
                 title: '用户',
                 field: 'user',
-                event: 'name'
+                event: 'name',
+                fixed: 'left'
             }, {
                 title: '手机号',
                 field: 'phone',
-                width: 100
+                width: 100,
+                editable: true,
+                fixed: 'left'
             }, {
                 title: '性别',
                 field: 'sex',
@@ -562,7 +566,8 @@
             }, {
                 title: '签名',
                 field: 'sign',
-                width: 80
+                width: 80,
+                editable: true
             }, {
                 title: '爱好',
                 field: 'like',
