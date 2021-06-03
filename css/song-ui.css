@@ -733,12 +733,15 @@ a {
 .song-table {
   position: relative;
   border-spacing: 0;
+  background-color: #ffffff;
   color: #666666;
 }
 
 .song-table-view {
+  position: relative;
   width: 100%;
   border: 1px solid #eeeeee;
+  background-color: #ffffff;
 }
 
 .song-table-header {
@@ -864,6 +867,31 @@ a {
   cursor: pointer;
 }
 
+.song-table-fixed-l {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  border-top: 1px solid #eeeeee;
+  -webkit-box-shadow: 1px 0 8px rgba(0, 0, 0, 0.08);
+          box-shadow: 1px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.song-table-fixed-r {
+  position: absolute;
+  right: 0;
+  top: 0;
+  overflow: hidden;
+  border-top: 1px solid #eeeeee;
+  -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+          box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.song-table-fixed-main {
+  overflow: hidden;
+  border-bottom: 1px solid #eeeeee;
+}
+
 .song-table thead {
   background-color: #f6f6f6;
 }
@@ -947,11 +975,25 @@ a {
 
 .song-table th.song-table-editting .cell,
 .song-table td.song-table-editting .cell {
-  width: 100% !important;
-  margin: 0;
-  padding: 0;
   overflow: visible;
   white-space: normal;
+}
+
+.song-table th.song-table-editting .song-table-input,
+.song-table th.song-table-editting .song-form-select,
+.song-table th.song-table-editting .song-table-checkboxs,
+.song-table td.song-table-editting .song-table-input,
+.song-table td.song-table-editting .song-form-select,
+.song-table td.song-table-editting .song-table-checkboxs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.song-table th.song-table-editting .song-table-checkboxs,
+.song-table td.song-table-editting .song-table-checkboxs {
+  margin: 5px 0;
 }
 
 .song-table-static {
