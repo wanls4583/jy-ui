@@ -770,6 +770,7 @@ a {
   padding: 10px 15px;
   padding-right: 130px;
   border-bottom: 1px solid #eeeeee;
+  background-color: #ffffff;
 }
 
 .song-table-tool-self {
@@ -879,7 +880,6 @@ a {
   position: absolute;
   left: 0;
   top: 0;
-  overflow: hidden;
   border-top: 1px solid #eeeeee;
   -webkit-box-shadow: 1px 0 8px rgba(0, 0, 0, 0.08);
           box-shadow: 1px 0 8px rgba(0, 0, 0, 0.08);
@@ -887,12 +887,18 @@ a {
 
 .song-table-fixed-r {
   position: absolute;
-  right: 0;
   top: 0;
-  overflow: hidden;
   border-top: 1px solid #eeeeee;
   -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.song-table-fixed-r .song-table-mend {
+  margin-right: -17px;
+}
+
+.song-table-fixed-header {
+  position: relative;
 }
 
 .song-table-fixed-header .song-table td,
@@ -902,8 +908,62 @@ a {
 }
 
 .song-table-fixed-main {
-  overflow: hidden;
+  position: relative;
   border-bottom: 1px solid #eeeeee;
+  overflow: hidden;
+}
+
+.song-table-mend {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  height: 100%;
+  background-color: #f6f6f6;
+}
+
+.song-table-confirm {
+  position: absolute;
+  right: -13px;
+  top: -13px;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: rgba(95, 184, 120, 0.6);
+  background-color: #5FB878\0/;
+  *background-color: #5FB878;
+  font-family: 'iconfont';
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.song-table-confirm:hover {
+  background-color: #5FB878;
+}
+
+.song-table-cancel {
+  position: absolute;
+  right: -44px;
+  top: -13px;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: rgba(255, 87, 34, 0.6);
+  background-color: #FF5722\0/;
+  *background-color: #FF5722;
+  font-family: 'iconfont';
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.song-table-cancel:hover {
+  background-color: #FF5722;
 }
 
 .song-table thead {
@@ -950,6 +1010,7 @@ a {
 .song-table th .cell .song-table-checkboxs,
 .song-table td .cell .song-table-checkboxs {
   padding-left: 10px;
+  padding: 5px 0 5px 10px;
 }
 
 .song-table th .cell .song-table-tip-icon,

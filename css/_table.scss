@@ -44,6 +44,7 @@
         padding: $pd10 $pd15;
         padding-right: 130px;
         border-bottom: 1px solid $light-color;
+        background-color: $white-color;
     }
 
     &-tool-self {
@@ -152,21 +153,23 @@
         position: absolute;
         left: 0;
         top: 0;
-        overflow: hidden;
         border-top: 1px solid $light-color;
         box-shadow: 1px 0 8px rgba(0, 0, 0, .08);
     }
 
     &-fixed-r {
         position: absolute;
-        right: 0;
         top: 0;
-        overflow: hidden;
         border-top: 1px solid $light-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+
+        .song-table-mend {
+            margin-right: -17px;
+        }
     }
 
     &-fixed-header {
+        position: relative;
         .song-table {
 
             td,
@@ -178,8 +181,64 @@
     }
 
     &-fixed-main {
-        overflow: hidden;
+        position: relative;
         border-bottom: 1px solid $light-color;
+        overflow: hidden;
+    }
+
+    &-mend {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 18px;
+        height: 100%;
+        background-color: $lighter-color;
+    }
+
+    &-confirm {
+        position: absolute;
+        right: -13px;
+        top: -13px;
+        z-index: 1;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        border-radius: 50%;
+        background-color: rgba(95, 184, 120, 0.6);
+        // 只兼容ie8的样式，在属性值后面加\0/
+        background-color: #{'#5FB878\\0/'};
+        *background-color: #5FB878;
+        font-family: 'iconfont';
+        color: $white-color;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #5FB878;
+        }
+    }
+
+    &-cancel {
+        position: absolute;
+        right: -44px;
+        top: -13px;
+        z-index: 1;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        border-radius: 50%;
+        background-color: rgba(255, 87, 34, 0.6);
+        // 只兼容ie8的样式，在属性值后面加\0/
+        background-color: #{'#FF5722\\0/'};
+        *background-color: #FF5722;
+        font-family: 'iconfont';
+        color: $white-color;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #FF5722;
+        }
     }
 
     thead {
@@ -226,6 +285,7 @@
             // 复选框编辑容器
             .song-table-checkboxs {
                 padding-left: $pd10;
+                padding: 5px 0 5px $pd10;
             }
 
             // 文本溢出详情弹框
