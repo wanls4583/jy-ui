@@ -2,8 +2,8 @@
     position: relative;
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
     // table-layout: fixed;
-    // border-collapse: collapse;
-    border-spacing: 0;
+    border-collapse: collapse;
+    // border-spacing: 0;
     background-color: $white-color;
     color: $color-666;
 
@@ -18,9 +18,16 @@
         position: relative;
         width: 100%;
         min-width: 100%;
-        border-top: 1px solid $light-color;
-        background-color: $lighter-color;
         overflow: hidden;
+
+        .song-table {
+
+            td,
+            th {
+                border-top: none;
+                border-bottom: none;
+            }
+        }
     }
 
     &-main {
@@ -29,7 +36,6 @@
         width: 100%;
         min-width: 100%;
         overflow: auto;
-        border-bottom: 1px solid $light-color;
     }
 
     &-toolbar {
@@ -37,6 +43,7 @@
         z-index: 1;
         padding: $pd10 $pd15;
         padding-right: 130px;
+        border-bottom: 1px solid $light-color;
     }
 
     &-tool-self {
@@ -86,6 +93,7 @@
 
     &-pager {
         // text-align: center;
+        border-top: 1px solid $light-color;
 
         .song-pager {
             display: inline-block;
@@ -158,6 +166,17 @@
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
     }
 
+    &-fixed-header {
+        .song-table {
+
+            td,
+            th {
+                border-top: none;
+                border-bottom: none;
+            }
+        }
+    }
+
     &-fixed-main {
         overflow: hidden;
         border-bottom: 1px solid $light-color;
@@ -178,8 +197,7 @@
         // position: relative;
         line-height: 28px;
         padding: 0;
-        border-right: 1px solid $light-color;
-        border-bottom: 1px solid $light-color;
+        border: 1px solid $light-color;
         font-size: 14px;
 
         .cell {
@@ -232,31 +250,43 @@
         }
 
         &.song-table-editting {
-            border: 1px solid $link-color;
-            box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
             background-color: $white-color;
-
-            *+html & {
-                padding: 1px;
-            }
 
             .cell {
                 overflow: visible;
                 white-space: normal;
+                padding-top: 0;
+                padding-bottom: 0;
             }
 
-            .song-table-input,
             .song-form-select,
             .song-table-checkboxs {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
+                width: auto;
+                margin: 0 -#{$pd15};
             }
 
-            .song-table-checkboxs {
-                margin: 5px 0;
+            .song-input {
+                padding-left: 0;
             }
+
+            .song-form-select {
+                .song-input {
+                    padding-left: $pd15;
+                }
+            }
+
+        }
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr {
+
+        th:first-child,
+        td:first-child {
+            border-left: none;
         }
     }
 

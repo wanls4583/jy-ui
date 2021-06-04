@@ -34,7 +34,8 @@
             hover: 'song-table-hover',
             fixedLeft: 'song-table-fixed-l',
             fixedRight: 'song-table-fixed-r',
-            fixedMain: 'song-table-fixed-main'
+            fixedMain: 'song-table-fixed-main',
+            fixeHeader: 'song-table-fixed-header'
         }
         // 常用正则验证
         var ruleMap = {
@@ -513,6 +514,8 @@
                         });
                         $cell.empty().append($input);
                         td.songBindData.$input = $input;
+                        // 输入框聚焦
+                        $input.trigger('focus');
                     } else if (editable.type == 'select') { // 下拉框编辑
                         var filter = 'table_edit_select_' + option._filter + '_' + Math.random();
                         var $select = $('<select song-filter="' + filter + '"></select>');
@@ -524,9 +527,14 @@
                         Form.render('select(' + filter + ')');
                         Form.on('select(' + filter + ')', function (e) {
                             $select[0].value = e.data;
+                            option.save(id, field);
                         });
                         $select[0].value = data;
                         td.songBindData.$select = $select;
+                        // 展开下拉框
+                        setTimeout(function () {
+                            $cell.find('.song-select-title').trigger('click');
+                        }, 0)
                     } else if (editable.type == 'checkbox') { // 复选框编辑
                         var filter = 'table_edit_checkbox_' + option._filter + '_' + Math.random();
                         var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
@@ -850,14 +858,16 @@
             var cols = option.cols;
             if (cols.length && cols[0].fixed == 'left') {
                 option.$fixedLeft = $('<div class="' + tableClass.fixedLeft + '"></div>');
+                option.$fixedLeftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                 option.$fixedLeftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                 option.$fixedLeftTable = $('<table class="' + tableClass.table + '"></table>');
                 option.$fixedLeftTableHeader = $('<table class="' + tableClass.table + '"></table>');
                 option.$fixedLeftTableHeaderHead = $('<thead></thead>');
-                option.$fixedLeft.append(option.$fixedLeftTableHeader);
-                option.$fixedLeft.append(option.$fixedLeftMain);
                 option.$fixedLeftTableHeader.append(option.$fixedLeftTableHeaderHead);
+                option.$fixedLeftHeader.append(option.$fixedLeftTableHeader);
+                option.$fixedLeft.append(option.$fixedLeftHeader);
                 option.$fixedLeftMain.append(option.$fixedLeftTable);
+                option.$fixedLeft.append(option.$fixedLeftMain);
                 option.$fixedLeft.css({
                     height: option.$tableHeader[0].clientHeight + option.$tableMain[0].clientHeight + 'px',
                     top: (option.$toolbar ? option.$toolbar[0].clientHeight : 0) + 'px'
@@ -868,17 +878,22 @@
                 renderTr(option, 'left');
                 renderTableHeader(option, 'left');
                 option.$view.append(option.$fixedLeft);
+                option.$fixedLeft.css({
+                    width: option.$fixedLeftTable[0].offsetWidth + 'px'
+                });
             }
             if (cols.length && cols[cols.length - 1].fixed == 'right') {
                 option.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
+                option.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                 option.$fixedRightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                 option.$fixedRightTable = $('<table class="' + tableClass.table + '"></table>');
                 option.$fixedRightTableHeader = $('<table class="' + tableClass.table + '"></table>');
                 option.$fixedRightTableHeaderHead = $('<thead></thead>');
-                option.$fixedRight.append(option.$fixedRightTableHeader);
-                option.$fixedRight.append(option.$fixedRightMain);
                 option.$fixedRightTableHeader.append(option.$fixedRightTableHeaderHead);
+                option.$fixedRightHeader.append(option.$fixedRightTableHeader);
+                option.$fixedRight.append(option.$fixedRightHeader);
                 option.$fixedRightMain.append(option.$fixedRightTable);
+                option.$fixedRight.append(option.$fixedRightMain);
                 option.$fixedRight.css({
                     height: option.$tableHeader[0].clientHeight + option.$tableMain[0].clientHeight + 'px',
                     top: (option.$toolbar ? option.$toolbar[0].clientHeight : 0) + 'px'
@@ -889,6 +904,9 @@
                 renderTr(option, 'right');
                 renderTableHeader(option, 'right');
                 option.$view.append(option.$fixedRight);
+                option.$fixedRight.css({
+                    width: option.$fixedRightTable[0].offsetWidth + 'px'
+                });
             }
         }
 
@@ -1159,7 +1177,7 @@
             $view.on('keydown', function (e) {
                 var $td = $(e.target).parents('td');
                 if ($td.length && e.keyCode == 13) {
-                    option.save($td[0].songBindData.id, $td[0].songBindData.field);
+                    option.save($td[0].songBindData.id, $td[0].songBindData.col.field);
                 }
             });
             // 滚动事件
@@ -1211,7 +1229,7 @@
                 var col = songBindData.col;
                 var $td = $(this);
                 var $cell = $td.children('.cell');
-                if (col.type == 'text' && !this.songBindData.editing && $cell[0].scrollWidth > $td.width()) {
+                if (col.type == 'text' && !this.songBindData.editing && $cell[0].scrollWidth > $td[0].clientWidth) {
                     var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
                     var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                     $cell.append($div);

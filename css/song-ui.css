@@ -732,7 +732,7 @@ a {
 
 .song-table {
   position: relative;
-  border-spacing: 0;
+  border-collapse: collapse;
   background-color: #ffffff;
   color: #666666;
 }
@@ -748,9 +748,13 @@ a {
   position: relative;
   width: 100%;
   min-width: 100%;
-  border-top: 1px solid #eeeeee;
-  background-color: #f6f6f6;
   overflow: hidden;
+}
+
+.song-table-header .song-table td,
+.song-table-header .song-table th {
+  border-top: none;
+  border-bottom: none;
 }
 
 .song-table-main {
@@ -758,7 +762,6 @@ a {
   width: 100%;
   min-width: 100%;
   overflow: auto;
-  border-bottom: 1px solid #eeeeee;
 }
 
 .song-table-toolbar {
@@ -766,6 +769,7 @@ a {
   z-index: 1;
   padding: 10px 15px;
   padding-right: 130px;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .song-table-tool-self {
@@ -813,6 +817,10 @@ a {
 
 .song-table-exports li .song-form-checkbox, .song-table-filter li .song-form-checkbox {
   margin: 0;
+}
+
+.song-table-pager {
+  border-top: 1px solid #eeeeee;
 }
 
 .song-table-pager .song-pager {
@@ -887,6 +895,12 @@ a {
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }
 
+.song-table-fixed-header .song-table td,
+.song-table-fixed-header .song-table th {
+  border-top: none;
+  border-bottom: none;
+}
+
 .song-table-fixed-main {
   overflow: hidden;
   border-bottom: 1px solid #eeeeee;
@@ -905,8 +919,7 @@ a {
 .song-table td {
   line-height: 28px;
   padding: 0;
-  border-right: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
+  border: 1px solid #eeeeee;
   font-size: 14px;
 }
 
@@ -962,38 +975,42 @@ a {
 
 .song-table th.song-table-editting,
 .song-table td.song-table-editting {
-  border: 1px solid #5FB878;
-  -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
-          box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
-}
-
-* + html .song-table th.song-table-editting, * + html
-.song-table td.song-table-editting {
-  padding: 1px;
 }
 
 .song-table th.song-table-editting .cell,
 .song-table td.song-table-editting .cell {
   overflow: visible;
   white-space: normal;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.song-table th.song-table-editting .song-table-input,
 .song-table th.song-table-editting .song-form-select,
 .song-table th.song-table-editting .song-table-checkboxs,
-.song-table td.song-table-editting .song-table-input,
 .song-table td.song-table-editting .song-form-select,
 .song-table td.song-table-editting .song-table-checkboxs {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  width: auto;
+  margin: 0 -15px;
 }
 
-.song-table th.song-table-editting .song-table-checkboxs,
-.song-table td.song-table-editting .song-table-checkboxs {
-  margin: 5px 0;
+.song-table th.song-table-editting .song-input,
+.song-table td.song-table-editting .song-input {
+  padding-left: 0;
+}
+
+.song-table th.song-table-editting .song-form-select .song-input,
+.song-table td.song-table-editting .song-form-select .song-input {
+  padding-left: 15px;
+}
+
+.song-table tr:last-child td {
+  border-bottom: none;
+}
+
+.song-table tr th:first-child,
+.song-table tr td:first-child {
+  border-left: none;
 }
 
 .song-table-static {
