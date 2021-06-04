@@ -263,7 +263,8 @@
             position: relative;
             // ie6下内容会溢出到旁边的td
             _width: 100%;
-            min-height: 28px;
+            height: 28px;
+            _height: 38px;
             // 定义了100%宽度后，ie6无法通过负边距延伸宽度
             // margin: -5px #{-$pd15};
             padding: 5px $pd15;
@@ -317,6 +318,7 @@
                 white-space: normal;
                 padding-top: 0;
                 padding-bottom: 0;
+                height: auto;
             }
 
             .song-form-select,

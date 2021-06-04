@@ -987,7 +987,8 @@ a {
 .song-table td .cell {
   position: relative;
   _width: 100%;
-  min-height: 28px;
+  height: 28px;
+  _height: 38px;
   padding: 5px 15px;
   *zoom: 1;
   overflow: hidden;
@@ -1045,6 +1046,7 @@ a {
   white-space: normal;
   padding-top: 0;
   padding-bottom: 0;
+  height: auto;
 }
 
 .song-table th.song-table-editting .song-form-select,

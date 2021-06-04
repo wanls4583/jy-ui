@@ -549,12 +549,12 @@
                     }
                     tds = [td];
                 } else {
-                    option.$tableBody.find('tr[data-id="' + id + '"]').each(_filter);
+                    option.$tableBody.find('tr[data-id="' + id + '"]').children('td').each(_filter);
                     if (option.$fixedLeftTable) {
-                        option.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
+                        option.$fixedLeftTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
                     }
                     if (option.$fixedRightTable) {
-                        option.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
+                        option.$fixedRightTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
                     }
                 }
             } else { // 编辑所有的数据
@@ -1377,12 +1377,14 @@
                 if (!$td.length || $td[0].songBindData.editing) {
                     return;
                 }
-                // 先保存真在编辑中的数据
-                // var pass = option.save();
-                // if (pass && $td[0].songBindData.col.editable) {
-                //     option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
-                // }
-                option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
+                if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
+                    // 先保存真在编辑中的数据
+                    // var pass = option.save();
+                    // if (pass && $td[0].songBindData.col.editable) {
+                    //     option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
+                    // }
+                    option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
+                }
             });
             // 行事件
             $view.delegate('tbody tr', 'click', function () {
