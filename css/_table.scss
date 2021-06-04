@@ -170,6 +170,7 @@
 
     &-fixed-header {
         position: relative;
+
         .song-table {
 
             td,
@@ -319,6 +320,7 @@
                 padding-top: 0;
                 padding-bottom: 0;
                 height: auto;
+                box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
             }
 
             .song-form-select,

@@ -634,7 +634,7 @@
                         $checkbox[0].value = data;
                         td.songBindData.$checkbox = $checkbox;
                     }
-                    if (editable.type != 'select') {
+                    if (editable.type != 'select' && editable.icon) {
                         var $confirm = $('<div class="' + tableClass.confirm + '" title="完成编辑">' + confirmIcon + '</div>')
                         var $cancel = $('<div class="' + tableClass.cancel + '" title="取消编辑">' + cancelIcon + '</div>')
                         $cell.append($confirm);
@@ -1312,12 +1312,12 @@
             var $header = option.$header;
             // 点击表格之外的区域，自动保存编辑中的数据
             $(window.document.body).on('click', function (e) {
-                // var table = $(e.target).parents('table')[0];
-                // if (table != option.$table[0] &&
-                //     (!option.$fixedLeftTable || table != option.$fixedLeftTable[0]) &&
-                //     (!option.$fixedRightTable || table != option.$fixedRightTable[0])) {
-                //     option.save();
-                // }
+                var table = $(e.target).parents('table')[0];
+                if (table != option.$table[0] &&
+                    (!option.$fixedLeftTable || table != option.$fixedLeftTable[0]) &&
+                    (!option.$fixedRightTable || table != option.$fixedRightTable[0])) {
+                    option.save();
+                }
                 option.$exports && option.$exports.hide();
                 option.$filter && option.$filter.hide();
             });
@@ -1379,11 +1379,11 @@
                 }
                 if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
                     // 先保存真在编辑中的数据
-                    // var pass = option.save();
-                    // if (pass && $td[0].songBindData.col.editable) {
-                    //     option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
-                    // }
-                    option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
+                    var pass = option.save();
+                    if (pass && $td[0].songBindData.col.editable) {
+                        option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
+                    }
+                    // option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
                 }
             });
             // 行事件

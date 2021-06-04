@@ -1047,6 +1047,8 @@ a {
   padding-top: 0;
   padding-bottom: 0;
   height: auto;
+  -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
 }
 
 .song-table th.song-table-editting .song-form-select,
