@@ -760,7 +760,6 @@ a {
 .song-table-main {
   position: relative;
   width: 100%;
-  min-width: 100%;
   overflow: auto;
 }
 
@@ -852,7 +851,7 @@ a {
   left: 50%;
   line-height: 22px;
   padding: 8px 15px 8px 15px;
-  margin: -1px 13px 0 -1px;
+  margin-right: 13px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
@@ -1078,14 +1077,18 @@ a {
   border-left: none;
 }
 
-.song-table-static {
-  border-top: 1px solid #eeeeee;
-  border-left: 1px solid #eeeeee;
-}
-
 .song-table-static th,
 .song-table-static td {
   padding: 5px 15px;
+}
+
+.song-table-static tr:last-child td {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.song-table-static tr th:first-child,
+.song-table-static tr td:first-child {
+  border-left: 1px solid #eeeeee;
 }
 
 @font-face {

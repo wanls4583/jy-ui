@@ -9,7 +9,8 @@
             getEvent: getEvent,
             getIeVersion: getIeVersion,
             getNum: getNum,
-            insertRule: insertRule
+            insertRule: insertRule,
+            getScrBarWidth: getScrBarWidth
         }
 
 
@@ -84,6 +85,15 @@
                 }
             }
             return num;
+        }
+
+        //获取滚动条宽度
+        function getScrBarWidth() {
+            var wrap = $('<div style="height:30px;width:30px;overflow:auto"><div style="height:100px"></div></div>')
+            document.body.append(wrap[0]);
+            var w = wrap[0].offsetWidth - wrap[0].clientWidth;;
+            wrap.remove();
+            return w;
         }
 
         if (!Array.prototype.indexOf) {

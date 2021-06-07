@@ -5,6 +5,7 @@
  */
 !(function () {
     function factory($, Common, Form, Pager, Dialog) {
+        var $body = $(window.document.body);
         var filterIcon = '&#xe61d;';
         var exportsIcon = '&#xe618;';
         var printIcon = '&#xe62c;';
@@ -15,6 +16,7 @@
         var confirmIcon = '&#xe737;';
         var cancelIcon = '&#xe735;';
         var ieVersion = Common.getIeVersion();
+        var scrBarWidth = Common.getScrBarWidth();
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
@@ -95,6 +97,7 @@
             option._fixeLeftIdCount = 0;
             option._fixeRightIdCount = 0;
             option._filter = filter || 'table_' + Math.random();
+            option._$tips = [];
             option._renderedData = [];
             option._loadedData = [];
             option._addedData = [];
@@ -273,7 +276,11 @@
                 }
                 // 删除溢出内容弹框
                 $tr.children('td').each(function (i, td) {
-                    td.songBindData.$tip && td.songBindData.$tip.remove();
+                    if (td.songBindData.$tip) {
+                        var index = option._$tips.indexOf(td.songBindData.$tip);
+                        option._$tips.splice(index, 1);
+                        td.songBindData.$tip.remove();
+                    }
                 });
                 $tr.remove();
                 if (fixed == 'left' || fixed == 'right') {
@@ -1066,7 +1073,7 @@
                     width: option.$fixedRightTable[0].offsetWidth + 'px',
                     height: option.$tableHeader[0].clientHeight + option.$tableMain[0].clientHeight + 'px',
                     top: (option.$toolbar ? option.$toolbar[0].clientHeight : 0) + 'px',
-                    left: option.$tableMain[0].clientWidth - option.$fixedRightTable[0].offsetWidth + 'px'
+                    right: scrBarWidth + 'px'
                 });
             }
         }
@@ -1311,7 +1318,7 @@
             var $tableMain = option.$tableMain;
             var $header = option.$header;
             // 点击表格之外的区域，自动保存编辑中的数据
-            $(window.document.body).on('click', function (e) {
+            $body.on('click', function (e) {
                 var table = $(e.target).parents('table')[0];
                 if (table != option.$table[0] &&
                     (!option.$fixedLeftTable || table != option.$fixedLeftTable[0]) &&
@@ -1366,6 +1373,15 @@
                 if (option.$fixedRightMain) {
                     option.$fixedRightMain[0].scrollTop = $tableMain[0].scrollTop;
                 }
+                if (option._$tips.length) {
+                    var tds = option.$table.find('td');
+                    option._$tips.map(function ($tip) {
+                        $tip.remove();
+                    });
+                    tds.each(function (i, td) {
+                        td.songBindData.$tip = undefined;
+                    });
+                }
             });
             // 点击编辑
             $view.on(trigger, function (e) {
@@ -1409,7 +1425,6 @@
                 var $cell = $td.children('.cell');
                 if (col.type == 'text' && !this.songBindData.editing && $cell[0].scrollWidth > $td[0].clientWidth) {
                     var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
-                    var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                     $cell.append($div);
                     // 点击打开内容详情弹框
                     $div.on('click', function () {
@@ -1418,12 +1433,13 @@
                         $td.addClass(tableClass.detail);
                         $div.remove();
                         $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
-                        $div.append($close)
-                        $(window.document.body).append($div);
+                        $div.append($close);
+                        $body.append($div);
                         songBindData.$tip = $div;
+                        option._$tips.push($div);
                         $div.css({
-                            top: offset.top + (ieVersion <= 6 ? ie6MarginTop : 0),
-                            left: offset.left
+                            top: offset.top - 1,
+                            left: offset.left - 1
                         });
                         // 点击关闭弹框
                         $close.on('click', function () {
