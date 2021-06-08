@@ -1010,15 +1010,15 @@ a {
   position: absolute;
   top: 0;
   right: 0;
-  height: 100%;
+  height: 40px;
   width: 24px;
   line-height: 38px;
   background-color: #ffffff;
   border-left: 1px solid #eeeeee;
-  cursor: pointer;
   font-family: 'iconfont';
   font-size: 16px;
   text-align: center;
+  cursor: pointer;
 }
 
 .song-table th .song-table-cell .song-table-tip-icon:hover,
@@ -1065,6 +1065,22 @@ a {
 .song-table th.song-table-editting .song-form-select .song-input,
 .song-table td.song-table-editting .song-form-select .song-input {
   padding-left: 15px;
+}
+
+.song-table th.song-table-col-radio .song-table-cell, .song-table th.song-table-col-checkbox .song-table-cell,
+.song-table td.song-table-col-radio .song-table-cell,
+.song-table td.song-table-col-checkbox .song-table-cell {
+  line-height: normal;
+}
+
+.song-table th.song-table-col-radio .song-form-radio,
+.song-table th.song-table-col-radio .song-form-checkbox, .song-table th.song-table-col-checkbox .song-form-radio,
+.song-table th.song-table-col-checkbox .song-form-checkbox,
+.song-table td.song-table-col-radio .song-form-radio,
+.song-table td.song-table-col-radio .song-form-checkbox,
+.song-table td.song-table-col-checkbox .song-form-radio,
+.song-table td.song-table-col-checkbox .song-form-checkbox {
+  margin-top: 5px;
 }
 
 .song-table tr:last-child td {

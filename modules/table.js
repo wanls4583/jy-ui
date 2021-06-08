@@ -811,8 +811,7 @@
             }
             if (option.$fixedLeft) {
                 option.$fixedLeft.css({
-                    width: option.$fixedLeftTable[0].offsetWidth + 'px',
-                    height: option.$tableHeader[0].clientHeight + option.$tableMain[0].clientHeight + 'px',
+                    width: option.$fixedLeftTable[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
                     top: (option.$toolbar ? option.$toolbar[0].clientHeight : 0) + 'px'
                 });
                 option.$fixedLeftMain.css({
@@ -821,8 +820,7 @@
             }
             if (option.$fixedRight) {
                 option.$fixedRight.css({
-                    width: option.$fixedRightTable[0].offsetWidth + 'px',
-                    height: option.$tableHeader[0].clientHeight + option.$tableMain[0].clientHeight + 'px',
+                    width: option.$fixedRightTable[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
                     top: (option.$toolbar ? option.$toolbar[0].clientHeight : 0) + 'px',
                     right: scrBarWidth + 'px'
                 });
@@ -958,7 +956,7 @@
                 if (col.type == 'radio' || col.type == 'checkbox') {
                     width = 20;
                     $cell.css({
-                        'text-overflow': 'unset'
+                        'overflow': 'visible'
                     });
                 }
                 if (width) {
@@ -1072,6 +1070,7 @@
                 if (option.$table[0].clientHeight > option.$tableMain[0].clientHeight) {
                     if (!option.$mend) {
                         option.$mend = $('<div class="' + tableClass.mend + '"></div>');
+                        // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
                         option.$mend.css('height', option.$tableHeader[0].clientHeight);
                         if (option.$fixedRightHeader) {
                             option.$fixedRightHeader.append(option.$mend);
@@ -1298,7 +1297,7 @@
             });
             if (col.type == 'radio' || col.type == 'checkbox') {
                 $cell.css({
-                    'text-overflow': 'unset'
+                    'overflow': 'visible'
                 });
             }
             // 单元格事件
