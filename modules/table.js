@@ -78,7 +78,6 @@
             var $tableMain = $('<div class="' + tableClass.main + '"></div>');
             if (!option.reload) {
                 option = Object.assign({}, option);
-                $view.html('');
             } else if (!$elem.length) {
                 return;
             }
@@ -841,7 +840,7 @@
                 // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
                 if (ieVersion <= 6) {
                     option.$tableMain.css({
-                        width: 'auto'
+                        overflow: 'hidden'
                     });
                 }
             }
