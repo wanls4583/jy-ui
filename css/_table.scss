@@ -17,23 +17,12 @@
     &-header {
         position: relative;
         width: 100%;
-        min-width: 100%;
         overflow: hidden;
-
-        .song-table {
-
-            td,
-            th {
-                border-top: none;
-                border-bottom: none;
-            }
-        }
     }
 
     &-main {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
-        width: 100%;
         overflow: auto;
     }
 
@@ -170,15 +159,6 @@
     &-fixed-header {
         position: relative;
         *zoom: 1;
-
-        .song-table {
-
-            td,
-            th {
-                border-top: none;
-                border-bottom: none;
-            }
-        }
     }
 
     &-fixed-main {
@@ -361,8 +341,17 @@
         }
     }
 
+    // i6以下浏览器不支持child选择器
     tr:last-child td {
         border-bottom: none;
+    }
+
+    tr:first-child {
+
+        td,
+        th {
+            border-top: none;
+        }
     }
 
     tr {

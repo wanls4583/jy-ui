@@ -790,7 +790,7 @@
                     width: width + 'px'
                 });
                 option.$tableMain.css({
-                    width: width + 'px'
+                    width: (ieVersion <= 6 ? width - 2 : width) + 'px'
                 });
             }
             if (option.height) {
@@ -828,16 +828,22 @@
                     height: option.$tableMain[0].clientHeight + 'px'
                 });
             }
-            var hedaerWidth = option.$header.width();
-            var tableHeaderWidth = option.$tableHeader.width();
+            var hedaerWidth = option.$header[0].clientWidth;
+            var tableHeaderWidth = option.$tableHeader[0].offsetWidth;
             //表格拉伸至容器的宽度
             if (option.stretch && tableHeaderWidth < hedaerWidth) {
                 option.$tableHeader.css({
-                    width: hedaerWidth + 'px'
+                    width: '100%'
                 });
                 option.$table.css({
-                    width: hedaerWidth + 'px'
+                    width: '100%'
                 });
+                // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
+                if (ieVersion <= 6) {
+                    option.$tableMain.css({
+                        width: 'auto'
+                    });
+                }
             }
             setCellWidth(option);
             option.$fixedLeft && setCellWidth(option, 'left');
@@ -1055,12 +1061,6 @@
             option.$tableMain.css({
                 width: viewWidth + 'px'
             });
-            var tableWidth = option.$table.width();
-            if (option.stretch && tableWidth < viewWidth) {
-                option.$table.css({
-                    width: viewWidth + 'px'
-                });
-            }
 
             // 修复表头右侧16px(滚动条宽度)空白问题
             function _fixHeader() {

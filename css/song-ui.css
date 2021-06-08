@@ -750,19 +750,11 @@ a {
 .song-table-header {
   position: relative;
   width: 100%;
-  min-width: 100%;
   overflow: hidden;
-}
-
-.song-table-header .song-table td,
-.song-table-header .song-table th {
-  border-top: none;
-  border-bottom: none;
 }
 
 .song-table-main {
   position: relative;
-  width: 100%;
   overflow: auto;
 }
 
@@ -902,12 +894,6 @@ a {
 .song-table-fixed-header {
   position: relative;
   *zoom: 1;
-}
-
-.song-table-fixed-header .song-table td,
-.song-table-fixed-header .song-table th {
-  border-top: none;
-  border-bottom: none;
 }
 
 .song-table-fixed-main {
@@ -1091,6 +1077,11 @@ a {
 
 .song-table tr:last-child td {
   border-bottom: none;
+}
+
+.song-table tr:first-child td,
+.song-table tr:first-child th {
+  border-top: none;
 }
 
 .song-table tr th:first-child,
