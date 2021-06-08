@@ -123,7 +123,7 @@
         top: 50%;
         left: 50%;
         line-height: 22px;
-        padding: 8px $pd15 8px $pd15;
+        padding: 9px $pd15 9px $pd15;
         margin-right: 13px;
         background-color: $white-color;
         border: 1px solid $light-color;
@@ -169,6 +169,7 @@
 
     &-fixed-header {
         position: relative;
+        *zoom: 1;
 
         .song-table {
 
@@ -259,15 +260,15 @@
         border: 1px solid $light-color;
         font-size: 14px;
 
-        .cell {
+        .song-table-cell {
             position: relative;
             // ie6下内容会溢出到旁边的td
             _width: 100%;
             height: 28px;
-            _height: 38px;
+            _height: 40px;
             // 定义了100%宽度后，ie6无法通过负边距延伸宽度
             // margin: -5px #{-$pd15};
-            padding: 5px $pd15;
+            padding: 5px + 1px $pd15 + 1px;
             // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
             *zoom: 1;
             overflow: hidden;
@@ -277,16 +278,6 @@
             .song-form-radio,
             .song-form-checkbox {
                 margin-top: 0;
-            }
-
-            .song-input {
-                border: transparent;
-            }
-
-            // 复选框编辑容器
-            .song-table-checkboxs {
-                padding-left: $pd10;
-                padding: 5px 0 5px $pd10;
             }
 
             // 文本溢出详情弹框
@@ -313,23 +304,31 @@
         &.song-table-editting {
             background-color: $white-color;
 
-            .cell {
+            .song-table-cell {
                 overflow: visible;
                 white-space: normal;
-                padding-top: 0;
-                padding-bottom: 0;
+                padding: 0 $pd15;
                 height: auto;
+                border: 1px solid $link-color;
                 box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
             }
 
             .song-form-select,
             .song-table-checkboxs {
+                // 解决ie7及以下浏览器div内部的高度多出两像素的问题
                 width: auto;
                 margin: 0 -#{$pd15};
             }
 
             .song-input {
                 padding-left: 0;
+                border: 0;
+            }
+
+            // 复选框编辑容器
+            .song-table-checkboxs {
+                line-height: normal;
+                padding: $pd10 0 $pd10 $pd10;
             }
 
             .song-form-select {

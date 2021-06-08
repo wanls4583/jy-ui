@@ -140,6 +140,8 @@
     // ie6能识别下划线_，ie6、ie7能识别*，ie7能识别!important，ie6不能识别
     *padding-left: 0 !important;
     _padding-left: $pd15;
+    // 解决ie7及以下1px外边距问题
+    *vertical-align: middle;
 }
 
 // 文本域
@@ -305,6 +307,7 @@
 .song-form-select {
     position: relative;
     width: 100%;
+    *zoom: 1;
 
     &.song-select-disabled {
         .song-select-title {
