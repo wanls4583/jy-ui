@@ -299,7 +299,7 @@
         &.song-table-editting {
             // 解决ie7及以下浏览器select下拉框被覆盖的问题
             *position: relative;
-            // ie7及以下浏览器添加position:relative后，td的四周都将形成边框
+            // ie7及以下浏览器添加position:relative后，td的边框布局将改变
             *border-bottom: 0;
             *border-left: 0;
             background-color: $white-color;
