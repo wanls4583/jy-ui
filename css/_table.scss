@@ -3,7 +3,7 @@
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
     // table-layout: fixed;
     border-collapse: collapse;
-    // border-spacing: 0;
+    border-spacing: 0;
     background-color: $white-color;
     color: $color-666;
 
@@ -275,11 +275,6 @@
             white-space: nowrap;
             text-overflow: ellipsis;
 
-            .song-form-radio,
-            .song-form-checkbox {
-                margin-top: 0;
-            }
-
             // 文本溢出详情弹框
             .song-table-tip-icon {
                 position: absolute;
@@ -302,6 +297,11 @@
         }
 
         &.song-table-editting {
+            // 解决ie7及以下浏览器select下拉框被覆盖的问题
+            *position: relative;
+            // ie7及以下浏览器添加position:relative后，td的四周都将形成边框
+            *border-bottom: 0;
+            *border-left: 0;
             background-color: $white-color;
 
             .song-table-cell {
@@ -313,6 +313,11 @@
                 box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
             }
 
+            .song-input {
+                padding-left: 0;
+                border: 0;
+            }
+
             .song-form-select,
             .song-table-checkboxs {
                 // 解决ie7及以下浏览器div内部的高度多出两像素的问题
@@ -320,15 +325,15 @@
                 margin: 0 -#{$pd15};
             }
 
-            .song-input {
-                padding-left: 0;
-                border: 0;
-            }
-
             // 复选框编辑容器
             .song-table-checkboxs {
                 line-height: normal;
-                padding: $pd10 0 $pd10 $pd10;
+                padding: $pd10;
+                padding-right: 0;
+
+                .song-form-checkbox {
+                    margin-top: 0;
+                }
             }
 
             .song-form-select {
@@ -342,12 +347,14 @@
         &.song-table-col-radio,
         &.song-table-col-checkbox {
             .song-table-cell {
+                text-overflow: inherit;
                 line-height: normal;
             }
 
             .song-form-radio,
             .song-form-checkbox {
                 margin-top: 5px;
+                margin-right: 0;
             }
 
         }

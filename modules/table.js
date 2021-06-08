@@ -955,9 +955,6 @@
                 }
                 if (col.type == 'radio' || col.type == 'checkbox') {
                     width = 20;
-                    $cell.css({
-                        'overflow': 'visible'
-                    });
                 }
                 if (width) {
                     $cell.css({
@@ -1295,11 +1292,6 @@
             $cell.css({
                 width: (ieVersion <= 6 ? width + cellPadding : width) + 'px'
             });
-            if (col.type == 'radio' || col.type == 'checkbox') {
-                $cell.css({
-                    'overflow': 'visible'
-                });
-            }
             // 单元格事件
             if (col.event) {
                 $cell.attr('song-event', col.event).css({
