@@ -1030,6 +1030,7 @@ a {
 
 .song-table th.song-table-editting .song-table-cell,
 .song-table td.song-table-editting .song-table-cell {
+  *left: 1px;
   overflow: visible;
   white-space: normal;
   padding: 0 15px;
