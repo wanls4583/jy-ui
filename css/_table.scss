@@ -325,6 +325,12 @@
 
         }
 
+        &.song-table-error {
+            .song-table-cell {
+                border-color: $danger-color;
+            }
+        }
+
         &.song-table-col-radio,
         &.song-table-col-checkbox {
             .song-table-cell {

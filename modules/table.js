@@ -44,19 +44,11 @@
             fixeHeader: 'song-table-fixed-header',
             confirm: 'song-table-confirm',
             cancel: 'song-table-cancel',
-            mend: 'song-table-mend'
+            mend: 'song-table-mend',
+            error: 'song-table-error'
         }
         // 常用正则验证
-        var ruleMap = {
-            'require': {
-                reg: /[\s\S]+/,
-                msg: '必填项不能为空'
-            },
-            'number': {
-                reg: /\d+/,
-                msg: '请输入数字'
-            }
-        };
+        var ruleMap = Form.verifyRules;
         var event = Common.getEvent();
         var Table = {
             render: render,
@@ -396,17 +388,23 @@
                             rule = ruleMap[rule.type];
                             msg = msg || rule.msg;
                         }
-                        if (typeof rule.reg == 'function') {
-                            pass = rule.reg(value);
-                        } else if (rule.reg) {
-                            pass = rule.reg.test(String(value || ''));
+                        if (typeof rule.rule == 'function') {
+                            pass = rule.rule(value);
+                        } else if (rule.rule) {
+                            pass = rule.rule.test(String(value || ''));
                         }
                         if (!pass) {
                             Dialog.msg(msg, {
                                 icon: 'error'
                             });
+                            break;
                         }
                     }
+                }
+                if (!pass) {
+                    $(td).addClass(tableClass.error);
+                } else {
+                    $(td).removeClass(tableClass.error);
                 }
                 return pass;
             }
@@ -1443,11 +1441,12 @@
                     return;
                 }
                 if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
+                    var pass = true;
                     // 先保存真在编辑中的数据
                     if (option.autoSave) {
-                        option.save();
+                        pass = option.save();
                     }
-                    if ($td[0].songBindData.col.editable) {
+                    if (pass && $td[0].songBindData.col.editable) {
                         option.edit($td[0].songBindData.id, $td[0].songBindData.col.field);
                     }
                 }

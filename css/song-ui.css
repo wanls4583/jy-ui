@@ -1057,6 +1057,11 @@ a {
   padding-left: 15px;
 }
 
+.song-table th.song-table-error .song-table-cell,
+.song-table td.song-table-error .song-table-cell {
+  border-color: #FF5722;
+}
+
 .song-table th.song-table-col-radio .song-table-cell, .song-table th.song-table-col-checkbox .song-table-cell,
 .song-table td.song-table-col-radio .song-table-cell,
 .song-table td.song-table-col-checkbox .song-table-cell {
