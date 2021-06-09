@@ -740,6 +740,141 @@ a {
   color: #666666;
 }
 
+.song-table thead {
+  background-color: #f6f6f6;
+}
+
+.song-table th {
+  text-align: left;
+  font-weight: normal;
+}
+
+.song-table th,
+.song-table td {
+  line-height: 28px;
+  padding: 0;
+  border: 1px solid #eeeeee;
+  font-size: 14px;
+}
+
+.song-table tr:last-child td {
+  border-bottom: none;
+}
+
+.song-table tr:first-child td,
+.song-table tr:first-child th {
+  border-top: none;
+}
+
+.song-table tr th:first-child,
+.song-table tr td:first-child {
+  border-left: none;
+}
+
+.song-table-cell {
+  position: relative;
+  _width: 100%;
+  height: 28px;
+  _height: 40px;
+  padding: 6px 16px;
+  *zoom: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.song-table-cell .song-table-tip-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40px;
+  width: 24px;
+  line-height: 38px;
+  background-color: #ffffff;
+  border-left: 1px solid #eeeeee;
+  font-family: 'iconfont';
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.song-table-cell .song-table-tip-icon:hover {
+  background-color: #f6f6f6;
+}
+
+.song-table-editting {
+  *position: relative;
+  *border-bottom: 0;
+  *border-left: 0;
+  background-color: #ffffff;
+}
+
+.song-table-editting .song-table-cell {
+  *left: 1px;
+  overflow: visible;
+  white-space: normal;
+  padding: 0 15px;
+  height: auto;
+  border: 1px solid #5FB878;
+  -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
+}
+
+.song-table-editting .song-input {
+  padding-left: 0;
+  border: 0;
+}
+
+.song-table-editting .song-form-select,
+.song-table-editting .song-table-checkboxs {
+  width: auto;
+  margin: 0 -15px;
+}
+
+.song-table-editting .song-table-checkboxs {
+  line-height: normal;
+  padding: 10px;
+  padding-right: 0;
+}
+
+.song-table-editting .song-table-checkboxs .song-form-checkbox {
+  margin-top: 0;
+}
+
+.song-table-editting .song-form-select .song-input {
+  padding-left: 15px;
+}
+
+.song-table-error .song-table-cell {
+  border-color: #FF5722;
+}
+
+.song-table-col-radio .song-table-cell, .song-table-col-checkbox .song-table-cell {
+  text-overflow: inherit;
+  line-height: normal;
+}
+
+.song-table-col-radio .song-form-radio,
+.song-table-col-radio .song-form-checkbox, .song-table-col-checkbox .song-form-radio,
+.song-table-col-checkbox .song-form-checkbox {
+  margin-top: 5px;
+  margin-right: 0;
+}
+
+.song-table-static th,
+.song-table-static td {
+  padding: 5px 15px;
+}
+
+.song-table-static tr:last-child td {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.song-table-static tr th:first-child,
+.song-table-static tr td:first-child {
+  border-left: 1px solid #eeeeee;
+}
+
 .song-table-view {
   position: relative;
   width: 100%;
@@ -953,159 +1088,6 @@ a {
 
 .song-table-cancel:hover {
   background-color: #FF5722;
-}
-
-.song-table thead {
-  background-color: #f6f6f6;
-}
-
-.song-table th {
-  text-align: left;
-  font-weight: normal;
-}
-
-.song-table th,
-.song-table td {
-  line-height: 28px;
-  padding: 0;
-  border: 1px solid #eeeeee;
-  font-size: 14px;
-}
-
-.song-table th .song-table-cell,
-.song-table td .song-table-cell {
-  position: relative;
-  _width: 100%;
-  height: 28px;
-  _height: 40px;
-  padding: 6px 16px;
-  *zoom: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.song-table th .song-table-cell .song-table-tip-icon,
-.song-table td .song-table-cell .song-table-tip-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 40px;
-  width: 24px;
-  line-height: 38px;
-  background-color: #ffffff;
-  border-left: 1px solid #eeeeee;
-  font-family: 'iconfont';
-  font-size: 16px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.song-table th .song-table-cell .song-table-tip-icon:hover,
-.song-table td .song-table-cell .song-table-tip-icon:hover {
-  background-color: #f6f6f6;
-}
-
-.song-table th.song-table-editting,
-.song-table td.song-table-editting {
-  *position: relative;
-  *border-bottom: 0;
-  *border-left: 0;
-  background-color: #ffffff;
-}
-
-.song-table th.song-table-editting .song-table-cell,
-.song-table td.song-table-editting .song-table-cell {
-  *left: 1px;
-  overflow: visible;
-  white-space: normal;
-  padding: 0 15px;
-  height: auto;
-  border: 1px solid #5FB878;
-  -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
-          box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
-}
-
-.song-table th.song-table-editting .song-input,
-.song-table td.song-table-editting .song-input {
-  padding-left: 0;
-  border: 0;
-}
-
-.song-table th.song-table-editting .song-form-select,
-.song-table th.song-table-editting .song-table-checkboxs,
-.song-table td.song-table-editting .song-form-select,
-.song-table td.song-table-editting .song-table-checkboxs {
-  width: auto;
-  margin: 0 -15px;
-}
-
-.song-table th.song-table-editting .song-table-checkboxs,
-.song-table td.song-table-editting .song-table-checkboxs {
-  line-height: normal;
-  padding: 10px;
-  padding-right: 0;
-}
-
-.song-table th.song-table-editting .song-table-checkboxs .song-form-checkbox,
-.song-table td.song-table-editting .song-table-checkboxs .song-form-checkbox {
-  margin-top: 0;
-}
-
-.song-table th.song-table-editting .song-form-select .song-input,
-.song-table td.song-table-editting .song-form-select .song-input {
-  padding-left: 15px;
-}
-
-.song-table th.song-table-error .song-table-cell,
-.song-table td.song-table-error .song-table-cell {
-  border-color: #FF5722;
-}
-
-.song-table th.song-table-col-radio .song-table-cell, .song-table th.song-table-col-checkbox .song-table-cell,
-.song-table td.song-table-col-radio .song-table-cell,
-.song-table td.song-table-col-checkbox .song-table-cell {
-  text-overflow: inherit;
-  line-height: normal;
-}
-
-.song-table th.song-table-col-radio .song-form-radio,
-.song-table th.song-table-col-radio .song-form-checkbox, .song-table th.song-table-col-checkbox .song-form-radio,
-.song-table th.song-table-col-checkbox .song-form-checkbox,
-.song-table td.song-table-col-radio .song-form-radio,
-.song-table td.song-table-col-radio .song-form-checkbox,
-.song-table td.song-table-col-checkbox .song-form-radio,
-.song-table td.song-table-col-checkbox .song-form-checkbox {
-  margin-top: 5px;
-  margin-right: 0;
-}
-
-.song-table tr:last-child td {
-  border-bottom: none;
-}
-
-.song-table tr:first-child td,
-.song-table tr:first-child th {
-  border-top: none;
-}
-
-.song-table tr th:first-child,
-.song-table tr td:first-child {
-  border-left: none;
-}
-
-.song-table-static th,
-.song-table-static td {
-  padding: 5px 15px;
-}
-
-.song-table-static tr:last-child td {
-  border-bottom: 1px solid #eeeeee;
-}
-
-.song-table-static tr th:first-child,
-.song-table-static tr td:first-child {
-  border-left: 1px solid #eeeeee;
 }
 
 @font-face {

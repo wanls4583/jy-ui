@@ -7,6 +7,172 @@
     background-color: $white-color;
     color: $color-666;
 
+    thead {
+        background-color: $lighter-color;
+    }
+
+    th {
+        text-align: left;
+        font-weight: normal;
+    }
+
+    th,
+    td {
+        // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8及以下不支持background-clip
+        // position: relative;
+        line-height: 28px;
+        padding: 0;
+        border: 1px solid $light-color;
+        font-size: 14px;
+    }
+
+    // i6以下浏览器不支持child选择器
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:first-child {
+
+        td,
+        th {
+            border-top: none;
+        }
+    }
+
+    tr {
+
+        th:first-child,
+        td:first-child {
+            border-left: none;
+        }
+    }
+
+    &-cell {
+        position: relative;
+        // ie6下内容会溢出到旁边的td
+        _width: 100%;
+        height: 28px;
+        _height: 40px;
+        // 定义了100%宽度后，ie6无法通过负边距延伸宽度
+        // margin: -5px #{-$pd15};
+        padding: 5px + 1px $pd15 + 1px;
+        // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
+        *zoom: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        // 文本溢出详情弹框
+        .song-table-tip-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 40px;
+            width: 24px;
+            line-height: $input-height;
+            background-color: $white-color;
+            border-left: 1px solid $light-color;
+            font-family: 'iconfont';
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $lighter-color;
+            }
+        }
+    }
+
+    &-editting {
+        // 解决ie7及以下浏览器select下拉框被覆盖的问题
+        *position: relative;
+        // ie7及以下浏览器添加position:relative后，td的边框布局将改变
+        *border-bottom: 0;
+        *border-left: 0;
+        background-color: $white-color;
+
+        .song-table-cell {
+            *left: 1px;
+            overflow: visible;
+            white-space: normal;
+            padding: 0 $pd15;
+            height: auto;
+            border: 1px solid $link-color;
+            box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
+        }
+
+        .song-input {
+            padding-left: 0;
+            border: 0;
+        }
+
+        .song-form-select,
+        .song-table-checkboxs {
+            // 解决ie7及以下浏览器div内部的高度多出两像素的问题
+            width: auto;
+            margin: 0 -#{$pd15};
+        }
+
+        // 复选框编辑容器
+        .song-table-checkboxs {
+            line-height: normal;
+            padding: $pd10;
+            padding-right: 0;
+
+            .song-form-checkbox {
+                margin-top: 0;
+            }
+        }
+
+        .song-form-select {
+            .song-input {
+                padding-left: $pd15;
+            }
+        }
+
+    }
+
+    &-error {
+        .song-table-cell {
+            border-color: $danger-color;
+        }
+    }
+
+    &-col-radio,
+    &-col-checkbox {
+        .song-table-cell {
+            text-overflow: inherit;
+            line-height: normal;
+        }
+
+        .song-form-radio,
+        .song-form-checkbox {
+            margin-top: 5px;
+            margin-right: 0;
+        }
+
+    }
+
+    &-static {
+
+        th,
+        td {
+            padding: 5px $pd15;
+        }
+
+        tr:last-child td {
+            border-bottom: 1px solid $light-color;
+        }
+
+        tr {
+
+            th:first-child,
+            td:first-child {
+                border-left: 1px solid $light-color;
+            }
+        }
+    }
+
     &-view {
         position: relative;
         width: 100%;
@@ -219,172 +385,6 @@
 
         &:hover {
             background-color: #FF5722;
-        }
-    }
-
-    thead {
-        background-color: $lighter-color;
-    }
-
-    th {
-        text-align: left;
-        font-weight: normal;
-    }
-
-    th,
-    td {
-        // 不能加position，否则背景色将遮住边框，可以用background-clip:padding-box;解决，不过ie8及以下不支持background-clip
-        // position: relative;
-        line-height: 28px;
-        padding: 0;
-        border: 1px solid $light-color;
-        font-size: 14px;
-
-        .song-table-cell {
-            position: relative;
-            // ie6下内容会溢出到旁边的td
-            _width: 100%;
-            height: 28px;
-            _height: 40px;
-            // 定义了100%宽度后，ie6无法通过负边距延伸宽度
-            // margin: -5px #{-$pd15};
-            padding: 5px + 1px $pd15 + 1px;
-            // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
-            *zoom: 1;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-
-            // 文本溢出详情弹框
-            .song-table-tip-icon {
-                position: absolute;
-                top: 0;
-                right: 0;
-                height: 40px;
-                width: 24px;
-                line-height: $input-height;
-                background-color: $white-color;
-                border-left: 1px solid $light-color;
-                font-family: 'iconfont';
-                font-size: 16px;
-                text-align: center;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: $lighter-color;
-                }
-            }
-        }
-
-        &.song-table-editting {
-            // 解决ie7及以下浏览器select下拉框被覆盖的问题
-            *position: relative;
-            // ie7及以下浏览器添加position:relative后，td的边框布局将改变
-            *border-bottom: 0;
-            *border-left: 0;
-            background-color: $white-color;
-
-            .song-table-cell {
-                *left: 1px;
-                overflow: visible;
-                white-space: normal;
-                padding: 0 $pd15;
-                height: auto;
-                border: 1px solid $link-color;
-                box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
-            }
-
-            .song-input {
-                padding-left: 0;
-                border: 0;
-            }
-
-            .song-form-select,
-            .song-table-checkboxs {
-                // 解决ie7及以下浏览器div内部的高度多出两像素的问题
-                width: auto;
-                margin: 0 -#{$pd15};
-            }
-
-            // 复选框编辑容器
-            .song-table-checkboxs {
-                line-height: normal;
-                padding: $pd10;
-                padding-right: 0;
-
-                .song-form-checkbox {
-                    margin-top: 0;
-                }
-            }
-
-            .song-form-select {
-                .song-input {
-                    padding-left: $pd15;
-                }
-            }
-
-        }
-
-        &.song-table-error {
-            .song-table-cell {
-                border-color: $danger-color;
-            }
-        }
-
-        &.song-table-col-radio,
-        &.song-table-col-checkbox {
-            .song-table-cell {
-                text-overflow: inherit;
-                line-height: normal;
-            }
-
-            .song-form-radio,
-            .song-form-checkbox {
-                margin-top: 5px;
-                margin-right: 0;
-            }
-
-        }
-    }
-
-    // i6以下浏览器不支持child选择器
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    tr:first-child {
-
-        td,
-        th {
-            border-top: none;
-        }
-    }
-
-    tr {
-
-        th:first-child,
-        td:first-child {
-            border-left: none;
-        }
-    }
-
-    &-static {
-
-        th,
-        td {
-            padding: 5px $pd15;
-        }
-
-        tr:last-child td {
-            border-bottom: 1px solid $light-color;
-        }
-
-        tr {
-
-            th:first-child,
-            td:first-child {
-                border-left: 1px solid $light-color;
-            }
         }
     }
 }
