@@ -1152,12 +1152,11 @@
                         if (typeof col.sortAble == 'object') {
                             sortFun = Object.assign(sortFun, col.sortAble);
                         }
+                        option._sortedData = option._renderedData.concat([]);
                         if (sortObj.sort) {
                             sortFun[sortObj.sort] && option._sortedData.sort(function (a, b) {
                                 return sortFun[sortObj.sort](a[col.field], b[col.field]);
                             });
-                        } else {
-                            option._sortedData = option._renderedData.concat([]);
                         }
                     }
                 });
