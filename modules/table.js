@@ -1039,10 +1039,13 @@
                 }
                 return;
             }
-            option.$tableHeaderHead.append($tr);
-            option.$tableHeader.append(option.$tableHeaderHead);
-            option.$header.append(option.$tableHeader);
-            option.$header.insertAfter(option.$toolbar);
+            if (!option.$header.inserted) {
+                option.$tableHeaderHead.append($tr);
+                option.$tableHeader.append(option.$tableHeaderHead);
+                option.$header.append(option.$tableHeader);
+                option.$header.insertAfter(option.$toolbar);
+                option.$header.inserted = true;
+            }
 
             // 渲染排序图标
             function _renderSortIcon($th, col) {
@@ -1087,6 +1090,17 @@
          */
         function renderTableBody(option, justSort) {
             var cols = option.cols;
+
+            if (!option.$tableMain.inserted) {
+                var viewWidth = option.$view.width();
+                option.$tableMain.append(option.$table);
+                option.$tableMain.insertAfter(option.$header);
+                option.$tableMain.css({
+                    width: viewWidth + 'px'
+                });
+                option.$tableMain.inserted = true;
+            }
+
             if (justSort) {
                 _render();
             } else if (option.data) {
@@ -1096,9 +1110,7 @@
                     return Object.assign({}, item);
                 });
                 option._sortedData = option._renderedData.concat([]);
-                setTimeout(function () {
-                    _render();
-                });
+                _render();
 
             } else {
                 httpGet(option, function (res) {
@@ -1113,13 +1125,6 @@
                     _render();
                 });
             }
-
-            var viewWidth = option.$view.width();
-            option.$tableMain.append(option.$table);
-            option.$tableMain.insertAfter(option.$header);
-            option.$tableMain.css({
-                width: viewWidth + 'px'
-            });
 
             // 渲染
             function _render() {
