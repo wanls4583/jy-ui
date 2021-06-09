@@ -841,11 +841,15 @@
             var tableHeaderWidth = option.$tableHeader[0].offsetWidth;
             //表格拉伸至容器的宽度
             if (option.stretch && tableHeaderWidth < hedaerWidth) {
+                // 确保选择列宽度不变
+                option.$view.find('th.song-table-col-checkbox,th.song-table-col-raido').each(function (i, th) {
+                    $(th).css('width', this.clientWidth);
+                });
                 option.$tableHeader.css({
-                    width: '100%'
+                    'width': '100%'
                 });
                 option.$table.css({
-                    width: '100%'
+                    'width': '100%'
                 });
                 // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
                 if (ieVersion <= 6) {
