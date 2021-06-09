@@ -436,6 +436,12 @@
                     if (pushed) {
                         option._editedData.push(td.songBindData.rowData);
                     }
+                    // 触发保存事件
+                    Table.trigger('save(' + option._filter + ')', {
+                        id: td.songBindData.id,
+                        field: col.field,
+                        data: value
+                    });
                 }
             }
         }
@@ -626,6 +632,12 @@
                         $checkbox[0].value = data;
                         td.songBindData.$checkbox = $checkbox;
                     }
+                    // 触发编辑事件
+                    Table.trigger('edit(' + option._filter + ')', {
+                        id: td.songBindData.id,
+                        field: col.field,
+                        data: data
+                    });
                     if (editable.type != 'select' && editable.icon) {
                         var $confirm = $('<div class="' + tableClass.confirm + '" title="完成编辑">' + confirmIcon + '</div>')
                         var $cancel = $('<div class="' + tableClass.cancel + '" title="取消编辑">' + cancelIcon + '</div>')
