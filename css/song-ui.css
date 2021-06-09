@@ -1048,6 +1048,47 @@ a {
   background-color: #FF5722;
 }
 
+.song-table-unselect {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-table-sort {
+  display: inline-block;
+  height: 28px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.song-table-sort-up {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid #b2b2b2;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.song-table-sort-up.song-table-sort-hover, .song-table-sort-up.song-table-sort-confirm {
+  border-bottom-color: #333333;
+}
+
+.song-table-sort-down {
+  border-top: 5px solid #b2b2b2;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.song-table-sort-down.song-table-sort-hover, .song-table-sort-down.song-table-sort-confirm {
+  border-top-color: #333333;
+}
+
 .song-table .song-table-editting {
   *position: relative;
   *border-bottom: 0;

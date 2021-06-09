@@ -341,6 +341,49 @@
         }
     }
 
+    // 不可选中
+    &-unselect {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    // 排序
+    &-sort {
+        display: inline-block;
+        height: 28px;
+        margin-left: 5px;
+        vertical-align: middle;
+
+        &-up {
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid #b2b2b2;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            margin-top: 2px;
+            cursor: pointer;
+
+            &.song-table-sort-hover,
+            &.song-table-sort-confirm {
+                border-bottom-color: $color-333;
+            }
+        }
+
+        &-down {
+            border-top: 5px solid #b2b2b2;
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            margin-top: 2px;
+            cursor: pointer;
+
+            &.song-table-sort-hover,
+            &.song-table-sort-confirm {
+                border-top-color: $color-333;
+            }
+        }
+    }
+
+    // 编辑中
     & &-editting {
         // 解决ie7及以下浏览器select下拉框被覆盖的问题
         *position: relative;
