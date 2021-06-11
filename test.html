@@ -278,8 +278,6 @@
             <div style="margin:15px 0;">单选表格</div>
             <table id="table1" song-filter="table1"></table>
             <div style="margin:15px 0;">多选表格</div>
-            <table id="table2" song-filter="table2"></table>
-            <div style="margin:15px 0;">可编辑表格</div>
             <table id="table3" song-filter="table3"></table>
         </div>
     </fieldset>
@@ -369,7 +367,6 @@
         });
     }
     renderTable1();
-    renderTable2();
     renderTable3();
     // 单选表格
     function renderTable1() {
@@ -433,74 +430,7 @@
             }]
         });
         SongUi.Table.on('selected(table1)', function () {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('radio')));
-        });
-        return table;
-    }
-    // 多选表格
-    function renderTable2() {
-        var data = [];
-        for (var i = 0; i < 1000; i++) {
-            var sex = Math.ceil(Math.random() * 2);
-            var age = Math.ceil(Math.random() * 100);
-            var phone = '1' + Math.ceil(Math.random() * 100000000000);
-            var like = Math.ceil(Math.random() * 3);
-            var sign = '个性签名' + i;
-            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
-        };
-        var table = SongUi.Table.render({
-            elem: '#table2',
-            stretch: true,
-            width: 800,
-            data: data,
-            limit: 10,
-            defaultToolbar: true,
-            toolbar: '<button class="song-btn song-btn-sm" song-event="checked">获取选择的项</button>',
-            cols: [{
-                type: 'checkbox'
-            }, {
-                title: '用户',
-                field: 'user'
-            }, {
-                title: '手机号',
-                field: 'phone',
-                width: 100
-            }, {
-                title: '性别',
-                field: 'sex',
-                width: 50,
-                select: [{
-                    label: '男',
-                    value: 1
-                }, {
-                    label: '女',
-                    value: 2
-                }]
-            }, {
-                title: '年龄',
-                field: 'age',
-                width: 50
-            }, {
-                title: '签名',
-                field: 'sign',
-                width: 80
-            }, {
-                title: '爱好',
-                field: 'like',
-                checkbox: [{
-                    label: '听歌',
-                    value: 1
-                }, {
-                    label: '游泳',
-                    value: 2
-                }, {
-                    label: '看小说',
-                    value: 3
-                }]
-            }]
-        });
-        SongUi.Table.on('checked(table2)', function () {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('checkbox')));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('select')));
         });
         return table;
     }
@@ -523,6 +453,7 @@
             limit: 20,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="add">添加行</button>\
+            <button class="song-btn song-btn-sm" song-event="checked">获取选中的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getadd">获取添加的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
@@ -619,11 +550,14 @@
         SongUi.Table.on('del(table3)', function (obj) {
             table.deleteRow(obj.id);
         });
+        SongUi.Table.on('checked(table3)', function (obj) {
+            SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
+        });
         SongUi.Table.on('getadd(table3)', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('add')));
         });
         SongUi.Table.on('getdel(table3)', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('del')));
+            SongUi.Dialog.alert(JSON.stringify(table.getData('delelte')));
         });
         SongUi.Table.on('getedit(table3)', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
