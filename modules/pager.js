@@ -76,7 +76,7 @@
             // 是否显示上一页
             if (option.layout.indexOf('prev') > -1) {
                 if (!option.$prev) {
-                    option.$prev = $('<a href="javascript:;" class="' + [pagerPrev, (option.nowPage == 1 ? pagerPrevDisabled : '')].join(' ') + '"></a>');
+                    option.$prev = $('<a hidefocus="true" href="javascript:;" class="' + [pagerPrev, (option.nowPage == 1 ? pagerPrevDisabled : '')].join(' ') + '"></a>');
                     $pager.append(option.$prev);
                 }
                 option.$prev.html(option.prev);
@@ -97,7 +97,7 @@
             // 是否显示下一页
             if (option.layout.indexOf('next') > -1) {
                 if (!option.$next) {
-                    option.$next = $('<a href="javascript:;" class="' + [pagerNext, (option.nowPage == 1 ? pagerNextDisabled : '')].join(' ') + '"></a>');
+                    option.$next = $('<a hidefocus="true" href="javascript:;" class="' + [pagerNext, (option.nowPage == 1 ? pagerNextDisabled : '')].join(' ') + '"></a>');
                     $pager.append(option.$next);
                 }
                 option.$next.html(option.next);
@@ -161,26 +161,26 @@
                 start = start > 0 ? start : 1;
                 if (option.first !== false) {
                     if (start > 1) {
-                        option.$page.append('<a href="javascript:;" class="' + pagerNum + '" data-page="1">' + (option.first || 1) + '</a>');
+                        option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pagerNum + '" data-page="1">' + (option.first || 1) + '</a>');
                     }
                     if (start > 2) { // 左侧省略号
                         option.$page.append('<span class="' + pagerDot + '">...</span>');
                     }
                 }
                 for (j = 0; j < option.groups && start <= option.pages; start++, j++) {
-                    option.$page.append('<a href="javascript:;" class="' + pagerNum + '" data-page="' + start + '">' + start + '</a>');
+                    option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pagerNum + '" data-page="' + start + '">' + start + '</a>');
                 }
                 if (option.last !== false) {
                     if (start <= option.pages) {
                         if (start <= option.pages - 1) { //右侧省略号
                             option.$page.append('<span class="' + pagerDot + '">...</span>');
                         }
-                        option.$page.append('<a href="javascript:;" class="' + pagerNum + '" data-page="' + option.pages + '">' + (option.last || option.pages) + '</a>');
+                        option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pagerNum + '" data-page="' + option.pages + '">' + (option.last || option.pages) + '</a>');
                     }
                 }
             } else {
                 for (var i = 0; i < option.pages; i++) {
-                    option.$page.append('<a href="javascript:;" class="' + pagerNum + '" data-page="' + (i + 1) + '">' + (i + 1) + '</a>');
+                    option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pagerNum + '" data-page="' + (i + 1) + '">' + (i + 1) + '</a>');
                 }
             }
             option.$page.find('a.' + pagerNow).removeClass(pagerNow);

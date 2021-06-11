@@ -23,6 +23,7 @@
         float: left;
         padding: 0 $height/2;
         border: 1px solid $light-color;
+        user-select: none;
     }
 
     .song-pager-prev-disabled,
