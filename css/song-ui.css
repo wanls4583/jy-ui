@@ -1077,11 +1077,10 @@ a {
 }
 
 .song-table-sort-up {
-  border-top: 5px solid transparent;
   border-bottom: 5px solid #b2b2b2;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  margin-top: 2px;
+  margin-top: 6px;
   cursor: pointer;
 }
 
@@ -1091,7 +1090,6 @@ a {
 
 .song-table-sort-down {
   border-top: 5px solid #b2b2b2;
-  border-bottom: 5px solid transparent;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   margin-top: 2px;

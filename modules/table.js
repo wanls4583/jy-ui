@@ -1894,7 +1894,7 @@
             var sotreData = store[filter];
             if (window.print) {
                 var $table = $(sotreData.$tableHeader[0].outerHTML);
-                var wind = window.open('打开窗口', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
+                var wind = window.open('', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
                 var style = '<style>\
                 .song-table-col-radio,\
                 .song-table-col-radio,\
@@ -1929,8 +1929,8 @@
                         $(tds[tds.length - _tds.length + i]).html($(td).html());
                     });
                 });
-                console.log($table[0].outerHTML)
-                wind.document.body.innerHTML = style + $table[0].outerHTML;
+                wind.document.write('<head>' + style + '</head><body>' + $table[0].outerHTML + '</body>');
+                wind.document.close();
                 wind.print();
                 wind.close();
             } else {
