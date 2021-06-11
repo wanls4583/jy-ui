@@ -154,7 +154,7 @@
             if (!option.$page) {
                 return;
             }
-            option.$page.html('');
+            var html = '';
             if (option.pages > option.groups) { // 有省略号
                 var half = Math.floor((option.groups) / 2);
                 var start = option.nowPage - half;
@@ -163,28 +163,29 @@
                 start = start > 0 ? start : 1;
                 if (option.first !== false) {
                     if (start > 1) {
-                        option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="1">' + (option.first || 1) + '</a>');
+                        html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="1">' + (option.first || 1) + '</a>';
                     }
                     if (start > 2) { // 左侧省略号
-                        option.$page.append('<span class="' + pageClass.dot + '">...</span>');
+                        html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.dot + '">...</a>';
                     }
                 }
                 for (j = 0; j < option.groups && start <= option.pages; start++, j++) {
-                    option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + start + '">' + start + '</a>');
+                    html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + start + '">' + start + '</a>';
                 }
                 if (option.last !== false) {
                     if (start <= option.pages) {
                         if (start <= option.pages - 1) { //右侧省略号
-                            option.$page.append('<span class="' + pageClass.dot + '">...</span>');
+                            html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.dot + '">...</a>';
                         }
-                        option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + option.pages + '">' + (option.last || option.pages) + '</a>');
+                        html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + option.pages + '">' + (option.last || option.pages) + '</a>';
                     }
                 }
             } else {
                 for (var i = 0; i < option.pages; i++) {
-                    option.$page.append('<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + (i + 1) + '">' + (i + 1) + '</a>');
+                    html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + (i + 1) + '">' + (i + 1) + '</a>';
                 }
             }
+            option.$page.html(html);
             option.$page.find('a.' + pageClass.now).removeClass(pageClass.now);
             option.$page.find('a.' + pageClass.num + '[data-page="' + option.nowPage + '"]').addClass(pageClass.now);
             option.$jump && option.$jump.find('input.' + pageClass.input).val(option.nowPage);
@@ -200,8 +201,11 @@
             }
             // 首次渲染时不需要触发
             if (!option.firstRender) {
-                Pager.trigger('page(' + option.filter + ')', option.nowPage);
-                Pager.trigger('page', option.nowPage);
+                clearTimeout(option.triggerTimer);
+                option.triggerTimer = setTimeout(function () {
+                    Pager.trigger('page(' + option.filter + ')', option.nowPage);
+                    Pager.trigger('page', option.nowPage);
+                }, 0)
             }
         }
 

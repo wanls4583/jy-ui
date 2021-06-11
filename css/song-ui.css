@@ -573,7 +573,6 @@ a:focus {
 .song-pager .song-pager-prev,
 .song-pager .song-pager-next,
 .song-pager .song-pager-num,
-.song-pager .song-pager-dot,
 .song-pager .song-pager-limits {
   float: left;
   padding: 0 15px;
@@ -587,9 +586,19 @@ a:focus {
 .song-pager .song-pager-prev:hover,
 .song-pager .song-pager-next:hover,
 .song-pager .song-pager-num:hover,
-.song-pager .song-pager-dot:hover,
 .song-pager .song-pager-limits:hover {
   color: #5FB878;
+}
+
+.song-pager .song-pager-dot {
+  float: left;
+  padding: 0 15px;
+  border: 1px solid #eeeeee;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: default;
 }
 
 .song-pager .song-pager-prev-disabled,
@@ -677,7 +686,6 @@ a:focus {
 .song-pager-small .song-pager-prev,
 .song-pager-small .song-pager-next,
 .song-pager-small .song-pager-num,
-.song-pager-small .song-pager-dot,
 .song-pager-small .song-pager-limits {
   float: left;
   padding: 0 13px;
@@ -691,9 +699,19 @@ a:focus {
 .song-pager-small .song-pager-prev:hover,
 .song-pager-small .song-pager-next:hover,
 .song-pager-small .song-pager-num:hover,
-.song-pager-small .song-pager-dot:hover,
 .song-pager-small .song-pager-limits:hover {
   color: #5FB878;
+}
+
+.song-pager-small .song-pager-dot {
+  float: left;
+  padding: 0 13px;
+  border: 1px solid #eeeeee;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: default;
 }
 
 .song-pager-small .song-pager-prev-disabled,
