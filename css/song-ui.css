@@ -578,11 +578,23 @@ a:focus {
   float: left;
   padding: 0 15px;
   border: 1px solid #eeeeee;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-pager .song-pager-prev:hover,
+.song-pager .song-pager-next:hover,
+.song-pager .song-pager-num:hover,
+.song-pager .song-pager-dot:hover,
+.song-pager .song-pager-limits:hover {
+  color: #5FB878;
 }
 
 .song-pager .song-pager-prev-disabled,
 .song-pager .song-pager-next-disabled {
-  color: #d2d2d2;
+  color: #d2d2d2 !important;
   cursor: not-allowed;
 }
 
@@ -593,7 +605,7 @@ a:focus {
 }
 
 .song-pager .song-pager-now {
-  color: #ffffff;
+  color: #ffffff !important;
   background-color: #009688;
   border-color: #009688;
 }
@@ -670,11 +682,23 @@ a:focus {
   float: left;
   padding: 0 13px;
   border: 1px solid #eeeeee;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-pager-small .song-pager-prev:hover,
+.song-pager-small .song-pager-next:hover,
+.song-pager-small .song-pager-num:hover,
+.song-pager-small .song-pager-dot:hover,
+.song-pager-small .song-pager-limits:hover {
+  color: #5FB878;
 }
 
 .song-pager-small .song-pager-prev-disabled,
 .song-pager-small .song-pager-next-disabled {
-  color: #d2d2d2;
+  color: #d2d2d2 !important;
   cursor: not-allowed;
 }
 
@@ -685,7 +709,7 @@ a:focus {
 }
 
 .song-pager-small .song-pager-now {
-  color: #ffffff;
+  color: #ffffff !important;
   background-color: #009688;
   border-color: #009688;
 }

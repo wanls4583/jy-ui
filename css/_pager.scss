@@ -24,11 +24,15 @@
         padding: 0 $height/2;
         border: 1px solid $light-color;
         user-select: none;
+
+        &:hover {
+            color: $link-color;
+        }
     }
 
     .song-pager-prev-disabled,
     .song-pager-next-disabled {
-        color: $gray-color;
+        color: $gray-color !important;
         cursor: not-allowed;
     }
 
@@ -39,7 +43,7 @@
     }
 
     .song-pager-now {
-        color: $white-color;
+        color: $white-color !important;
         background-color: $success-color;
         border-color: $success-color;
     }
