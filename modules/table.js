@@ -18,10 +18,6 @@
         var ieVersion = Common.getIeVersion();
         var scrBarWidth = Common.getScrBarWidth();
         var cellPadding = 16 * 2;
-        var sortObj = {
-            field: '',
-            sort: ''
-        }
         var store = {};
         var tableClass = {
             view: 'song-table-view',
@@ -56,7 +52,8 @@
             sortHover: 'song-table-sort-hover',
             sortConfirm: 'song-table-sort-confirm',
             unselect: 'song-table-unselect',
-            error: 'song-table-error'
+            error: 'song-table-error',
+            fixedEmpty: 'song-fixed-empty'
         }
         // 常用正则验证
         var ruleMap = Form.verifyRules;
@@ -118,6 +115,10 @@
             sotreData._editedData = [];
             sotreData._checkedData = [];
             sotreData._selectedData = null;
+            sotreData._sortObj = {
+                field: '',
+                sort: ''
+            }
             $view.attr('song-filter', sotreData._filter);
             // 已存在view，则不再插入
             if (!$view.parent().length) {
@@ -361,7 +362,7 @@
             return result;
 
             function _filter(i, td) {
-                if (!$(td).hasClass('song-fixed-empty')) {
+                if (!$(td).hasClass(tableClass.fixedEmpty)) {
                     tds.push(td);
                 }
             }
@@ -504,7 +505,7 @@
             }
 
             function _filter(i, td) {
-                if (!$(td).hasClass('song-fixed-empty')) {
+                if (!$(td).hasClass(tableClass.fixedEmpty)) {
                     tds.push(td);
                 }
             }
@@ -586,7 +587,7 @@
             }
 
             function _filter(i, td) {
-                if (!$(td).hasClass('song-fixed-empty')) {
+                if (!$(td).hasClass(tableClass.fixedEmpty)) {
                     tds.push(td);
                 }
             }
@@ -1001,7 +1002,7 @@
                 }
                 var width = col.width;
                 var $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
-                var $th = $('<th data-field="' + (col.field || '') + '"></th>');
+                var $th = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></th>');
                 $th.append($cell);
                 $tr.append($th);
                 $th[0].songBindData = {
@@ -1056,9 +1057,6 @@
                             Form.render('checkbox(table_checkbox_' + filter + ')');
                         });
                     }
-                    if (col.type != 'text') {
-                        $th.addClass('song-table-col-' + col.type);
-                    }
                 }
             }
             if (fixed) {
@@ -1092,8 +1090,8 @@
                     $up.removeClass(tableClass.sortHover);
                 }).on('click', function () {
                     sotreData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                    sortObj.field = col.field;
-                    sortObj.sort = 'asc';
+                    sotreData._sortObj.field = col.field;
+                    sotreData._sortObj.sort = 'asc';
                     $up.addClass(tableClass.sortConfirm);
                     renderTableBody(filter, true);
                     return false;
@@ -1104,8 +1102,8 @@
                     $down.removeClass(tableClass.sortHover);
                 }).on('click', function () {
                     sotreData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                    sortObj.field = col.field;
-                    sortObj.sort = 'desc';
+                    sotreData._sortObj.field = col.field;
+                    sotreData._sortObj.sort = 'desc';
                     $down.addClass(tableClass.sortConfirm);
                     renderTableBody(filter, true);
                     return false;
@@ -1178,14 +1176,14 @@
                     }
                 }
                 cols.map(function (col) {
-                    if (col.sortAble && sortObj.field == col.field) {
+                    if (col.sortAble && sotreData._sortObj.field == col.field) {
                         if (typeof col.sortAble == 'object') {
                             sortFun = Object.assign(sortFun, col.sortAble);
                         }
                         sotreData._sortedData = sotreData._renderedData.concat([]);
-                        if (sortObj.sort) {
-                            sortFun[sortObj.sort] && sotreData._sortedData.sort(function (a, b) {
-                                return sortFun[sortObj.sort](a[col.field], b[col.field]);
+                        if (sotreData._sortObj.sort) {
+                            sortFun[sotreData._sortObj.sort] && sotreData._sortedData.sort(function (a, b) {
+                                return sortFun[sotreData._sortObj.sort](a[col.field], b[col.field]);
                             });
                         }
                     }
@@ -1343,7 +1341,7 @@
                     }
                 } else {
                     if (col.fixed == 'left' || col.fixed == 'right') { // 主表格中的占位列
-                        $td = $('<td class="song-fixed-empty" data-field="' + (col.field || '') + '"></td>');
+                        $td = $('<td class="' + ['song-table-col-' + col.type, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
                         $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '"></div>');
                         $cell.css({
                             width: (ieVersion <= 6 ? widths[col_i] + cellPadding : widths[col_i]) + 'px'
@@ -1436,7 +1434,7 @@
          */
         function createTd(filter, col, data, width) {
             var sotreData = store[filter];
-            var $td = $('<td data-field="' + (col.field || '') + '"></td>');
+            var $td = $('<td class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></td>');
             var $cell = null;
             var id = data._song_table_id;
             $td[0].songBindData = {};
@@ -1470,9 +1468,6 @@
                 } else {
                     $cell.append(col.template(data[col.field], data, id, col));
                 }
-            }
-            if (col.type != 'text') {
-                $td.addClass('song-table-col-' + col.type);
             }
             $cell.css({
                 width: (ieVersion <= 6 ? width + cellPadding : width) + 'px'
@@ -1725,22 +1720,22 @@
                 var $this = $(this);
                 // 触发排序
                 var col = this.songBindData.col;
-                var $up = $this.find('div.' + tableClass.sortUp);
-                var $down = $this.find('div.' + tableClass.sortDown);
-                $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
                 if (col.sortAble) {
-                    if (sortObj.field != col.field) {
-                        sortObj.field = col.field;
-                        sortObj.sort = '';
+                    var $up = $this.find('div.' + tableClass.sortUp);
+                    var $down = $this.find('div.' + tableClass.sortDown);
+                    $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    if (sotreData._sortObj.field != col.field) {
+                        sotreData._sortObj.field = col.field;
+                        sotreData._sortObj.sort = '';
                     }
-                    if (!sortObj.sort) {
-                        sortObj.sort = 'asc';
+                    if (!sotreData._sortObj.sort) {
+                        sotreData._sortObj.sort = 'asc';
                         $up.addClass(tableClass.sortConfirm);
-                    } else if (sortObj.sort == 'asc') {
-                        sortObj.sort = 'desc';
+                    } else if (sotreData._sortObj.sort == 'asc') {
+                        sotreData._sortObj.sort = 'desc';
                         $down.addClass(tableClass.sortConfirm);
                     } else {
-                        sortObj.sort = '';
+                        sotreData._sortObj.sort = '';
                     }
                     renderTableBody(filter, true);
                 }
@@ -1902,6 +1897,7 @@
                 var wind = window.open('打开窗口', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
                 var style = '<style>\
                 .song-table-col-radio,\
+                .song-table-col-radio,\
                 .song-table-col-checkbox,\
                 .song-table-col-operate{\
                     display:none;\
@@ -1919,6 +1915,21 @@
                     text-align:left;\
                 }</style>';
                 $table.append(sotreData.$table.html());
+                var trs = $table.children('tbody').children('tr');
+                sotreData.$fixedLeftTable && sotreData.$fixedLeftTable.find('tr').each(function (i, tr) {
+                    var tds = $(trs[i]).children('td');
+                    $(tr).children('td').each(function (i, td) {
+                        $(tds[i]).html($(td).html());
+                    });
+                });
+                sotreData.$fixedRightTable && sotreData.$fixedRightTable.find('tr').each(function (i, tr) {
+                    var tds = $(trs[i]).children('td');
+                    var _tds = $(tr).children('td');
+                    _tds.each(function (i, td) {
+                        $(tds[tds.length - _tds.length + i]).html($(td).html());
+                    });
+                });
+                console.log($table[0].outerHTML)
                 wind.document.body.innerHTML = style + $table[0].outerHTML;
                 wind.print();
                 wind.close();

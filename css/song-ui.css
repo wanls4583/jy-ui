@@ -900,7 +900,17 @@ a {
 }
 
 .song-table-exports li .song-form-checkbox, .song-table-filter li .song-form-checkbox {
+  padding-top: 10px;
+  padding-bottom: 10px;
   margin: 0;
+}
+
+.song-table-exports li .song-form-checkbox i, .song-table-filter li .song-form-checkbox i {
+  margin-top: 10px;
+}
+
+.song-table-filter li {
+  padding: 0 15px;
 }
 
 .song-table-pager {
