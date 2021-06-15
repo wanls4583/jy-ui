@@ -448,14 +448,15 @@ a:focus {
 .song-layer {
   position: fixed;
   _position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
   z-index: 1;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 2px;
   -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
           box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .song-layer.song-layer-absolute {
@@ -497,11 +498,14 @@ a:focus {
 }
 
 .song-layer .song-layer-content {
+  display: block;
   position: relative;
   line-height: 24px;
   padding: 20px;
   overflow: auto;
   *zoom: 1;
+  _zoom: normal;
+  background-color: red;
 }
 
 .song-layer.song-layer-msg .song-layer-content {

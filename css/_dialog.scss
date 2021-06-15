@@ -20,13 +20,14 @@
     position: fixed;
     // ie6不支持fixed
     _position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
     z-index: 1;
     background-color: $white-color;
     border: 1px solid $light-color;
     border-radius: 2px;
     box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+    overflow: hidden;
 
     &.song-layer-absolute {
         position: absolute;
@@ -67,12 +68,14 @@
     }
 
     .song-layer-content {
+        display: block;
         position: relative;
         line-height: 24px;
         padding: $pd20;
         overflow: auto;
         // ie6及以下触发了hasLayout后，父元素如果是absolute，其宽度将被撑开
         *zoom: 1;
+        _zoom: normal;
     }
 
     &.song-layer-msg .song-layer-content {

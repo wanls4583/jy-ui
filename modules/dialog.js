@@ -21,6 +21,7 @@
         var layerMsg = 'song-layer-msg';
         var layerIconMsg = 'song-layer-msg-with-icon';
         var ieVersion = Common.getIeVersion();
+        var store = {};
         var Dialog = {
             layerIndex: 0,
             open: open,
@@ -47,6 +48,11 @@
             );
             var $content = $('<div class="' + layerBody + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
             var $footer = $('<div class="' + layerFooter + '"></div>');
+            // 存储弹框数据
+            store[layerIndex] = {
+                overflow: document.body.style.overflow,
+                type: option.type
+            }
             if (option.shadow !== false) {
                 $container.append($shadow);
             }
@@ -70,7 +76,6 @@
                 $layer.addClass('song-layer-absolute');
             } else if (ieVersion <= 6 && option.type != 'msg') {
                 //ie6不支持fixed，以下css防止页面滚动
-                document.body.overflow = document.body.style.overflow;
                 document.body.style.overflow = 'hidden';
             }
             if (option.icon) {
@@ -193,8 +198,8 @@
         function close(layerIndex) {
             $('div.' + layerClass + '.' + layerClass + layerIndex).remove();
             $('div.' + layerShadow + '.' + layerClass + layerIndex).remove();
-            if (ieVersion <= 6 && document.body.overflow !== undefined) {
-                document.body.style.overflow = document.body.overflow;
+            if (ieVersion <= 6 && store[layerIndex].type != 'msg') {
+                document.body.style.overflow = store[layerIndex].overflow;
             }
         }
         /**
@@ -240,45 +245,49 @@
             var $layer = $('div.' + layerClass + '.' + layerClass + layerIndex);
             var ie6MarginTop = 0;
             if ($layer.length) {
+                var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
+                var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
                 if (ieVersion <= 6) { //i6以下没有fixed定位
                     // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
                     // ie6以下只认document.body.scrollTop
                     ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                     $('div.' + layerShadow + '.' + layerClass + layerIndex).css({
-                        marginTop: ie6MarginTop + 'px',
-                        width: $(window.document.body).outerWidth() + 'px',
-                        height: $(window.document.body).outerHeight() + 'px'
+                        width: window.screen.width + window.document.body.scrollWidth + 'px',
+                        height: window.screen.height + window.document.body.scrollHeight + 'px'
                     });
                 }
+                var width = $layer[0].offsetWidth;
+                var height = $layer[0].offsetHeight;
+                if (width > winWidth) {
+                    width = winWidth;
+                }
+                if (height > winHeight) {
+                    height = winHeight;
+                }
                 if ('string' == typeof offset) {
-                    var width = $layer.outerWidth();
-                    var height = $layer.outerHeight();
                     offset = offset.split(' ');
                     offset[1] = offset[1] || offset[0];
-                    switch (offset[0]) {
+                    switch (offset[0]) { // 水平位置
                         case 'left':
                             $layer.css({
                                 left: 0,
-                                right: 'auto',
-                                marginLeft: 0
+                                right: 'auto'
                             });
                             break;
                         case 'right':
                             $layer.css({
                                 left: 'auto',
-                                right: 0,
-                                marginLeft: 0
+                                right: 0
                             });
                             break;
                         case 'center':
                             $layer.css({
-                                left: '50%',
-                                right: 'auto',
-                                marginLeft: '-' + (width / 2) + 'px'
+                                left: (winWidth - width) / 2 + 'px',
+                                right: 'auto'
                             });
                             break;
                     }
-                    switch (offset[1]) {
+                    switch (offset[1]) { // 垂直位置
                         case 'top':
                             $layer.css({
                                 top: 0,
@@ -288,9 +297,9 @@
                             break;
                         case 'center':
                             $layer.css({
-                                top: '50%',
+                                top: (winHeight - height) / 2 + 'px',
                                 bottom: 'auto',
-                                marginTop: (ie6MarginTop - height / 2) + 'px'
+                                marginTop: ie6MarginTop
                             });
                             break;
                         case 'bottom':
@@ -307,6 +316,18 @@
                         top: offset.top
                     });
                 }
+                var titleHeight = $layer.children('.' + layerTitle)[0];
+                var footerHeight = $layer.children('.' + layerFooter)[0];
+                titleHeight = titleHeight && titleHeight.offsetHeight;
+                footerHeight = footerHeight && footerHeight.offsetHeight;
+                $layer.css({
+                    width: (ieVersion <= 6 ? width : width - 2) + 'px',
+                    height: (ieVersion <= 6 ? height : height - 2) + 'px'
+                });
+                $layer.children('.' + layerBody).css({
+                    width: ieVersion <= 6 ? '100%' : 'auto',
+                    height: height - (ieVersion <= 6 ? 0 : 40) - titleHeight - footerHeight + 'px'
+                });
             }
         }
 
