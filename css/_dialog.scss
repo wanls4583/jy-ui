@@ -74,10 +74,10 @@
         padding: $pd20;
         overflow: auto;
         // ie6及以下，子元素触发haslayout后，父元素将被撑开
-        & * {
-            _display: inline;
-            _zoom: 1;
-        }
+        // & * {
+        //     _display: inline;
+        //     _zoom: 1;
+        // }
     }
 
     &.song-layer-msg .song-layer-content {

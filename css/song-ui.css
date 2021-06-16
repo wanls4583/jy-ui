@@ -504,11 +504,6 @@ a:focus {
   overflow: auto;
 }
 
-.song-layer .song-layer-content * {
-  _display: inline;
-  _zoom: 1;
-}
-
 .song-layer.song-layer-msg .song-layer-content {
   padding: 10px 20px;
 }
