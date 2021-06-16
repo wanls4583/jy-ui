@@ -19,6 +19,7 @@
 .song-layer {
     position: fixed;
     // ie6不支持fixed
+    // ie6及以下浏览器中，绝对定位元素中的布局和普通元素中布局一致
     _position: absolute;
     top: 0;
     left: 0;
@@ -68,14 +69,16 @@
     }
 
     .song-layer-content {
-        display: block;
         position: relative;
         line-height: 24px;
         padding: $pd20;
         overflow: auto;
-        // ie6及以下触发了hasLayout后，父元素如果是absolute，其宽度将被撑开
-        *zoom: 1;
-        _zoom: normal;
+
+        // ie6及以下，子元素触发haslayout后，父元素将被撑开
+        & * {
+            _display: inline;
+            _zoom: 1;
+        }
     }
 
     &.song-layer-msg .song-layer-content {

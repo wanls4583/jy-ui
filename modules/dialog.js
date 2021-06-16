@@ -74,7 +74,7 @@
             if ($container[0] != window.document.body) {
                 $shadow.addClass('song-layer-absolute');
                 $layer.addClass('song-layer-absolute');
-            } else if (ieVersion <= 6 && option.type != 'msg') {
+            } else if (ieVersion <= 6 && option.type != 'msg' && option.shadow !== false) {
                 //ie6不支持fixed，以下css防止页面滚动
                 document.body.style.overflow = 'hidden';
             }
@@ -316,16 +316,13 @@
                         top: offset.top
                     });
                 }
-                var titleHeight = $layer.children('.' + layerTitle)[0];
-                var footerHeight = $layer.children('.' + layerFooter)[0];
-                titleHeight = titleHeight && titleHeight.offsetHeight;
-                footerHeight = footerHeight && footerHeight.offsetHeight;
+                var titleHeight = $layer.children('.' + layerTitle).outerHeight() || 0;
+                var footerHeight = $layer.children('.' + layerFooter).outerHeight() || 0;
                 $layer.css({
                     width: (ieVersion <= 6 ? width : width - 2) + 'px',
                     height: (ieVersion <= 6 ? height : height - 2) + 'px'
                 });
                 $layer.children('.' + layerBody).css({
-                    width: ieVersion <= 6 ? '100%' : 'auto',
                     height: height - (ieVersion <= 6 ? 0 : 40) - titleHeight - footerHeight + 'px'
                 });
             }
