@@ -73,7 +73,6 @@
         line-height: 24px;
         padding: $pd20;
         overflow: auto;
-
         // ie6及以下，子元素触发haslayout后，父元素将被撑开
         & * {
             _display: inline;
