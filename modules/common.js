@@ -10,7 +10,8 @@
             getIeVersion: getIeVersion,
             getNum: getNum,
             insertRule: insertRule,
-            getScrBarWidth: getScrBarWidth
+            getScrBarWidth: getScrBarWidth,
+            getRect: getRect
         }
 
 
@@ -85,6 +86,63 @@
                 }
             }
             return num;
+        }
+
+        //获取margin,padding,offset(相对页面边缘)
+        function getRect(dom) {
+            var _r = dom.getBoundingClientRect();
+            var styles = null;
+            if (window.getComputedStyle) {
+                styles = window.getComputedStyle(dom, null);
+            } else {
+                styles = dom.currentStyle;
+            }
+            var _pt = styles['paddingTop'];
+            _pt = getNum(_pt);
+            var _pb = styles['paddingBottom'];
+            _pb = getNum(_pb);
+            var _pl = styles['paddingLeft'];
+            _pl = getNum(_pl);
+            var _pr = styles['paddingRight'];
+            _pr = getNum(_pr);
+            var _mt = styles['marginTop'];
+            _mt = getNum(_mt);
+            var _mb = styles['marginBottom'];
+            _mb = getNum(_mb);
+            var _ml = styles['marginLeft'];
+            _ml = getNum(_ml);
+            var _mr = styles['marginRight'];
+            _mr = getNum(_mr);
+            var _bt = styles['borderTop'];
+            _bt = getNum(_bt);
+            var _bb = styles['borderBottom'];
+            _bb = getNum(_bb);
+            var _bl = styles['borderLeft'];
+            _bl = getNum(_bl);
+            var _br = styles['borderRight'];
+            _br = getNum(_br);
+            return {
+                top: _r.top,
+                bottom: _r.bottom,
+                left: _r.left,
+                right: _r.right,
+                paddingTop: _pt,
+                paddingBottom: _pb,
+                paddingLeft: _pl,
+                paddingRight: _pr,
+                marginTop: _mt,
+                marginBottom: _mb,
+                marginLeft: _ml,
+                marginRight: _mr,
+                borderTop: _bt,
+                borderBottom: _bb,
+                borderLeft: _bl,
+                borderRight: _br,
+                offsetTop: dom.offsetTop,
+                offsetBottom: dom.offsetBottom,
+                offsetLeft: dom.offsetLeft,
+                offsetRight: dom.offsetRight
+            }
         }
 
         //获取滚动条宽度

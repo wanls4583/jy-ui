@@ -68,6 +68,9 @@
         color: $color-333;
         background-color: $lighter-color;
         border-bottom: 1px solid $light-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .song-layer-content {
@@ -102,7 +105,7 @@
 
     .song-layer-op {
         position: absolute;
-        right: 0px;
+        right: $pd10;
         top: 16px;
         white-space: nowrap;
 
@@ -112,7 +115,7 @@
             height: 20px;
             font-size: 20px;
             line-height: 20px;
-            margin-right: $pd15;
+            margin-right: 5px;
             color: $color-333;
             cursor: pointer;
 

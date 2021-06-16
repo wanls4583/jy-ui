@@ -10,6 +10,9 @@
         var warnIcon = '&#xe60a;';
         var errorIcon = '&#xe60b;';
         var questionIcon = '&#xe613;';
+        var fullIcon = '&#xe644;';
+        var recoveryIcon = '&#xe617;';
+        var minusIcon = '&#xe62d;';
         var layerClass = {
             layer: 'song-layer',
             shadow: 'song-layer-shadow',
@@ -31,7 +34,8 @@
             confirm: confirm,
             msg: msg,
             close: close,
-            setPosition: setPosition
+            setPosition: setPosition,
+            setArea: setArea
         };
         // 打开弹框
         function open(option) {
@@ -44,6 +48,9 @@
                 '<div class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
                     <div class="song-layer-op">\
+                        <i class="song-op-minus song-icon">' + minusIcon + '</i>\
+                        <i class="song-op-full song-icon">' + fullIcon + '</i>\
+                        <i class="song-op-recovery song-icon">' + recoveryIcon + '</i>\
                         <i class="song-op-close song-icon">' + closeIcon + '</i>\
                     </div>\
                 </div>'
@@ -54,6 +61,14 @@
             store[layerIndex] = {
                 overflow: document.body.style.overflow,
                 type: option.type
+            }
+            $title.find('i.song-icon').hide();
+            if (option.full) {
+                $title.find('i.song-op-minus').show();
+                $title.find('i.song-op-full').show();
+            }
+            if (option.close !== false) {
+                $title.find('i.song-op-close').show();
             }
             if (option.shadow !== false) {
                 $container.append($shadow);
@@ -114,15 +129,67 @@
                 }, option.duration);
             }
             $container.append($layer);
+            setArea(layerIndex, {
+                width: option.width,
+                height: option.height
+            });
             setPosition(layerIndex, option.offset || 'center');
             _bindEvent();
             Dialog.layerIndex++;
             return layerIndex;
 
             function _bindEvent() {
+                // 关闭
                 $title.find('i.song-op-close').on('click', function () {
                     close(layerIndex);
                 });
+                // 全屏
+                $title.find('i.song-op-full').on('click', function () {
+                    $(this).hide();
+                    $title.find('i.song-op-minus').hide();
+                    $title.find('i.song-op-recovery').show();
+                    store[layerIndex].area = {
+                        width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
+                        height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
+                    }
+                    var area = {
+                        width: document.documentElement.clientWidth || window.document.body.clientWidth,
+                        height: document.documentElement.clientHeight || window.document.body.clientHeight
+                    };
+                    setArea(layerIndex, area);
+                    setPosition(layerIndex, option.offset || 'center');
+                });
+                // 恢复默认大小
+                $title.find('i.song-op-recovery').on('click', function () {
+                    $(this).hide();
+                    $title.find('i.song-op-minus').show();
+                    $title.find('i.song-op-full').show();
+                    $content.show();
+                    $footer.show();
+                    setArea(layerIndex, store[layerIndex].area);
+                    setPosition(layerIndex, option.offset || 'center');
+                });
+                // 最小化
+                $title.find('i.song-op-minus').on('click', function () {
+                    var contentHeight = $layer.find('div.' + layerClass.body).outerHeight() || 0;
+                    var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+                    $(this).hide();
+                    $title.find('i.song-op-full').hide();
+                    $title.find('i.song-op-recovery').show();
+                    store[layerIndex].area = {
+                        width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
+                        height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
+                    }
+                    var area = {
+                        width: 180,
+                        height: (ieVersion <= 6 ? $layer.outerHeight() : $layer.height()) - contentHeight - footerHeight
+                    };
+                    $content.hide();
+                    $footer.hide();
+                    setArea(layerIndex, area);
+                    setPosition(layerIndex, 'left bottom');
+                });
+                // 底部按钮
                 $footer.find('button.song-btn').each(function (i) {
                     var $this = $(this);
                     (function (i) {
@@ -245,7 +312,6 @@
         // 设置位置
         function setPosition(layerIndex, offset) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
-            var $content = $layer.children('div.' + layerClass.body);
             var ie6MarginTop = 0;
             if ($layer.length) {
                 var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
@@ -261,12 +327,6 @@
                 }
                 var width = $layer[0].offsetWidth;
                 var height = $layer[0].offsetHeight;
-                if (width > winWidth) {
-                    width = winWidth;
-                }
-                if (height > winHeight) {
-                    height = winHeight;
-                }
                 if ('string' == typeof offset) {
                     offset = offset.split(' ');
                     offset[1] = offset[1] || offset[0];
@@ -319,14 +379,34 @@
                         top: offset.top
                     });
                 }
-                $layer.css({
-                    width: (ieVersion <= 6 ? width : $layer.width()) + 'px',
-                    height: (ieVersion <= 6 ? height : $layer.height()) + 'px'
-                });
-                $content.css({
-                    height: ieVersion <= 6 ? $content.outerHeight() : $content.height() + 'px'
-                });
             }
+        }
+
+        // 设置尺寸
+        function setArea(layerIndex, area) {
+            var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
+            var $content = $layer.children('div.' + layerClass.body);
+            var width = area.width || (ieVersion <= 6 ? $layer.outerWidth() : $layer.width());
+            var height = area.height || (ieVersion <= 6 ? $layer.outerHeight() : $layer.height());
+            var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
+            var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+            var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
+            var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
+            var rect = Common.getRect($content[0]);
+            if (width > winWidth) {
+                width = winWidth;
+            }
+            if (height > winHeight) {
+                height = winHeight;
+            }
+            $layer.css({
+                width: width,
+                height: height
+            });
+            height = $layer.outerHeight() - titleHeight - footerHeight;
+            $content.css({
+                height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 'px'
+            });
         }
 
         return Dialog;
