@@ -13,6 +13,7 @@
         var fullIcon = '&#xe644;';
         var recoveryIcon = '&#xe617;';
         var minusIcon = '&#xe62d;';
+        var menuWidth = 180;
         var layerClass = {
             layer: 'song-layer',
             shadow: 'song-layer-shadow',
@@ -28,7 +29,7 @@
         var ieVersion = Common.getIeVersion();
         var store = {};
         var Dialog = {
-            layerIndex: 0,
+            layerIndex: 1,
             open: open,
             alert: alert,
             confirm: confirm,
@@ -43,7 +44,7 @@
             var layerIndex = Dialog.layerIndex;
             var $container = $(option.container || window.document.body);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '"></div>');
-            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '"></div>');
+            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + layerIndex + '"></div>');
             var $title = $(
                 '<div class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
@@ -139,6 +140,9 @@
             return layerIndex;
 
             function _bindEvent() {
+                $layer.on('click', function () {
+                    $(this).css('z-index', Dialog.layerIndex++);
+                });
                 // 关闭
                 $title.find('i.song-op-close').on('click', function () {
                     close(layerIndex);
@@ -171,8 +175,10 @@
                 });
                 // 最小化
                 $title.find('i.song-op-minus').on('click', function () {
+                    var layers = $('div.' + layerClass.layer);
                     var contentHeight = $layer.find('div.' + layerClass.body).outerHeight() || 0;
                     var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+                    var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
                     $(this).hide();
                     $title.find('i.song-op-full').hide();
                     $title.find('i.song-op-recovery').show();
@@ -181,13 +187,34 @@
                         height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
                     }
                     var area = {
-                        width: 180,
+                        width: menuWidth,
                         height: (ieVersion <= 6 ? $layer.outerHeight() : $layer.height()) - contentHeight - footerHeight
                     };
+                    var left = 0;
+                    var arr = [];
+                    layers.each(function (i, layer) {
+                        if (layer != $layer[0]) {
+                            arr.push(layer.offsetLeft);
+                        }
+                    });
+                    arr.sort(function (a, b) {
+                        return a - b;
+                    });
+                    for (var i = 0; i < arr.length; i++) {
+                        if (i * menuWidth != arr[i]) {
+                            left = i * menuWidth;
+                            break;
+                        } else {
+                            left = (i + 1) * menuWidth;
+                        }
+                    }
                     $content.hide();
                     $footer.hide();
                     setArea(layerIndex, area);
-                    setPosition(layerIndex, 'left bottom');
+                    setPosition(layerIndex, {
+                        left: left,
+                        top: winHeight - $title.outerHeight()
+                    });
                 });
                 // 底部按钮
                 $footer.find('button.song-btn').each(function (i) {
@@ -211,6 +238,7 @@
                             }
                         });
                     })(i)
+                    return false;
                 });
             }
         }
@@ -381,7 +409,6 @@
                 }
             }
         }
-
         // 设置尺寸
         function setArea(layerIndex, area) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);

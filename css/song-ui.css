@@ -450,7 +450,6 @@ a:focus {
   _position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 2px;
