@@ -10,16 +10,18 @@
         var warnIcon = '&#xe60a;';
         var errorIcon = '&#xe60b;';
         var questionIcon = '&#xe613;';
-        var layerClass = 'song-layer';
-        var layerShadow = 'song-layer-shadow';
-        var layerTitle = 'song-layer-title';
-        var layerFooter = 'song-layer-footer';
-        var layerBody = 'song-layer-content';
-        var layerDialog = 'song-layer-dialog';
-        var layerAlert = 'song-layer-alert';
-        var layerConfirm = 'song-layer-confirm';
-        var layerMsg = 'song-layer-msg';
-        var layerIconMsg = 'song-layer-msg-with-icon';
+        var layerClass = {
+            layer: 'song-layer',
+            shadow: 'song-layer-shadow',
+            title: 'song-layer-title',
+            footer: 'song-layer-footer',
+            body: 'song-layer-content',
+            dialog: 'song-layer-dialog',
+            alert: 'song-layer-alert',
+            confirm: 'song-layer-confirm',
+            msg: 'song-layer-msg',
+            iconMsg: 'song-layer-msg-with-icon'
+        }
         var ieVersion = Common.getIeVersion();
         var store = {};
         var Dialog = {
@@ -36,18 +38,18 @@
             option.type = option.type || 'dialog';
             var layerIndex = Dialog.layerIndex;
             var $container = $(option.container || window.document.body);
-            var $shadow = $('<div class="' + [layerShadow, layerClass + layerIndex].join(' ') + '"></div>');
-            var $layer = $('<div class="' + [layerClass, layerClass + '-' + option.type, layerClass + layerIndex].join(' ') + '" song-index="' + layerIndex + '"></div>');
+            var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '"></div>');
+            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '"></div>');
             var $title = $(
-                '<div class="' + layerTitle + '">\
+                '<div class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
                     <div class="song-layer-op">\
                         <i class="song-op-close song-icon">' + closeIcon + '</i>\
                     </div>\
                 </div>'
             );
-            var $content = $('<div class="' + layerBody + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
-            var $footer = $('<div class="' + layerFooter + '"></div>');
+            var $content = $('<div class="' + layerClass.body + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
+            var $footer = $('<div class="' + layerClass.footer + '"></div>');
             // 存储弹框数据
             store[layerIndex] = {
                 overflow: document.body.style.overflow,
@@ -103,7 +105,7 @@
                     paddingLeft: '55px'
                 });
                 if (option.type == 'msg') {
-                    $layer.removeClass(layerMsg).addClass(layerIconMsg);
+                    $layer.removeClass(layerClass.msg).addClass(layerClass.iconMsg);
                 }
             }
             if (option.duration) {
@@ -196,8 +198,8 @@
         }
         // 关闭弹框
         function close(layerIndex) {
-            $('div.' + layerClass + '.' + layerClass + layerIndex).remove();
-            $('div.' + layerShadow + '.' + layerClass + layerIndex).remove();
+            $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex).remove();
+            $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
             if (ieVersion <= 6 && store[layerIndex].type != 'msg') {
                 document.body.style.overflow = store[layerIndex].overflow;
             }
@@ -210,39 +212,40 @@
             if (type) {
                 switch (type) {
                     case 'msg':
-                        $('div.' + layerMsg).remove();
-                        $('div.' + layerIconMsg).remove();
+                        $('div.' + layerClass.msg).remove();
+                        $('div.' + layerClass.iconMsg).remove();
                         break;
                     case 'dialog':
-                        $('div.' + layerDialog).each(function (i, dom) {
+                        $('div.' + layerClass.dialog).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.' + layerClass + index).remove();
+                            $('div.' + layerClass.layer + index).remove();
                         });
                         break;
                     case 'alert':
-                        $('div.' + layerAlert).each(function (i, dom) {
+                        $('div.' + layerClass.alert).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.' + layerClass + index).remove();
+                            $('div.' + layerClass.layer + index).remove();
                         });
                         break;
                     case 'confrim':
-                        $('div.' + layerConfirm).each(function (i, dom) {
+                        $('div.' + layerClass.confirm).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('song-index');
-                            $('div.' + layerClass + index).remove();
+                            $('div.' + layerClass.layer + index).remove();
                         });
                         break;
                 }
             } else {
-                $('div.' + layerShadow).remove();
-                $('div.' + layerClass).remove();
+                $('div.' + layerClass.shadow).remove();
+                $('div.' + layerClass.layer).remove();
             }
         }
         // 设置位置
         function setPosition(layerIndex, offset) {
-            var $layer = $('div.' + layerClass + '.' + layerClass + layerIndex);
+            var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
+            var $content = $layer.children('div.' + layerClass.body);
             var ie6MarginTop = 0;
             if ($layer.length) {
                 var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
@@ -251,7 +254,7 @@
                     // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
                     // ie6以下只认document.body.scrollTop
                     ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                    $('div.' + layerShadow + '.' + layerClass + layerIndex).css({
+                    $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
                         width: window.screen.width + window.document.body.scrollWidth + 'px',
                         height: window.screen.height + window.document.body.scrollHeight + 'px'
                     });
@@ -316,14 +319,12 @@
                         top: offset.top
                     });
                 }
-                var titleHeight = $layer.children('.' + layerTitle).outerHeight() || 0;
-                var footerHeight = $layer.children('.' + layerFooter).outerHeight() || 0;
                 $layer.css({
-                    width: (ieVersion <= 6 ? width : width - 2) + 'px',
-                    height: (ieVersion <= 6 ? height : height - 2) + 'px'
+                    width: (ieVersion <= 6 ? width : $layer.width()) + 'px',
+                    height: (ieVersion <= 6 ? height : $layer.height()) + 'px'
                 });
-                $layer.children('.' + layerBody).css({
-                    height: height - (ieVersion <= 6 ? 0 : 40) - titleHeight - footerHeight + 'px'
+                $content.css({
+                    height: ieVersion <= 6 ? $content.outerHeight() : $content.height() + 'px'
                 });
             }
         }

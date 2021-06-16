@@ -48,7 +48,9 @@
         // 只兼容ie8的样式，在属性值后面加\0/
         background-color: #{'#000000\\0/'};
         *background-color: #000000;
-        border-style: none;
+        // ie7中，border-style:none后，border宽度会计入clientWidth
+        // border-style: none;
+        border-color: transparent;
         box-shadow: none;
     }
 
@@ -91,6 +93,7 @@
     .song-layer-footer {
         padding: $pd10 $pd20 $pd10 0;
         text-align: center;
+        white-space: nowrap;
 
         .song-btn {
             margin-left: $pd20;
