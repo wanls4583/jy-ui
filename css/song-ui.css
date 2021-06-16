@@ -502,7 +502,11 @@ a:focus {
   line-height: 24px;
   padding: 20px;
   overflow: auto;
-  background-color: royalblue;
+}
+
+.song-layer .song-layer-content * {
+  _display: inline;
+  _zoom: 1;
 }
 
 .song-layer.song-layer-msg .song-layer-content {
