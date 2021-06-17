@@ -44,12 +44,16 @@
         // 打开弹框
         function open(option) {
             option.type = option.type || 'dialog';
+            option.close = option.close !== false ? true : false;
+            option.shadow = option.shadow !== false ? true : false;
+            option.move = option.move !== false ? true : false;
+            option.full = option.full !== false ? true : false;
             var layerIndex = Dialog.layerIndex;
             var $container = $(option.container || docBody);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '"></div>');
             var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + layerIndex + '"></div>');
             var $title = $(
-                '<div class="' + layerClass.title + '">\
+                '<div ' + (option.move ? 'onselectstart="return false;"' : '') + ' class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
                     <div class="song-layer-op">\
                         <i class="song-op-minus song-icon">' + minusIcon + '</i>\
@@ -61,10 +65,6 @@
             );
             var $content = $('<div class="' + layerClass.body + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
             var $footer = $('<div class="' + layerClass.footer + '"></div>');
-            option.close = option.close !== false ? true : false;
-            option.shadow = option.shadow !== false ? true : false;
-            option.move = option.move !== false ? true : false;
-            option.full = option.full !== false ? true : false;
             // 存储弹框数据
             store[layerIndex] = {
                 type: option.type
