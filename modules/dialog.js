@@ -233,12 +233,13 @@
                 // 拖动
                 if (option.move) {
                     $title.on('mousedown', function (e) {
-                        var ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
-                        var ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                        var rect = Common.getRect($layer[0]);
+                        var marginTop = rect.marginTop;
+                        var marginLeft = rect.marginLeft;
                         $title[0].startX = e.pageX;
                         $title[0].startY = e.pageY;
-                        $title[0].startTop = ieVersion <= 6 ? $layer[0].offsetTop - ie6MarginTop : $layer[0].offsetTop;
-                        $title[0].startLeft = ieVersion <= 6 ? $layer[0].offsetLeft - ie6MarginLeft : $layer[0].offsetLeft;
+                        $title[0].startTop = ieVersion <= 6 ? $layer[0].offsetTop - marginTop : $layer[0].offsetTop;
+                        $title[0].startLeft = ieVersion <= 6 ? $layer[0].offsetLeft - marginLeft : $layer[0].offsetLeft;
                     });
                     $(docBody).on('mousemove', function (e) {
                         if ($title[0].startX) {
@@ -289,10 +290,17 @@
                             var $layer = $(layer);
                             // 移动中的弹框不需要更改边距
                             if (!$layer.children('div.' + layerClass.title)[0].startX) {
-                                $layer.css({
-                                    marginLeft: ie6MarginLeft,
-                                    marginTop: ie6MarginTop
-                                });
+                                // 避免超出屏幕外
+                                if (layer.offsetLeft + layer.offsetWidth < docBody.scrollWidth) {
+                                    $layer.css({
+                                        marginLeft: ie6MarginLeft
+                                    });
+                                }
+                                if (layer.offsetTop + layer.offsetHeight < docBody.scrollHeight) {
+                                    $layer.css({
+                                        marginTop: ie6MarginTop
+                                    });
+                                }
                             }
                         });
                     });
