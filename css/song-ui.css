@@ -877,6 +877,11 @@ a:focus {
   border-bottom: 1px solid #eeeeee;
 }
 
+.song-table-static tr:first-child th,
+.song-table-static tr:first-child td {
+  border-top: 1px solid #eeeeee;
+}
+
 .song-table-static tr th:first-child,
 .song-table-static tr td:first-child {
   border-left: 1px solid #eeeeee;

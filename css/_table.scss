@@ -109,6 +109,13 @@
         }
 
         tr {
+            &:first-child {
+
+                th,
+                td {
+                    border-top: 1px solid $light-color;
+                }
+            }
 
             th:first-child,
             td:first-child {
@@ -188,6 +195,7 @@
                 padding-top: $pd10;
                 padding-bottom: $pd10;
                 margin: 0;
+
                 i {
                     margin-top: $pd10;
                 }
