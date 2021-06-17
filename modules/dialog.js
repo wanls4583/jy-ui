@@ -14,6 +14,9 @@
         var recoveryIcon = '&#xe617;';
         var minusIcon = '&#xe62d;';
         var menuWidth = 180;
+        var bindedEvent = false;
+        var docBody = window.document.body;
+        var docElement = window.document.documentElement;
         var layerClass = {
             layer: 'song-layer',
             shadow: 'song-layer-shadow',
@@ -42,7 +45,7 @@
         function open(option) {
             option.type = option.type || 'dialog';
             var layerIndex = Dialog.layerIndex;
-            var $container = $(option.container || window.document.body);
+            var $container = $(option.container || docBody);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '"></div>');
             var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + layerIndex + '"></div>');
             var $title = $(
@@ -58,9 +61,12 @@
             );
             var $content = $('<div class="' + layerClass.body + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
             var $footer = $('<div class="' + layerClass.footer + '"></div>');
+            option.close = option.close !== false ? true : false;
+            option.shadow = option.shadow !== false ? true : false;
+            option.move = option.move !== false ? true : false;
+            option.full = option.full !== false ? true : false;
             // 存储弹框数据
             store[layerIndex] = {
-                overflow: document.body.style.overflow,
                 type: option.type
             }
             $title.find('i.song-icon').hide();
@@ -68,11 +74,14 @@
                 $title.find('i.song-op-minus').show();
                 $title.find('i.song-op-full').show();
             }
-            if (option.close !== false) {
+            if (option.close) {
                 $title.find('i.song-op-close').show();
             }
-            if (option.shadow !== false) {
+            if (option.shadow) {
                 $container.append($shadow);
+            }
+            if (option.move) {
+                $title.css('cursor', 'move');
             }
             if (option.btn) {
                 var btnHtml = '';
@@ -89,13 +98,11 @@
                 $layer.append($footer);
             }
             // 在特定容器里打开
-            if ($container[0] != window.document.body) {
+            if ($container[0] != docBody) {
                 $shadow.addClass('song-layer-absolute');
                 $layer.addClass('song-layer-absolute');
-            } else if (ieVersion <= 6 && option.type != 'msg' && option.shadow !== false) {
-                //ie6不支持fixed，以下css防止页面滚动
-                document.body.style.overflow = 'hidden';
             }
+            // 提示图标
             if (option.icon) {
                 var icon = '';
                 var color = '';
@@ -124,6 +131,7 @@
                     $layer.removeClass(layerClass.msg).addClass(layerClass.iconMsg);
                 }
             }
+            // 自动关闭
             if (option.duration) {
                 setTimeout(function () {
                     close(layerIndex);
@@ -146,76 +154,106 @@
                 // 关闭
                 $title.find('i.song-op-close').on('click', function () {
                     close(layerIndex);
+                    return false;
                 });
-                // 全屏
-                $title.find('i.song-op-full').on('click', function () {
-                    $(this).hide();
-                    $title.find('i.song-op-minus').hide();
-                    $title.find('i.song-op-recovery').show();
-                    store[layerIndex].area = {
-                        width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
-                        height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
-                    }
-                    var area = {
-                        width: document.documentElement.clientWidth || window.document.body.clientWidth,
-                        height: document.documentElement.clientHeight || window.document.body.clientHeight
-                    };
-                    setArea(layerIndex, area);
-                    setPosition(layerIndex, option.offset || 'center');
-                });
-                // 恢复默认大小
-                $title.find('i.song-op-recovery').on('click', function () {
-                    $(this).hide();
-                    $title.find('i.song-op-minus').show();
-                    $title.find('i.song-op-full').show();
-                    $content.show();
-                    $footer.show();
-                    setArea(layerIndex, store[layerIndex].area);
-                    setPosition(layerIndex, option.offset || 'center');
-                });
-                // 最小化
-                $title.find('i.song-op-minus').on('click', function () {
-                    var layers = $('div.' + layerClass.layer);
-                    var contentHeight = $layer.find('div.' + layerClass.body).outerHeight() || 0;
-                    var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
-                    var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
-                    $(this).hide();
-                    $title.find('i.song-op-full').hide();
-                    $title.find('i.song-op-recovery').show();
-                    store[layerIndex].area = {
-                        width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
-                        height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
-                    }
-                    var area = {
-                        width: menuWidth,
-                        height: (ieVersion <= 6 ? $layer.outerHeight() : $layer.height()) - contentHeight - footerHeight
-                    };
-                    var left = 0;
-                    var arr = [];
-                    layers.each(function (i, layer) {
-                        if (layer != $layer[0]) {
-                            arr.push(layer.offsetLeft);
+                if (option.full) {
+                    // 全屏
+                    $title.find('i.song-op-full').on('click', function () {
+                        $(this).hide();
+                        $title.find('i.song-op-minus').hide();
+                        $title.find('i.song-op-recovery').show();
+                        store[layerIndex].area = {
+                            width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
+                            height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
                         }
+                        var area = {
+                            width: docElement.clientWidth || docBody.clientWidth,
+                            height: docElement.clientHeight || docBody.clientHeight
+                        };
+                        setArea(layerIndex, area);
+                        setPosition(layerIndex, option.offset || 'center');
+                        return false;
                     });
-                    arr.sort(function (a, b) {
-                        return a - b;
+                    // 恢复默认大小
+                    $title.find('i.song-op-recovery').on('click', function () {
+                        $(this).hide();
+                        $title.find('i.song-op-minus').show();
+                        $title.find('i.song-op-full').show();
+                        $content.show();
+                        $footer.show();
+                        setArea(layerIndex, store[layerIndex].area);
+                        setPosition(layerIndex, option.offset || 'center');
+                        return false;
                     });
-                    for (var i = 0; i < arr.length; i++) {
-                        if (i * menuWidth != arr[i]) {
-                            left = i * menuWidth;
-                            break;
-                        } else {
-                            left = (i + 1) * menuWidth;
+                    // 最小化
+                    $title.find('i.song-op-minus').on('click', function () {
+                        var layers = $('div.' + layerClass.layer);
+                        var contentHeight = $layer.find('div.' + layerClass.body).outerHeight() || 0;
+                        var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+                        var winHeight = docElement.clientHeight || docBody.clientHeight;
+                        $(this).hide();
+                        $title.find('i.song-op-full').hide();
+                        $title.find('i.song-op-recovery').show();
+                        store[layerIndex].area = {
+                            width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
+                            height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
                         }
-                    }
-                    $content.hide();
-                    $footer.hide();
-                    setArea(layerIndex, area);
-                    setPosition(layerIndex, {
-                        left: left,
-                        top: winHeight - $title.outerHeight()
+                        var area = {
+                            width: menuWidth,
+                            height: (ieVersion <= 6 ? $layer.outerHeight() : $layer.height()) - contentHeight - footerHeight
+                        };
+                        var left = 0;
+                        var arr = [];
+                        layers.each(function (i, layer) {
+                            if (layer != $layer[0]) {
+                                arr.push(layer.offsetLeft);
+                            }
+                        });
+                        arr.sort(function (a, b) {
+                            return a - b;
+                        });
+                        for (var i = 0; i < arr.length; i++) {
+                            if (i * menuWidth != arr[i]) {
+                                left = i * menuWidth;
+                                break;
+                            } else {
+                                left = (i + 1) * menuWidth;
+                            }
+                        }
+                        $content.hide();
+                        $footer.hide();
+                        setArea(layerIndex, area);
+                        setPosition(layerIndex, {
+                            left: left,
+                            top: winHeight - $title.outerHeight()
+                        });
+                        return false;
                     });
-                });
+                }
+                // 拖动
+                if (option.move) {
+                    $title.on('mousedown', function (e) {
+                        var ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                        var ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                        $title[0].startX = e.pageX;
+                        $title[0].startY = e.pageY;
+                        $title[0].startTop = ieVersion <= 6 ? $layer[0].offsetTop - ie6MarginTop : $layer[0].offsetTop;
+                        $title[0].startLeft = ieVersion <= 6 ? $layer[0].offsetLeft - ie6MarginLeft : $layer[0].offsetLeft;
+                    });
+                    $(docBody).on('mousemove', function (e) {
+                        if ($title[0].startX) {
+                            var _left = e.pageX - $title[0].startX;
+                            var _top = e.pageY - $title[0].startY;
+                            $layer.css({
+                                left: $title[0].startLeft + _left,
+                                top: $title[0].startTop + _top
+                            });
+                        }
+                    }).on('mouseup', function () {
+                        $title[0].startX = 0;
+                        $title[0].startY = 0;
+                    });
+                }
                 // 底部按钮
                 $footer.find('button.song-btn').each(function (i) {
                     var $this = $(this);
@@ -223,63 +261,85 @@
                         $this.on('click', function () {
                             if (i == 0) {
                                 if ('function' == typeof option.yes) {
-                                    option.yes(layerIndex);
+                                    option.yes($layer, layerIndex);
                                 } else {
-                                    'function' == typeof option['btn' + i] && typeof option['btn' + i](layerIndex);
+                                    'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);
                                 }
                             } else if (i == 1) {
                                 if ('function' == typeof option.cancel) {
-                                    option.cancel(layerIndex);
+                                    option.cancel($layer, layerIndex);
                                 } else {
-                                    'function' == typeof option['btn' + i] && typeof option['btn' + i](layerIndex);
+                                    'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);
                                 }
                             } else {
-                                'function' == typeof option['btn' + i] && typeof option['btn' + i](layerIndex);
+                                'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);
                             }
                         });
                     })(i)
                     return false;
                 });
+
+                // ie6修复top位置
+                if (ieVersion <= 6 && !bindedEvent) {
+                    bindedEvent = true;
+                    $(window).on('scroll', function () {
+                        var ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                        var ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                        $(docBody).children('div.' + layerClass.layer).each(function (i, layer) {
+                            var $layer = $(layer);
+                            // 移动中的弹框不需要更改边距
+                            if (!$layer.children('div.' + layerClass.title)[0].startX) {
+                                $layer.css({
+                                    marginLeft: ie6MarginLeft,
+                                    marginTop: ie6MarginTop
+                                });
+                            }
+                        });
+                    });
+                }
             }
         }
         // 带确定按钮的提示
         function alert(content, option) {
-            var yes = function (index) {
+            var yes = function ($layer, index) {
                 close(index)
             };
             var _option = {
                 title: '信息',
                 type: 'alert',
+                full: false,
                 content: content,
                 btn: ['确定'],
                 yes: yes
             }
             option = option && Object.assign(_option, option) || _option;
-            open(option);
+            return open(option);
         }
         // 确认弹框
         function confirm(content, option) {
-            var yes = function (index) {
+            var yes = function ($layer, index) {
                 close(index)
             };
             var _option = {
                 title: '信息',
                 type: 'alert',
+                full: false,
                 content: content,
                 btn: ['确定', '取消'],
                 cancel: yes
             }
             option = option && Object.assign(_option, option) || _option;
-            open(option);
+            return open(option);
         }
         // 提示消息
         function msg(content, option) {
-            var yes = function (index) {
+            var yes = function ($layer, index) {
                 close(index)
             };
             var _option = {
                 title: false,
                 type: 'msg',
+                full: false,
                 duration: 3000,
                 shadow: false,
                 content: content,
@@ -289,15 +349,12 @@
             if (!option.tipMore) {
                 closeAll('msg');
             }
-            open(option);
+            return open(option);
         }
         // 关闭弹框
         function close(layerIndex) {
             $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex).remove();
             $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
-            if (ieVersion <= 6 && store[layerIndex].type != 'msg') {
-                document.body.style.overflow = store[layerIndex].overflow;
-            }
         }
         /**
          * 关闭所有弹窗
@@ -341,17 +398,15 @@
         function setPosition(layerIndex, offset) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
             var ie6MarginTop = 0;
+            var ie6MarginLeft = 0;
             if ($layer.length) {
-                var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
-                var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
+                var winWidth = docElement.clientWidth || docBody.clientWidth;
+                var winHeight = docElement.clientHeight || docBody.clientHeight;
                 if (ieVersion <= 6) { //i6以下没有fixed定位
-                    // 在i6以上浏览器中，指定了DOCTYPE是document.documentElement.scrollTop有效，否则document.body.scrollTop有效
-                    // ie6以下只认document.body.scrollTop
-                    ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                    $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
-                        width: window.screen.width + window.document.body.scrollWidth + 'px',
-                        height: window.screen.height + window.document.body.scrollHeight + 'px'
-                    });
+                    // 在i6以上浏览器中，指定了DOCTYPE是documentElement.scrollTop有效
+                    // body.scrollTop
+                    ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                    ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
                 }
                 var width = $layer[0].offsetWidth;
                 var height = $layer[0].offsetHeight;
@@ -362,19 +417,22 @@
                         case 'left':
                             $layer.css({
                                 left: 0,
-                                right: 'auto'
+                                right: 'auto',
+                                marginLeft: ie6MarginLeft
                             });
                             break;
                         case 'right':
                             $layer.css({
                                 left: 'auto',
-                                right: 0
+                                right: 0,
+                                marginLeft: 0
                             });
                             break;
                         case 'center':
                             $layer.css({
                                 left: (winWidth - width) / 2 + 'px',
-                                right: 'auto'
+                                right: 'auto',
+                                marginLeft: ie6MarginLeft
                             });
                             break;
                     }
@@ -417,9 +475,15 @@
             var height = area.height || (ieVersion <= 6 ? $layer.outerHeight() : $layer.height());
             var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
             var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
-            var winWidth = document.documentElement.clientWidth || window.document.body.clientWidth;
-            var winHeight = document.documentElement.clientHeight || window.document.body.clientHeight;
+            var winWidth = docElement.clientWidth || docBody.clientWidth;
+            var winHeight = docElement.clientHeight || docBody.clientHeight;
             var rect = Common.getRect($content[0]);
+            if (ieVersion <= 6) {
+                $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
+                    width: window.screen.width + docBody.scrollWidth + 'px',
+                    height: window.screen.height + docBody.scrollHeight + 'px'
+                });
+            }
             if (width > winWidth) {
                 width = winWidth;
             }
