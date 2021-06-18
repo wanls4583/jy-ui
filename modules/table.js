@@ -144,7 +144,7 @@
             renderTableHeader(filter);
             renderTableBody(filter);
             renderPage(filter);
-            setArea(filter, sotreData.width, sotreData.height);
+            setArea(filter);
             bindViewEvent(filter);
             option.reload = function (_option) {
                 reload(filter, _option);
@@ -242,12 +242,12 @@
                 }
                 if (tr) {
                     data.reverse().map(function (item, i) {
-                        var $tr = createTr(filter, item, null, fixed);
+                        var $tr = createTr(filter, item, fixed);
                         $tr.insertAfter(tr);
                     });
                 } else {
                     data.map(function (item, i) {
-                        var $tr = createTr(filter, item, null, fixed);
+                        var $tr = createTr(filter, item, fixed);
                         $table.append($tr);
                     });
                 }
@@ -836,10 +836,10 @@
             sotreData.height = Number(height || sotreData.height);
             if (sotreData.width) {
                 sotreData.$view.css({
-                    width: width + 'px'
+                    width: sotreData.width + 'px'
                 });
                 sotreData.$tableMain.css({
-                    width: (ieVersion <= 6 ? width - 2 : width) + 'px'
+                    width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width) + 'px'
                 });
             }
             if (sotreData.height) {
@@ -856,25 +856,6 @@
                 }
                 sotreData.$tableMain.css({
                     height: h + 'px'
-                });
-            }
-            if (sotreData.$fixedLeft) {
-                sotreData.$fixedLeft.css({
-                    width: sotreData.$fixedLeftTable[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px'
-                });
-                sotreData.$fixedLeftMain.css({
-                    height: sotreData.$tableMain[0].clientHeight + 'px'
-                });
-            }
-            if (sotreData.$fixedRight) {
-                sotreData.$fixedRight.css({
-                    width: sotreData.$fixedRightTable[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px',
-                    right: scrBarWidth + 'px'
-                });
-                sotreData.$fixedRightMain.css({
-                    height: sotreData.$tableMain[0].clientHeight + 'px'
                 });
             }
             var hedaerWidth = sotreData.$header[0].clientWidth;
@@ -895,9 +876,60 @@
                     });
                 }
             }
+            _setTableWidth();
+            if (sotreData.$fixedLeft) {
+                sotreData.$fixedLeft.css({
+                    width: sotreData.$fixedLeftTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px'
+                });
+                sotreData.$fixedLeftMain.css({
+                    height: sotreData.$tableMain[0].clientHeight + 'px'
+                });
+            }
+            if (sotreData.$fixedRight) {
+                var left = 'auto';
+                var right = scrBarWidth;
+                if (sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth) {
+                    right = 'auto';
+                    left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
+                    sotreData.$mend && sotreData.$mend.hide();
+                } else {
+                    sotreData.$mend && sotreData.$mend.show();
+                }
+                sotreData.$fixedRight.css({
+                    width: sotreData.$fixedRightTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px',
+                    left: left,
+                    right: right
+                });
+                sotreData.$fixedRightMain.css({
+                    height: sotreData.$tableMain[0].clientHeight + 'px'
+                });
+            }
+
             setCellWidth(filter);
             sotreData.$fixedLeft && setCellWidth(filter, 'left');
             sotreData.$fixedRight && setCellWidth(filter, 'right');
+
+            // 设置表格宽度
+            function _setTableWidth() {
+                sotreData.$table.css({
+                    width: ieVersion <= 6 ? sotreData.$tableHeader.outerWidth() : sotreData.$tableHeader.width(),
+                    tableLayout: 'fixed'
+                });
+                if (sotreData.$fixedLeft) {
+                    sotreData.$fixedRightTable.css({
+                        width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
+                        tableLayout: 'fixed'
+                    });
+                }
+                if (sotreData.$fixedRight) {
+                    sotreData.$fixedRightTable.css({
+                        width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
+                        tableLayout: 'fixed'
+                    });
+                }
+            }
         }
 
         /**
@@ -908,34 +940,35 @@
         function setCellWidth(filter, fixed) {
             var sotreData = store[filter];
             var ws = [];
-            var $table = sotreData.$table;
             var $tableHead = sotreData.$tableHead;
             var $tableHeader = sotreData.$tableHeader;
             sotreData.$tableHeaderHead.find('th').each(function (i, th) {
-                var $th = $(th);
-                var tw = $th[0].clientWidth;
-                tw = ieVersion <= 6 ? tw : tw - cellPadding;
-                ws.push(tw);
+                // 先去掉之前设置的宽度，使其自适应
+                if (th.songBindData.flex) {
+                    $(th).children('.' + tableClass.cell).css('width', 'auto');
+                }
+            });
+            sotreData.$tableHeaderHead.find('th').each(function (i, th) {
+                // 获取自适应宽度
+                if (th.songBindData.flex) {
+                    var $th = $(th);
+                    var tw = $th[0].clientWidth;
+                    tw = ieVersion <= 6 ? tw : tw - cellPadding;
+                    ws.push(tw);
+                }
             });
             if (fixed == 'left') { // 左侧固定表格
                 sotreData.$fixedLeftTableHeaderHead.find('tr').each(_eachLeft);
-                $table = sotreData.$fixedLeftTable;
                 $tableHead = sotreData.$fixedLeftTableHead;
                 $tableHeader = sotreData.$fixedLeftTableHeader;
             } else if (fixed == 'right') { // 右侧固定表格
                 sotreData.$fixedRightTableHeaderHead.find('tr').each(_eachRight);
-                $table = sotreData.$fixedRightTable;
                 $tableHead = sotreData.$fixedRightTableHead;
                 $tableHeader = sotreData.$fixedRightTableHeader;
             } else { // 主表格
                 sotreData.$tableHeaderHead.find('tr').each(_eachLeft);
-                sotreData.$table.find('tr').each(_eachLeft);
             }
             ws = [];
-            $table.css({
-                width: ieVersion <= 6 ? $tableHeader.outerWidth() : $tableHeader.width(),
-                tableLayout: 'fixed'
-            });
             $tableHeader.find('th').each(function (i, th) {
                 ws.push(ieVersion <= 6 ? th.offsetWidth : th.clientWidth);
             });
@@ -947,9 +980,12 @@
 
             function _eachLeft(i, tr) {
                 $(tr).children('th').each(function (i, td) {
-                    $(td).children('.' + tableClass.cell).css({
-                        width: ws[i] + 'px'
-                    });
+                    if (td.songBindData.flex) {
+                        var $td = $(td);
+                        $td.children('.' + tableClass.cell).css({
+                            width: ws[i] + 'px'
+                        });
+                    }
                 });
             }
 
@@ -957,9 +993,12 @@
                 var tds = $(tr).children('th');
                 var last = ws.length - tds.length;
                 tds.each(function (i, td) {
-                    $(td).children('.' + tableClass.cell).css({
-                        width: ws[last + i] + 'px'
-                    });
+                    if (td.songBindData.flex) {
+                        var $td = $(td);
+                        $td.children('.' + tableClass.cell).css({
+                            width: ws[last + i] + 'px'
+                        });
+                    }
                 });
             }
         }
@@ -1025,7 +1064,7 @@
                 var width = col.width;
                 var $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
                 var $th = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></th>');
-                var $holdTh = $('<th style="height:0px;border-top:0;border-bottom:0;"></th>');
+                var $holdTh = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '" style="height:0px;border-top:0;border-bottom:0;"></th>');
                 $th.append($cell);
                 $tr.append($th);
                 $holdTr.append($holdTh);
@@ -1043,6 +1082,8 @@
                     $cell.css({
                         'width': (ieVersion <= 6 ? width + cellPadding : width) + 'px'
                     });
+                } else {
+                    $th[0].songBindData.flex = true;
                 }
                 // 可排序
                 if (col.sortAble && col.field) {
@@ -1825,22 +1866,13 @@
             Form.on('checkbox(song_table_' + filter + '_filter)', function (e) {
                 var $input = $(e.dom);
                 var value = $input.val();
-                var col = getColByField(filter, value);
                 var checked = $input.prop('checked');
                 if (checked) {
                     $view.find('th[data-field="' + value + '"],td[data-field="' + value + '"]').show();
                 } else {
                     $view.find('th[data-field="' + value + '"],td[data-field="' + value + '"]').hide();
                 }
-                if (col.fixed == 'left') {
-                    sotreData.$fixedLeft.css({
-                        width: sotreData.$fixedLeftTable[0].offsetWidth + 'px'
-                    });
-                } else if (col.fixed == 'right') {
-                    sotreData.$fixedRight.css({
-                        width: sotreData.$fixedRightTable[0].offsetWidth + 'px'
-                    });
-                }
+                setArea(filter);
             });
             Form.render('checkbox(song_table_' + filter + '_filter)');
         }
