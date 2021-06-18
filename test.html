@@ -387,6 +387,7 @@
             data: data,
             limit: 10,
             defaultToolbar: true,
+            stretch: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="selected">获取选择的项</button>',
             cols: [{
                 type: 'radio'
@@ -396,7 +397,12 @@
             }, {
                 title: '手机号',
                 field: 'phone',
-                width: 100
+                width: 100,
+                attr: { //设置单元属性
+                    title: function (value, obj, id, col) {
+                        return value;
+                    }
+                }
             }, {
                 title: '性别',
                 field: 'sex',
@@ -407,7 +413,14 @@
                 }, {
                     label: '女',
                     value: 2
-                }]
+                }],
+                style: { //设置单元格样式
+                    color: function (value, obj, id, col) {
+                        if (value == 2) {
+                            return 'red';
+                        }
+                    }
+                }
             }, {
                 title: '年龄',
                 field: 'age',

@@ -70,6 +70,7 @@
             var $elem = $(option.elem);
             var filter = $elem.attr('song-filter') || 'table_' + Math.random();
             var $table = $('<table class="' + tableClass.table + '"></table>');
+            var $tableHead = $('<thead></thead>');
             var $header = $('<div class="' + tableClass.tableHeader + '"></div>')
             var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
             var $tableHeaderHead = $('<thead></thead>');
@@ -80,6 +81,7 @@
             sotreData.$elem = $elem;
             sotreData.$view = $view;
             sotreData.$table = $table;
+            sotreData.$tableHead = $tableHead;
             sotreData.$header = $header;
             sotreData.$tableHeader = $tableHeader;
             sotreData.$tableHeaderHead = $tableHeaderHead;
@@ -880,13 +882,10 @@
             //表格拉伸至容器的宽度
             if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
                 // 确保选择列宽度不变
-                sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-raido').each(function (i, th) {
+                sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
                     $(th).css('width', this.clientWidth);
                 });
                 sotreData.$tableHeader.css({
-                    'width': '100%'
-                });
-                sotreData.$table.css({
                     'width': '100%'
                 });
                 // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
@@ -909,6 +908,9 @@
         function setCellWidth(filter, fixed) {
             var sotreData = store[filter];
             var ws = [];
+            var $table = sotreData.$table;
+            var $tableHead = sotreData.$tableHead;
+            var $tableHeader = sotreData.$tableHeader;
             sotreData.$tableHeaderHead.find('th').each(function (i, th) {
                 var $th = $(th);
                 var tw = $th[0].clientWidth;
@@ -917,17 +919,34 @@
             });
             if (fixed == 'left') { // 左侧固定表格
                 sotreData.$fixedLeftTableHeaderHead.find('tr').each(_eachLeft);
-                sotreData.$fixedLeftTable.find('tr').each(_eachLeft);
+                $table = sotreData.$fixedLeftTable;
+                $tableHead = sotreData.$fixedLeftTableHead;
+                $tableHeader = sotreData.$fixedLeftTableHeader;
             } else if (fixed == 'right') { // 右侧固定表格
                 sotreData.$fixedRightTableHeaderHead.find('tr').each(_eachRight);
-                sotreData.$fixedRightTable.find('tr').each(_eachRight);
+                $table = sotreData.$fixedRightTable;
+                $tableHead = sotreData.$fixedRightTableHead;
+                $tableHeader = sotreData.$fixedRightTableHeader;
             } else { // 主表格
                 sotreData.$tableHeaderHead.find('tr').each(_eachLeft);
                 sotreData.$table.find('tr').each(_eachLeft);
             }
+            ws = [];
+            $table.css({
+                width: ieVersion <= 6 ? $tableHeader.outerWidth() : $tableHeader.width(),
+                tableLayout: 'fixed'
+            });
+            $tableHeader.find('th').each(function (i, th) {
+                ws.push(ieVersion <= 6 ? th.offsetWidth : th.clientWidth);
+            });
+            $tableHead.find('th').each(function (i, th) {
+                $(th).css({
+                    width: ws[i]
+                });
+            });
 
             function _eachLeft(i, tr) {
-                $(tr).children('th,td').each(function (i, td) {
+                $(tr).children('th').each(function (i, td) {
                     $(td).children('.' + tableClass.cell).css({
                         width: ws[i] + 'px'
                     });
@@ -935,10 +954,11 @@
             }
 
             function _eachRight(i, tr) {
-                var last = ws.length - 1;
-                $(tr).children('th,td').each(function (i, td) {
+                var tds = $(tr).children('th');
+                var last = ws.length - tds.length;
+                tds.each(function (i, td) {
                     $(td).children('.' + tableClass.cell).css({
-                        width: ws[last - i] + 'px'
+                        width: ws[last + i] + 'px'
                     });
                 });
             }
@@ -994,23 +1014,27 @@
             var sotreData = store[filter];
             var $view = sotreData.$view;
             var $tr = $('<tr></tr>');
+            var $holdTr = $('<tr style="*display:none;"></tr>'); // 用于控制主表单元格宽度
             var cols = sotreData.cols;
             for (var i = 0; i < cols.length; i++) {
                 var col = cols[i];
                 if (fixed && col.fixed != fixed) {
                     continue;
                 }
+                col.type = col.type || 'text';
                 var width = col.width;
                 var $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
                 var $th = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></th>');
+                var $holdTh = $('<th style="height:0px;border-top:0;border-bottom:0;"></th>');
                 $th.append($cell);
                 $tr.append($th);
+                $holdTr.append($holdTh);
                 $th[0].songBindData = {
                     col: col
                 };
-                col.type = col.type || 'text';
                 if (col.hidden) {
                     $th.hide();
+                    $holdTh.hide();
                 }
                 if (col.type == 'radio' || col.type == 'checkbox') {
                     width = 20;
@@ -1062,17 +1086,18 @@
             if (fixed) {
                 if (fixed == 'left') {
                     sotreData.$fixedLeftTableHeaderHead.append($tr);
+                    sotreData.$fixedLeftTableHead.append($holdTr);
                 } else {
                     sotreData.$fixedRightTableHeaderHead.append($tr);
+                    sotreData.$fixedRightTableHead.append($holdTr);
                 }
                 return;
-            }
-            if (!sotreData.$header.inserted) {
+            } else {
+                sotreData.$tableHead.append($holdTr);
                 sotreData.$tableHeaderHead.append($tr);
                 sotreData.$tableHeader.append(sotreData.$tableHeaderHead);
                 sotreData.$header.append(sotreData.$tableHeader);
                 sotreData.$header.insertAfter(sotreData.$toolbar);
-                sotreData.$header.inserted = true;
             }
 
             // 渲染排序图标
@@ -1121,6 +1146,7 @@
             var cols = sotreData.cols;
             if (!sotreData.$tableMain.inserted) {
                 var viewWidth = sotreData.$view.width();
+                sotreData.$table.append(sotreData.$tableHead);
                 sotreData.$tableMain.append(sotreData.$table);
                 sotreData.$tableMain.insertAfter(sotreData.$header);
                 sotreData.$tableMain.css({
@@ -1219,6 +1245,7 @@
             if (cols.length && cols[0].fixed == 'left') {
                 if (!sotreData.$fixedLeft) {
                     sotreData.$fixedLeft = $('<div class="' + tableClass.fixedLeft + '"></div>');
+                    sotreData.$fixedLeftTableHead = $('<thead></thead>');
                     sotreData.$fixedLeftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                     sotreData.$fixedLeftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                     sotreData.$fixedLeftTable = $('<table class="' + tableClass.table + '"></table>');
@@ -1227,6 +1254,7 @@
                     sotreData.$fixedLeftTableHeader.append(sotreData.$fixedLeftTableHeaderHead);
                     sotreData.$fixedLeftHeader.append(sotreData.$fixedLeftTableHeader);
                     sotreData.$fixedLeft.append(sotreData.$fixedLeftHeader);
+                    sotreData.$fixedLeftTable.append(sotreData.$fixedLeftTableHead);
                     sotreData.$fixedLeftMain.append(sotreData.$fixedLeftTable);
                     sotreData.$fixedLeft.append(sotreData.$fixedLeftMain);
                     renderTableHeader(filter, 'left');
@@ -1237,6 +1265,7 @@
             if (cols.length && cols[cols.length - 1].fixed == 'right') {
                 if (!sotreData.$fixedRight) {
                     sotreData.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
+                    sotreData.$fixedRightTableHead = $('<thead></thead>');
                     sotreData.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                     sotreData.$fixedRightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                     sotreData.$fixedRightTable = $('<table class="' + tableClass.table + '"></table>');
@@ -1245,6 +1274,7 @@
                     sotreData.$fixedRightTableHeader.append(sotreData.$fixedRightTableHeaderHead);
                     sotreData.$fixedRightHeader.append(sotreData.$fixedRightTableHeader);
                     sotreData.$fixedRight.append(sotreData.$fixedRightHeader);
+                    sotreData.$fixedRightTable.append(sotreData.$fixedRightTableHead);
                     sotreData.$fixedRightMain.append(sotreData.$fixedRightTable);
                     sotreData.$fixedRight.append(sotreData.$fixedRightMain);
                     renderTableHeader(filter, 'right');
@@ -1266,7 +1296,6 @@
             var sotreData = store[filter];
             var $table = sotreData.$table;
             var data = sotreData._sortedData;
-            var widths = [];
             // 渲染左固定列
             if (fixed == 'left') {
                 $table = sotreData.$fixedLeftTable;
@@ -1276,9 +1305,6 @@
                 $table = sotreData.$fixedRightTable;
             }
             var trs = $table.children('tbody').children('tr');
-            sotreData.$tableHeaderHead.find('th').each(function (i, th) {
-                widths.push($(th).children('.' + tableClass.cell).width());
-            });
             // 取消全选
             sotreData.$tableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
             sotreData.$fixedLeftTableHeaderHead && sotreData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
@@ -1290,7 +1316,7 @@
                 if (trs[i]) { // 重复利用
                     replaceTr(filter, data[i], trs[i], fixed);
                 } else {
-                    $table.append(createTr(filter, data[i], widths, fixed));
+                    $table.append(createTr(filter, data[i], fixed));
                 }
             }
             // 删除多余的tr
@@ -1307,10 +1333,9 @@
          * 创建表格行
          * @param {String} filter 
          * @param {Object} data 
-         * @param {Array} widths 
          * @param {String} fixed 
          */
-        function createTr(filter, data, widths, fixed) {
+        function createTr(filter, data, fixed) {
             var sotreData = store[filter];
             var cols = sotreData.cols;
             var id = data.id || data._song_table_id;
@@ -1325,27 +1350,18 @@
             }
             var $tr = $('<tr data-id="' + id + '"></tr>');
             data._song_table_id = id;
-            if (!widths) {
-                widths = [];
-                sotreData.$tableHeaderHead.find('th').each(function (i, th) {
-                    widths.push($(th).children('.' + tableClass.cell).width());
-                });
-            }
             for (var col_i = 0; col_i < cols.length; col_i++) {
                 var col = cols[col_i];
                 var $td = null;
                 if (fixed) { // 固定列
                     if (col.fixed == fixed) {
-                        $td = createTd(filter, col, data, widths[col_i]);
+                        $td = createTd(filter, col, data);
                         $tr.append($td);
                     }
                 } else {
                     if (col.fixed == 'left' || col.fixed == 'right') { // 主表格中的占位列
                         $td = $('<td class="' + ['song-table-col-' + col.type, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
                         $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '"></div>');
-                        $cell.css({
-                            width: (ieVersion <= 6 ? widths[col_i] + cellPadding : widths[col_i]) + 'px'
-                        });
                         $td[0].songBindData = {};
                         $td[0].songBindData.colData = data[col.field];
                         $td[0].songBindData.col = col;
@@ -1353,7 +1369,7 @@
                         $td[0].songBindData.id = id;
                         $td.append($cell);
                     } else {
-                        $td = createTd(filter, col, data, widths[col_i]);
+                        $td = createTd(filter, col, data);
                     }
                     $tr.append($td);
                 }
@@ -1394,13 +1410,13 @@
                 var html = getCellHtml(data[col.field], data, id, col);
                 if (fixed) { // 固定列
                     if (col.fixed == fixed) {
-                        _setHtml(tds[td_i++], html, col);
+                        _setHtml(tds[td_i++], html, data, id, col);
                     }
                 } else {
                     if (col.fixed == 'left' || col.fixed == 'right') {
                         td_i++;
                     } else {
-                        _setHtml(tds[td_i++], html, col);
+                        _setHtml(tds[td_i++], html, data, id, col);
                     }
                 }
             }
@@ -1410,13 +1426,27 @@
             tr.songBindData.id = id;
 
             // 设置单元格内容
-            function _setHtml(td, html, col) {
+            function _setHtml(td, html, data, id, col) {
                 var $td = $(td);
                 if (col.type == 'text') {
                     $td.removeAttr('class');
                     $td.children('.' + tableClass.cell).html(html);
                 } else if (col.type == 'radio' || col.type == 'checkbox') {
                     $td.find('input[type="' + col.type + '"]').val(id).prop('checked', false);
+                }
+                // 设置单元格属性
+                if (col.attr) {
+                    for (var key in col.attr) {
+                        $td.removeAttr(key);
+                        $td.attr(key, typeof col.attr[key] == 'function' ? col.attr[key](data[col.field], data, id, col) : col.attr[key]);
+                    }
+                }
+                // 设置单元格样式
+                if (col.style) {
+                    $td.removeAttr('style');
+                    for (var key in col.style) {
+                        $td.css(key, typeof col.style[key] == 'function' ? col.style[key](data[col.field], data, id, col) : col.style[key])
+                    }
                 }
                 td.songBindData.colData = data[col.field];
                 td.songBindData.col = col;
@@ -1430,9 +1460,8 @@
          * @param {String} filter
          * @param {Object} col 
          * @param {Object} data 
-         * @param {Number} width 
          */
-        function createTd(filter, col, data, width) {
+        function createTd(filter, col, data) {
             var sotreData = store[filter];
             var $td = $('<td class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></td>');
             var $cell = null;
@@ -1469,9 +1498,18 @@
                     $cell.append(col.template(data[col.field], data, id, col));
                 }
             }
-            $cell.css({
-                width: (ieVersion <= 6 ? width + cellPadding : width) + 'px'
-            });
+            // 设置单元格属性
+            if (col.attr) {
+                for (var key in col.attr) {
+                    $td.attr(key, typeof col.attr[key] == 'function' ? col.attr[key](data[col.field], data, id, col) : col.attr[key]);
+                }
+            }
+            // 设置单元格样式
+            if (col.style) {
+                for (var key in col.style) {
+                    $td.css(key, typeof col.style[key] == 'function' ? col.style[key](data[col.field], data, id, col) : col.style[key])
+                }
+            }
             // 单元格事件
             if (col.event) {
                 $cell.attr('song-event', col.event).css({
@@ -1812,8 +1850,8 @@
             var sotreData = store[filter];
             if (window.btoa) {
                 var $table = $(sotreData.$tableHeader[0].outerHTML);
-                $table.append(sotreData.$table.html());
-                $table.find('.song-table-col-raido,.song-table-col-checkbox,.song-table-col-operate').remove();
+                $table.append(sotreData.$table.children('tbody').html());
+                $table.find('.song-table-col-radio,.song-table-col-checkbox,.song-table-col-operate').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
                     $td.text($td.text());
@@ -1847,7 +1885,7 @@
                 title += col.title + ',';
             });
             title = title.slice(0, -1) + '\n';
-            sotreData._renderedData.map(function (data) {
+            sotreData._sortedData.map(function (data) {
                 var str = '';
                 cols.map(function (col) {
                     if (col.type == 'text') {
@@ -1914,15 +1952,17 @@
                     color:#666;\
                     text-align:left;\
                 }</style>';
-                $table.append(sotreData.$table.html());
+                $table.append(sotreData.$table.children('tbody').html());
                 var trs = $table.children('tbody').children('tr');
-                sotreData.$fixedLeftTable && sotreData.$fixedLeftTable.find('tr').each(function (i, tr) {
+                // 左固定列中的数据
+                sotreData.$fixedLeftTable && sotreData.$fixedLeftTable.children('tbody').find('tr').each(function (i, tr) {
                     var tds = $(trs[i]).children('td');
                     $(tr).children('td').each(function (i, td) {
                         $(tds[i]).html($(td).html());
                     });
                 });
-                sotreData.$fixedRightTable && sotreData.$fixedRightTable.find('tr').each(function (i, tr) {
+                // 右固定列中的数据
+                sotreData.$fixedRightTable && sotreData.$fixedRightTable.children('tbody').find('tr').each(function (i, tr) {
                     var tds = $(trs[i]).children('td');
                     var _tds = $(tr).children('td');
                     _tds.each(function (i, td) {
