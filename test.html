@@ -368,7 +368,7 @@
             }
         });
     }
-    renderTable1();
+    // renderTable1();
     renderTable3();
     // 单选表格
     function renderTable1() {
@@ -472,79 +472,91 @@
             <button class="song-btn song-btn-sm" song-event="getadd">获取添加的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
             <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
-            cols: [{
-                type: 'checkbox',
-                fixed: 'left'
-            }, {
-                title: '用户',
-                field: 'user',
-                event: 'name',
-                fixed: 'left'
-            }, {
-                title: '手机号',
-                field: 'phone',
-                width: 100,
-                editable: true,
-                sortAble: true
-            }, {
-                title: '性别',
-                field: 'sex',
-                width: 50,
-                select: [{
-                    label: '男',
-                    value: 1
-                }, {
-                    label: '女',
-                    value: 2
-                }],
-                editable: {
-                    type: 'select',
-                    rules: [{ type: 'required' }]
-                }
-            }, {
-                title: '年龄',
-                field: 'age',
-                width: 50,
-                editable: {
-                    type: 'number',
-                    rules: [{ type: 'number' }]
-                },
-                sortAble: true
-            }, {
-                title: '签名',
-                field: 'sign',
-                width: 80,
-                editable: true
-            }, {
-                title: '爱好',
-                field: 'like',
-                width: 200,
-                checkbox: [{
-                    label: '听歌',
-                    value: 1
-                }, {
-                    label: '游泳',
-                    value: 2
-                }, {
-                    label: '看小说',
-                    value: 3
-                }],
-                editable: {
+            cols: [
+                [{
                     type: 'checkbox',
-                    rules: [{ type: 'required' }]
-                }
-            }, {
-                type: 'operate',
-                title: '操作',
-                width: 90,
-                btns: [{
-                    text: '删除',
-                    event: 'del',
-                    type: 'danger',
-                    stop: true
+                    fixed: 'left',
+                    rowspan: 2
+                }, {
+                    title: '用户',
+                    field: 'user',
+                    event: 'name',
+                    fixed: 'left',
+                    rowspan: 2
+                }, {
+                    title: '手机号',
+                    field: 'phone',
+                    width: 100,
+                    editable: true,
+                    sortAble: true,
+                    rowspan: 2
+                }, {
+                    title: '性别',
+                    field: 'sex',
+                    width: 50,
+                    select: [{
+                        label: '男',
+                        value: 1
+                    }, {
+                        label: '女',
+                        value: 2
+                    }],
+                    editable: {
+                        type: 'select',
+                        rules: [{ type: 'required' }]
+                    },
+                    rowspan: 2
+                }, {
+                    title: '年龄',
+                    field: 'age',
+                    width: 50,
+                    editable: {
+                        type: 'number',
+                        rules: [{ type: 'number' }]
+                    },
+                    sortAble: true,
+                    rowspan: 2
+                }, {
+                    title: '其他信息',
+                    colspan: 2
+                }, {
+                    type: 'operate',
+                    title: '操作',
+                    width: 90,
+                    btns: [{
+                        text: '删除',
+                        event: 'del',
+                        type: 'danger',
+                        stop: true
+                    }],
+                    fixed: 'right',
+                    rowspan: 2
                 }],
-                fixed: 'right'
-            }]
+                [{
+                    title: '签名',
+                    field: 'sign',
+                    width: 80,
+                    editable: true
+                }, {
+                    title: '爱好',
+                    field: 'like',
+                    width: 200,
+                    checkbox: [{
+                        label: '听歌',
+                        value: 1
+                    }, {
+                        label: '游泳',
+                        value: 2
+                    }, {
+                        label: '看小说',
+                        value: 3
+                    }],
+                    editable: {
+                        type: 'checkbox',
+                        rules: [{ type: 'required' }]
+                    }
+                }]
+            ]
         });
         SongUi.Table.on('save(table3)', function (obj) {
             console.log(obj);

@@ -1038,7 +1038,6 @@ a:focus {
 .song-table-fixed-r {
   position: absolute;
   top: 0;
-  border-top: 1px solid #eeeeee;
 }
 
 .song-table-fixed-r-shadow {
