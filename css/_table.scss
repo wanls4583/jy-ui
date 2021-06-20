@@ -438,11 +438,10 @@
         // 复选框编辑容器
         .song-table-checkboxs {
             line-height: normal;
-            padding: $pd10;
-            padding-right: 0;
+            padding: 0 0 $pd10 $pd10;
 
             .song-form-checkbox {
-                margin-top: 0;
+                margin-top: $pd10;
             }
         }
 

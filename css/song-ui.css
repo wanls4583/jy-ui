@@ -1191,12 +1191,11 @@ a:focus {
 
 .song-table .song-table-editting .song-table-checkboxs {
   line-height: normal;
-  padding: 10px;
-  padding-right: 0;
+  padding: 0 0 10px 10px;
 }
 
 .song-table .song-table-editting .song-table-checkboxs .song-form-checkbox {
-  margin-top: 0;
+  margin-top: 10px;
 }
 
 .song-table .song-table-editting .song-form-select .song-input {

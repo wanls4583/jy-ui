@@ -206,7 +206,7 @@
             for (var i = firstHeader.length - 1; i >= 0; i--) {
                 if (firstHeader[i].fixed == 'right') {
                     if (i == fixedRightStart - 1) {
-                        fixedLeftEnd = i;
+                        fixedRightStart = i;
                         fixedRightCount += firstHeader[i].colspan >= 2 ? firstHeader[i].colspan : 1;
                     } else {
                         firstHeader[0].fixed = undefined;
@@ -525,6 +525,7 @@
                         data: value
                     });
                 }
+                fixRowHeightById(filter, td.songBindData.id, 'auto');
             }
         }
 
@@ -609,6 +610,7 @@
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
                 td.songBindData.$checkbox = undefined;
+                fixRowHeightById(filter, td.songBindData.id, 'auto');
             }
         }
 
@@ -740,8 +742,20 @@
                     }
                     $(td).addClass(tableClass.edit);
                     td.songBindData.editing = true;
+                    fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
                 }
             }
+        }
+
+        /**
+         * 修复行高
+         * @param {String} filter 
+         * @param {Number} id 
+         * @param {Number/String} height 
+         */
+        function fixRowHeightById(filter, id, height) {
+            var sotreData = store[filter];
+            sotreData.$view.find('tr[data-id="' + id + '"]').css('height', height);
         }
 
         /**

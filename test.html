@@ -458,7 +458,7 @@
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
-            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            data.push({ user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table3',
@@ -480,6 +480,7 @@
                 }, {
                     title: '用户',
                     field: 'user',
+                    width: 60,
                     event: 'name',
                     fixed: 'left',
                     rowspan: 2
@@ -491,9 +492,14 @@
                     sortAble: true,
                     rowspan: 2
                 }, {
+                    title: '城市',
+                    field: 'city',
+                    width: 60,
+                    editable: true,
+                    rowspan: 2
+                }, {
                     title: '性别',
                     field: 'sex',
-                    width: 50,
                     select: [{
                         label: '男',
                         value: 1
@@ -509,7 +515,6 @@
                 }, {
                     title: '年龄',
                     field: 'age',
-                    width: 50,
                     editable: {
                         type: 'number',
                         rules: [{ type: 'number' }]
@@ -518,7 +523,8 @@
                     rowspan: 2
                 }, {
                     title: '其他信息',
-                    colspan: 2
+                    colspan: 2,
+                    fixed: 'right'
                 }, {
                     type: 'operate',
                     title: '操作',
@@ -540,7 +546,7 @@
                 }, {
                     title: '爱好',
                     field: 'like',
-                    width: 200,
+                    width: 80,
                     checkbox: [{
                         label: '听歌',
                         value: 1
@@ -559,10 +565,10 @@
             ]
         });
         SongUi.Table.on('save(table3)', function (obj) {
-            console.log(obj);
+            // console.log(obj);
         });
         SongUi.Table.on('edit(table3)', function (obj) {
-            console.log(obj);
+            // console.log(obj);
         });
         SongUi.Table.on('add(table3)', function (obj) {
             var sex = Math.ceil(Math.random() * 2);
