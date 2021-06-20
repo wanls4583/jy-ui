@@ -27,19 +27,18 @@
     }
 
     // i6以下浏览器不支持child选择器
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    tr:first-child {
-
-        td,
-        th {
-            border-top: none;
-        }
-    }
-
     tr {
+        &:first-child {
+
+            td,
+            th {
+                border-top: none;
+            }
+        }
+
+        &:last-child td {
+            border-bottom: none;
+        }
 
         th:first-child,
         td:first-child {
@@ -104,10 +103,6 @@
             padding: 5px $pd15;
         }
 
-        tr:last-child td {
-            border-bottom: 1px solid $light-color;
-        }
-
         tr {
             &:first-child {
 
@@ -115,6 +110,10 @@
                 td {
                     border-top: 1px solid $light-color;
                 }
+            }
+
+            &:last-child td {
+                border-bottom: 1px solid $light-color;
             }
 
             th:first-child,
@@ -135,6 +134,7 @@
         position: relative;
         width: 100%;
         overflow: hidden;
+        background-color: $lighter-color;
     }
 
     &-main {
@@ -278,7 +278,10 @@
         position: absolute;
         top: 0;
         border-top: 1px solid $light-color;
-        box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+
+        &-shadow {
+            box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+        }
 
         .song-table-mend {
             margin-right: -17px;

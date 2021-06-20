@@ -41,6 +41,7 @@
             hover: 'song-table-hover',
             fixedLeft: 'song-table-fixed-l',
             fixedRight: 'song-table-fixed-r',
+            fixedRightShadow: 'song-table-fixed-r-shadow',
             fixedMain: 'song-table-fixed-main',
             fixeHeader: 'song-table-fixed-header',
             confirm: 'song-table-confirm',
@@ -834,82 +835,58 @@
             var sotreData = store[filter];
             sotreData.width = Number(width || sotreData.width);
             sotreData.height = Number(height || sotreData.height);
-            if (sotreData.width) {
-                sotreData.$view.css({
-                    width: sotreData.width + 'px'
-                });
-                sotreData.$tableMain.css({
-                    width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width) + 'px'
-                });
-            }
-            if (sotreData.height) {
-                var h = sotreData.height;
-                sotreData.$view.css({
-                    height: h + 'px'
-                });
-                h -= sotreData.$header.height();
-                if (sotreData.$toolbar) {
-                    h -= sotreData.$toolbar.outerHeight();
-                }
-                if (sotreData.$pager) {
-                    h -= sotreData.$pager.outerHeight();
-                }
-                sotreData.$tableMain.css({
-                    height: h + 'px'
-                });
-            }
-            var hedaerWidth = sotreData.$header[0].clientWidth;
-            var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
-            //表格拉伸至容器的宽度
-            if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
-                // 确保选择列宽度不变
-                sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
-                    $(th).css('width', this.clientWidth);
-                });
-                sotreData.$tableHeader.css({
-                    'width': '100%'
-                });
-                // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
-                if (ieVersion <= 6) {
-                    sotreData.$tableMain.css({
-                        overflow: 'hidden'
-                    });
-                }
-            }
+            _setViewWidth();
             _setTableWidth();
-            if (sotreData.$fixedLeft) {
-                sotreData.$fixedLeft.css({
-                    width: sotreData.$fixedLeftTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px'
-                });
-                sotreData.$fixedLeftMain.css({
-                    height: sotreData.$tableMain[0].clientHeight + 'px'
-                });
-            }
-            if (sotreData.$fixedRight) {
-                var left = 'auto';
-                var right = scrBarWidth;
-                if (sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth) {
-                    right = 'auto';
-                    left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
-                    sotreData.$mend && sotreData.$mend.hide();
-                } else {
-                    sotreData.$mend && sotreData.$mend.show();
-                }
-                sotreData.$fixedRight.css({
-                    width: sotreData.$fixedRightTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px',
-                    left: left,
-                    right: right
-                });
-                sotreData.$fixedRightMain.css({
-                    height: sotreData.$tableMain[0].clientHeight + 'px'
-                });
-            }
-
+            _setFixedWidth();
             setCellWidth(filter);
             sotreData.$fixedLeft && setCellWidth(filter, 'left');
             sotreData.$fixedRight && setCellWidth(filter, 'right');
+
+            // 设置容器宽高
+            function _setViewWidth() {
+                if (sotreData.width) {
+                    sotreData.$view.css({
+                        width: sotreData.width + 'px'
+                    });
+                    sotreData.$tableMain.css({
+                        width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width) + 'px'
+                    });
+                }
+                if (sotreData.height) {
+                    var h = sotreData.height;
+                    sotreData.$view.css({
+                        height: h + 'px'
+                    });
+                    h -= sotreData.$header.height();
+                    if (sotreData.$toolbar) {
+                        h -= sotreData.$toolbar.outerHeight();
+                    }
+                    if (sotreData.$pager) {
+                        h -= sotreData.$pager.outerHeight();
+                    }
+                    sotreData.$tableMain.css({
+                        height: h + 'px'
+                    });
+                }
+                var hedaerWidth = sotreData.$header[0].clientWidth;
+                var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
+                //表格拉伸至容器的宽度
+                if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
+                    // 确保选择列宽度不变
+                    sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
+                        $(th).css('width', this.clientWidth);
+                    });
+                    sotreData.$tableHeader.css({
+                        'width': '100%'
+                    });
+                    // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
+                    if (ieVersion <= 6) {
+                        sotreData.$tableMain.css({
+                            overflow: 'hidden'
+                        });
+                    }
+                }
+            }
 
             // 设置表格宽度
             function _setTableWidth() {
@@ -918,8 +895,8 @@
                     tableLayout: 'fixed'
                 });
                 if (sotreData.$fixedLeft) {
-                    sotreData.$fixedRightTable.css({
-                        width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
+                    sotreData.$fixedLeftTable.css({
+                        width: ieVersion <= 6 ? sotreData.$fixedLeftTableHeaderHead.outerWidth() : sotreData.$fixedLeftTableHeaderHead.width(),
                         tableLayout: 'fixed'
                     });
                 }
@@ -927,6 +904,41 @@
                     sotreData.$fixedRightTable.css({
                         width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
                         tableLayout: 'fixed'
+                    });
+                }
+            }
+
+            // 设置固定表格容器的宽高
+            function _setFixedWidth() {
+                if (sotreData.$fixedLeft) {
+                    sotreData.$fixedLeft.css({
+                        width: sotreData.$fixedLeftTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
+                        top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px'
+                    });
+                    sotreData.$fixedLeftMain.css({
+                        height: sotreData.$tableMain[0].clientHeight + 'px'
+                    });
+                }
+                if (sotreData.$fixedRight) {
+                    var left = 'auto';
+                    var right = scrBarWidth;
+                    if (sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth) { // 没有滚动条
+                        right = 'auto';
+                        left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
+                        sotreData.$mend && sotreData.$mend.hide();
+                        sotreData.$fixedRight.removeClass(tableClass.fixedRightShadow);
+                    } else {
+                        sotreData.$mend && sotreData.$mend.show();
+                        sotreData.$fixedRight.addClass(tableClass.fixedRightShadow);
+                    }
+                    sotreData.$fixedRight.css({
+                        width: sotreData.$fixedRightTableHeader[0].offsetWidth + 'px', // ie6及以下浏览器不设置宽度将撑破父容器
+                        top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0) + 'px',
+                        left: left,
+                        right: right
+                    });
+                    sotreData.$fixedRightMain.css({
+                        height: sotreData.$tableMain[0].clientHeight + 'px'
                     });
                 }
             }
@@ -1228,7 +1240,6 @@
                 renderTr(filter);
                 // 渲染固定列
                 renderTableFixed(filter);
-                _fixHeader();
             }
 
             // 排序
@@ -1255,24 +1266,6 @@
                         }
                     }
                 });
-            }
-
-            // 修复表头右侧16px(滚动条宽度)空白问题
-            function _fixHeader() {
-                if (sotreData.$table[0].clientHeight > sotreData.$tableMain[0].clientHeight) {
-                    if (!sotreData.$mend) {
-                        sotreData.$mend = $('<div class="' + tableClass.mend + '"></div>');
-                        // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
-                        sotreData.$mend.css('height', sotreData.$tableHeader[0].clientHeight);
-                        if (sotreData.$fixedRightHeader) {
-                            sotreData.$fixedRightHeader.append(sotreData.$mend);
-                        } else {
-                            sotreData.$tableHeader.append(sotreData.$mend);
-                        }
-                    }
-                } else {
-                    sotreData.$mend && sotreData.$mend.remove();
-                }
             }
         }
 
@@ -1305,6 +1298,7 @@
             }
             if (cols.length && cols[cols.length - 1].fixed == 'right') {
                 if (!sotreData.$fixedRight) {
+                    sotreData.$mend = $('<div class="' + tableClass.mend + '"></div>');
                     sotreData.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
                     sotreData.$fixedRightTableHead = $('<thead></thead>');
                     sotreData.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
@@ -1314,10 +1308,13 @@
                     sotreData.$fixedRightTableHeaderHead = $('<thead></thead>');
                     sotreData.$fixedRightTableHeader.append(sotreData.$fixedRightTableHeaderHead);
                     sotreData.$fixedRightHeader.append(sotreData.$fixedRightTableHeader);
+                    sotreData.$fixedRightHeader.append(sotreData.$mend);
                     sotreData.$fixedRight.append(sotreData.$fixedRightHeader);
                     sotreData.$fixedRightTable.append(sotreData.$fixedRightTableHead);
                     sotreData.$fixedRightMain.append(sotreData.$fixedRightTable);
                     sotreData.$fixedRight.append(sotreData.$fixedRightMain);
+                    // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
+                    sotreData.$mend.css('height', sotreData.$tableHeader[0].clientHeight);
                     renderTableHeader(filter, 'right');
                     sotreData.$view.append(sotreData.$fixedRight);
                 }

@@ -592,8 +592,7 @@ a:focus {
 
 .song-pager .song-pager-prev:hover,
 .song-pager .song-pager-next:hover,
-.song-pager .song-pager-num:hover,
-.song-pager .song-pager-limits:hover {
+.song-pager .song-pager-num:hover {
   color: #5FB878;
 }
 
@@ -705,8 +704,7 @@ a:focus {
 
 .song-pager-small .song-pager-prev:hover,
 .song-pager-small .song-pager-next:hover,
-.song-pager-small .song-pager-num:hover,
-.song-pager-small .song-pager-limits:hover {
+.song-pager-small .song-pager-num:hover {
   color: #5FB878;
 }
 
@@ -810,13 +808,13 @@ a:focus {
   font-size: 14px;
 }
 
-.song-table tr:last-child td {
-  border-bottom: none;
-}
-
 .song-table tr:first-child td,
 .song-table tr:first-child th {
   border-top: none;
+}
+
+.song-table tr:last-child td {
+  border-bottom: none;
 }
 
 .song-table tr th:first-child,
@@ -873,13 +871,13 @@ a:focus {
   padding: 5px 15px;
 }
 
-.song-table-static tr:last-child td {
-  border-bottom: 1px solid #eeeeee;
-}
-
 .song-table-static tr:first-child th,
 .song-table-static tr:first-child td {
   border-top: 1px solid #eeeeee;
+}
+
+.song-table-static tr:last-child td {
+  border-bottom: 1px solid #eeeeee;
 }
 
 .song-table-static tr th:first-child,
@@ -898,6 +896,7 @@ a:focus {
   position: relative;
   width: 100%;
   overflow: hidden;
+  background-color: #f6f6f6;
 }
 
 .song-table-main {
@@ -1040,6 +1039,9 @@ a:focus {
   position: absolute;
   top: 0;
   border-top: 1px solid #eeeeee;
+}
+
+.song-table-fixed-r-shadow {
   -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }

@@ -24,9 +24,15 @@
         border: 1px solid $light-color;
         user-select: none;
 
+    }
+
+    .song-pager-prev,
+    .song-pager-next,
+    .song-pager-num {
         &:hover {
             color: $link-color;
         }
+
     }
 
     .song-pager-dot {
