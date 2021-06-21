@@ -1420,6 +1420,16 @@
                     sotreData.$fixedLeftTableHeader.css('height', ieVersion <= 6 ? sotreData.$tableHeader.outerHeight() : sotreData.$tableHeader.height());
                     renderTableHeader(filter, 'left');
                     sotreData.$view.append(sotreData.$fixedLeft);
+                    sotreData.$fixedLeftMain.on('mousewheel', function (e) {
+                        var wheelDelta = e.originalEvent.wheelDelta;
+                        if (wheelDelta < 0) {
+                            wheelDelta += 20;
+                        } else {
+                            wheelDelta -= 20;
+                        }
+                        sotreData.$tableMain[0].scrollTop -= wheelDelta;
+                        return false;
+                    });
                 }
                 renderTr(filter, 'left');
             }
@@ -1445,6 +1455,16 @@
                     sotreData.$mend.css('height', sotreData.$tableHeader[0].clientHeight);
                     renderTableHeader(filter, 'right');
                     sotreData.$view.append(sotreData.$fixedRight);
+                    sotreData.$fixedRightMain.on('mousewheel', function (e) {
+                        var wheelDelta = e.originalEvent.wheelDelta;
+                        if (wheelDelta < 0) {
+                            wheelDelta += 20;
+                        } else {
+                            wheelDelta -= 20;
+                        }
+                        sotreData.$tableMain[0].scrollTop -= wheelDelta;
+                        return false;
+                    });
                 }
                 renderTr(filter, 'right');
             }
