@@ -184,6 +184,10 @@
             var cols = sotreData.originCols.concat([]);
             cols.map(function (_cols, i) {
                 cols[i] = _cols.concat([]);
+                // 每个col都自动生成一个唯一key
+                cols[i].map(function (col) {
+                    col._key = String(Math.random());
+                });
             });
             // 一级表头
             var firstHeader = cols[0];
@@ -222,16 +226,13 @@
             for (var i = 1; i <= fixedRightCount; i++) {
                 sotreData.cols[sotreData.cols.length - i].fixed = 'right';
             }
-            sotreData.cols.map(function (col) {
-                col._key = String(Math.random());
-            });
 
-            function _getDataCol(cols, level, colspan) {
+            function _getDataCol(cols, level, colspan, pCol) {
                 for (var i = 0, count = 0; i < colspan && cols[level][i] && count < colspan; i++) {
                     var col = cols[level][i];
                     if (col.colspan >= 2) { // colspan大于1的列不能用于渲染数据
                         if (cols[level + 1] && cols[level + 1].length) { // 有下一级表头
-                            _getDataCol(cols, level + 1, col.colspan);
+                            _getDataCol(cols, level + 1, col.colspan, col);
                         } else { // 无效的colspan
                             sotreData.cols.push(col);
                             col.colspan = undefined;
@@ -240,6 +241,12 @@
                     } else {
                         sotreData.cols.push(col);
                         count += 1;
+                    }
+                    // 上一级对应的父列
+                    if (pCol) {
+                        pCol.child = pCol.child || [];
+                        pCol.child.push(col);
+                        col.parent = pCol;
                     }
                 }
                 // 移除已处理过的列
@@ -384,7 +391,7 @@
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
                 if (field) {
-                    var td = getTdById(filter, id, field);
+                    var td = getTdByIdField(filter, id, field);
                     if (!td) {
                         return;
                     }
@@ -540,7 +547,7 @@
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
                 if (field) {
-                    var td = getTdById(filter, id, field);
+                    var td = getTdByIdField(filter, id, field);
                     if (!td) {
                         return;
                     }
@@ -625,7 +632,7 @@
             var tds = [];
             if (id !== undefined) { // 编辑某一行的数据
                 if (field) {
-                    var td = getTdById(filter, id, field);
+                    var td = getTdByIdField(filter, id, field);
                     if (!td) {
                         return;
                     }
@@ -859,7 +866,7 @@
          * @param {Number} id 
          * @param {String} field 
          */
-        function getTdById(filter, id, field) {
+        function getTdByIdField(filter, id, field) {
             var sotreData = store[filter];
             var col = getColByField(filter, field);
             var td = null;
@@ -882,6 +889,20 @@
             var sotreData = store[filter];
             for (var i = 0; i < sotreData.cols.length; i++) {
                 if (sotreData.cols[i].field == field) {
+                    return sotreData.cols[i];
+                }
+            }
+        }
+
+        /**
+         * 根据字段唯一key返回列配置对象
+         * @param {String} filter 
+         * @param {String} key 
+         */
+        function getColByKey(filter, key) {
+            var sotreData = store[filter];
+            for (var i = 0; i < sotreData.cols.length; i++) {
+                if (sotreData.cols[i]._key == key) {
                     return sotreData.cols[i];
                 }
             }
@@ -1234,7 +1255,8 @@
                 var $holdTh = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '" style="height:0px;border-top:0;border-bottom:0;"></th>');
                 $holdTr.append($holdTh);
                 $holdTh[0].songBindData = {
-                    col: col
+                    col: col,
+                    holder: true
                 }
                 if (col.hidden) {
                     $holdTh.hide();
@@ -1964,7 +1986,7 @@
             for (var i = 0; i < sotreData.cols.length; i++) {
                 var col = sotreData.cols[i];
                 if (col.type == 'text') {
-                    $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col.field + '" checked song-filter="song_table_' + filter + '_filter"></li>');
+                    $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col._key + '" checked song-filter="song_table_' + filter + '_filter"></li>');
                 }
             }
             // 在工具图标下挂载
@@ -1973,12 +1995,53 @@
                 var $input = $(e.dom);
                 var value = $input.val();
                 var checked = $input.prop('checked');
-                if (checked) {
-                    $view.find('th[data-field="' + value + '"],td[data-field="' + value + '"]').show();
-                } else {
-                    $view.find('th[data-field="' + value + '"],td[data-field="' + value + '"]').hide();
+                var col = getColByKey(filter, value);
+                var allThs = [];
+                var nowTh = null;
+                $view.find('th,td').each(function (i, td) {
+                    if (td.songBindData.col._key == value) {
+                        checked ? $(td).show() : $(td).hide();
+                        if (td.tagName.toUpperCase() == 'TH' && !td.songBindData.holder) {
+                            nowTh = td;
+                        }
+                    }
+                    if (td.tagName.toUpperCase() == 'TH' && !td.songBindData.holder) {
+                        allThs.push(td);
+                    }
+                });
+                // 存在上级父列
+                if (col.parent) {
+                    _setParentCol(nowTh);
                 }
                 setArea(filter);
+
+                // 设置父级列的colspan
+                function _setParentCol(th) {
+                    var col = th.songBindData.col.parent;
+                    var ths = _getThByCol(col);
+                    ths.map(function (th) {
+                        var $th = $(th);
+                        var colspan = th.songBindData.colspan === undefined ? col.colspan : th.songBindData.colspan;
+                        checked ? ++colspan : --colspan;
+                        // ie7及以下浏览器设置为0时会报错
+                        colspan > 0 && $th.attr('colspan', colspan);
+                        colspan ? $th.show() : $th.hide();
+                        th.songBindData.colspan = colspan;
+                    });
+                    if (col.parent) {
+                        _setParentCol(ths[0]);
+                    }
+                }
+
+                function _getThByCol(col) {
+                    var ths = [];
+                    for (var i = 0; i < allThs.length; i++) {
+                        if (allThs[i].songBindData.col._key == col._key) {
+                            ths.push(allThs[i]);
+                        }
+                    }
+                    return ths;
+                }
             });
             Form.render('checkbox(song_table_' + filter + '_filter)');
         }
