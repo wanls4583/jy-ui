@@ -1167,7 +1167,6 @@ a:focus {
 }
 
 .song-table .song-table-editting .song-table-cell {
-  *left: 1px;
   *top: 1px;
   overflow: visible;
   white-space: normal;

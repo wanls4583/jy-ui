@@ -1171,6 +1171,9 @@
                         }
                         _renderSortIcon($th, $cell, col);
                     }
+                    if (col.align) {
+                        $th.css('text-align', col.align);
+                    }
                     col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
                     $th.append($cell);
                     $tr.append($th);
@@ -1656,6 +1659,9 @@
                 $cell.attr('song-event', col.event).css({
                     'cursor': 'pointer'
                 });
+            }
+            if (col.align) {
+                $td.css('text-align', col.align);
             }
             // 缓存td对应的数据
             $td[0].songBindData.colData = data[col.field];

@@ -368,7 +368,7 @@
             }
         });
     }
-    // renderTable1();
+    renderTable1();
     renderTable3();
     // 单选表格
     function renderTable1() {
@@ -523,8 +523,9 @@
                     rowspan: 2
                 }, {
                     title: '其他信息',
-                    colspan: 2,
-                    fixed: 'right'
+                    align: 'center',
+                    fixed: 'right',
+                    colspan: 2
                 }, {
                     type: 'operate',
                     title: '操作',
@@ -535,6 +536,7 @@
                         type: 'danger',
                         stop: true
                     }],
+                    align: 'center',
                     fixed: 'right',
                     rowspan: 2
                 }],
