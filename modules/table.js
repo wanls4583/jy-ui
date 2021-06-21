@@ -51,6 +51,7 @@
             sortUp: 'song-table-sort-up',
             sortDown: 'song-table-sort-down',
             sortHover: 'song-table-sort-hover',
+            colResize: 'song-table-col-resize',
             sortConfirm: 'song-table-sort-confirm',
             unselect: 'song-table-unselect',
             error: 'song-table-error',
@@ -1169,9 +1170,11 @@
                     $th[0].songBindData = {
                         col: col
                     };
+                    // 隐藏
                     if (col.hidden) {
                         $th.hide();
                     }
+                    // 选择列
                     if (col.type == 'radio' || col.type == 'checkbox') {
                         width = 20;
                     }
@@ -1180,6 +1183,7 @@
                             'width': (ieVersion <= 6 ? width + cellPadding : width)
                         });
                     } else if (!(col.colspan >= 2)) {
+                        // 自动列宽
                         $th[0].songBindData.flex = true;
                     }
                     if (col.colspan >= 2) {
@@ -1192,8 +1196,9 @@
                         }
                         _renderSortIcon($th, $cell, col);
                     }
+                    // 文字对齐方式
                     if (col.align) {
-                        $th.css('text-align', col.align);
+                        $th.addClass('song-table-align-' + col.align);
                     }
                     col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
                     $th.append($cell);
@@ -1815,6 +1820,20 @@
                 sotreData.$exports && sotreData.$exports.hide();
                 sotreData.$filter && sotreData.$filter.hide();
             });
+            $body.on('mousemove', function (e) {
+                if (sotreData.resizeData) {
+                    var x = e.pageX - sotreData.resizeData.pageX;
+                    var th = sotreData.resizeData.th;
+                    $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - cellPadding);
+                    setArea(filter);
+                }
+            });
+            $body.on('mouseup', function (e) {
+                if (sotreData.resizeData) {
+                    sotreData.resizeData.th.songBindData.flex = sotreData.originFlex;
+                    sotreData.resizeData = undefined;
+                }
+            });
             if (sotreData.bindedViewEvent) {
                 return;
             }
@@ -1908,7 +1927,7 @@
                 sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
             });
             // 内容溢出处理
-            $view.delegate('td', 'mouseenter', function () {
+            $view.delegate('th,td', 'mouseenter', function () {
                 var songBindData = this.songBindData;
                 var col = songBindData.col;
                 var $td = $(this);
@@ -1943,11 +1962,18 @@
                 $(this).children('.' + tableClass.cell).children('.' + tableClass.tipIcon).remove();
             });
             // 排序事件
-            $view.delegate('th', 'click', function () {
+            $view.delegate('th', 'mousedown', function (e) {
                 var $this = $(this);
                 // 触发排序
                 var col = this.songBindData.col;
-                if (col.sortAble) {
+                if (!sotreData.resizeData && $this.hasClass(tableClass.colResize)) { // 当前处于列宽调整中
+                    sotreData.resizeData = {
+                        pageX: e.pageX,
+                        th: this,
+                        originWidth: this.clientWidth,
+                        originFlex: this.songBindData.flex
+                    }
+                } else if (col.sortAble) {
                     var $up = $this.find('div.' + tableClass.sortUp);
                     var $down = $this.find('div.' + tableClass.sortDown);
                     $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
@@ -1965,6 +1991,17 @@
                         sotreData._sortObj.sort = '';
                     }
                     renderTableBody(filter, true);
+                }
+            });
+            // 调整列宽事件
+            $view.delegate('th', 'mousemove', function (e) {
+                if (!sotreData.resizeData) {
+                    var $this = $(this);
+                    if (e.offsetX > this.clientWidth - 10) {
+                        $this.addClass(tableClass.colResize);
+                    } else {
+                        $this.removeClass(tableClass.colResize);
+                    }
                 }
             });
             // 筛选字段事件

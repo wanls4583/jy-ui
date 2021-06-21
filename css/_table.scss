@@ -96,6 +96,33 @@
 
     }
 
+    // 居中对齐
+    &-align-left {
+        text-align: left;
+
+        .song-table-cell {
+            margin-right: auto;
+        }
+    }
+
+    // 居中对齐
+    &-align-center {
+        text-align: center;
+
+        .song-table-cell {
+            margin: auto;
+        }
+    }
+
+    // 居中对齐
+    &-align-center {
+        text-align: right;
+
+        .song-table-cell {
+            margin-left: auto;
+        }
+    }
+
     &-static {
 
         th,
@@ -365,6 +392,12 @@
     &-unselect {
         cursor: pointer;
         user-select: none;
+    }
+
+    // 列宽调整
+    &-col-resize {
+        cursor: e-resize;
+        cursor: col-resize;
     }
 
     // 排序

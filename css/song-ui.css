@@ -866,6 +866,30 @@ a:focus {
   margin-right: 0;
 }
 
+.song-table-align-left {
+  text-align: left;
+}
+
+.song-table-align-left .song-table-cell {
+  margin-right: auto;
+}
+
+.song-table-align-center {
+  text-align: center;
+}
+
+.song-table-align-center .song-table-cell {
+  margin: auto;
+}
+
+.song-table-align-center {
+  text-align: right;
+}
+
+.song-table-align-center .song-table-cell {
+  margin-left: auto;
+}
+
 .song-table-static th,
 .song-table-static td {
   padding: 5px 15px;
@@ -1124,6 +1148,11 @@ a:focus {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+.song-table-col-resize {
+  cursor: e-resize;
+  cursor: col-resize;
 }
 
 .song-table-sort {
