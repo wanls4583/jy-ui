@@ -11,7 +11,9 @@
             getNum: getNum,
             insertRule: insertRule,
             getScrBarWidth: getScrBarWidth,
-            getRect: getRect
+            getRect: getRect,
+            nextFrame: nextFrame,
+            cancelNextFrame: cancelNextFrame
         }
 
 
@@ -142,6 +144,25 @@
                 offsetBottom: dom.offsetBottom,
                 offsetLeft: dom.offsetLeft,
                 offsetRight: dom.offsetRight
+            }
+        }
+
+        //请求下一帧
+        function nextFrame(callback) {
+            if (window.requestAnimationFrame) {
+                return window.requestAnimationFrame(callback);
+            } else {
+                return setTimeout(function () {
+                    callback();
+                }, 0);
+            }
+        }
+        //取消下一帧
+        function cancelNextFrame(id) {
+            if (window.requestAnimationFrame) {
+                window.cancelAnimationFrame(id);
+            } else {
+                clearTimeout(id);
             }
         }
 

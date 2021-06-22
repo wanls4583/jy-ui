@@ -1849,8 +1849,8 @@
                     var th = sotreData.resizeData.th;
                     $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - hCellPadding);
                     // 延时执行，避免卡顿
-                    clearTimeout(sotreData.resizeData.timer);
-                    sotreData.resizeData.timer = setTimeout(function () {
+                    Common.cancelNextFrame(sotreData.resizeData.timer);
+                    sotreData.resizeData.timer = Common.nextFrame(function () {
                         setArea(filter);
                     }, 0);
                 }
