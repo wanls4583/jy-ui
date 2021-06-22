@@ -98,28 +98,37 @@
 
     // 居中对齐
     &-align-left {
-        text-align: left;
 
-        .song-table-cell {
-            margin-right: auto;
+        .song-table & {
+            text-align: left;
+
+            .song-table-cell {
+                margin-right: auto;
+            }
         }
     }
 
     // 居中对齐
     &-align-center {
-        text-align: center;
 
-        .song-table-cell {
-            margin: auto;
+        .song-table & {
+            text-align: center;
+
+            .song-table-cell {
+                margin: auto;
+            }
         }
     }
 
     // 居中对齐
-    &-align-center {
-        text-align: right;
+    &-align-right {
 
-        .song-table-cell {
-            margin-left: auto;
+        .song-table & {
+            text-align: right;
+
+            .song-table-cell {
+                margin-left: auto;
+            }
         }
     }
 

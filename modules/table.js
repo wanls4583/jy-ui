@@ -17,7 +17,8 @@
         var cancelIcon = '&#xe735;';
         var ieVersion = Common.getIeVersion();
         var scrBarWidth = Common.getScrBarWidth();
-        var cellPadding = 16 * 2;
+        var hCellPadding = 16 * 2;
+        var vCellPadding = 6 * 2;
         var store = {};
         var tableClass = {
             view: 'song-table-view',
@@ -933,124 +934,127 @@
             var sotreData = store[filter];
             sotreData.width = Number(width || sotreData.width);
             sotreData.height = Number(height || sotreData.height);
-            _setViewWidth();
-            _setTableWidth();
-            _setFixedWidth();
+            setViewWidth(filter);
+            setTableWidth(filter);
+            setFixedWidth(filter);
             setCellWidth(filter);
             sotreData.$fixedLeft && setCellWidth(filter, 'left');
             sotreData.$fixedRight && setCellWidth(filter, 'right');
+        }
 
-            // 设置容器宽高
-            function _setViewWidth() {
-                if (sotreData.width) {
-                    sotreData.$view.css({
-                        width: sotreData.width
-                    });
-                    sotreData.$tableMain.css({
-                        width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width)
-                    });
+        // 设置容器宽高
+        function setViewWidth(filter) {
+            var sotreData = store[filter];
+            if (sotreData.width) {
+                sotreData.$view.css({
+                    width: sotreData.width
+                });
+                sotreData.$tableMain.css({
+                    width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width)
+                });
+            }
+            if (sotreData.height) {
+                var h = sotreData.height;
+                sotreData.$view.css({
+                    height: h
+                });
+                h -= sotreData.$header.height();
+                if (sotreData.$toolbar) {
+                    h -= sotreData.$toolbar.outerHeight();
                 }
-                if (sotreData.height) {
-                    var h = sotreData.height;
-                    sotreData.$view.css({
-                        height: h
-                    });
-                    h -= sotreData.$header.height();
-                    if (sotreData.$toolbar) {
-                        h -= sotreData.$toolbar.outerHeight();
-                    }
-                    if (sotreData.$pager) {
-                        h -= sotreData.$pager.outerHeight();
-                    }
-                    sotreData.$tableMain.css({
-                        height: h
-                    });
+                if (sotreData.$pager) {
+                    h -= sotreData.$pager.outerHeight();
                 }
-                var hedaerWidth = sotreData.$header[0].clientWidth;
-                var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
-                //表格拉伸至容器的宽度
-                if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
-                    var ws = [];
-                    var ths = sotreData.$tableHeader.find('th');
-                    // 确保选择列宽度不变
-                    sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
-                        $(th).css('width', this.clientWidth);
+                sotreData.$tableMain.css({
+                    height: h
+                });
+            }
+            var hedaerWidth = sotreData.$header[0].clientWidth;
+            var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
+            //表格拉伸至容器的宽度
+            if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
+                var ws = [];
+                var ths = sotreData.$tableHeader.find('th');
+                // 确保选择列宽度不变
+                sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
+                    $(th).css('width', this.clientWidth);
+                });
+                sotreData.$tableHeader.css({
+                    width: '100%'
+                });
+                ths.each(function (i, th) {
+                    ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - hCellPadding);
+                    th.songBindData.flex = false;
+                });
+                ths.each(function (i, th) {
+                    $(th).children('div.' + tableClass.cell).css('width', ws[i]);
+                });
+                sotreData.$tableHeader.css({
+                    width: 'auto'
+                });
+                // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
+                if (ieVersion <= 6) {
+                    sotreData.$tableMain.css({
+                        overflow: 'hidden'
                     });
-                    sotreData.$tableHeader.css({
-                        width: '100%'
-                    });
-                    ths.each(function (i, th) {
-                        ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - cellPadding);
-                        th.songBindData.flex = false;
-                    });
-                    ths.each(function (i, th) {
-                        $(th).children('div.' + tableClass.cell).css('width', ws[i]);
-                    });
-                    sotreData.$tableHeader.css({
-                        width: 'auto'
-                    });
-                    // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
-                    if (ieVersion <= 6) {
-                        sotreData.$tableMain.css({
-                            overflow: 'hidden'
-                        });
-                    }
                 }
             }
+        }
 
-            // 设置表格宽度
-            function _setTableWidth() {
-                sotreData.$table.css({
-                    width: ieVersion <= 6 ? sotreData.$tableHeader.outerWidth() : sotreData.$tableHeader.width(),
+        // 设置表格宽度
+        function setTableWidth(filter) {
+            var sotreData = store[filter];
+            sotreData.$table.css({
+                width: ieVersion <= 6 ? sotreData.$tableHeader.outerWidth() : sotreData.$tableHeader.width(),
+                tableLayout: 'fixed'
+            });
+            if (sotreData.$fixedLeft) {
+                sotreData.$fixedLeftTable.css({
+                    width: ieVersion <= 6 ? sotreData.$fixedLeftTableHeaderHead.outerWidth() : sotreData.$fixedLeftTableHeaderHead.width(),
                     tableLayout: 'fixed'
                 });
-                if (sotreData.$fixedLeft) {
-                    sotreData.$fixedLeftTable.css({
-                        width: ieVersion <= 6 ? sotreData.$fixedLeftTableHeaderHead.outerWidth() : sotreData.$fixedLeftTableHeaderHead.width(),
-                        tableLayout: 'fixed'
-                    });
-                }
-                if (sotreData.$fixedRight) {
-                    sotreData.$fixedRightTable.css({
-                        width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
-                        tableLayout: 'fixed'
-                    });
-                }
             }
+            if (sotreData.$fixedRight) {
+                sotreData.$fixedRightTable.css({
+                    width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
+                    tableLayout: 'fixed'
+                });
+            }
+        }
 
-            // 设置固定表格容器的宽高
-            function _setFixedWidth() {
-                if (sotreData.$fixedLeft) {
-                    sotreData.$fixedLeft.css({
-                        width: sotreData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                        top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0)
-                    });
-                    sotreData.$fixedLeftMain.css({
-                        height: sotreData.$tableMain[0].clientHeight
-                    });
+        // 设置固定表格容器的宽高
+        function setFixedWidth(filter) {
+            var sotreData = store[filter];
+            if (sotreData.$fixedLeft) {
+                sotreData.$fixedLeft.css({
+                    width: sotreData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0)
+                });
+                sotreData.$fixedLeftMain.css({
+                    height: sotreData.$tableMain[0].clientHeight
+                });
+            }
+            if (sotreData.$fixedRight) {
+                var left = 'auto';
+                var right = scrBarWidth;
+                if (sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth) { // 没有滚动条
+                    right = 'auto';
+                    left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
+                    sotreData.$mend && sotreData.$mend.hide();
+                    sotreData.$fixedRight.removeClass(tableClass.fixedRightShadow);
+                } else {
+                    sotreData.$mend && sotreData.$mend.show();
+                    sotreData.$fixedRight.addClass(tableClass.fixedRightShadow);
                 }
-                if (sotreData.$fixedRight) {
-                    var left = 'auto';
-                    var right = scrBarWidth;
-                    if (sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth) { // 没有滚动条
-                        right = 'auto';
-                        left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
-                        sotreData.$mend && sotreData.$mend.hide();
-                        sotreData.$fixedRight.removeClass(tableClass.fixedRightShadow);
-                    } else {
-                        sotreData.$mend && sotreData.$mend.show();
-                        sotreData.$fixedRight.addClass(tableClass.fixedRightShadow);
-                    }
-                    sotreData.$fixedRight.css({
-                        width: sotreData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                        top: (sotreData.$toolbar ? sotreData.$toolbar[0].offsetHeight : 0),
-                        left: left,
-                        right: right
-                    });
-                    sotreData.$fixedRightMain.css({
-                        height: sotreData.$tableMain[0].clientHeight
-                    });
-                }
+                sotreData.$fixedRight.css({
+                    width: sotreData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].offsetHeight : 0),
+                    left: left,
+                    right: right
+                });
+                sotreData.$fixedRightMain.css({
+                    height: sotreData.$tableMain[0].clientHeight
+                });
             }
         }
 
@@ -1061,15 +1065,20 @@
          */
         function setCellWidth(filter, fixed) {
             var sotreData = store[filter];
-            var ws = {};
+            var thMap = {};
             var $tableHead = sotreData.$tableHead;
             var $tableHeaderHead = sotreData.$tableHeaderHead;
-            sotreData.$tableHeaderHead.find('th').each(function (i, th) {
-                // 先去掉之前设置的宽度，使其自适应
-                if (th.songBindData.flex) {
-                    $(th).children('.' + tableClass.cell).css('width', 'auto');
-                }
-                ws[th.songBindData.col._key] = th;
+            sotreData.$tableHeaderHead.children('tr').each(function (i, tr) {
+                $(tr).children('th').each(function (i, th) {
+                    // 先去掉之前设置的宽度，使其自适应
+                    if (th.songBindData.flex) {
+                        $(th).children('.' + tableClass.cell).css('width', 'auto');
+                    }
+                    thMap[th.songBindData.col._key] = th;
+                    if (!th.songBindData.originHeight) {
+                        th.songBindData.originHeight = ieVersion <= 6 ? th.offsetHeight : th.clientHeight;
+                    }
+                });
             });
             if (fixed == 'left') { // 左侧固定表格
                 sotreData.$fixedLeftTableHeaderHead.find('tr').each(_eachTh);
@@ -1082,12 +1091,12 @@
             } else { // 主表格
                 sotreData.$tableHeaderHead.find('tr').each(_eachTh);
             }
-            ws = {};
+            var widthMap = {};
             $tableHeaderHead.children('tr').each(function (i, tr) {
                 $(tr).children('th').each(function (i, th) {
                     var col = th.songBindData.col;
                     if (!(col.colspan >= 2)) {
-                        ws[col._key] = ieVersion <= 6 ? th.offsetWidth : th.clientWidth;
+                        widthMap[col._key] = ieVersion <= 6 ? th.offsetWidth : th.clientWidth;
                     }
                 });
             });
@@ -1095,21 +1104,22 @@
             $tableHead.children('tr').each(function (i, tr) {
                 $(tr).children('th').each(function (i, th) {
                     $(th).css({
-                        width: ws[th.songBindData.col._key]
+                        width: widthMap[th.songBindData.col._key]
                     });
                 });
             });
 
             function _eachTh(i, tr) {
                 $(tr).children('th').each(function (i, th) {
-                    var $th = $(th);
-                    var _th = ws[th.songBindData.col._key];
-                    $th.css({
-                        height: ieVersion <= 6 ? _th.offsetHeight : _th.clientHeight
+                    var _th = thMap[th.songBindData.col._key];
+                    var $cell = $(th).children('.' + tableClass.cell);
+                    // ie8中显隐th后，其高度可能发生变化
+                    $(th).css({
+                        height: _th.songBindData.originHeight
                     });
                     if (th.songBindData.flex) {
-                        $th.children('.' + tableClass.cell).css({
-                            width: ieVersion <= 6 ? _th.clientWidth : _th.clientWidth - cellPadding
+                        $cell.css({
+                            width: ieVersion <= 6 ? _th.clientWidth : _th.clientWidth - hCellPadding
                         });
                     }
                 });
@@ -1192,7 +1202,7 @@
                     }
                     if (width) {
                         $cell.css({
-                            'width': (ieVersion <= 6 ? width + cellPadding : width)
+                            'width': (ieVersion <= 6 ? width + hCellPadding : width)
                         });
                     } else if (!(col.colspan >= 2)) {
                         // 自动列宽
@@ -1837,7 +1847,7 @@
                 if (sotreData.resizeData) {
                     var x = e.pageX - sotreData.resizeData.pageX;
                     var th = sotreData.resizeData.th;
-                    $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - cellPadding);
+                    $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - hCellPadding);
                     // 延时执行，避免卡顿
                     clearTimeout(sotreData.resizeData.timer);
                     sotreData.resizeData.timer = setTimeout(function () {
