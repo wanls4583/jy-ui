@@ -970,12 +970,24 @@
                 var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
                 //表格拉伸至容器的宽度
                 if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
+                    var ws = [];
+                    var ths = sotreData.$tableHeader.find('th');
                     // 确保选择列宽度不变
                     sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
                         $(th).css('width', this.clientWidth);
                     });
                     sotreData.$tableHeader.css({
-                        'width': '100%'
+                        width: '100%'
+                    });
+                    ths.each(function (i, th) {
+                        ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - cellPadding);
+                        th.songBindData.flex = false;
+                    });
+                    ths.each(function (i, th) {
+                        $(th).children('div.' + tableClass.cell).css('width', ws[i]);
+                    });
+                    sotreData.$tableHeader.css({
+                        width: 'auto'
                     });
                     // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
                     if (ieVersion <= 6) {
@@ -1821,17 +1833,24 @@
                 sotreData.$filter && sotreData.$filter.hide();
             });
             $body.on('mousemove', function (e) {
+                // 调整列宽
                 if (sotreData.resizeData) {
                     var x = e.pageX - sotreData.resizeData.pageX;
                     var th = sotreData.resizeData.th;
                     $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - cellPadding);
-                    setArea(filter);
+                    // 延时执行，避免卡顿
+                    clearTimeout(sotreData.resizeData.timer);
+                    sotreData.resizeData.timer = setTimeout(function () {
+                        setArea(filter);
+                    }, 0);
                 }
             });
             $body.on('mouseup', function (e) {
+                // 调整列宽结束
                 if (sotreData.resizeData) {
                     sotreData.resizeData.th.songBindData.flex = sotreData.originFlex;
                     sotreData.resizeData = undefined;
+                    sotreData.$view.removeClass(tableClass.colResize);
                 }
             });
             if (sotreData.bindedViewEvent) {
@@ -1928,6 +1947,10 @@
             });
             // 内容溢出处理
             $view.delegate('th,td', 'mouseenter', function () {
+                // 正在调整列宽中
+                if (sotreData.resizeData) {
+                    return;
+                }
                 var songBindData = this.songBindData;
                 var col = songBindData.col;
                 var $td = $(this);
@@ -1973,6 +1996,8 @@
                         originWidth: this.clientWidth,
                         originFlex: this.songBindData.flex
                     }
+                    this.songBindData.flex = false;
+                    sotreData.$view.addClass(tableClass.colResize);
                 } else if (col.sortAble) {
                     var $up = $this.find('div.' + tableClass.sortUp);
                     var $down = $this.find('div.' + tableClass.sortDown);

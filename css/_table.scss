@@ -398,6 +398,14 @@
     &-col-resize {
         cursor: e-resize;
         cursor: col-resize;
+        user-select: none;
+
+        th,
+        td {
+            cursor: e-resize;
+            cursor: col-resize;
+            user-select: none;
+        }
     }
 
     // 排序

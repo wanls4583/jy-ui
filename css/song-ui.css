@@ -1153,6 +1153,20 @@ a:focus {
 .song-table-col-resize {
   cursor: e-resize;
   cursor: col-resize;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-table-col-resize th,
+.song-table-col-resize td {
+  cursor: e-resize;
+  cursor: col-resize;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .song-table-sort {
