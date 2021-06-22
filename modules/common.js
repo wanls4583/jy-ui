@@ -13,7 +13,8 @@
             getScrBarWidth: getScrBarWidth,
             getRect: getRect,
             nextFrame: nextFrame,
-            cancelNextFrame: cancelNextFrame
+            cancelNextFrame: cancelNextFrame,
+            checkOverflow: checkOverflow
         }
 
 
@@ -164,6 +165,24 @@
             } else {
                 clearTimeout(id);
             }
+        }
+
+        // 检测文本是否溢出
+        function checkOverflow(dom) {
+            if (dom.scrollWidth > dom.clientWidth) {
+                return true;
+            }
+            var $dom = $(dom);
+            var ieVersong = getIeVersion();
+            var $temp = $dom.clone().appendTo(window.document.body).css({
+                overflow: 'visible',
+                visiblity: 'hidden',
+                width: 'auto',
+                height: ieVersong <= 6 ? $dom[0].offsetHeight : $dom.height()
+            }).addClass('song-display-inline-block');
+            var overflow = $temp[0].scrollWidth > $dom[0].scrollWidth;
+            $temp.remove();
+            return overflow;
         }
 
         //获取滚动条宽度

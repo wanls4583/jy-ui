@@ -1913,7 +1913,7 @@
                     sotreData.$fixedRightMain[0].scrollTop = $tableMain[0].scrollTop;
                 }
                 if (sotreData._$tips.length) {
-                    var tds = sotreData.$table.find('td');
+                    var tds = sotreData.$view.find('td');
                     sotreData._$tips.map(function ($tip) {
                         $tip.remove();
                     });
@@ -1958,8 +1958,21 @@
             }).delegate('tbody tr', 'mouseleave', function () {
                 sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
             });
+            // 调整列宽事件
+            $view.delegate('th', 'mousemove', function (e) {
+                if (!sotreData.resizeData) {
+                    var $this = $(this);
+                    if (e.offsetX > this.clientWidth - 10) {
+                        $this.addClass(tableClass.colResize);
+                        this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
+                        this.songBindData.$tipIcon = undefined;
+                    } else {
+                        $this.removeClass(tableClass.colResize);
+                    }
+                }
+            });
             // 内容溢出处理
-            $view.delegate('th,td', 'mouseenter', function () {
+            $view.delegate('th,td', 'mousemove', function () {
                 // 正在调整列宽中
                 if (sotreData.resizeData) {
                     return;
@@ -1968,8 +1981,9 @@
                 var col = songBindData.col;
                 var $td = $(this);
                 var $cell = $td.children('.' + tableClass.cell);
-                if (col.type == 'text' && !this.songBindData.editing && $cell[0].scrollWidth > $td[0].clientWidth) {
+                if (!songBindData.$tipIcon && col.type == 'text' && !this.songBindData.editing && Common.checkOverflow($cell[0])) {
                     var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
+                    songBindData.$tipIcon = $div;
                     $cell.append($div);
                     // 点击打开内容详情弹框
                     $div.on('click', function () {
@@ -1994,8 +2008,9 @@
                         });
                     });
                 }
-            }).delegate('td', 'mouseleave', function () {
-                $(this).children('.' + tableClass.cell).children('.' + tableClass.tipIcon).remove();
+            }).delegate('th,td', 'mouseleave', function () {
+                this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
+                this.songBindData.$tipIcon = undefined;
             });
             // 排序事件
             $view.delegate('th', 'mousedown', function (e) {
@@ -2029,17 +2044,6 @@
                         sotreData._sortObj.sort = '';
                     }
                     renderTableBody(filter, true);
-                }
-            });
-            // 调整列宽事件
-            $view.delegate('th', 'mousemove', function (e) {
-                if (!sotreData.resizeData) {
-                    var $this = $(this);
-                    if (e.offsetX > this.clientWidth - 10) {
-                        $this.addClass(tableClass.colResize);
-                    } else {
-                        $this.removeClass(tableClass.colResize);
-                    }
                 }
             });
             // 筛选字段事件
