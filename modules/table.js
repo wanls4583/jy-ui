@@ -18,7 +18,6 @@
         var ieVersion = Common.getIeVersion();
         var scrBarWidth = Common.getScrBarWidth();
         var hCellPadding = 16 * 2;
-        var vCellPadding = 6 * 2;
         var store = {};
         var tableClass = {
             view: 'song-table-view',
@@ -138,7 +137,7 @@
             renderTableHeader(filter);
             renderTableBody(filter);
             renderPage(filter);
-            setArea(filter);
+            setArea(filter, true);
             bindViewEvent(filter);
             option.reload = function (_option) {
                 reload(filter, _option);
@@ -927,14 +926,23 @@
         /**
          * 设置表格肠宽
          * @param {String} filter 
-         * @param {Number} width 
+         * @param {Number/Boolean} width 
          * @param {Number} height 
          */
         function setArea(filter, width, height) {
             var sotreData = store[filter];
-            sotreData.width = Number(width || sotreData.width);
-            sotreData.height = Number(height || sotreData.height);
-            setViewWidth(filter);
+            if (width === true) { //第一次设置容器宽度
+                setViewWidth(filter);
+            } else {
+                width = Number(width || sotreData.width) || 0;
+                height = Number(height || sotreData.height) || 0;
+                // 宽度或高度有改变时才重新设置
+                if (width && width != sotreData.width || height && height != sotreData.height) {
+                    sotreData.width = width;
+                    sotreData.height = height;
+                    setViewWidth(filter);
+                }
+            }
             setTableWidth(filter);
             setFixedWidth(filter);
             setCellWidth(filter);
@@ -979,8 +987,9 @@
                 sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
                     $(th).css('width', this.clientWidth);
                 });
+                // ie6及以下，table宽度可能会多出一像素，从而撑破父容器
                 sotreData.$tableHeader.css({
-                    width: '100%'
+                    width: sotreData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
                 });
                 ths.each(function (i, th) {
                     ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - hCellPadding);
@@ -992,12 +1001,6 @@
                 sotreData.$tableHeader.css({
                     width: 'auto'
                 });
-                // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
-                // if (ieVersion <= 6) {
-                //     sotreData.$tableMain.css({
-                //         overflow: 'hidden'
-                //     });
-                // }
             }
         }
 
