@@ -1973,13 +1973,13 @@
             });
             // 内容溢出处理
             $view.delegate('th,td', 'mousemove', function () {
-                // 正在调整列宽中
-                if (sotreData.resizeData) {
+                var $td = $(this);
+                // 正在调整列宽中或准备调整列宽
+                if (sotreData.resizeData || $td.hasClass(tableClass.colResize)) {
                     return;
                 }
                 var songBindData = this.songBindData;
                 var col = songBindData.col;
-                var $td = $(this);
                 var $cell = $td.children('.' + tableClass.cell);
                 if (!songBindData.$tipIcon && col.type == 'text' && !this.songBindData.editing && Common.checkOverflow($cell[0])) {
                     var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
