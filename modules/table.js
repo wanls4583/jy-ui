@@ -1496,7 +1496,7 @@
                 renderTr(filter, 'right');
             }
             if (sotreData.$fixedLeft || sotreData.$fixedRight) {
-                setArea(filter, sotreData.width, sotreData.height);
+                setArea(filter);
             }
         }
 
