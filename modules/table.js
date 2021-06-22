@@ -993,11 +993,11 @@
                     width: 'auto'
                 });
                 // ie6及以下，table宽度为100%时可能会多出一像素，从而撑破父容器，这里避免产生滚动条
-                if (ieVersion <= 6) {
-                    sotreData.$tableMain.css({
-                        overflow: 'hidden'
-                    });
-                }
+                // if (ieVersion <= 6) {
+                //     sotreData.$tableMain.css({
+                //         overflow: 'hidden'
+                //     });
+                // }
             }
         }
 
