@@ -10,6 +10,7 @@
             getIeVersion: getIeVersion,
             getNum: getNum,
             insertRule: insertRule,
+            deleteRule: deleteRule,
             getScrBarWidth: getScrBarWidth,
             getRect: getRect,
             nextFrame: nextFrame,
@@ -64,13 +65,31 @@
             return version
         }
 
+        // 插入样式
         function insertRule(sheet, selectorText, cssText) {
+            var index = sheet.rules.length;
             //如果是非IE
             if (sheet.insertRule) {
-                sheet.insertRule(selectorText + "{" + cssText + "}", 0);
+                sheet.insertRule(selectorText + "{" + cssText + "}", index);
                 //如果是IE
             } else if (sheet.addRule) {
-                sheet.addRule(selectorText, cssText, 0);
+                sheet.addRule(selectorText, cssText, index);
+            }
+            return index;
+        }
+
+        // 删除样式
+        function deleteRule(sheet, selector) {
+            var rules = sheet.cssRules || sheet.rules;
+            for (var i = 0; i < rules.length; i++) {
+                if (rules[i].selectorText == selector) {
+                    if (sheet.deleteRule) {
+                        sheet.deleteRule(i);
+                    } else {
+                        sheet.removeRule(i);
+                    }
+                    i--;
+                }
             }
         }
 

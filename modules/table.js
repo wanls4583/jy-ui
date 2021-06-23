@@ -19,9 +19,11 @@
         var scrBarWidth = Common.getScrBarWidth();
         var hCellPadding = 16 * 2;
         var store = {};
+        var tableCount = 1;
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
+            col: 'song-table-col',
             cell: 'song-table-cell',
             tableHeader: 'song-table-header',
             main: 'song-table-main',
@@ -72,7 +74,7 @@
             var $elem = $(option.elem);
             var filter = $elem.attr('song-filter') || 'table_' + Math.random();
             var $table = $('<table class="' + tableClass.table + '"></table>');
-            var $tableHead = $('<thead></thead>');
+            // var $tableHead = $('<thead></thead>');
             var $header = $('<div class="' + tableClass.tableHeader + '"></div>')
             var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
             var $tableHeaderHead = $('<thead></thead>');
@@ -80,10 +82,11 @@
             var sotreData = store[filter] || {};
             var $view = sotreData.$view || $('<div class="' + tableClass.view + '"></div>');
             store[filter] = sotreData;
+            sotreData.tableCount = sotreData.tableCount || tableCount++;
             sotreData.$elem = $elem;
             sotreData.$view = $view;
             sotreData.$table = $table;
-            sotreData.$tableHead = $tableHead;
+            // sotreData.$tableHead = $tableHead;
             sotreData.$header = $header;
             sotreData.$tableHeader = $tableHeader;
             sotreData.$tableHeaderHead = $tableHeaderHead;
@@ -123,7 +126,7 @@
             sotreData._sortObj = {
                 field: '',
                 sort: ''
-            }
+            };
             $view.attr('song-filter', sotreData._filter);
             // 已存在view，则不再插入
             if (!$view.parent().length) {
@@ -133,11 +136,12 @@
                 $view.empty();
             }
             initCols(filter);
+            createSheet(filter);
             renderToolbar(filter);
             renderTableHeader(filter);
             renderTableBody(filter);
             renderPage(filter);
-            setArea(filter, true);
+            setArea(filter);
             bindViewEvent(filter);
             option.reload = function (_option) {
                 reload(filter, _option);
@@ -183,11 +187,12 @@
         function initCols(filter) {
             var sotreData = store[filter];
             var cols = sotreData.originCols.concat([]);
+            var key = 0;
             cols.map(function (_cols, i) {
                 cols[i] = _cols.concat([]);
                 // 每个col都自动生成一个唯一key
                 cols[i].map(function (col) {
-                    col._key = String(Math.random());
+                    col._key = key++;
                 });
             });
             // 一级表头
@@ -254,6 +259,19 @@
                 cols[level].splice(0, colspan);
                 return sotreData.cols;
             }
+        }
+
+        // 创建样式表
+        function createSheet(filter) {
+            var sotreData = store[filter];
+            if (sotreData.sheet) {
+                return;
+            }
+            var node = document.createElement('style');
+            style = 'body {background:red}';
+            node.type = 'text/css';
+            document.getElementsByTagName('head')[0].appendChild(node);
+            sotreData.sheet = node.styleSheet || node.sheet;
         }
 
         // 重载表格
@@ -931,23 +949,12 @@
          */
         function setArea(filter, width, height) {
             var sotreData = store[filter];
-            if (width === true) { //第一次设置容器宽度
-                setViewWidth(filter);
-            } else {
-                width = Number(width || sotreData.width) || 0;
-                height = Number(height || sotreData.height) || 0;
-                // 宽度或高度有改变时才重新设置
-                if (width && width != sotreData.width || height && height != sotreData.height) {
-                    sotreData.width = width;
-                    sotreData.height = height;
-                    setViewWidth(filter);
-                }
-            }
+            sotreData.width = Number(width || sotreData.width) || 0;
+            sotreData.height = Number(height || sotreData.height) || 0;
+            setViewWidth(filter);
+            stretchTable(filter);
             setTableWidth(filter);
             setFixedWidth(filter);
-            setCellWidth(filter);
-            sotreData.$fixedLeft && setCellWidth(filter, 'left');
-            sotreData.$fixedRight && setCellWidth(filter, 'right');
         }
 
         // 设置容器宽高
@@ -977,50 +984,46 @@
                     height: h
                 });
             }
+        }
+
+        // 拉伸表格至100%
+        function stretchTable(filter) {
+            var sotreData = store[filter];
             var hedaerWidth = sotreData.$header[0].clientWidth;
             var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
             //表格拉伸至容器的宽度
             if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
-                var ws = [];
-                var ths = sotreData.$tableHeader.find('th');
+                var ths = sotreData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
                 // 确保选择列宽度不变
-                sotreData.$view.find('th.song-table-col-checkbox,th.song-table-col-radio').each(function (i, th) {
-                    $(th).css('width', this.clientWidth);
+                ths.each(function (i, th) {
+                    $(th).css('width', ieVersion <= 6 ? this.offsetWidth : $(this).width());
                 });
                 // ie6及以下，table宽度可能会多出一像素，从而撑破父容器
                 sotreData.$tableHeader.css({
                     width: sotreData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
                 });
-                ths.each(function (i, th) {
-                    ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - hCellPadding);
-                    th.songBindData.flex = false;
+                sotreData.$table.css({
+                    width: sotreData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
                 });
-                ths.each(function (i, th) {
-                    $(th).children('div.' + tableClass.cell).css('width', ws[i]);
-                });
+                setCellStyle(filter);
                 sotreData.$tableHeader.css({
                     width: 'auto'
                 });
             }
+            sotreData.stretch = false;
         }
 
         // 设置表格宽度
         function setTableWidth(filter) {
             var sotreData = store[filter];
-            sotreData.$table.css({
-                width: ieVersion <= 6 ? sotreData.$tableHeader.outerWidth() : sotreData.$tableHeader.width(),
-                tableLayout: 'fixed'
-            });
             if (sotreData.$fixedLeft) {
                 sotreData.$fixedLeftTable.css({
-                    width: ieVersion <= 6 ? sotreData.$fixedLeftTableHeaderHead.outerWidth() : sotreData.$fixedLeftTableHeaderHead.width(),
-                    tableLayout: 'fixed'
+                    width: ieVersion <= 6 ? sotreData.$fixedLeftTableHeaderHead.outerWidth() : sotreData.$fixedLeftTableHeaderHead.width()
                 });
             }
             if (sotreData.$fixedRight) {
                 sotreData.$fixedRightTable.css({
-                    width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width(),
-                    tableLayout: 'fixed'
+                    width: ieVersion <= 6 ? sotreData.$fixedRightTableHeaderHead.outerWidth() : sotreData.$fixedRightTableHeaderHead.width()
                 });
             }
         }
@@ -1057,74 +1060,6 @@
                 });
                 sotreData.$fixedRightMain.css({
                     height: sotreData.$tableMain[0].clientHeight
-                });
-            }
-        }
-
-        /**
-         * 设置单元格宽度
-         * @param {String} filter 
-         * @param {String} fixed 
-         */
-        function setCellWidth(filter, fixed) {
-            var sotreData = store[filter];
-            var thMap = {};
-            var $tableHead = sotreData.$tableHead;
-            var $tableHeaderHead = sotreData.$tableHeaderHead;
-            sotreData.$tableHeaderHead.children('tr').each(function (i, tr) {
-                $(tr).children('th').each(function (i, th) {
-                    // 先去掉之前设置的宽度，使其自适应
-                    if (th.songBindData.flex) {
-                        $(th).children('.' + tableClass.cell).css('width', 'auto');
-                    }
-                    thMap[th.songBindData.col._key] = th;
-                    if (!th.songBindData.originHeight) {
-                        th.songBindData.originHeight = ieVersion <= 6 ? th.offsetHeight : th.clientHeight;
-                    }
-                });
-            });
-            if (fixed == 'left') { // 左侧固定表格
-                sotreData.$fixedLeftTableHeaderHead.find('tr').each(_eachTh);
-                $tableHead = sotreData.$fixedLeftTableHead;
-                $tableHeaderHead = sotreData.$fixedLeftTableHeaderHead;
-            } else if (fixed == 'right') { // 右侧固定表格
-                sotreData.$fixedRightTableHeaderHead.find('tr').each(_eachTh);
-                $tableHead = sotreData.$fixedRightTableHead;
-                $tableHeaderHead = sotreData.$fixedRightTableHeaderHead;
-            } else { // 主表格
-                sotreData.$tableHeaderHead.find('tr').each(_eachTh);
-            }
-            var widthMap = {};
-            $tableHeaderHead.children('tr').each(function (i, tr) {
-                $(tr).children('th').each(function (i, th) {
-                    var col = th.songBindData.col;
-                    if (!(col.colspan >= 2)) {
-                        widthMap[col._key] = ieVersion <= 6 ? th.offsetWidth : th.clientWidth;
-                    }
-                });
-            });
-            // 设置占位表头单元格宽度
-            $tableHead.children('tr').each(function (i, tr) {
-                $(tr).children('th').each(function (i, th) {
-                    $(th).css({
-                        width: widthMap[th.songBindData.col._key]
-                    });
-                });
-            });
-
-            function _eachTh(i, tr) {
-                $(tr).children('th').each(function (i, th) {
-                    var _th = thMap[th.songBindData.col._key];
-                    var $cell = $(th).children('.' + tableClass.cell);
-                    // ie8中显隐th后，其高度可能发生变化
-                    $(th).css({
-                        height: _th.songBindData.originHeight
-                    });
-                    if (th.songBindData.flex) {
-                        $cell.css({
-                            width: ieVersion <= 6 ? _th.clientWidth : _th.clientWidth - hCellPadding
-                        });
-                    }
                 });
             }
         }
@@ -1178,7 +1113,6 @@
         function renderTableHeader(filter, fixed) {
             var sotreData = store[filter];
             var $view = sotreData.$view;
-            var $holdTr = $('<tr style="*display:none;"></tr>'); // 用于控制主表单元格宽度
             var originCols = sotreData.originCols;
             // 创建多级表头
             originCols.map(function (cols) {
@@ -1190,8 +1124,8 @@
                     }
                     col.type = col.type || 'text';
                     var width = col.width;
-                    var $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
-                    var $th = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></th>');
+                    var $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + sotreData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
+                    var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + sotreData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></th>');
                     $th[0].songBindData = {
                         col: col
                     };
@@ -1202,12 +1136,9 @@
                     // 选择列
                     if (col.type == 'radio' || col.type == 'checkbox') {
                         width = 20;
+                        col.width = 20;
                     }
-                    if (width) {
-                        $cell.css({
-                            'width': (ieVersion <= 6 ? width + hCellPadding : width)
-                        });
-                    } else if (!(col.colspan >= 2)) {
+                    if (!width) {
                         // 自动列宽
                         $th[0].songBindData.flex = true;
                     }
@@ -1276,37 +1207,13 @@
                     sotreData.$tableHeaderHead.append($tr);
                 }
             });
-            // 创建占位单元格
-            for (var i = 0; i < sotreData.cols.length; i++) {
-                var col = sotreData.cols[i];
-                if (fixed && col.fixed != fixed) {
-                    continue;
-                }
-                var $holdTh = $('<th class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '" style="height:0px;border-top:0;border-bottom:0;"></th>');
-                $holdTr.append($holdTh);
-                $holdTh[0].songBindData = {
-                    col: col,
-                    holder: true
-                }
-                if (col.hidden) {
-                    $holdTh.hide();
-                }
-            }
-            if (fixed) {
-                if (fixed == 'left') {
-                    sotreData.$fixedLeftTableHead.append($holdTr);
-                } else {
-                    sotreData.$fixedRightTableHead.append($holdTr);
-                }
-                return;
-            } else {
-                sotreData.$tableHead.append($holdTr);
-            }
             // 挂载主表表头
             if (!fixed) {
                 sotreData.$tableHeader.append(sotreData.$tableHeaderHead);
                 sotreData.$header.append(sotreData.$tableHeader);
                 sotreData.$header.insertAfter(sotreData.$toolbar);
+                setCellStyle(filter);
+                setColStyle(filter);
             }
 
             // 渲染排序图标
@@ -1343,6 +1250,61 @@
                     return false;
                 });
             }
+        }
+
+        // 设置单元格高度样式表
+        function setColStyle(filter) {
+            var sotreData = store[filter];
+            var hs = [];
+            var ths = sotreData.$tableHeaderHead.find('th');
+            ths.each(function (i, th) {
+                hs.push(ieVersion <= 6 ? th.offsetHeight : $(th).height());
+            });
+            ths.each(function (i, th) {
+                Common.insertRule(sotreData.sheet, '.' + tableClass.col + '-' + sotreData.tableCount + '-' + th.songBindData.col._key, 'height:' + hs[i] + 'px;');
+            });
+        }
+
+        // 设置单元格宽度样式表
+        function setCellStyle(filter, cols) {
+            var sotreData = store[filter];
+            var ws = [];
+            var ths = [];
+            // 只设置部分列
+            if (cols) {
+                cols = cols.map(function (col) {
+                    return col._key;
+                });
+            }
+            sotreData.$tableHeaderHead.find('th').each(function (i, th) {
+                if (cols) {
+                    if (cols.indexOf(th.songBindData.col._key) > -1) {
+                        ths.push(th);
+                    }
+                } else {
+                    ths.push(th);
+                }
+            });
+            ths.map(function (th, i) {
+                var selector = '.' + tableClass.cell + '-' + sotreData.tableCount + '-' + th.songBindData.col._key;
+                var width = th.songBindData.col.width;
+                width = ieVersion <= 6 ? width + hCellPadding : width;
+                Common.deleteRule(sotreData.sheet, selector);
+                if (th.songBindData.col.width) {
+                    Common.insertRule(sotreData.sheet, selector, 'width:' + width + 'px;');
+                }
+            });
+            ths.map(function (th, i) {
+                ws.push(ieVersion <= 6 ? th.clientWidth : th.clientWidth - hCellPadding);
+            });
+            ths.map(function (th, i) {
+                var width = th.songBindData.col.colspan > 1 ? 'auto' : ws[i] + 'px';
+                var selector = '.' + tableClass.cell + '-' + sotreData.tableCount + '-' + th.songBindData.col._key;
+                if ($(th).is(':visible')) {
+                    Common.deleteRule(sotreData.sheet, selector);
+                    Common.insertRule(sotreData.sheet, selector, 'width:' + width);
+                }
+            });
         }
 
         /**
@@ -1435,7 +1397,6 @@
             if (cols.length && cols[0].fixed == 'left') {
                 if (!sotreData.$fixedLeft) {
                     sotreData.$fixedLeft = $('<div class="' + tableClass.fixedLeft + '"></div>');
-                    sotreData.$fixedLeftTableHead = $('<thead></thead>');
                     sotreData.$fixedLeftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                     sotreData.$fixedLeftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                     sotreData.$fixedLeftTable = $('<table class="' + tableClass.table + '"></table>');
@@ -1444,7 +1405,6 @@
                     sotreData.$fixedLeftTableHeader.append(sotreData.$fixedLeftTableHeaderHead);
                     sotreData.$fixedLeftHeader.append(sotreData.$fixedLeftTableHeader);
                     sotreData.$fixedLeft.append(sotreData.$fixedLeftHeader);
-                    sotreData.$fixedLeftTable.append(sotreData.$fixedLeftTableHead);
                     sotreData.$fixedLeftMain.append(sotreData.$fixedLeftTable);
                     sotreData.$fixedLeft.append(sotreData.$fixedLeftMain);
                     sotreData.$fixedLeftTableHeader.css('height', ieVersion <= 6 ? sotreData.$tableHeader.outerHeight() : sotreData.$tableHeader.height());
@@ -1467,7 +1427,6 @@
                 if (!sotreData.$fixedRight) {
                     sotreData.$mend = $('<div class="' + tableClass.mend + '"></div>');
                     sotreData.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
-                    sotreData.$fixedRightTableHead = $('<thead></thead>');
                     sotreData.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
                     sotreData.$fixedRightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
                     sotreData.$fixedRightTable = $('<table class="' + tableClass.table + '"></table>');
@@ -1477,7 +1436,6 @@
                     sotreData.$fixedRightHeader.append(sotreData.$fixedRightTableHeader);
                     sotreData.$fixedRightHeader.append(sotreData.$mend);
                     sotreData.$fixedRight.append(sotreData.$fixedRightHeader);
-                    sotreData.$fixedRightTable.append(sotreData.$fixedRightTableHead);
                     sotreData.$fixedRightMain.append(sotreData.$fixedRightTable);
                     sotreData.$fixedRight.append(sotreData.$fixedRightMain);
                     sotreData.$fixedRightTableHeader.css('height', ieVersion <= 6 ? sotreData.$tableHeader.outerHeight() : sotreData.$tableHeader.height());
@@ -1576,8 +1534,8 @@
                     }
                 } else {
                     if (col.fixed == 'left' || col.fixed == 'right') { // 主表格中的占位列
-                        $td = $('<td class="' + ['song-table-col-' + col.type, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
-                        $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '"></div>');
+                        $td = $('<td class="' + [tableClass.col + '-' + col.type, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
+                        $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + sotreData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
                         $td[0].songBindData = {};
                         $td[0].songBindData.colData = data[col.field];
                         $td[0].songBindData.col = col;
@@ -1679,7 +1637,7 @@
          */
         function createTd(filter, col, data) {
             var sotreData = store[filter];
-            var $td = $('<td class="song-table-col-' + col.type + '" data-field="' + (col.field || '') + '"></td>');
+            var $td = $('<td class="' + [tableClass.col + '-' + col.type].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
             var $cell = null;
             var id = data._song_table_id;
             $td[0].songBindData = {};
@@ -1740,6 +1698,7 @@
             $td[0].songBindData.col = col;
             $td[0].songBindData.rowData = data;
             $td[0].songBindData.id = id;
+            $cell.addClass(tableClass.cell + '-' + sotreData.tableCount + '-' + col._key);
             $td.append($cell);
             if (col.hidden) {
                 $td.hide();
@@ -1850,10 +1809,16 @@
                 if (sotreData.resizeData) {
                     var x = e.pageX - sotreData.resizeData.pageX;
                     var th = sotreData.resizeData.th;
-                    $(th).children('div.' + tableClass.cell).css('width', ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - hCellPadding);
+                    var width = ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - hCellPadding;
                     // 延时执行，避免卡顿
                     Common.cancelNextFrame(sotreData.resizeData.timer);
                     sotreData.resizeData.timer = Common.nextFrame(function () {
+                        var selector = '.' + tableClass.cell + '-' + sotreData.tableCount + '-' + th.songBindData.col._key;
+                        Common.deleteRule(sotreData.sheet, selector);
+                        Common.insertRule(sotreData.sheet, selector, 'width:' + width + 'px');
+                        sotreData.$tableHeader.css({
+                            left: -sotreData.$tableMain[0].scrollLeft
+                        });
                         setArea(filter);
                     }, 0);
                 }
@@ -1903,7 +1868,7 @@
             });
             // 滚动事件
             $tableMain.on('scroll', function (e) {
-                $header.children('table').css({
+                sotreData.$tableHeader.css({
                     left: -$tableMain[0].scrollLeft
                 });
                 if (sotreData.$fixedLeftMain) {
@@ -1960,7 +1925,7 @@
             });
             // 调整列宽事件
             $view.delegate('th', 'mousemove', function (e) {
-                if (!sotreData.resizeData) {
+                if (!sotreData.resizeData && !(this.songBindData.col.colspan > 1)) {
                     var $this = $(this);
                     if (e.offsetX > this.clientWidth - 10) {
                         $this.addClass(tableClass.colResize);
@@ -2111,8 +2076,12 @@
                 // 存在上级父列
                 if (col.parent) {
                     _setParentCol(nowTh);
+                    setCellStyle(filter, col.parent.child);
                 }
                 setArea(filter);
+                sotreData.$tableHeader.css({
+                    left: -sotreData.$tableMain[0].scrollLeft
+                });
 
                 // 设置父级列的colspan
                 function _setParentCol(th) {
@@ -2151,7 +2120,7 @@
             if (window.btoa) {
                 var $table = $(sotreData.$tableHeader[0].outerHTML);
                 $table.append(sotreData.$table.children('tbody').html());
-                $table.find('.song-table-col-radio,.song-table-col-checkbox,.song-table-col-operate').remove();
+                $table.find('.' + tableClass.col + '-radio,.' + tableClass.col + '-checkbox,.' + tableClass.col + '-operate').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
                     $td.text($td.text());

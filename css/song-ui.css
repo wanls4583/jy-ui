@@ -1235,6 +1235,7 @@ a:focus {
 .song-table .song-table-editting .song-table-checkboxs {
   line-height: normal;
   padding: 0 0 10px 10px;
+  text-align: left;
 }
 
 .song-table .song-table-editting .song-table-checkboxs .song-form-checkbox {
