@@ -110,7 +110,7 @@
             sotreData.enterSave = option.enterSave === undefined ? true : option.enterSave;
             sotreData.originCols = option.cols[0] instanceof Array ? option.cols : [option.cols];
             // 可配置参数-end
-            sotreData._filter = filter;
+            filter = filter;
             sotreData._idCount = 0;
             sotreData._fixeLeftIdCount = 0;
             sotreData._fixeRightIdCount = 0;
@@ -127,7 +127,7 @@
                 field: '',
                 sort: ''
             };
-            $view.attr('song-filter', sotreData._filter);
+            $view.attr('song-filter', filter);
             // 已存在view，则不再插入
             if (!$view.parent().length) {
                 $view.insertAfter($elem);
@@ -142,8 +142,9 @@
             renderTableBody(filter);
             renderPage(filter);
             setViewWidth(filter);
+            setFixedWidth(filter);
             stretchTable(filter);
-            bindViewEvent(filter);
+            bindEvent(filter);
             option.reload = function (_option) {
                 reload(filter, _option);
             }
@@ -546,7 +547,7 @@
                         sotreData._editedData.push(td.songBindData.rowData);
                     }
                     // 触发保存事件
-                    Table.trigger('save(' + sotreData._filter + ')', {
+                    Table.trigger('save(' + filter + ')', {
                         id: td.songBindData.id,
                         field: col.field,
                         data: value
@@ -688,7 +689,6 @@
 
             function _edit(td) {
                 var col = td.songBindData.col;
-                var $tr = $(td).parent();
                 if (col.editable && !col.editable.editing) {
                     var data = td.songBindData.colData;
                     var editable = col.editable === true ? {} : col.editable;
@@ -747,7 +747,7 @@
                         td.songBindData.$checkbox = $checkbox;
                     }
                     // 触发编辑事件
-                    Table.trigger('edit(' + sotreData._filter + ')', {
+                    Table.trigger('edit(' + filter + ')', {
                         id: td.songBindData.id,
                         field: col.field,
                         data: data
@@ -770,7 +770,7 @@
                     }
                     $(td).addClass(tableClass.edit);
                     td.songBindData.editing = true;
-                    fixRowHeightById(filter, td.songBindData.id, ieVersion <= 6 ? $tr[0].offsetHeight : $tr[0].clientHeight);
+                    fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
                 }
             }
         }
@@ -972,8 +972,6 @@
                 sotreData.$tableHeader.css({
                     width: 'auto'
                 });
-            } else {
-                setCellStyle(filter);
             }
         }
 
@@ -1743,7 +1741,7 @@
                 return;
             }
             var $pager = $('<div class="' + tableClass.pager + '"></div>');
-            var $elem = $('<div song-filter="table_pager_' + sotreData._filter + '"></div>');
+            var $elem = $('<div song-filter="table_pager_' + filter + '"></div>');
             $pager.append($elem);
             sotreData.$pager = $pager;
             sotreData.pager = Pager.render({
@@ -1755,11 +1753,11 @@
                 prev: '<span style="font-weight:bold">' + leftIcon + '</span>',
                 next: '<span style="font-weight:bold">' + rightIon + '</span>'
             });
-            Pager.on('page(table_pager_' + sotreData._filter + ')', function (page) {
+            Pager.on('page(table_pager_' + filter + ')', function (page) {
                 sotreData.nowPage = page;
                 renderTableBody(filter);
             });
-            Pager.on('limit(table_pager_' + sotreData._filter + ')', function (limit) {
+            Pager.on('limit(table_pager_' + filter + ')', function (limit) {
                 sotreData.limit = limit;
             });
             sotreData.$pager.insertAfter(sotreData.$tableMain);
@@ -1788,15 +1786,13 @@
         }
 
         // 绑定容器的事件
-        function bindViewEvent(filter) {
+        function bindEvent(filter) {
             var sotreData = store[filter];
-            var trigger = sotreData.trigger || 'click'; //触发编辑的事件类型
+            var editTrigger = sotreData.editTrigger || 'click'; //触发编辑的事件类型
             var $view = sotreData.$view;
-            var $tableMain = sotreData.$tableMain;
-            var $header = sotreData.$header;
-            // 点击表格之外的区域，自动保存编辑中的数据
             $body.on('click', function (e) {
                 var table = $(e.target).parents('table')[0];
+                // 点击表格之外的区域，自动保存编辑中的数据
                 if (sotreData.autoSave && table != sotreData.$table[0] &&
                     (!sotreData.$fixedLeftTable || table != sotreData.$fixedLeftTable[0]) &&
                     (!sotreData.$fixedRightTable || table != sotreData.$fixedRightTable[0])) {
@@ -1806,7 +1802,7 @@
                 sotreData.$filter && sotreData.$filter.hide();
             });
             $body.on('mousemove', function (e) {
-                // 调整列宽
+                // 调整列宽中
                 if (sotreData.resizeData) {
                     var x = e.pageX - sotreData.resizeData.pageX;
                     var th = sotreData.resizeData.th;
@@ -1830,212 +1826,256 @@
                     sotreData.$view.removeClass(tableClass.colResize);
                 }
             });
-            if (sotreData.bindedViewEvent) {
+            if (sotreData.bindedEvent) {
                 return;
             }
-            sotreData.bindedViewEvent = true;
-            // 表格中的所有点击事件
-            $view.on('click', function (e) {
-                var $target = $(e.target);
-                var $tr = $target.parents('tr');
-                var event = $target.attr('song-event');
-                var stop = $target.attr('song-stop');
-                if (event) {
-                    var data = {
-                        dom: $target[0]
+            sotreData.bindedEvent = true;
+            _bindClickEvent();
+            _bindEditEvent();
+            _bindHoverEvent();
+            _bindScrollEvent();
+            _bindColResizeEvent();
+            _bindOverflowEvent();
+            _bindOrderByEvent();
+            _bindToolbarEvent();
+
+            function _bindClickEvent() {
+                // 表格中的所有点击事件
+                $view.on('click', function (e) {
+                    var $target = $(e.target);
+                    var $tr = $target.parents('tr');
+                    var event = $target.attr('song-event');
+                    var stop = $target.attr('song-stop');
+                    if (event) {
+                        var data = {
+                            dom: $target[0]
+                        }
+                        if ($tr[0] && $tr[0].songBindData) {
+                            data.id = $tr[0].songBindData.id;
+                            data.data = $tr[0].songBindData.rowData;
+                        }
+                        // 触发自定义事件
+                        filter && Table.trigger(event + '(' + filter + ')', data);
                     }
-                    if ($tr[0] && $tr[0].songBindData) {
-                        data.id = $tr[0].songBindData.id;
-                        data.data = $tr[0].songBindData.rowData;
+                    // 阻止冒泡
+                    if (stop) {
+                        return false;
                     }
-                    // 触发自定义事件
-                    filter && Table.trigger(event + '(' + filter + ')', data);
-                }
-                // 阻止冒泡
-                if (stop) {
-                    return false;
-                }
-            });
-            // 回车保存
-            $view.on('keydown', function (e) {
-                if (sotreData.enterSave) {
-                    var $td = $(e.target).parents('td');
-                    if ($td.length && e.keyCode == 13) {
-                        save(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
-                    }
-                }
-            });
-            // 滚动事件
-            $tableMain.on('scroll', function (e) {
-                sotreData.$tableHeader.css({
-                    left: -$tableMain[0].scrollLeft
                 });
-                if (sotreData.$fixedLeftMain) {
-                    sotreData.$fixedLeftMain[0].scrollTop = $tableMain[0].scrollTop;
-                }
-                if (sotreData.$fixedRightMain) {
-                    sotreData.$fixedRightMain[0].scrollTop = $tableMain[0].scrollTop;
-                }
-                if (sotreData._$tips.length) {
-                    var tds = sotreData.$view.find('td');
-                    sotreData._$tips.map(function ($tip) {
-                        $tip.remove();
+                // 行点击事件
+                $view.delegate('tbody tr', 'click', function () {
+                    // 触发行点击事件
+                    Table.trigger('row(' + filter + ')', {
+                        dom: this,
+                        id: this.songBindData.id,
+                        data: this.songBindData.rowData
                     });
-                    tds.each(function (i, td) {
-                        td.songBindData.$tip = undefined;
-                    });
-                }
-            });
-            // 点击编辑
-            $view.on(trigger, function (e) {
-                var $target = $(e.target);
-                if ($target.attr('song-event')) {
-                    return;
-                }
-                var $td = $target.parents('td');
-                if (!$td.length || $td[0].songBindData.editing) {
-                    return;
-                }
-                if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
-                    var pass = true;
-                    // 先保存真在编辑中的数据
-                    if (sotreData.autoSave) {
-                        pass = save(filter);
-                    }
-                    if (pass && $td[0].songBindData.col.editable) {
-                        edit(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
-                    }
-                }
-            });
-            // 行事件
-            $view.delegate('tbody tr', 'click', function () {
-                // 触发行点击事件
-                sotreData._filter && Table.trigger('row(' + sotreData._filter + ')', {
-                    dom: this,
-                    id: this.songBindData.id,
-                    data: this.songBindData.rowData
                 });
-                // hover改变背景色
-            }).delegate('tbody tr', 'mouseenter', function () {
-                sotreData.$view.find('tr.' + tableClass.hover).removeClass(tableClass.hover);
-                sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').addClass(tableClass.hover);
-            }).delegate('tbody tr', 'mouseleave', function () {
-                sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
-            });
-            // 调整列宽事件
-            $view.delegate('th', 'mousemove', function (e) {
-                if (!sotreData.resizeData && !(this.songBindData.col.colspan > 1)) {
-                    var $this = $(this);
-                    if (e.offsetX > this.clientWidth - 10) {
-                        $this.addClass(tableClass.colResize);
-                        this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
-                        this.songBindData.$tipIcon = undefined;
-                    } else {
-                        $this.removeClass(tableClass.colResize);
+                // 列点击事件
+                $view.delegate('tbody td', 'click', function () {
+                    // 触发单元格点击事件
+                    Table.trigger('col(' + filter + ')', {
+                        dom: this,
+                        id: this.songBindData.id,
+                        data: this.songBindData.colData
+                    });
+                })
+            }
+
+            function _bindEditEvent() {
+                // 回车保存
+                $view.on('keydown', function (e) {
+                    if (sotreData.enterSave) {
+                        var $td = $(e.target).parents('td');
+                        if ($td.length && e.keyCode == 13) {
+                            save(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
+                        }
                     }
-                }
-            });
-            // 内容溢出处理
-            $view.delegate('th,td', 'mousemove', function () {
-                var $td = $(this);
-                // 正在调整列宽中或准备调整列宽
-                if (sotreData.resizeData || $td.hasClass(tableClass.colResize)) {
-                    return;
-                }
-                var songBindData = this.songBindData;
-                var col = songBindData.col;
-                var $cell = $td.children('.' + tableClass.cell);
-                if (!songBindData.$tipIcon && col.type == 'text' && !this.songBindData.editing && Common.checkOverflow($cell[0])) {
-                    var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
-                    songBindData.$tipIcon = $div;
-                    $cell.append($div);
-                    // 点击打开内容详情弹框
-                    $div.on('click', function () {
-                        var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
-                        var offset = $cell.offset();
-                        var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                        $td.addClass(tableClass.detail);
-                        $div.remove();
-                        $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
-                        $div.append($close);
-                        $body.append($div);
-                        songBindData.$tip = $div;
-                        sotreData._$tips.push($div);
-                        $div.css({
-                            top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
-                            left: offset.left - 1
+                });
+                // 点击编辑
+                $view.on(editTrigger, function (e) {
+                    var $target = $(e.target);
+                    if ($target.attr('song-event')) {
+                        return;
+                    }
+                    var $td = $target.parents('td');
+                    if (!$td.length || $td[0].songBindData.editing) {
+                        return;
+                    }
+                    if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
+                        var pass = true;
+                        // 先保存真在编辑中的数据
+                        if (sotreData.autoSave) {
+                            pass = save(filter);
+                        }
+                        if (pass && $td[0].songBindData.col.editable) {
+                            edit(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
+                        }
+                    }
+                });
+            }
+
+            function _bindHoverEvent() {
+                $view.delegate('tbody tr', 'mouseenter', function () {
+                    sotreData.$view.find('tr.' + tableClass.hover).removeClass(tableClass.hover);
+                    sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').addClass(tableClass.hover);
+                }).delegate('tbody tr', 'mouseleave', function () {
+                    sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
+                });
+            }
+
+            function _bindScrollEvent() {
+                // 滚动事件
+                sotreData.$tableMain.on('scroll', function (e) {
+                    sotreData.$tableHeader.css({
+                        left: -sotreData.$tableMain[0].scrollLeft
+                    });
+                    if (sotreData.$fixedLeftMain) {
+                        sotreData.$fixedLeftMain[0].scrollTop = sotreData.$tableMain[0].scrollTop;
+                    }
+                    if (sotreData.$fixedRightMain) {
+                        sotreData.$fixedRightMain[0].scrollTop = sotreData.$tableMain[0].scrollTop;
+                    }
+                    if (sotreData._$tips.length) {
+                        var tds = sotreData.$view.find('td');
+                        sotreData._$tips.map(function ($tip) {
+                            $tip.remove();
                         });
-                        // 点击关闭弹框
-                        $close.on('click', function () {
-                            songBindData.$tip = undefined;
+                        tds.each(function (i, td) {
+                            td.songBindData.$tip = undefined;
+                        });
+                    }
+                });
+            }
+
+            function _bindColResizeEvent() {
+                // 调整列宽事件
+                $view.delegate('th', 'mousemove', function (e) {
+                    if (!sotreData.resizeData && !(this.songBindData.col.colspan > 1)) {
+                        var $this = $(this);
+                        if (e.offsetX > this.clientWidth - 10) {
+                            $this.addClass(tableClass.colResize);
+                            this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
+                            this.songBindData.$tipIcon = undefined;
+                        } else {
+                            $this.removeClass(tableClass.colResize);
+                        }
+                    }
+                });
+                $view.delegate('th', 'mousedown', function (e) {
+                    if (!sotreData.resizeData && $this.hasClass(tableClass.colResize)) {
+                        sotreData.resizeData = {
+                            pageX: e.pageX,
+                            th: this,
+                            originWidth: this.clientWidth
+                        }
+                        sotreData.$view.addClass(tableClass.colResize);
+                    }
+                });
+            }
+
+            function _bindOverflowEvent() {
+                // 内容溢出处理
+                $view.delegate('th,td', 'mousemove', function () {
+                    var $td = $(this);
+                    // 正在调整列宽中或准备调整列宽
+                    if (sotreData.resizeData || $td.hasClass(tableClass.colResize)) {
+                        return;
+                    }
+                    var songBindData = this.songBindData;
+                    var col = songBindData.col;
+                    var $cell = $td.children('.' + tableClass.cell);
+                    if (!songBindData.$tipIcon && col.type == 'text' && !this.songBindData.editing && Common.checkOverflow($cell[0])) {
+                        var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
+                        songBindData.$tipIcon = $div;
+                        $cell.append($div);
+                        // 点击打开内容详情弹框
+                        $div.on('click', function () {
+                            var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
+                            var offset = $cell.offset();
+                            var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
+                            $td.addClass(tableClass.detail);
                             $div.remove();
+                            $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
+                            $div.append($close);
+                            $body.append($div);
+                            songBindData.$tip = $div;
+                            sotreData._$tips.push($div);
+                            $div.css({
+                                top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
+                                left: offset.left - 1
+                            });
+                            // 点击关闭弹框
+                            $close.on('click', function () {
+                                songBindData.$tip = undefined;
+                                $div.remove();
+                            });
                         });
-                    });
-                }
-            }).delegate('th,td', 'mouseleave', function () {
-                this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
-                this.songBindData.$tipIcon = undefined;
-            });
-            // 排序事件
-            $view.delegate('th', 'mousedown', function (e) {
-                var $this = $(this);
-                // 触发排序
-                var col = this.songBindData.col;
-                if (!sotreData.resizeData && $this.hasClass(tableClass.colResize)) { // 当前处于列宽调整中
-                    sotreData.resizeData = {
-                        pageX: e.pageX,
-                        th: this,
-                        originWidth: this.clientWidth
                     }
-                    sotreData.$view.addClass(tableClass.colResize);
-                } else if (col.sortAble) {
-                    var $up = $this.find('div.' + tableClass.sortUp);
-                    var $down = $this.find('div.' + tableClass.sortDown);
-                    $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                    if (sotreData._sortObj.field != col.field) {
-                        sotreData._sortObj.field = col.field;
-                        sotreData._sortObj.sort = '';
+                }).delegate('th,td', 'mouseleave', function () {
+                    this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
+                    this.songBindData.$tipIcon = undefined;
+                });
+            }
+
+            function _bindOrderByEvent() {
+                // 排序事件
+                $view.delegate('th', 'click', function (e) {
+                    var $this = $(this);
+                    // 触发排序
+                    var col = this.songBindData.col;
+                    if (col.sortAble && !sotreData.resizeData && !$this.hasClass(tableClass.colResize)) {
+                        var $up = $this.find('div.' + tableClass.sortUp);
+                        var $down = $this.find('div.' + tableClass.sortDown);
+                        $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                        if (sotreData._sortObj.field != col.field) {
+                            sotreData._sortObj.field = col.field;
+                            sotreData._sortObj.sort = '';
+                        }
+                        if (!sotreData._sortObj.sort) {
+                            sotreData._sortObj.sort = 'asc';
+                            $up.addClass(tableClass.sortConfirm);
+                        } else if (sotreData._sortObj.sort == 'asc') {
+                            sotreData._sortObj.sort = 'desc';
+                            $down.addClass(tableClass.sortConfirm);
+                        } else {
+                            sotreData._sortObj.sort = '';
+                        }
+                        renderTableBody(filter, true);
                     }
-                    if (!sotreData._sortObj.sort) {
-                        sotreData._sortObj.sort = 'asc';
-                        $up.addClass(tableClass.sortConfirm);
-                    } else if (sotreData._sortObj.sort == 'asc') {
-                        sotreData._sortObj.sort = 'desc';
-                        $down.addClass(tableClass.sortConfirm);
+                });
+            }
+
+            function _bindToolbarEvent() {
+                // 筛选字段事件
+                Table.on('filter(' + filter + ')', function (e) {
+                    if (sotreData.$filter) {
+                        sotreData.$filter.toggle();
                     } else {
-                        sotreData._sortObj.sort = '';
+                        createFilter(filter, e.dom);
                     }
-                    renderTableBody(filter, true);
-                }
-            });
-            // 筛选字段事件
-            Table.on('filter(' + sotreData._filter + ')', function (e) {
-                if (sotreData.$filter) {
-                    sotreData.$filter.toggle();
-                } else {
-                    createFilter(filter, e.dom);
-                }
-                sotreData.$exports && sotreData.$exports.hide();
-            });
-            // 导出事件
-            Table.on('exports(' + sotreData._filter + ')', function (e) {
-                sotreData.$exports.toggle();
-                sotreData.$filter && sotreData.$filter.hide();
-            });
-            // 导出事件
-            Table.on('exports-excel(' + sotreData._filter + ')', function (e) {
-                exportsExecl(filter);
-                sotreData.$exports.hide();
-            });
-            // 导出事件
-            Table.on('exports-csv(' + sotreData._filter + ')', function (e) {
-                exportsCsv(filter);
-                sotreData.$exports.hide();
-            });
-            // 打印事件
-            Table.on('print(' + sotreData._filter + ')', function (e) {
-                print(filter);
-            });
+                    sotreData.$exports && sotreData.$exports.hide();
+                });
+                // 导出事件
+                Table.on('exports(' + filter + ')', function (e) {
+                    sotreData.$exports.toggle();
+                    sotreData.$filter && sotreData.$filter.hide();
+                });
+                // 导出事件
+                Table.on('exports-excel(' + filter + ')', function (e) {
+                    exportsExecl(filter);
+                    sotreData.$exports.hide();
+                });
+                // 导出事件
+                Table.on('exports-csv(' + filter + ')', function (e) {
+                    exportsCsv(filter);
+                    sotreData.$exports.hide();
+                });
+                // 打印事件
+                Table.on('print(' + filter + ')', function (e) {
+                    print(filter);
+                });
+            }
         }
 
         // 创建过滤器

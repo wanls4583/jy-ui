@@ -28,6 +28,8 @@
 
     // i6以下浏览器不支持child选择器
     tr {
+        // 避免设置高度时异常
+        *zoom: 1;
         &:first-child {
 
             td,
@@ -464,6 +466,7 @@
 
         .song-table-cell {
             *top: 1px;
+            *left: 1px;
             overflow: visible;
             white-space: normal;
             padding: 0 $pd15;

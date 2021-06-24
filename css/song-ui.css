@@ -808,6 +808,10 @@ a:focus {
   font-size: 14px;
 }
 
+.song-table tr {
+  *zoom: 1;
+}
+
 .song-table tr:first-child td,
 .song-table tr:first-child th {
   border-top: none;
@@ -1210,6 +1214,7 @@ a:focus {
 
 .song-table .song-table-editting .song-table-cell {
   *top: 1px;
+  *left: 1px;
   overflow: visible;
   white-space: normal;
   padding: 0 15px;
