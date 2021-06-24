@@ -13,8 +13,6 @@
         var rightIon = '&#xe734;';
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
-        var confirmIcon = '&#xe737;';
-        var cancelIcon = '&#xe735;';
         var ieVersion = Common.getIeVersion();
         var scrBarWidth = Common.getScrBarWidth();
         var hCellPadding = 16 * 2;
@@ -31,7 +29,7 @@
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
-            edit: 'song-table-edit',
+            customEdit: 'song-table-custom-edit',
             input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
@@ -469,13 +467,17 @@
             function _getValue(td, ifFormat) {
                 var value = null;
                 var col = td.songBindData.col;
-                if (td.songBindData.$input) {
+                if (typeof col.editable.type == 'object' && col.editable.type.save) {
+                    var $customEdit = $(td).find('div.' + tableClass.customEdit);
+                    value = col.editable.type.save($customEdit);
+                } else if (td.songBindData.$input) {
                     value = td.songBindData.$input.val();
                 } else if (td.songBindData.$select) {
                     value = td.songBindData.$select[0].value;
                 } else if (td.songBindData.$checkbox) {
                     value = td.songBindData.$checkbox[0].value
                 }
+                value = value || '';
                 if (ifFormat) {
                     var rowData = td.parentNode.songBindData.rowData;
                     rowData = Object.assign({}, rowData);
@@ -692,12 +694,18 @@
                 var col = td.songBindData.col;
                 if (col.editable && !td.songBindData.editing) {
                     var data = td.songBindData.colData;
-                    var $cell = $(td.children[0]);
+                    var $td = $(td);
+                    var tr = $td.parent()[0];
+                    var rowData = tr.songBindData.rowData;
+                    var id = tr.songBindData.id;
+                    var $cell = $td.children('.' + tableClass.cell);
                     var editable = col.editable === true ? {} : col.editable;
-                    var $edit = $('<div class="' + tableClass.edit + '"></div>');
                     editable.type = editable.type || 'text';
                     if (typeof editable.type == 'object' && editable.type.edit) {
-                        $edit.append(editable.type.edit());
+                        var $customEdit = $('<div class="' + tableClass.customEdit + '"></div>');
+                        $cell.empty().append($customEdit);
+                        $customEdit.append(editable.type.edit(data, rowData, id, col));
+                        $customEdit.find('input').trigger('focus');
                     } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                         _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
@@ -719,7 +727,7 @@
 
             function _editInput(td) {
                 var data = td.songBindData.colData;
-                var $edit = $(td).find('.' + tableClass.cell);
+                var $cell = $(td).children('.' + tableClass.cell);
                 var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
                 $input.val(data);
                 $input.on('input propertychange', function () {
@@ -731,7 +739,7 @@
                         }
                     }
                 });
-                $edit.empty().append($input);
+                $cell.empty().append($input);
                 td.songBindData.$input = $input;
                 // 输入框聚焦
                 $input.trigger('focus');
@@ -740,13 +748,13 @@
             function _editSelect(td) {
                 var col = td.songBindData.col;
                 var data = td.songBindData.colData;
-                var $edit = $(td).find('.' + tableClass.cell);
+                var $cell = $(td).children('.' + tableClass.cell);
                 var selectFilter = 'table_edit_select_' + filter + '_' + Math.random();
                 var $select = $('<select song-filter="' + selectFilter + '"></select>');
                 col.select && col.select.map(function (item) {
                     $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
                 });
-                $edit.empty().append($select);
+                $cell.empty().append($select);
                 // 触发select事件
                 Form.render('select(' + selectFilter + ')');
                 Form.on('select(' + selectFilter + ')', function (e) {
@@ -759,20 +767,20 @@
                 td.songBindData.$select = $select;
                 // 展开下拉框
                 setTimeout(function () {
-                    $edit.find('.song-select-title').trigger('click');
+                    $cell.children('.song-select-title').trigger('click');
                 }, 0)
             }
 
             function _editCheckbox(td) {
                 var col = td.songBindData.col;
                 var data = td.songBindData.colData;
-                var $edit = $(td).find('.' + tableClass.cell);
+                var $cell = $(td).children('.' + tableClass.cell);
                 var checkFilter = 'table_edit_checkbox_' + filter + '_' + Math.random();
                 var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
                 col.checkbox && col.checkbox.map(function (item) {
                     $checkbox.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
                 });
-                $edit.empty().append($checkbox);
+                $cell.empty().append($checkbox);
                 // 触发checkbox事件
                 Form.render('checkbox(' + checkFilter + ')');
                 Form.on('checkbox(' + checkFilter + ')', function (e) {
@@ -1909,12 +1917,12 @@
                     if (!$td.length || $td[0].songBindData.editing) {
                         return;
                     }
+                    var pass = true;
+                    // 先保存真在编辑中的数据
+                    if (storeData.autoSave) {
+                        pass = save(filter);
+                    }
                     if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
-                        var pass = true;
-                        // 先保存真在编辑中的数据
-                        if (storeData.autoSave) {
-                            pass = save(filter);
-                        }
                         if (pass && $td[0].songBindData.col.editable) {
                             edit(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
                         }

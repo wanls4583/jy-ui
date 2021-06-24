@@ -488,7 +488,10 @@
                     title: '手机号',
                     field: 'phone',
                     width: 100,
-                    editable: true,
+                    editable: {
+                        type: 'number',
+                        rules: [{ type: 'number' }]
+                    },
                     sortAble: true,
                     rowspan: 2
                 }, {
@@ -516,11 +519,21 @@
                     title: '年龄',
                     field: 'age',
                     editable: {
-                        type: 'number',
+                        type: {
+                            edit: function (value, data, id, col) {
+                                return '<div style="display:inline-block;width:50px"><input class="song-input" style="width:50px" /></div>岁';
+                            },
+                            save: function ($cell) {
+                                return $cell.find('input').val();
+                            }
+                        },
                         rules: [{ type: 'number' }]
                     },
                     sortAble: true,
-                    rowspan: 2
+                    rowspan: 2,
+                    template: function (value) {
+                        return value + '岁';
+                    }
                 }, {
                     title: '其他信息',
                     align: 'center',

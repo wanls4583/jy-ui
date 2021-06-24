@@ -425,9 +425,24 @@
             overflow: visible;
             white-space: normal;
             padding: 0 $pd15;
-            height: auto;
+            min-height: 38px;
             border-color: $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
+        }
+
+        // 自定义编辑
+        .song-table-custom-edit {
+            width: auto;
+            margin: 0 -#{$pd15};
+
+            .song-form-select {
+                margin: 0;
+            }
+
+            .song-input {
+                border: 1px;
+                padding-left: $pd15;
+            }
         }
 
         .song-input {
