@@ -30,6 +30,7 @@
     tr {
         // 避免设置高度时异常
         *zoom: 1;
+
         &:first-child {
 
             td,
@@ -52,8 +53,8 @@
         position: relative;
         // ie6下内容会溢出到旁边的td
         _width: 100%;
-        height: 28px;
         _height: 40px;
+        min-height: 28px;
         padding: 5px $pd15;
         border: 1px solid transparent;
         // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
@@ -353,52 +354,6 @@
         background-color: $lighter-color;
     }
 
-    &-confirm {
-        position: absolute;
-        right: -13px;
-        top: -13px;
-        z-index: 1;
-        width: 26px;
-        height: 26px;
-        line-height: 26px;
-        border-radius: 50%;
-        background-color: rgba(95, 184, 120, 0.6);
-        // 只兼容ie8的样式，在属性值后面加\0/
-        background-color: #{'#5FB878\\0/'};
-        *background-color: #5FB878;
-        font-family: 'iconfont';
-        color: $white-color;
-        text-align: center;
-        cursor: pointer;
-
-        &:hover {
-            background-color: #5FB878;
-        }
-    }
-
-    &-cancel {
-        position: absolute;
-        right: -44px;
-        top: -13px;
-        z-index: 1;
-        width: 26px;
-        height: 26px;
-        line-height: 26px;
-        border-radius: 50%;
-        background-color: rgba(255, 87, 34, 0.6);
-        // 只兼容ie8的样式，在属性值后面加\0/
-        background-color: #{'#FF5722\\0/'};
-        *background-color: #FF5722;
-        font-family: 'iconfont';
-        color: $white-color;
-        text-align: center;
-        cursor: pointer;
-
-        &:hover {
-            background-color: #FF5722;
-        }
-    }
-
     // 不可选中
     &-unselect {
         cursor: pointer;
@@ -456,9 +411,9 @@
     }
 
     // 编辑中
-    & &-editting {
+    & &-editing {
         // 解决ie7及以下浏览器select下拉框被覆盖的问题
-        *position: relative;
+        position: relative;
         // ie7及以下浏览器添加position:relative后，td的边框布局将改变
         *border-top: 0;
         *border-left: 0;

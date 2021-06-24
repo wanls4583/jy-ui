@@ -30,7 +30,8 @@
             tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
-            edit: 'song-table-editting',
+            editing: 'song-table-editing',
+            edit: 'song-table-edit',
             input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
@@ -79,51 +80,51 @@
             var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
             var $tableHeaderHead = $('<thead></thead>');
             var $tableMain = $('<div class="' + tableClass.main + '"></div>');
-            var sotreData = store[filter] || {};
-            var $view = sotreData.$view || $('<div class="' + tableClass.view + '"></div>');
-            store[filter] = sotreData;
-            sotreData.tableCount = sotreData.tableCount || tableCount++;
-            sotreData.$elem = $elem;
-            sotreData.$view = $view;
-            sotreData.$table = $table;
-            // sotreData.$tableHead = $tableHead;
-            sotreData.$header = $header;
-            sotreData.$tableHeader = $tableHeader;
-            sotreData.$tableHeaderHead = $tableHeaderHead;
-            sotreData.$tableMain = $tableMain;
-            sotreData.$filter = null;
-            sotreData.$exports = null;
-            sotreData.option = option;
+            var storeData = store[filter] || {};
+            var $view = storeData.$view || $('<div class="' + tableClass.view + '"></div>');
+            store[filter] = storeData;
+            storeData.tableCount = storeData.tableCount || tableCount++;
+            storeData.$elem = $elem;
+            storeData.$view = $view;
+            storeData.$table = $table;
+            // storeData.$tableHead = $tableHead;
+            storeData.$header = $header;
+            storeData.$tableHeader = $tableHeader;
+            storeData.$tableHeaderHead = $tableHeaderHead;
+            storeData.$tableMain = $tableMain;
+            storeData.$filter = null;
+            storeData.$exports = null;
+            storeData.option = option;
             // 可配置参数-start
-            sotreData.width = option.width;
-            sotreData.height = option.height;
-            sotreData.data = option.data;
-            sotreData.reqeust = option.reqeust;
-            sotreData.defaultToolbar = option.defaultToolbar;
-            sotreData.toolbar = option.toolbar;
-            sotreData.trigger = option.trigger || 'click';
-            sotreData.nowPage = option.nowPage || 1;
-            sotreData.limit = option.limit || 20;
-            sotreData.stretch = option.stretch || false;
-            sotreData.page = option.page === undefined ? true : option.page;
-            sotreData.autoSave = option.autoSave === undefined ? true : option.autoSave;
-            sotreData.enterSave = option.enterSave === undefined ? true : option.enterSave;
-            sotreData.originCols = option.cols[0] instanceof Array ? option.cols : [option.cols];
+            storeData.width = option.width;
+            storeData.height = option.height;
+            storeData.data = option.data;
+            storeData.reqeust = option.reqeust;
+            storeData.defaultToolbar = option.defaultToolbar;
+            storeData.toolbar = option.toolbar;
+            storeData.trigger = option.trigger || 'click';
+            storeData.nowPage = option.nowPage || 1;
+            storeData.limit = option.limit || 20;
+            storeData.stretch = option.stretch || false;
+            storeData.page = option.page === undefined ? true : option.page;
+            storeData.autoSave = option.autoSave === undefined ? true : option.autoSave;
+            storeData.enterSave = option.enterSave === undefined ? true : option.enterSave;
+            storeData.originCols = option.cols[0] instanceof Array ? option.cols : [option.cols];
             // 可配置参数-end
             filter = filter;
-            sotreData._idCount = 0;
-            sotreData._fixeLeftIdCount = 0;
-            sotreData._fixeRightIdCount = 0;
-            sotreData._$tips = [];
-            sotreData._renderedData = [];
-            sotreData._sortedData = [];
-            sotreData._loadedData = [];
-            sotreData._addedData = [];
-            sotreData._deletedData = [];
-            sotreData._editedData = [];
-            sotreData._checkedData = [];
-            sotreData._selectedData = null;
-            sotreData._sortObj = {
+            storeData._idCount = 0;
+            storeData._fixeLeftIdCount = 0;
+            storeData._fixeRightIdCount = 0;
+            storeData._$tips = [];
+            storeData._renderedData = [];
+            storeData._sortedData = [];
+            storeData._loadedData = [];
+            storeData._addedData = [];
+            storeData._deletedData = [];
+            storeData._editedData = [];
+            storeData._checkedData = [];
+            storeData._selectedData = null;
+            storeData._sortObj = {
                 field: '',
                 sort: ''
             };
@@ -187,8 +188,8 @@
 
         // 初始化cols
         function initCols(filter) {
-            var sotreData = store[filter];
-            var cols = sotreData.originCols.concat([]);
+            var storeData = store[filter];
+            var cols = storeData.originCols.concat([]);
             var key = 0;
             cols.map(function (_cols, i) {
                 cols[i] = _cols.concat([]);
@@ -226,13 +227,13 @@
                 }
             }
             // 用来渲染数据的列数组
-            sotreData.cols = [];
-            sotreData.cols = _getDataCol(cols, 0, 1000);
+            storeData.cols = [];
+            storeData.cols = _getDataCol(cols, 0, 1000);
             for (var i = 0; i < fixedLeftCount; i++) {
-                sotreData.cols[i].fixed = 'left';
+                storeData.cols[i].fixed = 'left';
             }
             for (var i = 1; i <= fixedRightCount; i++) {
-                sotreData.cols[sotreData.cols.length - i].fixed = 'right';
+                storeData.cols[storeData.cols.length - i].fixed = 'right';
             }
 
             function _getDataCol(cols, level, colspan, pCol) {
@@ -242,12 +243,12 @@
                         if (cols[level + 1] && cols[level + 1].length) { // 有下一级表头
                             _getDataCol(cols, level + 1, col.colspan, col);
                         } else { // 无效的colspan
-                            sotreData.cols.push(col);
+                            storeData.cols.push(col);
                             col.colspan = undefined;
                         }
                         count += (col.colspan || 1);
                     } else {
-                        sotreData.cols.push(col);
+                        storeData.cols.push(col);
                         count += 1;
                     }
                     // 上一级对应的父列
@@ -259,27 +260,27 @@
                 }
                 // 移除已处理过的列
                 cols[level].splice(0, colspan);
-                return sotreData.cols;
+                return storeData.cols;
             }
         }
 
         // 创建样式表
         function createSheet(filter) {
-            var sotreData = store[filter];
-            if (sotreData.sheet) {
+            var storeData = store[filter];
+            if (storeData.sheet) {
                 return;
             }
             var node = document.createElement('style');
             style = 'body {background:red}';
             node.type = 'text/css';
             document.getElementsByTagName('head')[0].appendChild(node);
-            sotreData.sheet = node.styleSheet || node.sheet;
+            storeData.sheet = node.styleSheet || node.sheet;
         }
 
         // 重载表格
         function reload(filter, _option) {
-            var sotreData = store[filter];
-            option = Object.assign(sotreData.option, _option || {});
+            var storeData = store[filter];
+            option = Object.assign(storeData.option, _option || {});
             render(option);
         }
 
@@ -289,16 +290,16 @@
          * @param {Object} _option [{data, id, position}]
          */
         function addRow(filter, _option) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             var data = _option.data instanceof Array ? _option.data : [_option.data];
             var index = -2;
-            var renderLength = sotreData._renderedData.length;
+            var renderLength = storeData._renderedData.length;
             if (typeof _option.id == undefined) {
-                index = sotreData._renderedData.length - 1;
+                index = storeData._renderedData.length - 1;
             } else {
-                for (var i = 0; i < sotreData._renderedData.length; i++) {
-                    if (_option.id != undefined && sotreData._renderedData[i]._song_table_id == _option.id) {
+                for (var i = 0; i < storeData._renderedData.length; i++) {
+                    if (_option.id != undefined && storeData._renderedData[i]._song_table_id == _option.id) {
                         index = i + 1;
                         break;
                     }
@@ -308,12 +309,12 @@
                 index--;
             }
             index = index < 0 ? renderLength : index;
-            sotreData._renderedData = sotreData._renderedData.slice(0, index).concat(data).concat(sotreData._renderedData.slice(index));
+            storeData._renderedData = storeData._renderedData.slice(0, index).concat(data).concat(storeData._renderedData.slice(index));
             if (index && index >= renderLength) {
                 index = renderLength - 1;
             }
             data.map(function (item) {
-                sotreData._addedData.push(item);
+                storeData._addedData.push(item);
             });
             _addRow();
             cols[0].fixed == 'left' && _addRow('left');
@@ -321,12 +322,12 @@
             Form.render();
 
             function _addRow(fixed) {
-                var $table = sotreData.$table;
+                var $table = storeData.$table;
                 var tr = null;
                 if (fixed == 'left') {
-                    $table = sotreData.$fixedLeftTable;
+                    $table = storeData.$fixedLeftTable;
                 } else if (fixed == 'right') {
-                    $table = sotreData.$fixedRightTable;
+                    $table = storeData.$fixedRightTable;
                 }
                 if (_option.id) {
                     tr = $table.find('tr[data-id="' + _option.id + '"]')[0];
@@ -351,8 +352,8 @@
          * @param {Number} id
          */
         function deleteRow(filter, id) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             _deleteRow();
             cols[0].fixed == 'left' && _deleteRow('left');
             cols[cols.length - 1].fixed == 'right' && _deleteRow('right');
@@ -360,17 +361,17 @@
             function _deleteRow(fixed) {
                 var $tr = null;
                 if (fixed == 'left') {
-                    $tr = sotreData.$fixedLeftTable.find('tr[data-id="' + id + '"]');
+                    $tr = storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]');
                 } else if (fixed == 'right') {
-                    $tr = sotreData.$fixedRightTable.find('tr[data-id="' + id + '"]');
+                    $tr = storeData.$fixedRightTable.find('tr[data-id="' + id + '"]');
                 } else {
-                    $tr = sotreData.$table.find('tr[data-id="' + id + '"]')
+                    $tr = storeData.$table.find('tr[data-id="' + id + '"]')
                 }
                 // 删除溢出内容弹框
                 $tr.children('td').each(function (i, td) {
                     if (td.songBindData.$tip) {
-                        var index = sotreData._$tips.indexOf(td.songBindData.$tip);
-                        sotreData._$tips.splice(index, 1);
+                        var index = storeData._$tips.indexOf(td.songBindData.$tip);
+                        storeData._$tips.splice(index, 1);
                         td.songBindData.$tip.remove();
                     }
                 });
@@ -378,22 +379,22 @@
                 if (fixed == 'left' || fixed == 'right') {
                     return;
                 }
-                for (var i = 0; i < sotreData._renderedData.length; i++) {
-                    if (id !== undefined && sotreData._renderedData[i]._song_table_id == id) {
-                        sotreData._deletedData.push(sotreData._renderedData[i]);
-                        for (var j = 0; j < sotreData._addedData.length; j++) {
-                            if (sotreData._addedData[j]._song_table_id == sotreData._renderedData[i]._song_table_id) {
-                                sotreData._addedData.splice(j, 1);
+                for (var i = 0; i < storeData._renderedData.length; i++) {
+                    if (id !== undefined && storeData._renderedData[i]._song_table_id == id) {
+                        storeData._deletedData.push(storeData._renderedData[i]);
+                        for (var j = 0; j < storeData._addedData.length; j++) {
+                            if (storeData._addedData[j]._song_table_id == storeData._renderedData[i]._song_table_id) {
+                                storeData._addedData.splice(j, 1);
                                 break;
                             }
                         }
-                        for (var j = 0; j < sotreData._editedData.length; j++) {
-                            if (sotreData._editedData[j]._song_table_id == sotreData._renderedData[i]._song_table_id) {
-                                sotreData._editedData.splice(j, 1);
+                        for (var j = 0; j < storeData._editedData.length; j++) {
+                            if (storeData._editedData[j]._song_table_id == storeData._renderedData[i]._song_table_id) {
+                                storeData._editedData.splice(j, 1);
                                 break;
                             }
                         }
-                        sotreData._renderedData.splice(i, 1);
+                        storeData._renderedData.splice(i, 1);
                         return;
                     }
                 }
@@ -407,7 +408,7 @@
          * @param {String} field 
          */
         function save(filter, id, field) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var result = true;
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
@@ -418,21 +419,21 @@
                     }
                     tds = [td];
                 } else {
-                    sotreData.$table.find('tr[data-id="' + id + '"]').each(_filter);
-                    if (sotreData.$fixedLeftTable) {
-                        sotreData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
+                    storeData.$table.find('tr[data-id="' + id + '"]').each(_filter);
+                    if (storeData.$fixedLeftTable) {
+                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
                     }
-                    if (sotreData.$fixedRightTable) {
-                        sotreData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
+                    if (storeData.$fixedRightTable) {
+                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
                     }
                 }
             } else { // 保存所有的数据
-                sotreData.$table.find('td').each(_filter);
-                if (sotreData.$fixedLeftTable) {
-                    sotreData.$fixedLeftTable.find('td').each(_filter);
+                storeData.$table.find('td').each(_filter);
+                if (storeData.$fixedLeftTable) {
+                    storeData.$fixedLeftTable.find('td').each(_filter);
                 }
-                if (sotreData.$fixedRightTable) {
-                    sotreData.$fixedRightTable.find('td').each(_filter);
+                if (storeData.$fixedRightTable) {
+                    storeData.$fixedRightTable.find('td').each(_filter);
                 }
             }
             for (var i = 0; i < tds.length; i++) {
@@ -529,7 +530,7 @@
                 td.songBindData.rowData[col.field] = value;
                 td.songBindData.colData = value;
                 td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.id, col) : fValue;
-                $td.removeClass(tableClass.edit);
+                $td.removeClass(tableClass.editing);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
@@ -537,14 +538,14 @@
                 // 值被修改过
                 if (String(originValue) != String(value)) {
                     var pushed = true;
-                    for (var i = 0; i < sotreData._editedData.length; i++) {
-                        if (sotreData._editedData[0]._song_table_id == td.songBindData.rowData._song_table_id) {
+                    for (var i = 0; i < storeData._editedData.length; i++) {
+                        if (storeData._editedData[0]._song_table_id == td.songBindData.rowData._song_table_id) {
                             pushed = false;
                             break;
                         }
                     }
                     if (pushed) {
-                        sotreData._editedData.push(td.songBindData.rowData);
+                        storeData._editedData.push(td.songBindData.rowData);
                     }
                     // 触发保存事件
                     Table.trigger('save(' + filter + ')', {
@@ -564,7 +565,7 @@
          * @param {String} field 
          */
         function cancel(filter, id, field) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
                 if (field) {
@@ -574,21 +575,21 @@
                     }
                     tds = [td];
                 } else {
-                    sotreData.$table.find('tr[data-id="' + id + '"]').each(_filter);
-                    if (sotreData.$fixedLeftTable) {
-                        sotreData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
+                    storeData.$table.find('tr[data-id="' + id + '"]').each(_filter);
+                    if (storeData.$fixedLeftTable) {
+                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
                     }
-                    if (sotreData.$fixedRightTable) {
-                        sotreData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
+                    if (storeData.$fixedRightTable) {
+                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
                     }
                 }
             } else { // 保存所有的数据
-                sotreData.$table.find('td').each(_filter);
-                if (sotreData.$fixedLeftTable) {
-                    sotreData.$fixedLeftTable.find('td').each(_filter);
+                storeData.$table.find('td').each(_filter);
+                if (storeData.$fixedLeftTable) {
+                    storeData.$fixedLeftTable.find('td').each(_filter);
                 }
-                if (sotreData.$fixedRightTable) {
-                    sotreData.$fixedRightTable.find('td').each(_filter);
+                if (storeData.$fixedRightTable) {
+                    storeData.$fixedRightTable.find('td').each(_filter);
                 }
             }
             for (var i = 0; i < tds.length; i++) {
@@ -633,7 +634,7 @@
                 var $td = $(td);
                 var fValue = _getValue(td);
                 td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.id, col) : fValue;
-                $td.removeClass(tableClass.edit);
+                $td.removeClass(tableClass.editing);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
                 td.songBindData.$select = undefined;
@@ -649,7 +650,7 @@
          * @param {String} field 
          */
         function edit(filter, id, field) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var tds = [];
             if (id !== undefined) { // 编辑某一行的数据
                 if (field) {
@@ -659,21 +660,21 @@
                     }
                     tds = [td];
                 } else {
-                    sotreData.$table.find('tr[data-id="' + id + '"]').children('td').each(_filter);
-                    if (sotreData.$fixedLeftTable) {
-                        sotreData.$fixedLeftTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
+                    storeData.$table.find('tr[data-id="' + id + '"]').children('td').each(_filter);
+                    if (storeData.$fixedLeftTable) {
+                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
                     }
-                    if (sotreData.$fixedRightTable) {
-                        sotreData.$fixedRightTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
+                    if (storeData.$fixedRightTable) {
+                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
                     }
                 }
             } else { // 编辑所有的数据
-                sotreData.$table.find('td').each(_filter);
-                if (sotreData.$fixedLeftTable) {
-                    sotreData.$fixedLeftTable.find('td').each(_filter);
+                storeData.$table.find('td').each(_filter);
+                if (storeData.$fixedLeftTable) {
+                    storeData.$fixedLeftTable.find('td').each(_filter);
                 }
-                if (sotreData.$fixedRightTable) {
-                    sotreData.$fixedRightTable.find('td').each(_filter);
+                if (storeData.$fixedRightTable) {
+                    storeData.$fixedRightTable.find('td').each(_filter);
                 }
             }
             for (var i = 0; i < tds.length; i++) {
@@ -689,62 +690,20 @@
 
             function _edit(td) {
                 var col = td.songBindData.col;
-                if (col.editable && !col.editable.editing) {
+                if (col.editable && !td.songBindData.editing) {
                     var data = td.songBindData.colData;
-                    var editable = col.editable === true ? {} : col.editable;
                     var $cell = $(td.children[0]);
+                    var editable = col.editable === true ? {} : col.editable;
+                    var $edit = $('<div class="' + tableClass.edit + '"></div>');
                     editable.type = editable.type || 'text';
-                    if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
-                        var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
-                        $input.val(data);
-                        $input.on('input propertychange', function () {
-                            // 只可输入数字
-                            if (editable.type == 'number') {
-                                var num = Common.getNum($input.val());
-                                if (num !== $input.val()) {
-                                    $input.val(num);
-                                }
-                            }
-                        });
-                        $cell.empty().append($input);
-                        td.songBindData.$input = $input;
-                        // 输入框聚焦
-                        $input.trigger('focus');
+                    if (typeof editable.type == 'object' && editable.type.edit) {
+                        $edit.append(editable.type.edit());
+                    } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
+                        _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
-                        var selectFilter = 'table_edit_select_' + filter + '_' + Math.random();
-                        var $select = $('<select song-filter="' + selectFilter + '"></select>');
-                        col.select && col.select.map(function (item) {
-                            $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
-                        });
-                        $cell.empty().append($select);
-                        // 触发select事件
-                        Form.render('select(' + selectFilter + ')');
-                        Form.on('select(' + selectFilter + ')', function (e) {
-                            $select[0].value = e.data;
-                            if (sotreData.autoSave) {
-                                save(filter, id, field);
-                            }
-                        });
-                        $select[0].value = data;
-                        td.songBindData.$select = $select;
-                        // 展开下拉框
-                        setTimeout(function () {
-                            $cell.find('.song-select-title').trigger('click');
-                        }, 0)
+                        _editSelect(td);
                     } else if (editable.type == 'checkbox') { // 复选框编辑
-                        var checkFilter = 'table_edit_checkbox_' + filter + '_' + Math.random();
-                        var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
-                        col.checkbox && col.checkbox.map(function (item) {
-                            $checkbox.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
-                        });
-                        $cell.empty().append($checkbox);
-                        // 触发checkbox事件
-                        Form.render('checkbox(' + checkFilter + ')');
-                        Form.on('checkbox(' + checkFilter + ')', function (e) {
-                            $checkbox[0].value = e.data;
-                        });
-                        $checkbox[0].value = data;
-                        td.songBindData.$checkbox = $checkbox;
+                        _editCheckbox(td);
                     }
                     // 触发编辑事件
                     Table.trigger('edit(' + filter + ')', {
@@ -752,26 +711,75 @@
                         field: col.field,
                         data: data
                     });
-                    if (editable.type != 'select' && editable.icon) {
-                        var $confirm = $('<div class="' + tableClass.confirm + '" title="完成编辑">' + confirmIcon + '</div>')
-                        var $cancel = $('<div class="' + tableClass.cancel + '" title="取消编辑">' + cancelIcon + '</div>')
-                        $cell.append($confirm);
-                        $cell.append($cancel);
-                        // 编辑完成事件
-                        $confirm.on('click', function () {
-                            save(filter, id, field);
-                            return false;
-                        });
-                        // 取消编辑
-                        $cancel.on('click', function () {
-                            sotreData.cancel(id, field);
-                            return false;
-                        });
-                    }
-                    $(td).addClass(tableClass.edit);
+                    $(td).addClass(tableClass.editing);
                     td.songBindData.editing = true;
                     fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
                 }
+            }
+
+            function _editInput(td) {
+                var data = td.songBindData.colData;
+                var $edit = $(td).find('.' + tableClass.cell);
+                var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
+                $input.val(data);
+                $input.on('input propertychange', function () {
+                    // 只可输入数字
+                    if (td.songBindData.col.editable.type == 'number') {
+                        var num = Common.getNum($input.val());
+                        if (num !== $input.val()) {
+                            $input.val(num);
+                        }
+                    }
+                });
+                $edit.empty().append($input);
+                td.songBindData.$input = $input;
+                // 输入框聚焦
+                $input.trigger('focus');
+            }
+
+            function _editSelect(td) {
+                var col = td.songBindData.col;
+                var data = td.songBindData.colData;
+                var $edit = $(td).find('.' + tableClass.cell);
+                var selectFilter = 'table_edit_select_' + filter + '_' + Math.random();
+                var $select = $('<select song-filter="' + selectFilter + '"></select>');
+                col.select && col.select.map(function (item) {
+                    $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
+                });
+                $edit.empty().append($select);
+                // 触发select事件
+                Form.render('select(' + selectFilter + ')');
+                Form.on('select(' + selectFilter + ')', function (e) {
+                    $select[0].value = e.data;
+                    if (storeData.autoSave) {
+                        save(filter, id, field);
+                    }
+                });
+                $select[0].value = data;
+                td.songBindData.$select = $select;
+                // 展开下拉框
+                setTimeout(function () {
+                    $edit.find('.song-select-title').trigger('click');
+                }, 0)
+            }
+
+            function _editCheckbox(td) {
+                var col = td.songBindData.col;
+                var data = td.songBindData.colData;
+                var $edit = $(td).find('.' + tableClass.cell);
+                var checkFilter = 'table_edit_checkbox_' + filter + '_' + Math.random();
+                var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
+                col.checkbox && col.checkbox.map(function (item) {
+                    $checkbox.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
+                });
+                $edit.empty().append($checkbox);
+                // 触发checkbox事件
+                Form.render('checkbox(' + checkFilter + ')');
+                Form.on('checkbox(' + checkFilter + ')', function (e) {
+                    $checkbox[0].value = e.data;
+                });
+                $checkbox[0].value = data;
+                td.songBindData.$checkbox = $checkbox;
             }
         }
 
@@ -782,8 +790,8 @@
          * @param {Number/String} height 
          */
         function fixRowHeightById(filter, id, height) {
-            var sotreData = store[filter];
-            sotreData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+            var storeData = store[filter];
+            storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
         }
 
         /**
@@ -792,19 +800,19 @@
          * @param {Object} _option 
          */
         function setData(filter, _option) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var id = _option.id;
             var field = _option.field;
             var data = _option.data;
-            var $tr = sotreData.$table.find('tr[data-id="' + id + '"]');
+            var $tr = storeData.$table.find('tr[data-id="' + id + '"]');
             var editFields = [];
             $tr.find('td').each(function (i, td) {
                 if (td.songBindData.editing) {
                     editFields.push(td.songBindData.col.field);
                 }
             });
-            for (var i = 0; i < sotreData._renderedData.length; i++) {
-                var rowData = sotreData._renderedData[i];
+            for (var i = 0; i < storeData._renderedData.length; i++) {
+                var rowData = storeData._renderedData[i];
                 if (rowData._song_table_id == id) {
                     var _data = null;
                     if (field) {
@@ -817,7 +825,7 @@
                         _data = Object.assign({}, data);
                     }
                     if (_data) {
-                        sotreData._renderedData.splice(i, _data);
+                        storeData._renderedData.splice(i, _data);
                         $tr.replaceWith(createTr(filter, _data));
                         editFields.map(function (field) {
                             edit(filter, _data._song_table_id, field);
@@ -835,27 +843,27 @@
          * @param {String} type 
          */
         function getData(filter, type) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var data = null;
             type = type || 'render';
             switch (type) {
                 case 'render':
-                    data = sotreData._renderedData;
+                    data = storeData._renderedData;
                     break;
                 case 'select':
-                    data = sotreData._selectedData;
+                    data = storeData._selectedData;
                     break;
                 case 'check':
-                    data = sotreData._checkedData;
+                    data = storeData._checkedData;
                     break;
                 case 'add':
-                    data = sotreData._addedData;
+                    data = storeData._addedData;
                     break;
                 case 'delelte':
-                    data = sotreData._deletedData;
+                    data = storeData._deletedData;
                     break;
                 case 'edit':
-                    data = sotreData._editedData;
+                    data = storeData._editedData;
                     break;
             }
             if (data) {
@@ -888,15 +896,15 @@
          * @param {String} field 
          */
         function getTdByIdField(filter, id, field) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var col = getColByField(filter, field);
             var td = null;
             if (col.fixed == 'left') {
-                td = sotreData.$fixedLeftTable.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
+                td = storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
             } else if (col.fixed == 'right') {
-                td = sotreData.$fixedRightTable.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
+                td = storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
             } else {
-                td = sotreData.$table.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
+                td = storeData.$table.find('tr[data-id="' + id + '"]').find('td[data-field="' + field + '"]')[0];
             }
             return td;
         }
@@ -907,10 +915,10 @@
          * @param {String} field 
          */
         function getColByField(filter, field) {
-            var sotreData = store[filter];
-            for (var i = 0; i < sotreData.cols.length; i++) {
-                if (sotreData.cols[i].field == field) {
-                    return sotreData.cols[i];
+            var storeData = store[filter];
+            for (var i = 0; i < storeData.cols.length; i++) {
+                if (storeData.cols[i].field == field) {
+                    return storeData.cols[i];
                 }
             }
         }
@@ -921,10 +929,10 @@
          * @param {String} key 
          */
         function getColByKey(filter, key) {
-            var sotreData = store[filter];
-            for (var i = 0; i < sotreData.cols.length; i++) {
-                if (sotreData.cols[i]._key == key) {
-                    return sotreData.cols[i];
+            var storeData = store[filter];
+            for (var i = 0; i < storeData.cols.length; i++) {
+                if (storeData.cols[i]._key == key) {
+                    return storeData.cols[i];
                 }
             }
         }
@@ -935,10 +943,10 @@
          * @param {String} id 
          */
         function getRowDataById(filter, id) {
-            var sotreData = store[filter];
-            for (var i = 0; i < sotreData._sortedData.length; i++) {
-                if (sotreData._sortedData[i]._song_table_id == id) {
-                    return sotreData._sortedData[i];
+            var storeData = store[filter];
+            for (var i = 0; i < storeData._sortedData.length; i++) {
+                if (storeData._sortedData[i]._song_table_id == id) {
+                    return storeData._sortedData[i];
                 }
             }
         }
@@ -948,28 +956,28 @@
          * @param {String} className 
          */
         function getClassNameWithKey(filter, col, className) {
-            var sotreData = store[filter];
-            return className + '-' + sotreData.tableCount + '-' + col._key;
+            var storeData = store[filter];
+            return className + '-' + storeData.tableCount + '-' + col._key;
         }
 
         // 拉伸表格至100%
         function stretchTable(filter) {
-            var sotreData = store[filter];
-            var hedaerWidth = sotreData.$header[0].clientWidth;
-            var tableHeaderWidth = sotreData.$tableHeader[0].offsetWidth;
+            var storeData = store[filter];
+            var hedaerWidth = storeData.$header[0].clientWidth;
+            var tableHeaderWidth = storeData.$tableHeader[0].offsetWidth;
             //表格拉伸至容器的宽度
-            if (sotreData.stretch && tableHeaderWidth < hedaerWidth) {
-                var ths = sotreData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
+            if (storeData.stretch && tableHeaderWidth < hedaerWidth) {
+                var ths = storeData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
                 // 确保选择列宽度不变
                 ths.each(function (i, th) {
                     $(th).css('width', ieVersion <= 6 ? this.offsetWidth : $(this).width());
                 });
                 // ie6及以下，table宽度可能会多出一像素，从而撑破父容器
-                sotreData.$tableHeader.css({
-                    width: sotreData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
+                storeData.$tableHeader.css({
+                    width: storeData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
                 });
                 setCellStyle(filter);
-                sotreData.$tableHeader.css({
+                storeData.$tableHeader.css({
                     width: 'auto'
                 });
             }
@@ -982,41 +990,41 @@
          * @param {Number} height 
          */
         function setArea(filter, width, height) {
-            var sotreData = store[filter];
-            sotreData.width = Number(width || sotreData.width) || 0;
-            sotreData.height = Number(height || sotreData.height) || 0;
+            var storeData = store[filter];
+            storeData.width = Number(width || storeData.width) || 0;
+            storeData.height = Number(height || storeData.height) || 0;
             setViewWidth(filter);
-            if (sotreData.stretch) {
+            if (storeData.stretch) {
                 stretchTable(filter);
-            } else if (height && height != sotreData.height) {
+            } else if (height && height != storeData.height) {
                 setFixedWidth(filter);
             }
         }
 
         // 设置容器宽高
         function setViewWidth(filter) {
-            var sotreData = store[filter];
-            if (sotreData.width) {
-                sotreData.$view.css({
-                    width: sotreData.width
+            var storeData = store[filter];
+            if (storeData.width) {
+                storeData.$view.css({
+                    width: storeData.width
                 });
-                sotreData.$tableMain.css({
-                    width: (ieVersion <= 6 ? sotreData.width - 2 : sotreData.width)
+                storeData.$tableMain.css({
+                    width: (ieVersion <= 6 ? storeData.width - 2 : storeData.width)
                 });
             }
-            if (sotreData.height) {
-                var h = sotreData.height;
-                sotreData.$view.css({
+            if (storeData.height) {
+                var h = storeData.height;
+                storeData.$view.css({
                     height: h
                 });
-                h -= sotreData.$header.height();
-                if (sotreData.$toolbar) {
-                    h -= sotreData.$toolbar.outerHeight();
+                h -= storeData.$header.height();
+                if (storeData.$toolbar) {
+                    h -= storeData.$toolbar.outerHeight();
                 }
-                if (sotreData.$pager) {
-                    h -= sotreData.$pager.outerHeight();
+                if (storeData.$pager) {
+                    h -= storeData.$pager.outerHeight();
                 }
-                sotreData.$tableMain.css({
+                storeData.$tableMain.css({
                     height: h
                 });
             }
@@ -1024,52 +1032,52 @@
 
         // 设置固定表格容器的宽高
         function setFixedWidth(filter) {
-            var sotreData = store[filter];
-            var hasHscroll = sotreData.$tableMain[0].scrollWidth == sotreData.$tableMain[0].clientWidth;
-            if (sotreData.$fixedLeft) {
-                sotreData.$fixedLeft.css({
-                    width: sotreData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].clientHeight : 0)
+            var storeData = store[filter];
+            var hasHscroll = storeData.$tableMain[0].scrollWidth == storeData.$tableMain[0].clientWidth;
+            if (storeData.$fixedLeft) {
+                storeData.$fixedLeft.css({
+                    width: storeData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (storeData.$toolbar ? storeData.$toolbar[0].clientHeight : 0) + 1
                 });
-                sotreData.$fixedLeftMain.css({
-                    height: sotreData.$tableMain[0].clientHeight
+                storeData.$fixedLeftMain.css({
+                    height: storeData.$tableMain[0].clientHeight
                 });
                 if (hasHscroll) { // 没有滚动条
-                    sotreData.$fixedLeft.removeClass(tableClass.fixedShadow);
+                    storeData.$fixedLeft.removeClass(tableClass.fixedShadow);
                 } else {
-                    sotreData.$fixedLeft.addClass(tableClass.fixedShadow);
+                    storeData.$fixedLeft.addClass(tableClass.fixedShadow);
                 }
             }
-            if (sotreData.$fixedRight) {
+            if (storeData.$fixedRight) {
                 var left = 'auto';
                 var right = scrBarWidth;
                 if (hasHscroll) { // 没有滚动条
                     right = 'auto';
-                    left = sotreData.$table[0].offsetWidth - sotreData.$fixedRightTableHeader[0].offsetWidth;
-                    sotreData.$mend && sotreData.$mend.hide();
-                    sotreData.$fixedRight.removeClass(tableClass.fixedShadow);
+                    left = storeData.$table[0].offsetWidth - storeData.$fixedRightTableHeader[0].offsetWidth;
+                    storeData.$mend && storeData.$mend.hide();
+                    storeData.$fixedRight.removeClass(tableClass.fixedShadow);
                 } else {
-                    sotreData.$mend && sotreData.$mend.show();
-                    sotreData.$fixedRight.addClass(tableClass.fixedShadow);
+                    storeData.$mend && storeData.$mend.show();
+                    storeData.$fixedRight.addClass(tableClass.fixedShadow);
                 }
-                sotreData.$fixedRight.css({
-                    width: sotreData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (sotreData.$toolbar ? sotreData.$toolbar[0].offsetHeight : 0),
+                storeData.$fixedRight.css({
+                    width: storeData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    top: (storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0) + 1,
                     left: left,
                     right: right
                 });
-                sotreData.$fixedRightMain.css({
-                    height: sotreData.$tableMain[0].clientHeight
+                storeData.$fixedRightMain.css({
+                    height: storeData.$tableMain[0].clientHeight
                 });
             }
         }
 
         // 渲染工具条
         function renderToolbar(filter) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var $toolbar = $('<div class="' + [tableClass.toolbar, 'song-row'].join(' ') + '"></div>');
-            if (sotreData.defaultToolbar) {
-                var defaultToolbar = sotreData.defaultToolbar;
+            if (storeData.defaultToolbar) {
+                var defaultToolbar = storeData.defaultToolbar;
                 var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
                 // 默认工具条
                 if (defaultToolbar === true) {
@@ -1089,7 +1097,7 @@
                                 </ul>');
                             $div.append($exports);
                             $tool.append($div);
-                            sotreData.$exports = $exports;
+                            storeData.$exports = $exports;
                             break;
                         case 'print':
                             $tool.append('<div title="打印" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="print">' + printIcon + '</div>');
@@ -1098,10 +1106,10 @@
                 }
                 $toolbar.append($tool);
             }
-            if (sotreData.toolbar || sotreData.defaultToolbar) {
-                sotreData.$toolbar = $toolbar;
-                $toolbar.append(sotreData.toolbar);
-                sotreData.$view.prepend($toolbar);
+            if (storeData.toolbar || storeData.defaultToolbar) {
+                storeData.$toolbar = $toolbar;
+                $toolbar.append(storeData.toolbar);
+                storeData.$view.prepend($toolbar);
             }
         }
 
@@ -1111,9 +1119,9 @@
          * @param {String} fixed 
          */
         function renderTableHeader(filter, fixed) {
-            var sotreData = store[filter];
-            var $view = sotreData.$view;
-            var originCols = sotreData.originCols;
+            var storeData = store[filter];
+            var $view = storeData.$view;
+            var originCols = storeData.originCols;
             // 创建多级表头
             originCols.map(function (cols) {
                 var $tr = $('<tr></tr>');
@@ -1124,8 +1132,8 @@
                     }
                     col.type = col.type || 'text';
                     var width = col.width;
-                    var $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + sotreData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
-                    var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + sotreData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></th>');
+                    var $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
+                    var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></th>');
                     $th[0].songBindData = {
                         col: col
                     };
@@ -1159,7 +1167,7 @@
                         // 单选
                         if (col.type == 'radio' && filter) {
                             Form.once('radio(table_radio_' + filter + ')', function (e) {
-                                sotreData._selectedData = getRowDataById(filter, e.data);
+                                storeData._selectedData = getRowDataById(filter, e.data);
                             });
                         }
                         // 多选
@@ -1171,19 +1179,19 @@
                                 for (var i = 0; i < e.data.length; i++) {
                                     checkedData.push(getRowDataById(filter, e.data[i]));
                                 }
-                                sotreData._checkedData = checkedData
-                                $all.prop('checked', checkedData.length == sotreData._sortedData.length);
+                                storeData._checkedData = checkedData
+                                $all.prop('checked', checkedData.length == storeData._sortedData.length);
                                 Form.render('checkbox(table_checkbox_' + filter + '_all)');
                             });
                             // 全选或者全不选
                             Form.once('checkbox(table_checkbox_' + filter + '_all)', function (e) {
                                 var checked = $(e.dom).prop('checked');
-                                var checkedData = checked ? sotreData._sortedData.concat([]) : [];
+                                var checkedData = checked ? storeData._sortedData.concat([]) : [];
                                 var boxs = $view.find('input[type="checkbox"][song-filter="table_checkbox_' + filter + '"]');
                                 boxs.each(function (i, box) {
                                     $(box).prop('checked', checked);
                                 });
-                                sotreData._checkedData = checkedData
+                                storeData._checkedData = checkedData
                                 Form.render('checkbox(table_checkbox_' + filter + ')');
                             });
                         }
@@ -1192,21 +1200,21 @@
                 if (fixed) {
                     if ($th) { // 空$tr无效
                         if (fixed == 'left') {
-                            sotreData.$fixedLeftTableHeaderHead.append($tr);
+                            storeData.$fixedLeftTableHeaderHead.append($tr);
                         } else {
-                            sotreData.$fixedRightTableHeaderHead.append($tr);
+                            storeData.$fixedRightTableHeaderHead.append($tr);
                         }
                     }
                     return;
                 } else {
-                    sotreData.$tableHeaderHead.append($tr);
+                    storeData.$tableHeaderHead.append($tr);
                 }
             });
             // 挂载主表表头
             if (!fixed) {
-                sotreData.$tableHeader.append(sotreData.$tableHeaderHead);
-                sotreData.$header.append(sotreData.$tableHeader);
-                sotreData.$header.insertAfter(sotreData.$toolbar);
+                storeData.$tableHeader.append(storeData.$tableHeaderHead);
+                storeData.$header.append(storeData.$tableHeader);
+                storeData.$header.insertAfter(storeData.$toolbar);
                 setCellStyle(filter);
                 setColStyle(filter);
             }
@@ -1225,9 +1233,9 @@
                 }).on('mouseleave', function () {
                     $up.removeClass(tableClass.sortHover);
                 }).on('click', function () {
-                    sotreData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                    sotreData._sortObj.field = col.field;
-                    sotreData._sortObj.sort = 'asc';
+                    storeData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    storeData._sortObj.field = col.field;
+                    storeData._sortObj.sort = 'asc';
                     $up.addClass(tableClass.sortConfirm);
                     renderTableBody(filter, true);
                     return false;
@@ -1237,9 +1245,9 @@
                 }).on('mouseleave', function () {
                     $down.removeClass(tableClass.sortHover);
                 }).on('click', function () {
-                    sotreData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                    sotreData._sortObj.field = col.field;
-                    sotreData._sortObj.sort = 'desc';
+                    storeData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    storeData._sortObj.field = col.field;
+                    storeData._sortObj.sort = 'desc';
                     $down.addClass(tableClass.sortConfirm);
                     renderTableBody(filter, true);
                     return false;
@@ -1249,20 +1257,20 @@
 
         // 设置单元格高度样式表
         function setColStyle(filter) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var hs = [];
-            var ths = sotreData.$tableHeaderHead.find('th');
+            var ths = storeData.$tableHeaderHead.find('th');
             ths.each(function (i, th) {
                 hs.push(ieVersion <= 6 ? th.offsetHeight : $(th).height());
             });
             ths.each(function (i, th) {
-                Common.insertRule(sotreData.sheet, getClassNameWithKey(filter, th.songBindData.col, 'th.' + tableClass.col), 'height:' + hs[i] + 'px;');
+                Common.insertRule(storeData.sheet, getClassNameWithKey(filter, th.songBindData.col, 'th.' + tableClass.col), 'height:' + hs[i] + 'px;');
             });
         }
 
         // 设置单元格宽度样式表
         function setCellStyle(filter, cols) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             var ws = [];
             var ths = [];
             // 只设置部分列
@@ -1271,7 +1279,7 @@
                     return col._key;
                 });
             }
-            sotreData.$tableHeaderHead.find('th').each(function (i, th) {
+            storeData.$tableHeaderHead.find('th').each(function (i, th) {
                 if (cols) {
                     if (cols.indexOf(th.songBindData.col._key) > -1) {
                         ths.push(th);
@@ -1284,9 +1292,9 @@
                 var cellSelector = getClassNameWithKey(filter, th.songBindData.col, '.' + tableClass.cell);
                 var width = th.songBindData.col.width;
                 width = ieVersion <= 6 ? width + hCellPadding : width;
-                Common.deleteRule(sotreData.sheet, cellSelector);
+                Common.deleteRule(storeData.sheet, cellSelector);
                 if (th.songBindData.col.width) {
-                    Common.insertRule(sotreData.sheet, cellSelector, 'width:' + width + 'px;');
+                    Common.insertRule(storeData.sheet, cellSelector, 'width:' + width + 'px;');
                 }
             });
             ths.map(function (th, i) {
@@ -1299,8 +1307,8 @@
                 var cw = th.songBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px';
                 var cellSelector = getClassNameWithKey(filter, th.songBindData.col, '.' + tableClass.cell);
                 if ($(th).is(':visible')) {
-                    Common.deleteRule(sotreData.sheet, cellSelector);
-                    Common.insertRule(sotreData.sheet, cellSelector, 'width:' + cw);
+                    Common.deleteRule(storeData.sheet, cellSelector);
+                    Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
                 }
             });
             setFixedWidth(filter);
@@ -1312,38 +1320,38 @@
          * @param {Boolean} justSort 
          */
         function renderTableBody(filter, justSort) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
-            if (!sotreData.$tableMain.inserted) {
-                var viewWidth = sotreData.$view.width();
-                sotreData.$table.append(sotreData.$tableHead);
-                sotreData.$tableMain.append(sotreData.$table);
-                sotreData.$tableMain.insertAfter(sotreData.$header);
-                sotreData.$tableMain.css({
+            var storeData = store[filter];
+            var cols = storeData.cols;
+            if (!storeData.$tableMain.inserted) {
+                var viewWidth = storeData.$view.width();
+                storeData.$table.append(storeData.$tableHead);
+                storeData.$tableMain.append(storeData.$table);
+                storeData.$tableMain.insertAfter(storeData.$header);
+                storeData.$tableMain.css({
                     width: viewWidth
                 });
-                sotreData.$tableMain.inserted = true;
+                storeData.$tableMain.inserted = true;
             }
 
             if (justSort) {
                 _render();
-            } else if (sotreData.data) {
-                var start = (sotreData.nowPage - 1) * sotreData.limit;
-                var end = sotreData.nowPage * sotreData.limit;
-                sotreData._renderedData = sotreData.data.slice(start, end).map(function (item) {
+            } else if (storeData.data) {
+                var start = (storeData.nowPage - 1) * storeData.limit;
+                var end = storeData.nowPage * storeData.limit;
+                storeData._renderedData = storeData.data.slice(start, end).map(function (item) {
                     return Object.assign({}, item);
                 });
-                sotreData._sortedData = sotreData._renderedData.concat([]);
+                storeData._sortedData = storeData._renderedData.concat([]);
                 _render();
 
             } else {
                 httpGet(filter, function (res) {
-                    sotreData._renderedData = res.data;
-                    sotreData._loadedData = res.data.map(function (item) {
+                    storeData._renderedData = res.data;
+                    storeData._loadedData = res.data.map(function (item) {
                         return Object.assign({}, item);
                     });
-                    sotreData._sortedData = sotreData._renderedData.concat([]);
-                    sotreData.pager.count != res.count && sotreData.pager.reload({
+                    storeData._sortedData = storeData._renderedData.concat([]);
+                    storeData.pager.count != res.count && storeData.pager.reload({
                         count: res.count
                     });
                     _render();
@@ -1371,14 +1379,14 @@
                     }
                 }
                 cols.map(function (col) {
-                    if (col.sortAble && sotreData._sortObj.field == col.field) {
+                    if (col.sortAble && storeData._sortObj.field == col.field) {
                         if (typeof col.sortAble == 'object') {
                             sortFun = Object.assign(sortFun, col.sortAble);
                         }
-                        sotreData._sortedData = sotreData._renderedData.concat([]);
-                        if (sotreData._sortObj.sort) {
-                            sortFun[sotreData._sortObj.sort] && sotreData._sortedData.sort(function (a, b) {
-                                return sortFun[sotreData._sortObj.sort](a[col.field], b[col.field]);
+                        storeData._sortedData = storeData._renderedData.concat([]);
+                        if (storeData._sortObj.sort) {
+                            sortFun[storeData._sortObj.sort] && storeData._sortedData.sort(function (a, b) {
+                                return sortFun[storeData._sortObj.sort](a[col.field], b[col.field]);
                             });
                         }
                     }
@@ -1391,71 +1399,71 @@
          * @param {String} filter 
          */
         function renderTableFixed(filter) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             if (cols.length && cols[0].fixed == 'left') {
-                if (!sotreData.$fixedLeft) {
-                    sotreData.$fixedLeft = $('<div class="' + tableClass.fixedLeft + '"></div>');
-                    sotreData.$fixedLeftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
-                    sotreData.$fixedLeftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
-                    sotreData.$fixedLeftTable = $('<table class="' + tableClass.table + '"></table>');
-                    sotreData.$fixedLeftTableHeader = $('<table class="' + tableClass.table + '"></table>');
-                    sotreData.$fixedLeftTableHeaderHead = $('<thead></thead>');
-                    sotreData.$fixedLeftTableHeader.append(sotreData.$fixedLeftTableHeaderHead);
-                    sotreData.$fixedLeftHeader.append(sotreData.$fixedLeftTableHeader);
-                    sotreData.$fixedLeft.append(sotreData.$fixedLeftHeader);
-                    sotreData.$fixedLeftMain.append(sotreData.$fixedLeftTable);
-                    sotreData.$fixedLeft.append(sotreData.$fixedLeftMain);
-                    sotreData.$fixedLeftTableHeader.css('height', ieVersion <= 6 ? sotreData.$tableHeader.outerHeight() : sotreData.$tableHeader.height());
+                if (!storeData.$fixedLeft) {
+                    storeData.$fixedLeft = $('<div class="' + tableClass.fixedLeft + '"></div>');
+                    storeData.$fixedLeftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
+                    storeData.$fixedLeftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
+                    storeData.$fixedLeftTable = $('<table class="' + tableClass.table + '"></table>');
+                    storeData.$fixedLeftTableHeader = $('<table class="' + tableClass.table + '"></table>');
+                    storeData.$fixedLeftTableHeaderHead = $('<thead></thead>');
+                    storeData.$fixedLeftTableHeader.append(storeData.$fixedLeftTableHeaderHead);
+                    storeData.$fixedLeftHeader.append(storeData.$fixedLeftTableHeader);
+                    storeData.$fixedLeft.append(storeData.$fixedLeftHeader);
+                    storeData.$fixedLeftMain.append(storeData.$fixedLeftTable);
+                    storeData.$fixedLeft.append(storeData.$fixedLeftMain);
+                    storeData.$fixedLeftTableHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     renderTableHeader(filter, 'left');
-                    sotreData.$view.append(sotreData.$fixedLeft);
-                    sotreData.$fixedLeftMain.on('mousewheel', function (e) {
+                    storeData.$view.append(storeData.$fixedLeft);
+                    storeData.$fixedLeftMain.on('mousewheel', function (e) {
                         var wheelDelta = e.originalEvent.wheelDelta;
                         if (wheelDelta < 0) {
                             wheelDelta += 20;
                         } else {
                             wheelDelta -= 20;
                         }
-                        sotreData.$tableMain[0].scrollTop -= wheelDelta;
+                        storeData.$tableMain[0].scrollTop -= wheelDelta;
                         return false;
                     });
                 }
                 renderTr(filter, 'left');
             }
             if (cols.length && cols[cols.length - 1].fixed == 'right') {
-                if (!sotreData.$fixedRight) {
-                    sotreData.$mend = $('<div class="' + tableClass.mend + '"></div>');
-                    sotreData.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
-                    sotreData.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
-                    sotreData.$fixedRightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
-                    sotreData.$fixedRightTable = $('<table class="' + tableClass.table + '"></table>');
-                    sotreData.$fixedRightTableHeader = $('<table class="' + tableClass.table + '"></table>');
-                    sotreData.$fixedRightTableHeaderHead = $('<thead></thead>');
-                    sotreData.$fixedRightTableHeader.append(sotreData.$fixedRightTableHeaderHead);
-                    sotreData.$fixedRightHeader.append(sotreData.$fixedRightTableHeader);
-                    sotreData.$fixedRightHeader.append(sotreData.$mend);
-                    sotreData.$fixedRight.append(sotreData.$fixedRightHeader);
-                    sotreData.$fixedRightMain.append(sotreData.$fixedRightTable);
-                    sotreData.$fixedRight.append(sotreData.$fixedRightMain);
-                    sotreData.$fixedRightTableHeader.css('height', ieVersion <= 6 ? sotreData.$tableHeader.outerHeight() : sotreData.$tableHeader.height());
+                if (!storeData.$fixedRight) {
+                    storeData.$mend = $('<div class="' + tableClass.mend + '"></div>');
+                    storeData.$fixedRight = $('<div class="' + tableClass.fixedRight + '"></div>');
+                    storeData.$fixedRightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
+                    storeData.$fixedRightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
+                    storeData.$fixedRightTable = $('<table class="' + tableClass.table + '"></table>');
+                    storeData.$fixedRightTableHeader = $('<table class="' + tableClass.table + '"></table>');
+                    storeData.$fixedRightTableHeaderHead = $('<thead></thead>');
+                    storeData.$fixedRightTableHeader.append(storeData.$fixedRightTableHeaderHead);
+                    storeData.$fixedRightHeader.append(storeData.$fixedRightTableHeader);
+                    storeData.$fixedRightHeader.append(storeData.$mend);
+                    storeData.$fixedRight.append(storeData.$fixedRightHeader);
+                    storeData.$fixedRightMain.append(storeData.$fixedRightTable);
+                    storeData.$fixedRight.append(storeData.$fixedRightMain);
+                    storeData.$fixedRightTableHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
-                    sotreData.$mend.css('height', sotreData.$tableHeader[0].clientHeight);
+                    storeData.$mend.css('height', storeData.$tableHeader[0].clientHeight);
                     renderTableHeader(filter, 'right');
-                    sotreData.$view.append(sotreData.$fixedRight);
-                    sotreData.$fixedRightMain.on('mousewheel', function (e) {
+                    storeData.$view.append(storeData.$fixedRight);
+                    storeData.$fixedRightMain.on('mousewheel', function (e) {
                         var wheelDelta = e.originalEvent.wheelDelta;
                         if (wheelDelta < 0) {
                             wheelDelta += 20;
                         } else {
                             wheelDelta -= 20;
                         }
-                        sotreData.$tableMain[0].scrollTop -= wheelDelta;
+                        storeData.$tableMain[0].scrollTop -= wheelDelta;
                         return false;
                     });
                 }
                 renderTr(filter, 'right');
             }
-            if (sotreData.$fixedLeft || sotreData.$fixedRight) {
+            if (storeData.$fixedLeft || storeData.$fixedRight) {
                 setFixedWidth(filter);
             }
         }
@@ -1466,25 +1474,25 @@
          * @param {String} fixed 
          */
         function renderTr(filter, fixed) {
-            var sotreData = store[filter];
-            var $table = sotreData.$table;
-            var data = sotreData._sortedData;
+            var storeData = store[filter];
+            var $table = storeData.$table;
+            var data = storeData._sortedData;
             // 渲染左固定列
             if (fixed == 'left') {
-                $table = sotreData.$fixedLeftTable;
+                $table = storeData.$fixedLeftTable;
             }
             // 渲染右固定列
             if (fixed == 'right') {
-                $table = sotreData.$fixedRightTable;
+                $table = storeData.$fixedRightTable;
             }
             var trs = $table.children('tbody').children('tr');
             // 取消全选
-            sotreData.$tableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-            sotreData.$fixedLeftTableHeaderHead && sotreData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-            sotreData.$fixedRightTableHeaderHead && sotreData.$fixedRightTableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-            sotreData.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
-            sotreData._checkedData = [];
-            sotreData._selectedData = null;
+            storeData.$tableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
+            storeData.$fixedLeftTableHeaderHead && storeData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
+            storeData.$fixedRightTableHeaderHead && storeData.$fixedRightTableHeaderHead.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
+            storeData.$tableHeader.find('[song-filter="table_checkbox_' + filter + '_all"]').prop('checked', false);
+            storeData._checkedData = [];
+            storeData._selectedData = null;
             for (var i = 0; i < data.length; i++) {
                 if (trs[i]) { // 重复利用
                     replaceTr(filter, data[i], trs[i], fixed);
@@ -1509,16 +1517,16 @@
          * @param {String} fixed 
          */
         function createTr(filter, data, fixed) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             var id = data.id || data._song_table_id;
             if (id === undefined) {
                 if (fixed == 'left') {
-                    id = sotreData._fixeLeftIdCount++;
+                    id = storeData._fixeLeftIdCount++;
                 } else if (fixed == 'right') {
-                    id = sotreData._fixeRightIdCount++;
+                    id = storeData._fixeRightIdCount++;
                 } else {
-                    id = sotreData._idCount++;
+                    id = storeData._idCount++;
                 }
             }
             var $tr = $('<tr data-id="' + id + '"></tr>');
@@ -1533,8 +1541,8 @@
                     }
                 } else {
                     if (col.fixed == 'left' || col.fixed == 'right') { // 主表格中的占位列
-                        $td = $('<td class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + sotreData.tableCount + '-' + col._key, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
-                        $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + sotreData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
+                        $td = $('<td class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key, tableClass.fixedEmpty].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
+                        $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
                         $td[0].songBindData = {};
                         $td[0].songBindData.colData = data[col.field];
                         $td[0].songBindData.col = col;
@@ -1562,16 +1570,16 @@
          * @param {String} fixed 
          */
         function replaceTr(filter, data, tr, fixed) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             var id = data.id || data._song_table_id;
             if (id === undefined) {
                 if (fixed == 'left') {
-                    id = sotreData._fixeLeftIdCount++;
+                    id = storeData._fixeLeftIdCount++;
                 } else if (fixed == 'right') {
-                    id = sotreData._fixeRightIdCount++;
+                    id = storeData._fixeRightIdCount++;
                 } else {
-                    id = sotreData._idCount++;
+                    id = storeData._idCount++;
                 }
             }
             data._song_table_id = id;
@@ -1635,8 +1643,8 @@
          * @param {Object} data 
          */
         function createTd(filter, col, data) {
-            var sotreData = store[filter];
-            var $td = $('<td class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + sotreData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
+            var storeData = store[filter];
+            var $td = $('<td class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></td>');
             var $cell = null;
             var id = data._song_table_id;
             $td[0].songBindData = {};
@@ -1644,13 +1652,13 @@
                 $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '">' + getCellHtml(data[col.field], data, id, col) + '</div>');
             } else if (col.type == 'radio') { // 单选列
                 $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '"><input type="radio" name="table_radio_' + filter + '" value="' + id + '" song-filter="table_radio_' + filter + '"/></div>');
-                if (sotreData._selectedData && sotreData._selectedData._song_table_id === id) {
+                if (storeData._selectedData && storeData._selectedData._song_table_id === id) {
                     $cell.children('input').prop('checked', true);
                 }
             } else if (col.type == 'checkbox') { // 多选列
                 $cell = $('<div class="' + ['song-row', tableClass.cell].join(' ') + '"><input type="checkbox" name="table_checkbox_' + filter + '" value="' + id + '" song-filter="table_checkbox_' + filter + '"/></div>');
-                for (var i = 0; i < sotreData._checkedData.length; i++) {
-                    if (sotreData._checkedData[i]._song_table_id === id) {
+                for (var i = 0; i < storeData._checkedData.length; i++) {
+                    if (storeData._checkedData[i]._song_table_id === id) {
                         $cell.children('input').prop('checked', true);
                         break;
                     }
@@ -1697,7 +1705,7 @@
             $td[0].songBindData.col = col;
             $td[0].songBindData.rowData = data;
             $td[0].songBindData.id = id;
-            $cell.addClass(tableClass.cell + '-' + sotreData.tableCount + '-' + col._key);
+            $cell.addClass(tableClass.cell + '-' + storeData.tableCount + '-' + col._key);
             $td.append($cell);
             if (col.hidden) {
                 $td.hide();
@@ -1736,50 +1744,50 @@
 
         // 渲染页码
         function renderPage(filter) {
-            var sotreData = store[filter];
-            if (sotreData.page === false) {
+            var storeData = store[filter];
+            if (storeData.page === false) {
                 return;
             }
             var $pager = $('<div class="' + tableClass.pager + '"></div>');
             var $elem = $('<div song-filter="table_pager_' + filter + '"></div>');
             $pager.append($elem);
-            sotreData.$pager = $pager;
-            sotreData.pager = Pager.render({
+            storeData.$pager = $pager;
+            storeData.pager = Pager.render({
                 elem: $elem[0],
-                nowPage: sotreData.nowPage,
-                limit: sotreData.limit,
+                nowPage: storeData.nowPage,
+                limit: storeData.limit,
                 size: 'small',
-                count: sotreData.data ? sotreData.data.length : sotreData._loadedData.length,
+                count: storeData.data ? storeData.data.length : storeData._loadedData.length,
                 prev: '<span style="font-weight:bold">' + leftIcon + '</span>',
                 next: '<span style="font-weight:bold">' + rightIon + '</span>'
             });
             Pager.on('page(table_pager_' + filter + ')', function (page) {
-                sotreData.nowPage = page;
+                storeData.nowPage = page;
                 renderTableBody(filter);
             });
             Pager.on('limit(table_pager_' + filter + ')', function (limit) {
-                sotreData.limit = limit;
+                storeData.limit = limit;
             });
-            sotreData.$pager.insertAfter(sotreData.$tableMain);
+            storeData.$pager.insertAfter(storeData.$tableMain);
         }
 
         function httpGet(filter, success, error) {
-            var sotreData = store[filter];
-            var data = sotreData.reqeust.data || {};
-            data[sotreData.reqeust.pageName || 'page'] = sotreData.nowPage;
-            data[sotreData.reqeust.limitName || 'limit'] = sotreData.limit;
+            var storeData = store[filter];
+            var data = storeData.reqeust.data || {};
+            data[storeData.reqeust.pageName || 'page'] = storeData.nowPage;
+            data[storeData.reqeust.limitName || 'limit'] = storeData.limit;
             $.ajax({
-                url: sotreData.reqeust.url,
-                method: sotreData.reqeust.method || 'get',
-                dataType: sotreData.reqeust.dataType || 'json',
-                contentType: sotreData.reqeust.contentType || 'application/json',
+                url: storeData.reqeust.url,
+                method: storeData.reqeust.method || 'get',
+                dataType: storeData.reqeust.dataType || 'json',
+                contentType: storeData.reqeust.contentType || 'application/json',
                 data: data,
                 success: function (res) {
-                    sotreData.reqeust.success && sotreData.reqeust.success(res);
-                    success(sotreData.reqeust.parseData && sotreData.reqeust.parseData(res) || res);
+                    storeData.reqeust.success && storeData.reqeust.success(res);
+                    success(storeData.reqeust.parseData && storeData.reqeust.parseData(res) || res);
                 },
                 error: function (res) {
-                    sotreData.reqeust.error && sotreData.reqeust.error(res);
+                    storeData.reqeust.error && storeData.reqeust.error(res);
                     error && error(res);
                 }
             })
@@ -1787,49 +1795,48 @@
 
         // 绑定容器的事件
         function bindEvent(filter) {
-            var sotreData = store[filter];
-            var editTrigger = sotreData.editTrigger || 'click'; //触发编辑的事件类型
-            var $view = sotreData.$view;
+            var storeData = store[filter];
+            var editTrigger = storeData.editTrigger || 'click'; //触发编辑的事件类型
             $body.on('click', function (e) {
                 var table = $(e.target).parents('table')[0];
                 // 点击表格之外的区域，自动保存编辑中的数据
-                if (sotreData.autoSave && table != sotreData.$table[0] &&
-                    (!sotreData.$fixedLeftTable || table != sotreData.$fixedLeftTable[0]) &&
-                    (!sotreData.$fixedRightTable || table != sotreData.$fixedRightTable[0])) {
+                if (storeData.autoSave && table != storeData.$table[0] &&
+                    (!storeData.$fixedLeftTable || table != storeData.$fixedLeftTable[0]) &&
+                    (!storeData.$fixedRightTable || table != storeData.$fixedRightTable[0])) {
                     save(filter);
                 }
-                sotreData.$exports && sotreData.$exports.hide();
-                sotreData.$filter && sotreData.$filter.hide();
+                storeData.$exports && storeData.$exports.hide();
+                storeData.$filter && storeData.$filter.hide();
             });
             $body.on('mousemove', function (e) {
                 // 调整列宽中
-                if (sotreData.resizeData) {
-                    var x = e.pageX - sotreData.resizeData.pageX;
-                    var th = sotreData.resizeData.th;
+                if (storeData.resizeData) {
+                    var x = e.pageX - storeData.resizeData.pageX;
+                    var th = storeData.resizeData.th;
                     var col = th.songBindData.col;
-                    var width = ieVersion <= 6 ? sotreData.resizeData.originWidth + x : sotreData.resizeData.originWidth + x - hCellPadding;
+                    var width = ieVersion <= 6 ? storeData.resizeData.originWidth + x : storeData.resizeData.originWidth + x - hCellPadding;
                     col.width = width;
                     // 延时执行，避免卡顿
-                    Common.cancelNextFrame(sotreData.resizeData.timer);
-                    sotreData.resizeData.timer = Common.nextFrame(function () {
+                    Common.cancelNextFrame(storeData.resizeData.timer);
+                    storeData.resizeData.timer = Common.nextFrame(function () {
                         setCellStyle(filter, [th.songBindData.col]);
-                        sotreData.$tableHeader.css({
-                            left: -sotreData.$tableMain[0].scrollLeft
+                        storeData.$tableHeader.css({
+                            left: -storeData.$tableMain[0].scrollLeft
                         });
                     }, 0);
                 }
             });
             $body.on('mouseup', function (e) {
                 // 调整列宽结束
-                if (sotreData.resizeData) {
-                    sotreData.resizeData = undefined;
-                    sotreData.$view.removeClass(tableClass.colResize);
+                if (storeData.resizeData) {
+                    storeData.resizeData = undefined;
+                    storeData.$view.removeClass(tableClass.colResize);
                 }
             });
-            if (sotreData.bindedEvent) {
+            if (storeData.bindedEvent) {
                 return;
             }
-            sotreData.bindedEvent = true;
+            storeData.bindedEvent = true;
             _bindClickEvent();
             _bindEditEvent();
             _bindHoverEvent();
@@ -1841,7 +1848,7 @@
 
             function _bindClickEvent() {
                 // 表格中的所有点击事件
-                $view.on('click', function (e) {
+                storeData.$view.on('click', function (e) {
                     var $target = $(e.target);
                     var $tr = $target.parents('tr');
                     var event = $target.attr('song-event');
@@ -1863,7 +1870,7 @@
                     }
                 });
                 // 行点击事件
-                $view.delegate('tbody tr', 'click', function () {
+                storeData.$view.delegate('tbody tr', 'click', function () {
                     // 触发行点击事件
                     Table.trigger('row(' + filter + ')', {
                         dom: this,
@@ -1872,7 +1879,7 @@
                     });
                 });
                 // 列点击事件
-                $view.delegate('tbody td', 'click', function () {
+                storeData.$view.delegate('tbody td', 'click', function () {
                     // 触发单元格点击事件
                     Table.trigger('col(' + filter + ')', {
                         dom: this,
@@ -1884,8 +1891,8 @@
 
             function _bindEditEvent() {
                 // 回车保存
-                $view.on('keydown', function (e) {
-                    if (sotreData.enterSave) {
+                storeData.$view.on('keydown', function (e) {
+                    if (storeData.enterSave) {
                         var $td = $(e.target).parents('td');
                         if ($td.length && e.keyCode == 13) {
                             save(filter, $td[0].songBindData.id, $td[0].songBindData.col.field);
@@ -1893,7 +1900,7 @@
                     }
                 });
                 // 点击编辑
-                $view.on(editTrigger, function (e) {
+                storeData.$view.on(editTrigger, function (e) {
                     var $target = $(e.target);
                     if ($target.attr('song-event')) {
                         return;
@@ -1905,7 +1912,7 @@
                     if ($td[0].songBindData.col.editable && $td[0].songBindData.col.field) {
                         var pass = true;
                         // 先保存真在编辑中的数据
-                        if (sotreData.autoSave) {
+                        if (storeData.autoSave) {
                             pass = save(filter);
                         }
                         if (pass && $td[0].songBindData.col.editable) {
@@ -1916,29 +1923,29 @@
             }
 
             function _bindHoverEvent() {
-                $view.delegate('tbody tr', 'mouseenter', function () {
-                    sotreData.$view.find('tr.' + tableClass.hover).removeClass(tableClass.hover);
-                    sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').addClass(tableClass.hover);
+                storeData.$view.delegate('tbody tr', 'mouseenter', function () {
+                    storeData.$view.find('tr.' + tableClass.hover).removeClass(tableClass.hover);
+                    storeData.$view.find('tr[data-id="' + this.songBindData.id + '"]').addClass(tableClass.hover);
                 }).delegate('tbody tr', 'mouseleave', function () {
-                    sotreData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
+                    storeData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
                 });
             }
 
             function _bindScrollEvent() {
                 // 滚动事件
-                sotreData.$tableMain.on('scroll', function (e) {
-                    sotreData.$tableHeader.css({
-                        left: -sotreData.$tableMain[0].scrollLeft
+                storeData.$tableMain.on('scroll', function (e) {
+                    storeData.$tableHeader.css({
+                        left: -storeData.$tableMain[0].scrollLeft
                     });
-                    if (sotreData.$fixedLeftMain) {
-                        sotreData.$fixedLeftMain[0].scrollTop = sotreData.$tableMain[0].scrollTop;
+                    if (storeData.$fixedLeftMain) {
+                        storeData.$fixedLeftMain[0].scrollTop = storeData.$tableMain[0].scrollTop;
                     }
-                    if (sotreData.$fixedRightMain) {
-                        sotreData.$fixedRightMain[0].scrollTop = sotreData.$tableMain[0].scrollTop;
+                    if (storeData.$fixedRightMain) {
+                        storeData.$fixedRightMain[0].scrollTop = storeData.$tableMain[0].scrollTop;
                     }
-                    if (sotreData._$tips.length) {
-                        var tds = sotreData.$view.find('td');
-                        sotreData._$tips.map(function ($tip) {
+                    if (storeData._$tips.length) {
+                        var tds = storeData.$view.find('td');
+                        storeData._$tips.map(function ($tip) {
                             $tip.remove();
                         });
                         tds.each(function (i, td) {
@@ -1950,8 +1957,8 @@
 
             function _bindColResizeEvent() {
                 // 调整列宽事件
-                $view.delegate('th', 'mousemove', function (e) {
-                    if (!sotreData.resizeData && !(this.songBindData.col.colspan > 1)) {
+                storeData.$view.delegate('th', 'mousemove', function (e) {
+                    if (!storeData.resizeData && !(this.songBindData.col.colspan > 1)) {
                         var $this = $(this);
                         if (e.offsetX > this.clientWidth - 10) {
                             $this.addClass(tableClass.colResize);
@@ -1962,24 +1969,24 @@
                         }
                     }
                 });
-                $view.delegate('th', 'mousedown', function (e) {
-                    if (!sotreData.resizeData && $this.hasClass(tableClass.colResize)) {
-                        sotreData.resizeData = {
+                storeData.$view.delegate('th', 'mousedown', function (e) {
+                    if (!storeData.resizeData && $(this).hasClass(tableClass.colResize)) {
+                        storeData.resizeData = {
                             pageX: e.pageX,
                             th: this,
                             originWidth: this.clientWidth
                         }
-                        sotreData.$view.addClass(tableClass.colResize);
+                        storeData.$view.addClass(tableClass.colResize);
                     }
                 });
             }
 
             function _bindOverflowEvent() {
                 // 内容溢出处理
-                $view.delegate('th,td', 'mousemove', function () {
+                storeData.$view.delegate('th,td', 'mousemove', function () {
                     var $td = $(this);
                     // 正在调整列宽中或准备调整列宽
-                    if (sotreData.resizeData || $td.hasClass(tableClass.colResize)) {
+                    if (storeData.resizeData || $td.hasClass(tableClass.colResize)) {
                         return;
                     }
                     var songBindData = this.songBindData;
@@ -2000,7 +2007,7 @@
                             $div.append($close);
                             $body.append($div);
                             songBindData.$tip = $div;
-                            sotreData._$tips.push($div);
+                            storeData._$tips.push($div);
                             $div.css({
                                 top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
                                 left: offset.left - 1
@@ -2020,26 +2027,26 @@
 
             function _bindOrderByEvent() {
                 // 排序事件
-                $view.delegate('th', 'click', function (e) {
+                storeData.$view.delegate('th', 'click', function (e) {
                     var $this = $(this);
                     // 触发排序
                     var col = this.songBindData.col;
-                    if (col.sortAble && !sotreData.resizeData && !$this.hasClass(tableClass.colResize)) {
+                    if (col.sortAble && !storeData.resizeData && !$this.hasClass(tableClass.colResize)) {
                         var $up = $this.find('div.' + tableClass.sortUp);
                         var $down = $this.find('div.' + tableClass.sortDown);
-                        $view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
-                        if (sotreData._sortObj.field != col.field) {
-                            sotreData._sortObj.field = col.field;
-                            sotreData._sortObj.sort = '';
+                        storeData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                        if (storeData._sortObj.field != col.field) {
+                            storeData._sortObj.field = col.field;
+                            storeData._sortObj.sort = '';
                         }
-                        if (!sotreData._sortObj.sort) {
-                            sotreData._sortObj.sort = 'asc';
+                        if (!storeData._sortObj.sort) {
+                            storeData._sortObj.sort = 'asc';
                             $up.addClass(tableClass.sortConfirm);
-                        } else if (sotreData._sortObj.sort == 'asc') {
-                            sotreData._sortObj.sort = 'desc';
+                        } else if (storeData._sortObj.sort == 'asc') {
+                            storeData._sortObj.sort = 'desc';
                             $down.addClass(tableClass.sortConfirm);
                         } else {
-                            sotreData._sortObj.sort = '';
+                            storeData._sortObj.sort = '';
                         }
                         renderTableBody(filter, true);
                     }
@@ -2049,27 +2056,27 @@
             function _bindToolbarEvent() {
                 // 筛选字段事件
                 Table.on('filter(' + filter + ')', function (e) {
-                    if (sotreData.$filter) {
-                        sotreData.$filter.toggle();
+                    if (storeData.$filter) {
+                        storeData.$filter.toggle();
                     } else {
                         createFilter(filter, e.dom);
                     }
-                    sotreData.$exports && sotreData.$exports.hide();
+                    storeData.$exports && storeData.$exports.hide();
                 });
                 // 导出事件
                 Table.on('exports(' + filter + ')', function (e) {
-                    sotreData.$exports.toggle();
-                    sotreData.$filter && sotreData.$filter.hide();
+                    storeData.$exports.toggle();
+                    storeData.$filter && storeData.$filter.hide();
                 });
                 // 导出事件
                 Table.on('exports-excel(' + filter + ')', function (e) {
                     exportsExecl(filter);
-                    sotreData.$exports.hide();
+                    storeData.$exports.hide();
                 });
                 // 导出事件
                 Table.on('exports-csv(' + filter + ')', function (e) {
                     exportsCsv(filter);
-                    sotreData.$exports.hide();
+                    storeData.$exports.hide();
                 });
                 // 打印事件
                 Table.on('print(' + filter + ')', function (e) {
@@ -2080,12 +2087,12 @@
 
         // 创建过滤器
         function createFilter(filter, dom) {
-            var sotreData = store[filter];
-            var $view = sotreData.$view;
+            var storeData = store[filter];
+            var $view = storeData.$view;
             var $filter = $('<ul class="' + tableClass.filter + '"></ul>');
-            sotreData.$filter = $filter;
-            for (var i = 0; i < sotreData.cols.length; i++) {
-                var col = sotreData.cols[i];
+            storeData.$filter = $filter;
+            for (var i = 0; i < storeData.cols.length; i++) {
+                var col = storeData.cols[i];
                 if (col.type == 'text') {
                     $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col._key + '" checked song-filter="song_table_' + filter + '_filter"></li>');
                 }
@@ -2117,8 +2124,8 @@
                 } else {
                     setFixedWidth(filter);
                 }
-                sotreData.$tableHeader.css({
-                    left: -sotreData.$tableMain[0].scrollLeft
+                storeData.$tableHeader.css({
+                    left: -storeData.$tableMain[0].scrollLeft
                 });
 
                 // 设置父级列的colspan
@@ -2154,10 +2161,10 @@
 
         // 导出
         function exportsExecl(filter) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             if (window.btoa) {
-                var $table = $(sotreData.$tableHeader[0].outerHTML);
-                $table.append(sotreData.$table.children('tbody').html());
+                var $table = $(storeData.$tableHeader[0].outerHTML);
+                $table.append(storeData.$table.children('tbody').html());
                 $table.find('.' + tableClass.col + '-radio,.' + tableClass.col + '-checkbox,.' + tableClass.col + '-operate').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
@@ -2184,15 +2191,15 @@
         }
 
         function exportsCsv(filter) {
-            var sotreData = store[filter];
-            var cols = sotreData.cols;
+            var storeData = store[filter];
+            var cols = storeData.cols;
             var title = '';
             var dataStr = '';
             cols.map(function (col) {
                 title += col.title + ',';
             });
             title = title.slice(0, -1) + '\n';
-            sotreData._sortedData.map(function (data) {
+            storeData._sortedData.map(function (data) {
                 var str = '';
                 cols.map(function (col) {
                     if (col.type == 'text') {
@@ -2236,9 +2243,9 @@
 
         // 打印
         function print(filter) {
-            var sotreData = store[filter];
+            var storeData = store[filter];
             if (window.print) {
-                var $table = $(sotreData.$tableHeader[0].outerHTML);
+                var $table = $(storeData.$tableHeader[0].outerHTML);
                 var wind = window.open('', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
                 var style = '<style>\
                 .song-table-col-radio,\
@@ -2259,17 +2266,17 @@
                     color:#666;\
                     text-align:left;\
                 }</style>';
-                $table.append(sotreData.$table.children('tbody').html());
+                $table.append(storeData.$table.children('tbody').html());
                 var trs = $table.children('tbody').children('tr');
                 // 左固定列中的数据
-                sotreData.$fixedLeftTable && sotreData.$fixedLeftTable.children('tbody').find('tr').each(function (i, tr) {
+                storeData.$fixedLeftTable && storeData.$fixedLeftTable.children('tbody').find('tr').each(function (i, tr) {
                     var tds = $(trs[i]).children('td');
                     $(tr).children('td').each(function (i, td) {
                         $(tds[i]).html($(td).html());
                     });
                 });
                 // 右固定列中的数据
-                sotreData.$fixedRightTable && sotreData.$fixedRightTable.children('tbody').find('tr').each(function (i, tr) {
+                storeData.$fixedRightTable && storeData.$fixedRightTable.children('tbody').find('tr').each(function (i, tr) {
                     var tds = $(trs[i]).children('td');
                     var _tds = $(tr).children('td');
                     _tds.each(function (i, td) {
