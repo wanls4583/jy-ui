@@ -432,15 +432,16 @@
 
         // 自定义编辑
         .song-table-custom-edit {
-            width: auto;
+            line-height: normal;
             margin: 0 -#{$pd15};
+            *zoom: 1;
 
             .song-form-select {
                 margin: 0;
             }
 
             .song-input {
-                border: 1px;
+                margin: 0;
                 padding-left: $pd15;
             }
         }

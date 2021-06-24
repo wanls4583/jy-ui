@@ -1181,8 +1181,9 @@ a:focus {
 }
 
 .song-table .song-table-editing .song-table-custom-edit {
-  width: auto;
+  line-height: normal;
   margin: 0 -15px;
+  *zoom: 1;
 }
 
 .song-table .song-table-editing .song-table-custom-edit .song-form-select {
@@ -1190,7 +1191,7 @@ a:focus {
 }
 
 .song-table .song-table-editing .song-table-custom-edit .song-input {
-  border: 1px;
+  margin: 0;
   padding-left: 15px;
 }
 

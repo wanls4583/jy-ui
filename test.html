@@ -521,7 +521,8 @@
                     editable: {
                         type: {
                             edit: function (value, data, id, col) {
-                                return '<div style="display:inline-block;width:50px"><input class="song-input" style="width:50px" /></div>岁';
+                                var $cell = $('<div><input class="song-input song-display-inline-block" style="width:50px;vertical-align:middle" /><span class="song-display-inline-block" style="vertical-align:middle">岁</span>')
+                                return $cell;
                             },
                             save: function ($cell) {
                                 return $cell.find('input').val();
