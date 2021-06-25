@@ -30,6 +30,8 @@
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
             edit: 'song-table-edit',
+            editPrefix: 'song-table-edit-prefix',
+            editSuffix: 'song-table-edit-suffix',
             input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
@@ -701,6 +703,7 @@
                     var $cell = $td.children('.' + tableClass.cell);
                     var $edit = $('<div class="' + tableClass.edit + '"></div>');
                     var editable = col.editable === true ? {} : col.editable;
+                    $edit.css('width', $cell[0].clientWidth);
                     $cell.empty().append($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
@@ -1042,41 +1045,41 @@
         // 设置固定表格容器的宽高
         function setFixedWidth(filter) {
             var storeData = store[filter];
-            var hasHscroll = storeData.$tableMain[0].scrollWidth == storeData.$tableMain[0].clientWidth;
+            var top = storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0;
+            var hasHscroll = storeData.$tableMain[0].scrollWidth > storeData.$tableMain[0].clientWidth;
+            var hasVscroll = storeData.$tableMain[0].scrollHeight > storeData.$tableMain[0].clientHeight
+            var height = storeData.$tableMain[0].clientHeight;
             if (storeData.$fixedLeft) {
                 storeData.$fixedLeft.css({
                     width: storeData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0
+                    top: top
                 });
                 storeData.$fixedLeftMain.css({
-                    height: storeData.$tableMain[0].clientHeight
+                    height: height
                 });
-                if (hasHscroll) { // 没有滚动条
-                    storeData.$fixedLeft.removeClass(tableClass.fixedShadow);
-                } else {
-                    storeData.$fixedLeft.addClass(tableClass.fixedShadow);
-                }
             }
             if (storeData.$fixedRight) {
                 var left = 'auto';
-                var right = scrBarWidth;
-                if (hasHscroll) { // 没有滚动条
+                var right = 0;
+                if (!hasHscroll) { // 没有横向滚动条
                     right = 'auto';
                     left = storeData.$table[0].offsetWidth - storeData.$fixedRightTableHeader[0].offsetWidth;
-                    storeData.$mend && storeData.$mend.hide();
-                    storeData.$fixedRight.removeClass(tableClass.fixedShadow);
-                } else {
+                } else if (hasVscroll) { // 有纵向滚动条
+                    right = scrBarWidth;
+                }
+                if (hasVscroll) { // 有纵向滚动条
                     storeData.$mend && storeData.$mend.show();
-                    storeData.$fixedRight.addClass(tableClass.fixedShadow);
+                } else {
+                    storeData.$mend && storeData.$mend.hide();
                 }
                 storeData.$fixedRight.css({
                     width: storeData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0,
+                    top: top,
                     left: left,
                     right: right
                 });
                 storeData.$fixedRightMain.css({
-                    height: storeData.$tableMain[0].clientHeight
+                    height: height
                 });
             }
         }
@@ -1292,7 +1295,7 @@
                     if (cols.indexOf(th.songBindData.col._key) > -1) {
                         ths.push(th);
                     }
-                } else {
+                } else if ($(th).is(':visible')) {
                     ths.push(th);
                 }
             });

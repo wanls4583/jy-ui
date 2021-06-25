@@ -35,6 +35,11 @@ a:focus {
   outline: 0;
 }
 
+input,
+textarea {
+  font-size: 14px;
+}
+
 .song-btn {
   display: inline-block;
   height: 36px;
@@ -814,16 +819,12 @@ a:focus {
 
 .song-table tr:first-child td,
 .song-table tr:first-child th {
-  border-top: none;
-}
-
-.song-table tr:last-child td {
-  border-bottom: none;
+  border-top: 0;
 }
 
 .song-table tr th:first-child,
 .song-table tr td:first-child {
-  border-left: none;
+  border-left: 0;
 }
 
 .song-table-cell {
@@ -892,25 +893,6 @@ a:focus {
 
 .song-table .song-table-align-right .song-table-cell {
   margin-left: auto;
-}
-
-.song-table-static th,
-.song-table-static td {
-  padding: 5px 15px;
-}
-
-.song-table-static tr:first-child th,
-.song-table-static tr:first-child td {
-  border-top: 1px solid #eeeeee;
-}
-
-.song-table-static tr:last-child td {
-  border-bottom: 1px solid #eeeeee;
-}
-
-.song-table-static tr th:first-child,
-.song-table-static tr td:first-child {
-  border-left: 1px solid #eeeeee;
 }
 
 .song-table-view {
@@ -1059,25 +1041,28 @@ a:focus {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 1;
+  border-right: 1px solid #eeeeee;
+  -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+          box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.song-table-fixed-l th:last-child,
+.song-table-fixed-l td:last-child {
+  border-right: 0;
 }
 
 .song-table-fixed-r {
   position: absolute;
   top: 0;
+  z-index: 1;
+  border-left: 1px solid #eeeeee;
+  -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
+          box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }
 
 .song-table-fixed-r .song-table-mend {
   margin-right: -17px;
-}
-
-.song-table-fixed-r tr th:first-child,
-.song-table-fixed-r tr td:first-child {
-  border-left: 1px solid #eeeeee;
-}
-
-.song-table-fixed-shadow {
-  -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
-          box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }
 
 .song-table-fixed-header {
@@ -1168,6 +1153,8 @@ a:focus {
 
 .song-table .song-table-editing .song-table-cell {
   overflow: visible;
+  width: auto;
+  padding: 0;
   white-space: normal;
   border-color: #5FB878;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
@@ -1175,18 +1162,18 @@ a:focus {
 }
 
 .song-table .song-table-editing .song-table-edit {
-  line-height: normal;
-  margin: -5px -15px;
   *zoom: 1;
 }
 
 .song-table .song-table-editing .song-table-checkboxs {
-  padding: 0 0 10px 10px;
+  padding-bottom: 10px;
   text-align: left;
 }
 
 .song-table .song-table-editing .song-table-checkboxs .song-form-checkbox {
   margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 0;
 }
 
 .song-table .song-table-editing .song-input {

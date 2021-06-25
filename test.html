@@ -520,11 +520,7 @@
                     field: 'age',
                     editable: {
                         edit: function (value, data, id, col) {
-                            var editStr = '<div>\
-                                <input class="song-input song-display-inline-block" style="width:50px;vertical-align:middle" value="'+ value + '" />\
-                                <span class="song-display-inline-block" style="vertical-align:middle">岁</span>\
-                                </div>';
-                            return editStr;
+                            return '<input class="song-input song-display-inline-block" style="width:50px;" value="' + value + '" /><span>岁</span>';
                         },
                         save: function ($edit) {
                             return $edit.find('input').val();

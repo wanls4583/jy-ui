@@ -35,17 +35,18 @@
 
             td,
             th {
-                border-top: none;
+                border-top: 0;
             }
         }
 
-        &:last-child td {
-            border-bottom: none;
-        }
+        // ie8及以下浏览器不支持last-child
+        // &:last-child td {
+        //     border-bottom: 0;
+        // }
 
         th:first-child,
         td:first-child {
-            border-left: none;
+            border-left: 0;
         }
     }
 
@@ -131,33 +132,6 @@
 
             .song-table-cell {
                 margin-left: auto;
-            }
-        }
-    }
-
-    &-static {
-
-        th,
-        td {
-            padding: 5px $pd15;
-        }
-
-        tr {
-            &:first-child {
-
-                th,
-                td {
-                    border-top: 1px solid $light-color;
-                }
-            }
-
-            &:last-child td {
-                border-bottom: 1px solid $light-color;
-            }
-
-            th:first-child,
-            td:first-child {
-                border-left: 1px solid $light-color;
             }
         }
     }
@@ -310,27 +284,26 @@
         position: absolute;
         left: 0;
         top: 0;
+        z-index: 1;
+        border-right: 1px solid $light-color;
+        box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+
+        th:last-child,
+        td:last-child {
+            border-right: 0;
+        }
     }
 
     &-fixed-r {
         position: absolute;
         top: 0;
+        z-index: 1;
+        border-left: 1px solid $light-color;
+        box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
 
         .song-table-mend {
             margin-right: -17px;
         }
-
-        tr {
-
-            th:first-child,
-            td:first-child {
-                border-left: 1px solid $light-color;
-            }
-        }
-    }
-
-    &-fixed-shadow {
-        box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
     }
 
     &-fixed-header {
@@ -421,6 +394,8 @@
 
         .song-table-cell {
             overflow: visible;
+            width: auto;
+            padding: 0;
             white-space: normal;
             border-color: $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
@@ -428,18 +403,18 @@
 
         // 自定义编辑
         .song-table-edit {
-            line-height: normal;
-            margin: -5px -#{$pd15};
             *zoom: 1;
         }
 
         // 复选框编辑容器
         .song-table-checkboxs {
-            padding: 0 0 $pd10 $pd10;
+            padding-bottom: $pd10;
             text-align: left;
 
             .song-form-checkbox {
                 margin-top: $pd10;
+                margin-left: $pd10;
+                margin-right: 0;
             }
         }
 
