@@ -519,14 +519,15 @@
                     title: '年龄',
                     field: 'age',
                     editable: {
-                        type: {
-                            edit: function (value, data, id, col) {
-                                var $cell = $('<div><input class="song-input song-display-inline-block" style="width:50px;vertical-align:middle" /><span class="song-display-inline-block" style="vertical-align:middle">岁</span>')
-                                return $cell;
-                            },
-                            save: function ($cell) {
-                                return $cell.find('input').val();
-                            }
+                        edit: function (value, data, id, col) {
+                            var editStr = '<div>\
+                                <input class="song-input song-display-inline-block" style="width:50px;vertical-align:middle" value="'+ value + '" />\
+                                <span class="song-display-inline-block" style="vertical-align:middle">岁</span>\
+                                </div>';
+                            return editStr;
+                        },
+                        save: function ($edit) {
+                            return $edit.find('input').val();
                         },
                         rules: [{ type: 'number' }]
                     },

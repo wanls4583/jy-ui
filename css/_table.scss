@@ -310,7 +310,6 @@
         position: absolute;
         left: 0;
         top: 0;
-        border-top: 1px solid $light-color;
     }
 
     &-fixed-r {
@@ -414,53 +413,28 @@
     & &-editing {
         // 解决ie7及以下浏览器select下拉框被覆盖的问题
         position: relative;
+        z-index: 1;
         // ie7及以下浏览器添加position:relative后，td的边框布局将改变
-        *border-top: 0;
-        *border-left: 0;
+        // *border: 0;
+        // *border-left: 0;
         background-color: $white-color;
 
         .song-table-cell {
-            *top: 1px;
-            *left: 1px;
             overflow: visible;
             white-space: normal;
-            padding: 0 $pd15;
-            min-height: 38px;
             border-color: $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
         }
 
         // 自定义编辑
-        .song-table-custom-edit {
+        .song-table-edit {
             line-height: normal;
-            margin: 0 -#{$pd15};
+            margin: -5px -#{$pd15};
             *zoom: 1;
-
-            .song-form-select {
-                margin: 0;
-            }
-
-            .song-input {
-                margin: 0;
-                padding-left: $pd15;
-            }
-        }
-
-        .song-input {
-            padding-left: 0;
-            border: 0;
-        }
-
-        .song-form-select,
-        .song-table-checkboxs {
-            // 解决ie7及以下浏览器div内部的高度多出两像素的问题
-            width: auto;
-            margin: 0 -#{$pd15};
         }
 
         // 复选框编辑容器
         .song-table-checkboxs {
-            line-height: normal;
             padding: 0 0 $pd10 $pd10;
             text-align: left;
 
@@ -469,12 +443,9 @@
             }
         }
 
-        .song-form-select {
-            .song-input {
-                padding-left: $pd15;
-            }
+        .song-input {
+            border: 0;
         }
-
     }
 
     & &-error {

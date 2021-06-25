@@ -29,7 +29,7 @@
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
-            customEdit: 'song-table-custom-edit',
+            edit: 'song-table-edit',
             input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
@@ -467,9 +467,9 @@
             function _getValue(td, ifFormat) {
                 var value = null;
                 var col = td.songBindData.col;
-                if (typeof col.editable.type == 'object' && col.editable.type.save) {
-                    var $customEdit = $(td).find('div.' + tableClass.customEdit);
-                    value = col.editable.type.save($customEdit);
+                if (typeof col.editable.save == 'function') {
+                    var $edit = $(td.children[0].children[0]);
+                    value = col.editable.save($edit);
                 } else if (td.songBindData.$input) {
                     value = td.songBindData.$input.val();
                 } else if (td.songBindData.$select) {
@@ -699,13 +699,13 @@
                     var rowData = tr.songBindData.rowData;
                     var id = tr.songBindData.id;
                     var $cell = $td.children('.' + tableClass.cell);
+                    var $edit = $('<div class="' + tableClass.edit + '"></div>');
                     var editable = col.editable === true ? {} : col.editable;
+                    $cell.empty().append($edit);
                     editable.type = editable.type || 'text';
-                    if (typeof editable.type == 'object' && editable.type.edit) {
-                        var $customEdit = $('<div class="' + tableClass.customEdit + '"></div>');
-                        $cell.empty().append($customEdit);
-                        $customEdit.append(editable.type.edit(data, rowData, id, col));
-                        $customEdit.find('input').trigger('focus');
+                    if (typeof editable.edit == 'function') {
+                        $edit.append(editable.edit(data, rowData, id, col));
+                        $edit.find('input').trigger('focus');
                     } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                         _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
@@ -727,7 +727,7 @@
 
             function _editInput(td) {
                 var data = td.songBindData.colData;
-                var $cell = $(td).children('.' + tableClass.cell);
+                var $edit = $(td.children[0].children[0]);
                 var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
                 $input.val(data);
                 $input.on('input propertychange', function () {
@@ -739,7 +739,7 @@
                         }
                     }
                 });
-                $cell.empty().append($input);
+                $edit.empty().append($input);
                 td.songBindData.$input = $input;
                 // 输入框聚焦
                 $input.trigger('focus');
@@ -748,13 +748,15 @@
             function _editSelect(td) {
                 var col = td.songBindData.col;
                 var data = td.songBindData.colData;
-                var $cell = $(td).children('.' + tableClass.cell);
+                var $edit = $(td.children[0].children[0]);
                 var selectFilter = 'table_edit_select_' + filter + '_' + Math.random();
                 var $select = $('<select song-filter="' + selectFilter + '"></select>');
                 col.select && col.select.map(function (item) {
                     $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
                 });
-                $cell.empty().append($select);
+                var $div = $('<div style="zoom:1;"></div>');
+                $edit.empty().append($div);
+                $div.append($select);
                 // 触发select事件
                 Form.render('select(' + selectFilter + ')');
                 Form.on('select(' + selectFilter + ')', function (e) {
@@ -767,27 +769,26 @@
                 td.songBindData.$select = $select;
                 // 展开下拉框
                 setTimeout(function () {
-                    $cell.children('.song-select-title').trigger('click');
+                    $edit.find('div.song-select-title').trigger('click');
                 }, 0)
             }
 
             function _editCheckbox(td) {
                 var col = td.songBindData.col;
                 var data = td.songBindData.colData;
-                var $cell = $(td).children('.' + tableClass.cell);
+                var $edit = $(td.children[0].children[0]);
                 var checkFilter = 'table_edit_checkbox_' + filter + '_' + Math.random();
-                var $checkbox = $('<div class="' + tableClass.checkboxs + '"></div>');
+                $edit.addClass(tableClass.checkboxs);
                 col.checkbox && col.checkbox.map(function (item) {
-                    $checkbox.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
+                    $edit.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
                 });
-                $cell.empty().append($checkbox);
                 // 触发checkbox事件
                 Form.render('checkbox(' + checkFilter + ')');
                 Form.on('checkbox(' + checkFilter + ')', function (e) {
-                    $checkbox[0].value = e.data;
+                    $edit[0].value = e.data;
                 });
-                $checkbox[0].value = data;
-                td.songBindData.$checkbox = $checkbox;
+                $edit[0].value = data;
+                td.songBindData.$checkbox = $edit;
             }
         }
 
@@ -1045,7 +1046,7 @@
             if (storeData.$fixedLeft) {
                 storeData.$fixedLeft.css({
                     width: storeData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (storeData.$toolbar ? storeData.$toolbar[0].clientHeight : 0) + 1
+                    top: storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0
                 });
                 storeData.$fixedLeftMain.css({
                     height: storeData.$tableMain[0].clientHeight
@@ -1070,7 +1071,7 @@
                 }
                 storeData.$fixedRight.css({
                     width: storeData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
-                    top: (storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0) + 1,
+                    top: storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0,
                     left: left,
                     right: right
                 });
@@ -1139,7 +1140,6 @@
                         continue;
                     }
                     col.type = col.type || 'text';
-                    var width = col.width;
                     var $cell = $('<div class="' + ['song-row', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
                     var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '"></th>');
                     $th[0].songBindData = {
@@ -1155,7 +1155,7 @@
                     }
                     if (col.colspan >= 2) {
                         $th.attr('colspan', col.colspan);
-                    } else if (col.sortAble && col.field) { // 可排序
+                    } else if (col.sortAble && col.field && !(col.colspan > 1)) { // 可排序
                         if (ieVersion <= 9) {
                             $th[0].onselectstart = function () {
                                 return false
@@ -1422,7 +1422,7 @@
                     storeData.$fixedLeft.append(storeData.$fixedLeftHeader);
                     storeData.$fixedLeftMain.append(storeData.$fixedLeftTable);
                     storeData.$fixedLeft.append(storeData.$fixedLeftMain);
-                    storeData.$fixedLeftTableHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
+                    storeData.$fixedLeftHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     renderTableHeader(filter, 'left');
                     storeData.$view.append(storeData.$fixedLeft);
                     storeData.$fixedLeftMain.on('mousewheel', function (e) {
@@ -1453,7 +1453,7 @@
                     storeData.$fixedRight.append(storeData.$fixedRightHeader);
                     storeData.$fixedRightMain.append(storeData.$fixedRightTable);
                     storeData.$fixedRight.append(storeData.$fixedRightMain);
-                    storeData.$fixedRightTableHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
+                    storeData.$fixedRightHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
                     storeData.$mend.css('height', storeData.$tableHeader[0].clientHeight);
                     renderTableHeader(filter, 'right');
@@ -1706,7 +1706,7 @@
                 });
             }
             if (col.align) {
-                $td.css('text-align', col.align);
+                $td.addClass('song-table-align-' + col.align);
             }
             // 缓存td对应的数据
             $td[0].songBindData.colData = data[col.field];
