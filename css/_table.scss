@@ -34,6 +34,11 @@
             td,
             th {
                 border-top: 0;
+
+                // ie7及以下浏览器中，设置了position（编辑中的td将设置position）的td边框布局将发生改变
+                &.song-table-editing {
+                    *border-bottom: 0;
+                }
             }
         }
 

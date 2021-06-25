@@ -726,7 +726,7 @@
                     $(td).addClass(tableClass.editing);
                     td.songBindData.editing = true;
                     // 高度发送变化时重新调整行高
-                    if (originTdHeight != td.offsetHeight) {
+                    if (Math.abs(originTdHeight - td.offsetHeight) > 2) {
                         fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
                     }
                 }
