@@ -697,6 +697,7 @@
                 if (col.editable && !td.songBindData.editing) {
                     var data = td.songBindData.colData;
                     var $td = $(td);
+                    var originTdHeight = td.offsetHeight;
                     var tr = $td.parent()[0];
                     var rowData = tr.songBindData.rowData;
                     var id = tr.songBindData.id;
@@ -724,7 +725,10 @@
                     });
                     $(td).addClass(tableClass.editing);
                     td.songBindData.editing = true;
-                    fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
+                    // 高度发送变化时重新调整行高
+                    if (originTdHeight != td.offsetHeight) {
+                        fixRowHeightById(filter, td.songBindData.id, td.offsetHeight);
+                    }
                 }
             }
 

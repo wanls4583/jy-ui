@@ -28,8 +28,6 @@
 
     // i6以下浏览器不支持child选择器
     tr {
-        // 避免设置高度时异常
-        *zoom: 1;
 
         &:first-child {
 
@@ -384,11 +382,13 @@
 
     // 编辑中
     & &-editing {
-        // ie7及以下浏览器添加position:relative后，td高度将增加2像素左右
         // 解决ie7及以下浏览器select下拉框被覆盖的问题
         position: relative;
         z-index: 1;
         background-color: $white-color;
+        // ie7及以下浏览器添加position:relative后，td的边框布局将变化，右上角的边框将多出一像素
+        *border-top: 0;
+        *border-right: 0;
 
         .song-table-cell {
             overflow: visible;
@@ -418,7 +418,9 @@
         }
 
         .song-input {
-            border: 0;
+            border-color: transparent;
+            *border-left: 0;
+            *border-right: 0;
         }
     }
 

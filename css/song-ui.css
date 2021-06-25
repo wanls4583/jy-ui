@@ -813,10 +813,6 @@ textarea {
   font-size: 14px;
 }
 
-.song-table tr {
-  *zoom: 1;
-}
-
 .song-table tr:first-child td,
 .song-table tr:first-child th {
   border-top: 0;
@@ -1149,6 +1145,8 @@ textarea {
   position: relative;
   z-index: 1;
   background-color: #ffffff;
+  *border-top: 0;
+  *border-right: 0;
 }
 
 .song-table .song-table-editing .song-table-cell {
@@ -1178,7 +1176,9 @@ textarea {
 }
 
 .song-table .song-table-editing .song-input {
-  border: 0;
+  border-color: transparent;
+  *border-left: 0;
+  *border-right: 0;
 }
 
 .song-table .song-table-error .song-table-cell {
