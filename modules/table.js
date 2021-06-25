@@ -75,7 +75,6 @@
             var $elem = $(option.elem);
             var filter = $elem.attr('song-filter') || 'table_' + Math.random();
             var $table = $('<table class="' + tableClass.table + '"></table>');
-            // var $tableHead = $('<thead></thead>');
             var $header = $('<div class="' + tableClass.tableHeader + '"></div>')
             var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
             var $tableHeaderHead = $('<thead></thead>');
@@ -87,7 +86,6 @@
             storeData.$elem = $elem;
             storeData.$view = $view;
             storeData.$table = $table;
-            // storeData.$tableHead = $tableHead;
             storeData.$header = $header;
             storeData.$tableHeader = $tableHeader;
             storeData.$tableHeaderHead = $tableHeaderHead;
@@ -986,7 +984,7 @@
                 var ths = storeData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
                 // 确保选择列宽度不变
                 ths.each(function (i, th) {
-                    $(th).css('width', ieVersion <= 6 ? this.offsetWidth : $(this).width());
+                    $(th).css('width', ieVersion <= 6 ? 51 : 20);
                 });
                 // ie6及以下，table宽度可能会多出一像素，从而撑破父容器
                 storeData.$tableHeader.css({
@@ -1321,10 +1319,8 @@
             ths.map(function (th, i) {
                 var cw = th.songBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px';
                 var cellSelector = getClassNameWithKey(filter, th.songBindData.col, '.' + tableClass.cell);
-                if ($(th).is(':visible')) {
-                    Common.deleteRule(storeData.sheet, cellSelector);
-                    Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
-                }
+                Common.deleteRule(storeData.sheet, cellSelector);
+                Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
             });
             setFixedWidth(filter);
         }
@@ -1339,7 +1335,6 @@
             var cols = storeData.cols;
             if (!storeData.$tableMain.inserted) {
                 var viewWidth = storeData.$view.width();
-                storeData.$table.append(storeData.$tableHead);
                 storeData.$tableMain.append(storeData.$table);
                 storeData.$tableMain.insertAfter(storeData.$header);
                 storeData.$tableMain.css({
