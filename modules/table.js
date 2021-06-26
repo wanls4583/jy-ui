@@ -1166,6 +1166,12 @@
                             };
                         }
                         _renderSortIcon($th, $cell, col);
+                    } else if (ieVersion <= 9) { // 调整列宽中防止选中文本
+                        $th[0].onselectstart = function () {
+                            if (storeData.resizeData) {
+                                return false
+                            }
+                        };
                     }
                     // 文字对齐方式
                     if (col.align) {
@@ -1830,21 +1836,21 @@
             });
             $body.on('mousemove', function (e) {
                 // 调整列宽中
-                if (storeData.resizeData) {
-                    var x = e.pageX - storeData.resizeData.pageX;
-                    var th = storeData.resizeData.th;
-                    var col = th.songBindData.col;
-                    var width = storeData.resizeData.originWidth + x;
-                    col.width = width;
-                    // 延时执行，避免卡顿
-                    Common.cancelNextFrame(storeData.resizeData.timer);
-                    storeData.resizeData.timer = Common.nextFrame(function () {
+                // 延时执行，避免卡顿
+                Common.cancelNextFrame(storeData.resizeTimer);
+                storeData.resizeTimer = Common.nextFrame(function () {
+                    if (storeData.resizeData) {
+                        var x = e.pageX - storeData.resizeData.pageX;
+                        var th = storeData.resizeData.th;
+                        var col = th.songBindData.col;
+                        var width = storeData.resizeData.originWidth + x;
+                        col.width = width;
                         setCellStyle(filter, [th.songBindData.col]);
                         storeData.$tableHeader.css({
                             left: -storeData.$tableMain[0].scrollLeft
                         });
-                    }, 0);
-                }
+                    }
+                }, 0);
             });
             $body.on('mouseup', function (e) {
                 // 调整列宽结束
@@ -1978,16 +1984,20 @@
             function _bindColResizeEvent() {
                 // 调整列宽事件
                 storeData.$view.delegate('th', 'mousemove', function (e) {
-                    if (!storeData.resizeData && !(this.songBindData.col.colspan > 1)) {
-                        var $this = $(this);
-                        if (e.offsetX > this.clientWidth - 10) {
-                            $this.addClass(tableClass.colResize);
-                            this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
-                            this.songBindData.$tipIcon = undefined;
-                        } else {
-                            $this.removeClass(tableClass.colResize);
+                    var th = this;
+                    Common.cancelNextFrame(_bindColResizeEvent.timer);
+                    _bindColResizeEvent.timer = Common.nextFrame(function () {
+                        if (!storeData.resizeData && !(th.songBindData.col.colspan > 1)) {
+                            var $th = $(th);
+                            if (e.offsetX > th.clientWidth - 10) {
+                                $th.addClass(tableClass.colResize);
+                                th.songBindData.$tipIcon && th.songBindData.$tipIcon.remove();
+                                th.songBindData.$tipIcon = undefined;
+                            } else {
+                                $th.removeClass(tableClass.colResize);
+                            }
                         }
-                    }
+                    });
                 });
                 storeData.$view.delegate('th', 'mousedown', function (e) {
                     if (!storeData.resizeData && $(this).hasClass(tableClass.colResize)) {
@@ -2004,41 +2014,45 @@
             function _bindOverflowEvent() {
                 // 内容溢出处理
                 storeData.$view.delegate('th,td', 'mousemove', function () {
-                    var $td = $(this);
-                    // 正在调整列宽中或准备调整列宽
-                    if (storeData.resizeData || $td.hasClass(tableClass.colResize)) {
-                        return;
-                    }
-                    var songBindData = this.songBindData;
-                    var col = songBindData.col;
-                    var $cell = $td.children('.' + tableClass.cell);
-                    if (!songBindData.$tipIcon && col.type == 'text' && !this.songBindData.editing && Common.checkOverflow($cell[0])) {
-                        var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
-                        songBindData.$tipIcon = $div;
-                        $cell.append($div);
-                        // 点击打开内容详情弹框
-                        $div.on('click', function () {
-                            var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
-                            var offset = $cell.offset();
-                            var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                            $td.addClass(tableClass.detail);
-                            $div.remove();
-                            $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
-                            $div.append($close);
-                            $body.append($div);
-                            songBindData.$tip = $div;
-                            storeData._$tips.push($div);
-                            $div.css({
-                                top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
-                                left: offset.left - 1
-                            });
-                            // 点击关闭弹框
-                            $close.on('click', function () {
-                                songBindData.$tip = undefined;
+                    var td = this;
+                    Common.cancelNextFrame(_bindOverflowEvent.timer);
+                    _bindOverflowEvent.timer = Common.nextFrame(function () {
+                        var $td = $(td);
+                        // 正在调整列宽中或准备调整列宽
+                        if (storeData.resizeData || $td.hasClass(tableClass.colResize)) {
+                            return;
+                        }
+                        var songBindData = td.songBindData;
+                        var col = songBindData.col;
+                        var $cell = $td.children('.' + tableClass.cell);
+                        if (!songBindData.$tipIcon && col.type == 'text' && !td.songBindData.editing && Common.checkOverflow($cell[0])) {
+                            var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
+                            songBindData.$tipIcon = $div;
+                            $cell.append($div);
+                            // 点击打开内容详情弹框
+                            $div.on('click', function () {
+                                var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
+                                var offset = $cell.offset();
+                                var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
+                                $td.addClass(tableClass.detail);
                                 $div.remove();
+                                $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
+                                $div.append($close);
+                                $body.append($div);
+                                songBindData.$tip = $div;
+                                storeData._$tips.push($div);
+                                $div.css({
+                                    top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
+                                    left: offset.left - 1
+                                });
+                                // 点击关闭弹框
+                                $close.on('click', function () {
+                                    songBindData.$tip = undefined;
+                                    $div.remove();
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
                 }).delegate('th,td', 'mouseleave', function () {
                     this.songBindData.$tipIcon && this.songBindData.$tipIcon.remove();
                     this.songBindData.$tipIcon = undefined;

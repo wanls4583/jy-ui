@@ -168,13 +168,13 @@
         }
 
         //请求下一帧
-        function nextFrame(callback) {
+        function nextFrame(callback, duration) {
             if (window.requestAnimationFrame) {
                 return window.requestAnimationFrame(callback);
             } else {
                 return setTimeout(function () {
                     callback();
-                }, 0);
+                }, isNaN(duration) ? 30 : duration);
             }
         }
         //取消下一帧
