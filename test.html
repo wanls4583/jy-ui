@@ -365,7 +365,7 @@
             var sign = '个性签名' + i;
             data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
-        var table = SongUi.Table.render({
+        window.table = SongUi.Table.render({
             elem: '#table1',
             width: 800,
             data: data,

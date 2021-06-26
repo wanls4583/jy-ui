@@ -269,7 +269,6 @@
                 return;
             }
             var node = document.createElement('style');
-            style = 'body {background:red}';
             node.type = 'text/css';
             document.getElementsByTagName('head')[0].appendChild(node);
             storeData.sheet = node.styleSheet || node.sheet;
@@ -1302,12 +1301,12 @@
                 }
             });
             ths.map(function (th, i) {
-                var cellSelector = getClassNameWithKey(filter, th.songBindData.col, '.' + tableClass.cell);
+                var $cell = $(th.children[0]);
                 var width = th.songBindData.col.width;
                 width = ieVersion <= 6 ? width + hCellPadding : width;
-                Common.deleteRule(storeData.sheet, cellSelector);
+                $cell.css('width', 'auto');
                 if (th.songBindData.col.width) {
-                    Common.insertRule(storeData.sheet, cellSelector, 'width:' + width + 'px;');
+                    $cell.css('width', width);
                 }
             });
             ths.map(function (th, i) {
@@ -1317,8 +1316,10 @@
                 });
             });
             ths.map(function (th, i) {
+                var $cell = $(th.children[0]);
                 var cw = th.songBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px';
                 var cellSelector = getClassNameWithKey(filter, th.songBindData.col, '.' + tableClass.cell);
+                $cell.css('width', cw);
                 Common.deleteRule(storeData.sheet, cellSelector);
                 Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
             });
@@ -1353,7 +1354,6 @@
                 });
                 storeData._sortedData = storeData._renderedData.concat([]);
                 _render();
-
             } else {
                 httpGet(filter, function (res) {
                     storeData._renderedData = res.data;
@@ -1372,9 +1372,19 @@
             function _render() {
                 // 数据排序
                 _sort();
-                renderTr(filter);
-                // 渲染固定列
-                renderTableFixed(filter);
+                // ie6解析css需要一定时间，方式setCellStyle无效
+                if (ieVersion <= 6) {
+                    clearTimeout(storeData.renderTimer)
+                    storeData.renderTimer = setTimeout(function () {
+                        renderTr(filter);
+                        // 渲染固定列
+                        renderTableFixed(filter);
+                    });
+                } else {
+                    renderTr(filter);
+                    // 渲染固定列
+                    renderTableFixed(filter);
+                }
             }
 
             // 排序
@@ -1824,7 +1834,7 @@
                     var x = e.pageX - storeData.resizeData.pageX;
                     var th = storeData.resizeData.th;
                     var col = th.songBindData.col;
-                    var width = ieVersion <= 6 ? storeData.resizeData.originWidth + x : storeData.resizeData.originWidth + x - hCellPadding;
+                    var width = storeData.resizeData.originWidth + x;
                     col.width = width;
                     // 延时执行，避免卡顿
                     Common.cancelNextFrame(storeData.resizeData.timer);
@@ -1984,7 +1994,7 @@
                         storeData.resizeData = {
                             pageX: e.pageX,
                             th: this,
-                            originWidth: this.clientWidth
+                            originWidth: this.clientWidth - hCellPadding
                         }
                         storeData.$view.addClass(tableClass.colResize);
                     }
