@@ -50,8 +50,8 @@
             option.full = option.full !== false ? true : false;
             var layerIndex = Dialog.layerIndex;
             var $container = $(option.container || docBody);
-            var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '"></div>');
-            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + layerIndex + '"></div>');
+            var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + 99) + '"></div>');
+            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + (layerIndex + 100) + '"></div>');
             var $title = $(
                 '<div ' + (option.move ? 'onselectstart="return false;"' : '') + ' class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
@@ -149,7 +149,9 @@
 
             function _bindEvent() {
                 $layer.on('click', function () {
-                    $(this).css('z-index', Dialog.layerIndex++);
+                    var zIndex = Dialog.layerIndex + 100;
+                    $(this).css('z-index', zIndex);
+                    Dialog.layerIndex++;
                 });
                 // 关闭
                 $title.find('i.song-op-close').on('click', function () {
