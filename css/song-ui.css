@@ -128,7 +128,6 @@ textarea {
 }
 
 .song-form-item {
-  position: relative;
   clear: both;
   margin-bottom: 15px;
   *zoom: 1;
@@ -151,20 +150,17 @@ textarea {
 }
 
 .song-input-block {
-  position: relative;
   margin-left: 110px;
   *margin-left: 0;
   *zoom: 1;
 }
 
 .song-input-inline {
-  position: relative;
   float: left;
   width: 190px;
 }
 
 .song-inline {
-  position: relative;
   display: inline-block;
   *display: inline;
   *zoom: 1;
@@ -354,6 +350,10 @@ textarea {
   position: relative;
   width: 100%;
   *zoom: 1;
+}
+
+.song-form-select.song-form-select-open {
+  z-index: 99;
 }
 
 .song-form-select.song-select-disabled .song-select-title .song-input {

@@ -71,7 +71,6 @@
 
 // 表单项
 .song-form-item {
-    position: relative;
     clear: both;
     margin-bottom: $pd15;
     // ie7及以下不支持before，after，用zoom触发haslayout清除内部浮动
@@ -99,7 +98,6 @@
 
 // 块级包裹
 .song-input-block {
-    position: relative;
     margin-left: 110px;
     // 在ie6，ie7中，zoom:1触发了BFC
     *margin-left: 0;
@@ -108,14 +106,12 @@
 
 // 内联包裹
 .song-input-inline {
-    position: relative;
     float: left;
     width: 190px;
 }
 
 // 内联组合包裹
 .song-inline {
-    position: relative;
     display: inline-block;
     // ie6、ie7下inline-block只是触发layout，使元素可以设置宽高等属性，block元素还是会占一行
     *display: inline;
@@ -308,6 +304,10 @@
     position: relative;
     width: 100%;
     *zoom: 1;
+
+    &.song-form-select-open {
+        z-index: 99;
+    }
 
     &.song-select-disabled {
         .song-select-title {
