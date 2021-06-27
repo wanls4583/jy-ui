@@ -126,6 +126,8 @@
                 field: '',
                 sort: ''
             };
+            storeData.timers = storeData.timers || {};
+            storeData.tempData = storeData.tempData || {};
             $view.attr('song-filter', filter);
             // 已存在view，则不再插入
             if (!$view.parent().length) {
@@ -1168,7 +1170,7 @@
                         _renderSortIcon($th, $cell, col);
                     } else if (ieVersion <= 9) { // 调整列宽中防止选中文本
                         $th[0].onselectstart = function () {
-                            if (storeData.resizeData) {
+                            if (storeData.tempData.resizeData) {
                                 return false
                             }
                         };
@@ -1837,13 +1839,13 @@
             $body.on('mousemove', function (e) {
                 // 调整列宽中
                 // 延时执行，避免卡顿
-                Common.cancelNextFrame(storeData.resizeTimer);
-                storeData.resizeTimer = Common.nextFrame(function () {
-                    if (storeData.resizeData) {
-                        var x = e.pageX - storeData.resizeData.pageX;
-                        var th = storeData.resizeData.th;
+                Common.cancelNextFrame(storeData.timers.resizingTimer);
+                storeData.timers.resizingTimer = Common.nextFrame(function () {
+                    if (storeData.tempData.resizeData) {
+                        var x = e.pageX - storeData.tempData.resizeData.pageX;
+                        var th = storeData.tempData.resizeData.th;
                         var col = th.songBindData.col;
-                        var width = storeData.resizeData.originWidth + x;
+                        var width = storeData.tempData.resizeData.originWidth + x;
                         col.width = width;
                         setCellStyle(filter, [th.songBindData.col]);
                         storeData.$tableHeader.css({
@@ -1854,8 +1856,8 @@
             });
             $body.on('mouseup', function (e) {
                 // 调整列宽结束
-                if (storeData.resizeData) {
-                    storeData.resizeData = undefined;
+                if (storeData.tempData.resizeData) {
+                    storeData.tempData.resizeData = undefined;
                     storeData.$view.removeClass(tableClass.colResize);
                 }
             });
@@ -1949,11 +1951,20 @@
             }
 
             function _bindHoverEvent() {
-                storeData.$view.delegate('tbody tr', 'mouseenter', function () {
-                    storeData.$view.find('tr.' + tableClass.hover).removeClass(tableClass.hover);
-                    storeData.$view.find('tr[data-id="' + this.songBindData.id + '"]').addClass(tableClass.hover);
-                }).delegate('tbody tr', 'mouseleave', function () {
-                    storeData.$view.find('tr[data-id="' + this.songBindData.id + '"]').removeClass(tableClass.hover);
+                storeData.$view.delegate('tbody tr', 'mousemove', function (e) {
+                    var id = this.songBindData.id;
+                    Common.cancelNextFrame(storeData.timers.hoverInTimer);
+                    storeData.timers.hoverInTimer = Common.nextFrame(function () {
+                        storeData.tempData.hoverTrs && storeData.tempData.hoverTrs.removeClass(tableClass.hover);
+                        storeData.tempData.hoverTrs = storeData.$view.find('tr[data-id="' + id + '"]');
+                        storeData.tempData.hoverTrs.addClass(tableClass.hover);
+                        Common.cancelNextFrame(storeData.timers.hoverOutTimer);
+                    }, 0);
+                }).delegate('tbody tr', 'mouseleave', function (e) {
+                    storeData.timers.hoverOutTimer = Common.nextFrame(function () {
+                        storeData.tempData.hoverTrs && storeData.tempData.hoverTrs.removeClass(tableClass.hover);
+                        storeData.tempData.hoverTrs = undefined;
+                    });
                 });
             }
 
@@ -1985,9 +1996,9 @@
                 // 调整列宽事件
                 storeData.$view.delegate('th', 'mousemove', function (e) {
                     var th = this;
-                    Common.cancelNextFrame(_bindColResizeEvent.timer);
-                    _bindColResizeEvent.timer = Common.nextFrame(function () {
-                        if (!storeData.resizeData && !(th.songBindData.col.colspan > 1)) {
+                    Common.cancelNextFrame(storeData.timers.resizeTimer);
+                    storeData.timers.resizeTimer = Common.nextFrame(function () {
+                        if (!storeData.tempData.resizeData && !(th.songBindData.col.colspan > 1)) {
                             var $th = $(th);
                             if (e.offsetX > th.clientWidth - 10) {
                                 $th.addClass(tableClass.colResize);
@@ -2000,8 +2011,8 @@
                     });
                 });
                 storeData.$view.delegate('th', 'mousedown', function (e) {
-                    if (!storeData.resizeData && $(this).hasClass(tableClass.colResize)) {
-                        storeData.resizeData = {
+                    if (!storeData.tempData.resizeData && $(this).hasClass(tableClass.colResize)) {
+                        storeData.tempData.resizeData = {
                             pageX: e.pageX,
                             th: this,
                             originWidth: this.clientWidth - hCellPadding
@@ -2015,11 +2026,11 @@
                 // 内容溢出处理
                 storeData.$view.delegate('th,td', 'mousemove', function () {
                     var td = this;
-                    Common.cancelNextFrame(_bindOverflowEvent.timer);
-                    _bindOverflowEvent.timer = Common.nextFrame(function () {
+                    Common.cancelNextFrame(storeData.timers.overflowTimer);
+                    storeData.timers.overflowTimer = Common.nextFrame(function () {
                         var $td = $(td);
                         // 正在调整列宽中或准备调整列宽
-                        if (storeData.resizeData || $td.hasClass(tableClass.colResize)) {
+                        if (storeData.tempData.resizeData || $td.hasClass(tableClass.colResize)) {
                             return;
                         }
                         var songBindData = td.songBindData;
@@ -2065,7 +2076,7 @@
                     var $this = $(this);
                     // 触发排序
                     var col = this.songBindData.col;
-                    if (col.sortAble && !storeData.resizeData && !$this.hasClass(tableClass.colResize)) {
+                    if (col.sortAble && !storeData.tempData.resizeData && !$this.hasClass(tableClass.colResize)) {
                         var $up = $this.find('div.' + tableClass.sortUp);
                         var $down = $this.find('div.' + tableClass.sortDown);
                         storeData.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
