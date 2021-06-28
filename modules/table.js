@@ -1791,11 +1791,11 @@
                 prev: '<span style="font-weight:bold">' + leftIcon + '</span>',
                 next: '<span style="font-weight:bold">' + rightIon + '</span>'
             });
-            Pager.on('page(table_pager_' + filter + ')', function (page) {
+            storeData.pager.on('page', function (page) {
                 storeData.nowPage = page;
                 renderTableBody(filter);
             });
-            Pager.on('limit(table_pager_' + filter + ')', function (limit) {
+            storeData.pager.on('limit', function (limit) {
                 storeData.limit = limit;
             });
             storeData.$pager.insertAfter(storeData.$tableMain);
