@@ -47,6 +47,27 @@
 
 // 栅格
 .song-row {
+    *font-size: 0;
+
+    // ie7默认content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
+    @for $i from 1 through 12 {
+        .song-col-#{$i} {
+            width: $i/12*100%;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            *font-size: 14px;
+        }
+
+        // 列偏移
+        .song-col-offset-#{$i} {
+            margin-left: $i/12*100%;
+        }
+    }
+}
+
+// 清除浮动
+.song-clear {
     // ie6只能用zoom来清除内部浮动，ie7可以用oveflow或者zoom来清除
     *zoom: 1;
 
@@ -57,20 +78,10 @@
         display: block;
         clear: both;
     }
+}
 
-    // ie7默认content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
-    // 在ie6下，百分比宽度将包括父容器的padding和border，所以不要给col添加padding或者border，否则宽度将不准确
-    @for $i from 1 through 11 {
-        .song-col-#{$i} {
-            width: $i/12*100%;
-            float: left;
-        }
-
-        // 列偏移
-        .song-col-offset-#{$i} {
-            margin-left: $i/12*100%;
-        }
-    }
+.song-nowrap {
+    white-space: nowrap;
 }
 
 // 分割线

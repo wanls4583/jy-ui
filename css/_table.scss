@@ -54,7 +54,7 @@
     }
 
     &-cell {
-        // position: relative;
+        position: relative;
         // ie6下内容会溢出到旁边的td
         _width: 100%;
         _height: 40px;
@@ -396,6 +396,7 @@
         background-color: $white-color;
 
         .song-table-cell {
+            z-index: 1;
             overflow: visible;
             width: auto;
             padding: 0;

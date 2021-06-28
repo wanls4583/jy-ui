@@ -32,13 +32,18 @@
         // 渲染
         function render(option) {
             var $elem = $(option.elem);
-            var $pager = null;
+            var $pager = option.$pager;
+            var firstRender = false;
             if (!$elem.length) {
                 return;
             }
             if (!option.$pager) {
-                option.firstRender = true;
-                Object.assign({}, option);
+                $pager = $('<div class="' + [pageClass.pager, 'song-clear'].join(' ') + '"></div>');
+                option = Object.assign({}, option);
+                option.$pager = $pager;
+                $pager.insertAfter($elem);
+                $elem.hide();
+                firstRender = true;
             }
             option.count = option.count || 0;
             option.limit = option.limit || 10;
@@ -52,17 +57,10 @@
             option.next = option.next || '下一页';
             option.size = option.size || 'normal';
             option.filter = $elem.attr('song-filter') || '';
-            $pager = option.$pager || $('<div class="' + [pageClass.pager, 'song-row'].join(' ') + '"></div>');
-            $pager[0].option = option;
             switch (option.size) {
                 case 'small':
                     $pager.addClass('song-pager-small');
                     break;
-            }
-            if (!option.$pager) {
-                option.$pager = $pager;
-                $pager.insertAfter($elem);
-                $elem.hide();
             }
             // 是否显示总数
             if (option.layout.indexOf('count') > -1) {
@@ -138,19 +136,26 @@
                 option.$jump.remove();
                 option.$jump = undefined;
             }
-            option.$page && renderNowPage(option);
+            renderNowPage(option, firstRender);
             bindEvent(option);
             // 重置
             option.reload = function (_option) {
                 Object.assign(option, _option);
                 render(option);
             }
-            delete option.firstRender;
             return option;
         }
 
         // 渲染当前页码
-        function renderNowPage(option) {
+        function renderNowPage(option, firstRender) {
+            // 首次渲染时不需要触发
+            if (!firstRender) {
+                clearTimeout(option.triggerTimer);
+                option.triggerTimer = setTimeout(function () {
+                    Pager.trigger('page(' + option.filter + ')', option.nowPage);
+                    Pager.trigger('page', option.nowPage);
+                }, 0)
+            }
             if (!option.$page) {
                 return;
             }
@@ -158,8 +163,11 @@
             if (option.pages > option.groups) { // 有省略号
                 var half = Math.floor((option.groups) / 2);
                 var start = option.nowPage - half;
+                // 避免超过最大页码
                 start = start + option.groups - 1 >= option.pages - 1 ? option.pages - option.groups + 1 : start;
-                start = start == 2 ? 1 : start;
+                // 避免1和2之间生成省略号
+                start = start == 2 && option.groups > 3 ? 1 : start;
+                // 避免生成负页码
                 start = start > 0 ? start : 1;
                 if (option.first !== false) {
                     if (start > 1) {
@@ -170,7 +178,7 @@
                     }
                 }
                 for (j = 0; j < option.groups && start <= option.pages; start++, j++) {
-                    html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + start + '">' + start + '</a>';
+                    html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + start + '">' + (start == 1 && option.first ? option.first : start) + '</a>';
                 }
                 if (option.last !== false) {
                     if (start <= option.pages) {
@@ -198,14 +206,6 @@
                 option.$next.addClass(pageClass.nextDisabled);
             } else {
                 option.$next.removeClass(pageClass.nextDisabled);
-            }
-            // 首次渲染时不需要触发
-            if (!option.firstRender) {
-                clearTimeout(option.triggerTimer);
-                option.triggerTimer = setTimeout(function () {
-                    Pager.trigger('page(' + option.filter + ')', option.nowPage);
-                    Pager.trigger('page', option.nowPage);
-                }, 0)
             }
         }
 

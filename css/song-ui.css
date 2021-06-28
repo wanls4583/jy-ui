@@ -829,6 +829,7 @@ textarea {
 }
 
 .song-table-cell {
+  position: relative;
   _width: 100%;
   _height: 40px;
   min-height: 28px;
@@ -1150,6 +1151,7 @@ textarea {
 }
 
 .song-table .song-table-editing .song-table-cell {
+  z-index: 1;
   overflow: visible;
   width: auto;
   padding: 0;
@@ -1216,18 +1218,15 @@ textarea {
 }
 
 .song-row {
-  *zoom: 1;
-}
-
-.song-row:before, .song-row:after {
-  content: "";
-  display: block;
-  clear: both;
+  *font-size: 0;
 }
 
 .song-row .song-col-1 {
   width: 8.33333%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-1 {
@@ -1236,7 +1235,10 @@ textarea {
 
 .song-row .song-col-2 {
   width: 16.66667%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-2 {
@@ -1245,7 +1247,10 @@ textarea {
 
 .song-row .song-col-3 {
   width: 25%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-3 {
@@ -1254,7 +1259,10 @@ textarea {
 
 .song-row .song-col-4 {
   width: 33.33333%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-4 {
@@ -1263,7 +1271,10 @@ textarea {
 
 .song-row .song-col-5 {
   width: 41.66667%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-5 {
@@ -1272,7 +1283,10 @@ textarea {
 
 .song-row .song-col-6 {
   width: 50%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-6 {
@@ -1281,7 +1295,10 @@ textarea {
 
 .song-row .song-col-7 {
   width: 58.33333%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-7 {
@@ -1290,7 +1307,10 @@ textarea {
 
 .song-row .song-col-8 {
   width: 66.66667%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-8 {
@@ -1299,7 +1319,10 @@ textarea {
 
 .song-row .song-col-9 {
   width: 75%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-9 {
@@ -1308,7 +1331,10 @@ textarea {
 
 .song-row .song-col-10 {
   width: 83.33333%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-10 {
@@ -1317,11 +1343,40 @@ textarea {
 
 .song-row .song-col-11 {
   width: 91.66667%;
-  float: left;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
 }
 
 .song-row .song-col-offset-11 {
   margin-left: 91.66667%;
+}
+
+.song-row .song-col-12 {
+  width: 100%;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  *font-size: 14px;
+}
+
+.song-row .song-col-offset-12 {
+  margin-left: 100%;
+}
+
+.song-clear {
+  *zoom: 1;
+}
+
+.song-clear:before, .song-clear:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.song-nowrap {
+  white-space: nowrap;
 }
 
 hr {
