@@ -45,11 +45,11 @@
             }
             if (!this.$pager) {
                 this.$pager = $('<div class="' + [pageClass.pager, 'song-clear'].join(' ') + '"></div>');
-                this.option = Object.assign({}, this.option);
                 this.$pager.insertAfter($elem);
                 $elem.hide();
                 firstRender = true;
             }
+            this.option = Object.assign({}, this.option);
             this.option.count = this.option.count || 0;
             this.option.limit = this.option.limit || 10;
             this.option.pages = Math.ceil(this.option.count / this.option.limit) || 1;
@@ -61,7 +61,6 @@
             this.option.prev = this.option.prev || '上一页';
             this.option.next = this.option.next || '下一页';
             this.option.size = this.option.size || 'normal';
-            this.option.filter = $elem.attr('song-filter') || '';
             switch (this.option.size) {
                 case 'small':
                     this.$pager.addClass('song-pager-small');
