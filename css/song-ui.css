@@ -829,7 +829,6 @@ textarea {
 }
 
 .song-table-cell {
-  position: relative;
   _width: 100%;
   _height: 40px;
   min-height: 28px;
@@ -1147,11 +1146,7 @@ textarea {
 }
 
 .song-table .song-table-editing {
-  position: relative;
-  z-index: 1;
   background-color: #ffffff;
-  *border-top: 0;
-  *border-right: 0;
 }
 
 .song-table .song-table-editing .song-table-cell {

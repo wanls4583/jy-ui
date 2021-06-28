@@ -54,7 +54,7 @@
     }
 
     &-cell {
-        position: relative;
+        // position: relative;
         // ie6下内容会溢出到旁边的td
         _width: 100%;
         _height: 40px;
@@ -388,12 +388,12 @@
     // 编辑中
     & &-editing {
         // 解决ie7及以下浏览器select下拉框被覆盖的问题
-        position: relative;
-        z-index: 1;
-        background-color: $white-color;
+        // position: relative;
+        // z-index: 1;
         // ie7及以下浏览器添加position:relative后，td的边框布局将变化，右上角的边框将多出一像素
-        *border-top: 0;
-        *border-right: 0;
+        // *border-top: 0;
+        // *border-right: 0;
+        background-color: $white-color;
 
         .song-table-cell {
             overflow: visible;
