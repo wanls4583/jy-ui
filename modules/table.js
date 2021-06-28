@@ -75,11 +75,11 @@
             this.once = event.once;
             this.trigger = event.trigger;
             this.option = option;
-            this.init();
+            this.render();
         }
 
         // 渲染表格
-        Class.prototype.init = function () {
+        Class.prototype.render = function () {
             var $elem = $(this.option.elem);
             var $table = $('<table class="' + tableClass.table + '"></table>');
             var $header = $('<div class="' + tableClass.tableHeader + '"></div>')

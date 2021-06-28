@@ -35,10 +35,10 @@
             this.once = event.once;
             this.trigger = event.trigger;
             this.option = option;
-            this.init();
+            this.render();
         }
 
-        Class.prototype.init = function () {
+        Class.prototype.render = function () {
             var $elem = $(this.option.elem);
             var firstRender = false;
             var storeData = null;
