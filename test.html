@@ -365,7 +365,7 @@
             var sign = '个性签名' + i;
             data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
-        window.table = SongUi.Table.render({
+        var table = SongUi.Table.render({
             elem: '#table1',
             width: 800,
             data: data,
@@ -428,7 +428,7 @@
                 }]
             }]
         });
-        SongUi.Table.on('selected(table1)', function () {
+        table.on('selected', function () {
             SongUi.Dialog.alert(JSON.stringify(table.getData('select')));
         });
         return table;
@@ -561,13 +561,13 @@
                 }]
             ]
         });
-        SongUi.Table.on('save(table3)', function (obj) {
+        table.on('save', function (obj) {
             // console.log(obj);
         });
-        SongUi.Table.on('edit(table3)', function (obj) {
+        table.on('edit', function (obj) {
             // console.log(obj);
         });
-        SongUi.Table.on('add(table3)', function (obj) {
+        table.on('add', function (obj) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
@@ -577,25 +577,24 @@
                 data: { user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
         });
-        SongUi.Table.on('del(table3)', function (obj) {
+        table.on('del', function (obj) {
             table.deleteRow(obj.id);
         });
-        SongUi.Table.on('checked(table3)', function (obj) {
+        table.on('checked', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
         });
-        SongUi.Table.on('getadd(table3)', function (obj) {
+        table.on('getadd', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('add')));
         });
-        SongUi.Table.on('getdel(table3)', function (obj) {
+        table.on('getdel', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('delelte')));
         });
-        SongUi.Table.on('getedit(table3)', function (obj) {
+        table.on('getedit', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
         });
-        SongUi.Table.on('name(table3)', function (obj) {
+        table.on('name', function (obj) {
             SongUi.Dialog.alert(obj.data.user);
         });
-        window.table = table;
         return table;
     }
     SongUi.Pager.render({

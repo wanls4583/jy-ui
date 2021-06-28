@@ -1218,7 +1218,7 @@ textarea {
 }
 
 .song-row {
-  *font-size: 0;
+  font-size: 0;
 }
 
 .song-row .song-col-1 {
@@ -1226,7 +1226,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-1 {
@@ -1238,7 +1238,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-2 {
@@ -1250,7 +1250,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-3 {
@@ -1262,7 +1262,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-4 {
@@ -1274,7 +1274,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-5 {
@@ -1286,7 +1286,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-6 {
@@ -1298,7 +1298,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-7 {
@@ -1310,7 +1310,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-8 {
@@ -1322,7 +1322,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-9 {
@@ -1334,7 +1334,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-10 {
@@ -1346,7 +1346,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-11 {
@@ -1358,7 +1358,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  *font-size: 14px;
+  font-size: 14px;
 }
 
 .song-row .song-col-offset-12 {

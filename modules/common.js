@@ -22,20 +22,20 @@
         function getEvent() {
             // 监听事件
             function on(filter, callback) {
-                on[filter] = on[filter] || [];
-                on[filter].push(callback);
+                on[filter + '_event'] = on[filter + '_event'] || [];
+                on[filter + '_event'].push(callback);
             }
 
             // 监听事件
             function once(filter, callback) {
-                if (!on[filter]) {
-                    on[filter] = [callback];
+                if (!on[filter + '_event']) {
+                    on[filter + '_event'] = [callback];
                 }
             }
 
             // 触发事件
             function trigger(filter, event) {
-                var arr = on[filter];
+                var arr = on[filter + '_event'];
                 if (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         arr[i](event);

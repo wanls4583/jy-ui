@@ -21,6 +21,7 @@
             confirm: 'song-pager-confirm',
             count: 'song-pager-count'
         }
+        var store = {};
         var Pager = {
             render: function (option) {
                 return new Class(option);
@@ -40,12 +41,16 @@
         Class.prototype.init = function () {
             var $elem = $(this.option.elem);
             var firstRender = false;
+            var storeData = null;
+            this.filter = this.filter || $elem.attr('song-filter') || 'pager_' + Math.random();
+            store[this.filter] = store[this.filter] || {};
+            storeData = store[this.filter];
             if (!$elem.length) {
                 return;
             }
-            if (!this.$pager) {
-                this.$pager = $('<div class="' + [pageClass.pager, 'song-clear'].join(' ') + '"></div>');
-                this.$pager.insertAfter($elem);
+            if (!storeData.$pager) {
+                storeData.$pager = $('<div class="' + [pageClass.pager, 'song-clear'].join(' ') + '"></div>');
+                storeData.$pager.insertAfter($elem);
                 $elem.hide();
                 firstRender = true;
             }
@@ -63,82 +68,82 @@
             this.option.size = this.option.size || 'normal';
             switch (this.option.size) {
                 case 'small':
-                    this.$pager.addClass('song-pager-small');
+                    storeData.$pager.addClass('song-pager-small');
                     break;
             }
             // 是否显示总数
             if (this.option.layout.indexOf('count') > -1) {
-                if (!this.$count) {
-                    this.$count = $('<span class="' + pageClass.count + '"></span>');
-                    this.$pager.append(this.$count);
+                if (!storeData.$count) {
+                    storeData.$count = $('<span class="' + pageClass.count + '"></span>');
+                    storeData.$pager.append(storeData.$count);
                 }
-                this.$count.html('共' + this.option.count + '条');
-            } else if (this.$count) {
-                this.$count.remove();
-                this.$count = undefined;
+                storeData.$count.html('共' + this.option.count + '条');
+            } else if (storeData.$count) {
+                storeData.$count.remove();
+                storeData.$count = undefined;
             }
             // 是否显示上一页
             if (this.option.layout.indexOf('prev') > -1) {
-                if (!this.$prev) {
-                    this.$prev = $('<a hidefocus="true" href="javascript:;" class="' + [pageClass.prev, (this.option.nowPage == 1 ? pageClass.prevDisabled : '')].join(' ') + '"></a>');
-                    this.$pager.append(this.$prev);
+                if (!storeData.$prev) {
+                    storeData.$prev = $('<a hidefocus="true" href="javascript:;" class="' + [pageClass.prev, (this.option.nowPage == 1 ? pageClass.prevDisabled : '')].join(' ') + '"></a>');
+                    storeData.$pager.append(storeData.$prev);
                 }
-                this.$prev.html(this.option.prev);
-            } else if (this.$prev) {
-                this.$prev.remove();
-                this.$prev = undefined;
+                storeData.$prev.html(this.option.prev);
+            } else if (storeData.$prev) {
+                storeData.$prev.remove();
+                storeData.$prev = undefined;
             }
             // 是否显示页码
             if (this.option.layout.indexOf('page') > -1) {
-                if (!this.$page) {
-                    this.$page = $('<div class="' + pageClass.nums + '"></div>');
-                    this.$pager.append(this.$page);
+                if (!storeData.$page) {
+                    storeData.$page = $('<div class="' + pageClass.nums + '"></div>');
+                    storeData.$pager.append(storeData.$page);
                 }
-            } else if (this.$page) {
-                this.$page.remove();
-                this.$page = undefined;
+            } else if (storeData.$page) {
+                storeData.$page.remove();
+                storeData.$page = undefined;
             }
             // 是否显示下一页
             if (this.option.layout.indexOf('next') > -1) {
-                if (!this.$next) {
-                    this.$next = $('<a hidefocus="true" href="javascript:;" class="' + [pageClass.next, (this.option.nowPage == 1 ? pageClass.nextDisabled : '')].join(' ') + '"></a>');
-                    this.$pager.append(this.$next);
+                if (!storeData.$next) {
+                    storeData.$next = $('<a hidefocus="true" href="javascript:;" class="' + [pageClass.next, (this.option.nowPage == 1 ? pageClass.nextDisabled : '')].join(' ') + '"></a>');
+                    storeData.$pager.append(storeData.$next);
                 }
-                this.$next.html(this.option.next);
-            } else if (this.$next) {
-                this.$next.remove();
-                this.$next = undefined;
+                storeData.$next.html(this.option.next);
+            } else if (storeData.$next) {
+                storeData.$next.remove();
+                storeData.$next = undefined;
             }
             // 是否显示每页数量
             if (this.option.layout.indexOf('limit') > -1) {
-                if (!this.$select) {
-                    this.$select = $('<select class="' + pageClass.limit + '" song-ignore></select>');
-                    this.$pager.append(this.$select);
+                if (!storeData.$select) {
+                    storeData.$select = $('<select class="' + pageClass.limit + '" song-ignore></select>');
+                    storeData.$pager.append(storeData.$select);
                 }
-                this.$select.empty();
+                storeData.$select.empty();
                 for (var i = 0; i < this.option.limits.length; i++) {
-                    this.$select.append('<option value="' + this.option.limits[i] + '" ' + (this.option.limit == this.option.limits[i] ? 'selected' : '') + '>' + this.option.limits[i] + '条每页</option>');
+                    storeData.$select.append('<option value="' + this.option.limits[i] + '" ' + (this.option.limit == this.option.limits[i] ? 'selected' : '') + '>' + this.option.limits[i] + '条每页</option>');
                 }
-            } else if (this.$select) {
-                this.$select.remove();
-                this.$select = undefined;
+            } else if (storeData.$select) {
+                storeData.$select.remove();
+                storeData.$select = undefined;
             }
             // 是否显示跳转
             if (this.option.layout.indexOf('jump') > -1) {
-                if (!this.$jump) {
-                    this.$jump = $('\
+                if (!storeData.$jump) {
+                    storeData.$jump = $('\
                     <div class="' + pageClass.jump + '">\
                         <span>到</span>\
                         <input type="text" class="' + pageClass.input + '">\
                         <span>页</span>\
                         <button class="' + pageClass.confirm + '">确定</button>\
                     </div>');
-                    this.$pager.append(this.$jump);
+                    storeData.$pager.append(storeData.$jump);
                 }
-                this.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
-            } else if (this.$jump) {
-                this.$jump.remove();
-                this.$jump = undefined;
+                storeData.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
+            } else if (storeData.$jump) {
+                storeData.$jump.remove();
+                storeData.$jump = undefined;
             }
             this.renderNowPage(firstRender);
             this.bindEvent();
@@ -147,6 +152,7 @@
         // 渲染当前页码
         Class.prototype.renderNowPage = function (firstRender) {
             var that = this;
+            var storeData = store[this.filter];
             // 首次渲染时不需要触发
             if (!firstRender) {
                 clearTimeout(this.triggerTimer);
@@ -154,7 +160,7 @@
                     that.trigger('page', that.option.nowPage);
                 }, 0)
             }
-            if (!this.$page) {
+            if (!storeData.$page) {
                 return;
             }
             var html = '';
@@ -191,18 +197,18 @@
                     html += '<a hidefocus="true" href="javascript:;" class="' + pageClass.num + '" data-page="' + (i + 1) + '">' + (i + 1) + '</a>';
                 }
             }
-            this.$page.html(html);
-            this.$page.find('a.' + pageClass.num + '[data-page="' + this.option.nowPage + '"]').addClass(pageClass.now);
-            this.$jump && this.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
+            storeData.$page.html(html);
+            storeData.$page.find('a.' + pageClass.num + '[data-page="' + this.option.nowPage + '"]').addClass(pageClass.now);
+            storeData.$jump && storeData.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
             if (this.option.nowPage == 1) {
-                this.$prev && this.$prev.addClass(pageClass.prevDisabled);
+                storeData.$prev && storeData.$prev.addClass(pageClass.prevDisabled);
             } else {
-                this.$prev && this.$prev.removeClass(pageClass.prevDisabled);
+                storeData.$prev && storeData.$prev.removeClass(pageClass.prevDisabled);
             }
             if (this.option.nowPage == this.option.pages) {
-                this.$next && this.$next.addClass(pageClass.nextDisabled);
+                storeData.$next && storeData.$next.addClass(pageClass.nextDisabled);
             } else {
-                this.$next && this.$next.removeClass(pageClass.nextDisabled);
+                storeData.$next && storeData.$next.removeClass(pageClass.nextDisabled);
             }
         }
 
@@ -218,43 +224,44 @@
                 return;
             }
             var that = this;
+            var storeData = store[this.filter];
             this.binded = true;
             // 上一页
-            this.$pager.delegate('a.' + pageClass.prev, 'click', function () {
+            storeData.$pager.delegate('a.' + pageClass.prev, 'click', function () {
                 if (that.option.nowPage > 1) {
                     that.option.nowPage--;
                     that.renderNowPage();
                 }
             });
             // 下一页
-            this.$pager.delegate('a.' + pageClass.next, 'click', function () {
+            storeData.$pager.delegate('a.' + pageClass.next, 'click', function () {
                 if (that.option.nowPage < that.option.pages) {
                     that.option.nowPage++;
                     that.renderNowPage();
                 }
             });
             // 点击页码
-            this.$pager.delegate('a.' + pageClass.num, 'click', function () {
+            storeData.$pager.delegate('a.' + pageClass.num, 'click', function () {
                 var $that = $(this);
                 var page = $that.attr('data-page');
                 that.option.nowPage = page;
                 that.renderNowPage();
             });
             // 跳转
-            this.$pager.delegate('button.' + pageClass.confirm, 'click', function () {
-                var page = that.$jump.find('input.' + pageClass.input).val();
+            storeData.$pager.delegate('button.' + pageClass.confirm, 'click', function () {
+                var page = storeData.$jump.find('input.' + pageClass.input).val();
                 if (page >= 1 && page <= that.option.pages) {
                     that.option.nowPage = page;
                     that.renderNowPage();
                 }
             });
-            this.$pager.delegate('input.' + pageClass.input, 'keydown', function (e) {
+            storeData.$pager.delegate('input.' + pageClass.input, 'keydown', function (e) {
                 if (e.keyCode == 13) {
-                    that.$jump.find('button.' + pageClass.confirm).trigger('click');
+                    storeData.$jump.find('button.' + pageClass.confirm).trigger('click');
                 }
             });
             // 每页数量变化
-            this.$pager.delegate('select.' + pageClass.limit, 'change', function () {
+            storeData.$pager.delegate('select.' + pageClass.limit, 'change', function () {
                 var limit = Number($(this).val()) || 0;
                 that.trigger('limit', limit);
                 that.reload({

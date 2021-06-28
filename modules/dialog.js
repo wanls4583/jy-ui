@@ -31,8 +31,8 @@
         }
         var ieVersion = Common.getIeVersion();
         var store = {};
+        var layerCount = 0;
         var Dialog = {
-            layerIndex: 1,
             open: open,
             alert: alert,
             confirm: confirm,
@@ -48,7 +48,7 @@
             option.shadow = option.shadow !== false ? true : false;
             option.move = option.move !== false ? true : false;
             option.full = option.full !== false ? true : false;
-            var layerIndex = Dialog.layerIndex;
+            var layerIndex = ++layerCount;
             var $container = $(option.container || docBody);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + 99) + '"></div>');
             var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + (layerIndex + 100) + '"></div>');
@@ -144,14 +144,12 @@
             });
             setPosition(layerIndex, option.offset || 'center');
             _bindEvent();
-            Dialog.layerIndex++;
             return layerIndex;
 
             function _bindEvent() {
                 $layer.on('click', function () {
-                    var zIndex = Dialog.layerIndex + 100;
+                    var zIndex = ++layerCount + 100;
                     $(this).css('z-index', zIndex);
-                    Dialog.layerIndex++;
                 });
                 // 关闭
                 $title.find('i.song-op-close').on('click', function () {
