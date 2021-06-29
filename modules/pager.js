@@ -215,7 +215,7 @@
         // 重载
         Class.prototype.reload = function (option) {
             this.option = Object.assign(this.option, option);
-            this.init();
+            this.render();
         }
 
         // 绑定事件
