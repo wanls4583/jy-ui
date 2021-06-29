@@ -1307,7 +1307,6 @@
             var cols = storeData.cols;
             if (!storeData.$tableMain.inserted) {
                 var viewWidth = storeData.$view.width();
-                storeData.$tableMain.append(storeData.$table);
                 storeData.$tableMain.insertAfter(storeData.$header);
                 storeData.$tableMain.css({
                     width: viewWidth
@@ -1402,7 +1401,6 @@
                     storeData.$fixedLeftTableHeader.append(storeData.$fixedLeftTableHeaderHead);
                     storeData.$fixedLeftHeader.append(storeData.$fixedLeftTableHeader);
                     storeData.$fixedLeft.append(storeData.$fixedLeftHeader);
-                    storeData.$fixedLeftMain.append(storeData.$fixedLeftTable);
                     storeData.$fixedLeft.append(storeData.$fixedLeftMain);
                     storeData.$fixedLeftHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     this.renderTableHeader('left');
@@ -1433,7 +1431,6 @@
                     storeData.$fixedRightHeader.append(storeData.$fixedRightTableHeader);
                     storeData.$fixedRightHeader.append(storeData.$mend);
                     storeData.$fixedRight.append(storeData.$fixedRightHeader);
-                    storeData.$fixedRightMain.append(storeData.$fixedRightTable);
                     storeData.$fixedRight.append(storeData.$fixedRightMain);
                     storeData.$fixedRightHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
@@ -1465,14 +1462,17 @@
         Class.prototype.renderTr = function (fixed) {
             var storeData = store[this.filter];
             var $table = storeData.$table;
+            var $tableMain = storeData.$tableMain;
             var data = storeData._sortedData;
             // 渲染左固定列
             if (fixed == 'left') {
                 $table = storeData.$fixedLeftTable;
+                $tableMain = storeData.$fixedLeftMain;
             }
             // 渲染右固定列
             if (fixed == 'right') {
                 $table = storeData.$fixedRightTable;
+                $tableMain = storeData.$fixedRightMain;
             }
             var trs = $table.children('tbody').children('tr');
             // 取消全选
@@ -1488,6 +1488,11 @@
                 } else {
                     $table.append(this.createTr(data[i], fixed));
                 }
+            }
+            // 延迟插入，避免闪屏
+            if (!$table.inserted) {
+                $tableMain.append($table);
+                $table.inserted = true;
             }
             // 删除多余的tr
             for (var i = data.length; i < trs.length; i++) {
