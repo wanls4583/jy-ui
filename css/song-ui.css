@@ -978,7 +978,17 @@ textarea {
 }
 
 .song-table-filter li {
-  padding: 0 15px;
+  padding: 0;
+}
+
+.song-table-filter .song-form-checkbox {
+  display: block;
+  padding-left: 40px;
+  padding-right: 15px;
+}
+
+.song-table-filter .song-form-checkbox i {
+  left: 15px;
 }
 
 .song-table-pager {

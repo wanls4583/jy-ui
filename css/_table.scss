@@ -221,7 +221,17 @@
 
     &-filter {
         li {
-            padding: 0 $pd15;
+            padding: 0;
+        }
+
+        .song-form-checkbox {
+            display: block;
+            padding-left: 25px + $pd15;
+            padding-right: $pd15;
+
+            i {
+                left: $pd15;
+            }
         }
     }
 

@@ -501,7 +501,7 @@
                 var originValue = td.songBindData.colData;
                 td.songBindData.rowData[col.field] = value;
                 td.songBindData.colData = value;
-                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.id, col) : fValue;
+                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.rowData, td.songBindData.id, col) : fValue;
                 $td.removeClass(tableClass.editing);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
@@ -605,7 +605,7 @@
                 var col = td.songBindData.col;
                 var $td = $(td);
                 var fValue = _getValue(td);
-                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.id, col) : fValue;
+                td.children[0].innerHTML = col.template ? col.template(td.songBindData.colData, td.songBindData.rowData, td.songBindData.id, col) : fValue;
                 $td.removeClass(tableClass.editing);
                 td.songBindData.editing = false;
                 td.songBindData.$input = undefined;
@@ -2110,6 +2110,9 @@
             }
             // 在工具图标下挂载
             $(dom).append($filter);
+            $filter.on('click', function () {
+                return false;
+            });
             Form.on('checkbox(song_table_' + this.filter + '_filter)', function (e) {
                 var $input = $(e.dom);
                 var value = $input.val();
@@ -2174,8 +2177,25 @@
         Class.prototype.exportsExecl = function () {
             var storeData = store[this.filter];
             if (window.btoa) {
+                var trs = null;
                 var $table = $(storeData.$tableHeader[0].outerHTML);
                 $table.append(storeData.$table.children('tbody').html());
+                trs = $table.children('tbody').children('tr');
+                // 左固定列中的数据
+                storeData.$fixedLeftTable && storeData.$fixedLeftTable.children('tbody').find('tr').each(function (i, tr) {
+                    var tds = $(trs[i]).children('td');
+                    $(tr).children('td').each(function (i, td) {
+                        $(tds[i]).html($(td).html());
+                    });
+                });
+                // 右固定列中的数据
+                storeData.$fixedRightTable && storeData.$fixedRightTable.children('tbody').find('tr').each(function (i, tr) {
+                    var tds = $(trs[i]).children('td');
+                    var _tds = $(tr).children('td');
+                    _tds.each(function (i, td) {
+                        $(tds[tds.length - _tds.length + i]).html($(td).html());
+                    });
+                });
                 $table.find('.' + tableClass.col + '-radio,.' + tableClass.col + '-checkbox,.' + tableClass.col + '-operate').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
@@ -2216,7 +2236,7 @@
                     if (col.type == 'text') {
                         var html = data[col.field];
                         if (col.template) { // 自定义渲染函数
-                            html = col.template(data, id, col);
+                            html = col.template(data[col.field], data, data._song_table_id, col);
                         } else if (col.select) { // 下列列表中的数据
                             html = '';
                             col.select.map(function (obj) {
