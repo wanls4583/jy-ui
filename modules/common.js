@@ -215,27 +215,31 @@
         }
 
         function htmlTemplate(str, data) {
-            var reg = /<%(.*?)%>/g,
-                match = null,
-                result = 'var str="";',
-                params = '',
-                args = [],
-                start = 0;
-
-            //拼接代码
-            while (match = reg.exec(str)) {
-                if (start < match.index) {
-                    result += 'str+=\'' + str.slice(start, match.index).replace(/\n|\r/g, '').replace(/'/g, '\\\'') + '\';';
+            var result = htmlTemplate[str];
+            var args = [];
+            var params = '';
+            if (!result) {
+                var reg = /<%(.*?)%>/g,
+                    match = null,
+                    start = 0;
+                result = 'var str="";';
+                //拼接代码
+                while (match = reg.exec(str)) {
+                    if (start < match.index) {
+                        result += 'str+=\'' + str.slice(start, match.index).replace(/\n|\r/g, '').replace(/'/g, '\\\'') + '\';';
+                    }
+                    if (match[1].charAt(0) == '-') { //如果是赋值语句<%-data%>
+                        result += 'str+=' + match[1].slice(1) + ';';
+                    } else { //如果是流程语句
+                        result += match[1];
+                    }
+                    start = match.index + match[0].length;
                 }
-                if (match[1].charAt(0) == '-') { //如果是赋值语句<%-data%>
-                    result += 'str+=' + match[1].slice(1) + ';';
-                } else { //如果是流程语句
-                    result += match[1];
-                }
-                start = match.index + match[0].length;
+                result += 'str+=\'' + str.slice(start).replace(/\n|\r/g, '') + '\';';
+                result += 'return str;';
+                // 缓存结果
+                htmlTemplate[str] = result;
             }
-            result += 'str+=\'' + str.slice(start).replace(/\n|\r/g, '') + '\';';
-            result += 'return str;';
 
             //拼接参数
             for (var key in data) {

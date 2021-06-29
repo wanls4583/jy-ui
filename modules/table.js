@@ -1547,20 +1547,17 @@
             storeData.$tableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData.$fixedLeftTableHeaderHead && storeData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData.$fixedRightTableHeaderHead && storeData.$fixedRightTableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
-            storeData.$tableHeader.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData._checkedData = [];
             storeData._selectedData = null;
-            var start = new Date().getTime();
             var html = '';
             for (var i = 0; i < data.length; i++) {
-                if (trs[i]) { // 重复利用
+                if (trs[i]) { // 重复利用（在非ie浏览器中可加速渲染）
                     this.replaceTr(data[i], trs[i], fixed);
                 } else {
                     html += this.createTr(data[i], fixed);
                 }
             }
             html && $table.append(html);
-            console.log(new Date().getTime() - start);
             // 延迟插入，避免闪屏
             if (!$table.inserted) {
                 $tableMain.append($table);
