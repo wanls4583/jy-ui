@@ -1602,7 +1602,6 @@
             function _setHtml(td, html, data, id, col) {
                 var $td = $(td);
                 if (col.type == 'text') {
-                    $td.removeAttr('class');
                     $td.children('.' + tableClass.cell).html(html);
                 } else if (col.type == 'radio' || col.type == 'checkbox') {
                     $td.find('input[type="' + col.type + '"]').val(id).prop('checked', false);
