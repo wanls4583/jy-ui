@@ -1537,7 +1537,6 @@
                 $table = storeData.$fixedRightTable;
                 $tableHeader = storeData.$fixedRightTableHeader;
             }
-            var startTime = new Date().getTime();
             // 取消全选
             storeData.$tableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData.$fixedLeftTableHeaderHead && storeData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);

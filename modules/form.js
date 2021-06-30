@@ -193,10 +193,10 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.switchClass];
-                // 删除已经渲染过的ui
-                input.$ui && input.$ui.remove();
+                var text = 'OFF';
                 // 忽略标签
                 if (ignore) {
+                    input.$ui && input.$ui.remove();
                     return;
                 }
                 // 已禁用
@@ -206,17 +206,23 @@
                 // 已选中
                 if ($input.prop('checked')) {
                     classNames.push(formClass.switchChecked);
+                    text = 'ON';
+                }
+                // 已经渲染过
+                if (input.$ui) {
+                    input.$ui.attr('class', classNames.join(' '));
+                    input.$ui.children('span').html(text);
+                    return;
                 }
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
                         <i></i>\
-                        <span>' + ($input.prop('checked') ? 'ON' : 'OFF') + '</span>\
+                        <span>' + text + '</span>\
                     </div>');
                 $html.insertAfter(input);
                 $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                input.renderedSongUi = true;
                 _bindEvent($html);
             });
 
@@ -251,10 +257,10 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.radio];
-                // 删除已经渲染过的ui
-                input.$ui && input.$ui.remove();
+                var icon = radioedIcon;
                 // 忽略标签
                 if (ignore) {
+                    input.$ui && input.$ui.remove();
                     return;
                 }
                 // 已禁用
@@ -264,10 +270,17 @@
                 // 已选中
                 if ($input.prop('checked')) {
                     classNames.push(formClass.radioChecked);
+                    icon = radioIcon;
+                }
+                // 已经渲染过
+                if (input.$ui) {
+                    input.$ui.attr('class', classNames.join(' '));
+                    input.$ui.children('i').html(icon);
+                    return;
                 }
                 var html =
                     '<div class="' + classNames.join(' ') + '">\
-                        <i>' + ($input.prop('checked') ? radioIcon : radioedIcon) + '</i>\
+                        <i>' + icon + '</i>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>';
                 var $html = $(html);
@@ -275,7 +288,6 @@
                 $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                input.renderedSongUi = true;
                 _bindEvent($html);
             });
             //绑定事件
@@ -317,10 +329,10 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.checkbox];
-                // 删除已经渲染过的ui
-                input.$ui && input.$ui.remove();
+                var icon = '';
                 // 忽略标签
                 if (ignore) {
+                    input.$ui && input.$ui.remove();
                     return;
                 }
                 // 已禁用
@@ -330,17 +342,23 @@
                 // 已选中
                 if ($input.prop('checked')) {
                     classNames.push(formClass.checkboxCheckd);
+                    icon = checkedIcon;
+                }
+                // 已经渲染过
+                if (input.$ui) {
+                    input.$ui.attr('class', classNames.join(' '));
+                    input.$ui.children('i').html(icon);
+                    return;
                 }
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
-                        <i>' + ($input.prop('checked') ? checkedIcon : '') + '</i>\
+                        <i>' + icon + '</i>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>');
                 $html.insertAfter(input);
                 $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                input.renderedSongUi = true;
                 _bindEvent($html);
             });
 
@@ -425,7 +443,6 @@
                 $html[0].$select = $select;
                 select.$ui = $html;
                 $select.hide();
-                select.renderedSongUi = true;
                 _bindEvent($html);
             });
             // 绑定事件
