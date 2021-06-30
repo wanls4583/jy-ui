@@ -126,7 +126,7 @@
             storeData.reqeust = this.option.reqeust;
             storeData.defaultToolbar = this.option.defaultToolbar;
             storeData.toolbar = this.option.toolbar;
-            storeData.trigger = this.option.trigger || 'click';
+            storeData.editTrigger = this.option.editTrigger || 'click';
             storeData.nowPage = this.option.nowPage || 1;
             storeData.limit = this.option.limit || 20;
             storeData.stretch = this.option.stretch || false;
@@ -658,13 +658,12 @@
                 var col = songBindData.col;
                 if (col.editable && !songBindData.editing) {
                     var data = songBindData.colData;
-                    var $td = $(td);
                     var originTdHeight = td.offsetHeight;
                     var rowData = songBindData.rowData;
                     var id = songBindData.id;
-                    var $cell = $td.children('.' + tableClass.cell);
-                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + $cell[0].clientWidth + 'px"></div>');
+                    var $cell = $(td.children[0]);
                     var editable = col.editable === true ? {} : col.editable;
+                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + 100 + 'px"></div>');
                     $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
@@ -731,7 +730,7 @@
                 Form.on('select(' + selectFilter + ')', function (e) {
                     $select[0].value = e.data;
                     if (storeData.autoSave) {
-                        that.save(id, field);
+                        that.save(id);
                     }
                 });
                 $select[0].value = data;
@@ -1763,7 +1762,6 @@
                 // 表格中的所有点击事件
                 storeData.$view.on('click', function (e) {
                     var $target = $(e.target);
-                    var $tr = $target.parents('tr');
                     var $td = $target.parents('td')
                     var event = $target.attr('song-event');
                     var stop = $target.attr('song-stop');
@@ -1819,7 +1817,7 @@
                         var $td = $(e.target).parents('td');
                         var songBindData = that.getBindDataById($td[0]);
                         if ($td.length && e.keyCode == 13) {
-                            that.save(songBindData.id, songBindData.col.field);
+                            that.save(songBindData.id);
                         }
                     }
                 });
