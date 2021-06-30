@@ -60,12 +60,18 @@
             this.option.pages = Math.ceil(this.option.count / this.option.limit) || 1;
             this.option.nowPage = this.option.nowPage || 1;
             this.option.nowPage = this.option.nowPage > this.option.pages ? this.option.pages : this.option.nowPage;
-            this.option.limits = this.option.limits || [10, 20, 50];
+            this.option.limits = this.option.limits || [10, 20, 50, 100];
             this.option.groups = this.option.groups || 5;
             this.option.layout = this.option.layout || ['count', 'prev', 'page', 'next', 'limit', 'jump'];
             this.option.prev = this.option.prev || '上一页';
             this.option.next = this.option.next || '下一页';
             this.option.size = this.option.size || 'normal';
+            if (this.option.limits.indexOf(this.option.limit) == -1) {
+                this.option.limits.push(this.option.limit);
+                this.option.limits.sort(function (a, b) {
+                    return a - b
+                });
+            }
             switch (this.option.size) {
                 case 'small':
                     storeData.$pager.addClass('song-pager-small');

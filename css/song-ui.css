@@ -913,6 +913,8 @@ textarea {
 .song-table-main {
   position: relative;
   overflow: auto;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
 }
 
 .song-table-toolbar {
@@ -1085,6 +1087,8 @@ textarea {
   position: relative;
   border-bottom: 1px solid #eeeeee;
   overflow: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
 }
 
 .song-table-mend {

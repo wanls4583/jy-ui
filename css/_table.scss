@@ -157,6 +157,7 @@
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
         overflow: auto;
+        transform: translate3d(0, 0, 0);
     }
 
     &-toolbar {
@@ -328,6 +329,7 @@
         position: relative;
         border-bottom: 1px solid $light-color;
         overflow: hidden;
+        transform: translate3d(0, 0, 0);
     }
 
     &-mend {
