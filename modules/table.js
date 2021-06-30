@@ -663,7 +663,7 @@
                     var id = songBindData.id;
                     var $cell = $(td.children[0]);
                     var editable = col.editable === true ? {} : col.editable;
-                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + 100 + 'px"></div>');
+                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + $cell[0].clientWidth + 'px"></div>');
                     $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
