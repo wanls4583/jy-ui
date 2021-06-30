@@ -135,25 +135,27 @@
             storeData.enterSave = this.option.enterSave === undefined ? true : this.option.enterSave;
             storeData.originCols = this.option.cols[0] instanceof Array ? this.option.cols : [this.option.cols];
             // 可配置参数-end
-            storeData._idCount = 0;
-            storeData._fixeLeftIdCount = 0;
-            storeData._fixeRightIdCount = 0;
-            storeData._$tips = [];
-            storeData._renderedData = [];
-            storeData._sortedData = [];
-            storeData._loadedData = [];
-            storeData._addedData = [];
-            storeData._deletedData = [];
-            storeData._editedData = [];
-            storeData._checkedData = [];
-            storeData._selectedData = null;
-            storeData._sortObj = {
+            storeData._idCount = 0; // 主表自增id
+            storeData._fixeLeftIdCount = 0; // 左固定表自增id
+            storeData._fixeRightIdCount = 0; // 右固定表自增id
+            storeData._$tips = []; // 展开的详情弹框
+            storeData._renderedData = []; // 渲染的数据
+            storeData._sortedData = []; // 排过序的数据
+            storeData._addedData = []; // 手动添加的数据
+            storeData._deletedData = []; // 删除的数据
+            storeData._editedData = []; // 编辑过的数据
+            storeData._checkedData = []; // 选中的数据(多选)
+            storeData._selectedData = null; // 选中的数据(单选)
+            storeData._sortObj = { // 排序数据
                 field: '',
                 sort: ''
             };
-            storeData.timers = storeData.timers || {};
-            storeData.tempData = storeData.tempData || {};
-            storeData.dataMap = {};
+            storeData.timers = {}; // 计时器
+            storeData.tempData = {}; // 临时数据
+            storeData.dataMap = {}; // 存储数据映射，可快速找到数据
+            storeData.editMap = { // 存储编辑中的单元格
+                list: []
+            };
             // 已存在view，则不再插入
             if (!$view.parent().length) {
                 $view.insertAfter($elem);
@@ -396,63 +398,44 @@
         /**
          * 保存编辑中的数据
          * @param {Number} id 
-         * @param {String} field 
          */
-        Class.prototype.save = function (id, field) {
+        Class.prototype.save = function (id) {
             var that = this;
             var storeData = store[this.filter];
             var result = true;
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
-                if (field) {
-                    var td = this.getTdByIdField(id, field);
-                    if (!td) {
-                        return;
-                    }
-                    tds = [td];
-                } else {
-                    storeData.$table.find('tr[data-id="' + id + '"]').each(_filter);
-                    if (storeData.$fixedLeftTable) {
-                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
-                    }
-                    if (storeData.$fixedRightTable) {
-                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
-                    }
-                }
+                storeData.editMap[id] && storeData.editMap[id].map(function (td) {
+                    tds.push(td);
+                });
             } else { // 保存所有的数据
-                storeData.$table.find('td').each(_filter);
-                if (storeData.$fixedLeftTable) {
-                    storeData.$fixedLeftTable.find('td').each(_filter);
-                }
-                if (storeData.$fixedRightTable) {
-                    storeData.$fixedRightTable.find('td').each(_filter);
-                }
+                storeData.editMap.list && storeData.editMap.list.map(function (td) {
+                    tds.push(td);
+                });
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
-                var songBindData = this.getBindDataById(td);
-                if (songBindData && songBindData.editing) {
-                    result = _verify(td);
-                    if (!result) {
-                        break;
-                    }
+                result = _verify(td);
+                if (!result) {
+                    break;
                 }
             }
             if (result) {
                 for (var i = 0; i < tds.length; i++) {
                     var td = tds[i];
-                    var songBindData = this.getBindDataById(td);
-                    if (songBindData && songBindData.editing) {
-                        _save(td);
-                    }
+                    _save(td);
+                    _delEditMap(td);
                 }
             }
             return result;
 
-            function _filter(i, td) {
-                if (!$(td).hasClass(tableClass.fixedEmpty)) {
-                    tds.push(td);
-                }
+            function _delEditMap(td) {
+                var songBindData = that.getBindDataById(td);
+                var id = songBindData.id;
+                var index = storeData.editMap[id].indexOf(td);
+                storeData.editMap[id].splice(index, 1);
+                index = storeData.editMap.list.indexOf(td);
+                storeData.editMap.list.splice(index, 1);
             }
 
             /**
@@ -569,42 +552,27 @@
             var storeData = store[this.filter];
             var tds = [];
             if (id !== undefined) { // 保存某一行的数据
-                if (field) {
-                    var td = this.getTdByIdField(id, field);
-                    if (!td) {
-                        return;
-                    }
-                    tds = [td];
-                } else {
-                    storeData.$table.find('tr[data-id="' + id + '"]').each(_filter);
-                    if (storeData.$fixedLeftTable) {
-                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').each(_filter);
-                    }
-                    if (storeData.$fixedRightTable) {
-                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').each(_filter);
-                    }
-                }
+                storeData.editMap[id] && storeData.editMap[id].map(function (td) {
+                    tds.push(td);
+                });
             } else { // 保存所有的数据
-                storeData.$table.find('td').each(_filter);
-                if (storeData.$fixedLeftTable) {
-                    storeData.$fixedLeftTable.find('td').each(_filter);
-                }
-                if (storeData.$fixedRightTable) {
-                    storeData.$fixedRightTable.find('td').each(_filter);
-                }
+                storeData.editMap.list && storeData.editMap.list.map(function (td) {
+                    tds.push(td);
+                });
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
-                var songBindData = this.getBindDataById(td);
-                if (songBindData && songBindData.editing) {
-                    _save(td);
-                }
+                _save(td);
+                _delEditMap(td);
             }
 
-            function _filter(i, td) {
-                if (!$(td).hasClass(tableClass.fixedEmpty)) {
-                    tds.push(td);
-                }
+            function _delEditMap(td) {
+                var songBindData = that.getBindDataById(td);
+                var id = songBindData.id;
+                var index = storeData.editMap[id].indexOf(td);
+                storeData.editMap[id].splice(index, 1);
+                index = storeData.editMap.list.indexOf(td);
+                storeData.editMap.list.splice(index, 1);
             }
 
             // 获取编辑中的数据
@@ -656,34 +624,27 @@
             var that = this;
             var storeData = store[this.filter];
             var tds = [];
-            if (id !== undefined) { // 编辑某一行的数据
-                if (field) {
-                    var td = this.getTdByIdField(id, field);
-                    if (!td) {
-                        return;
-                    }
-                    tds = [td];
-                } else {
-                    storeData.$table.find('tr[data-id="' + id + '"]').children('td').each(_filter);
-                    if (storeData.$fixedLeftTable) {
-                        storeData.$fixedLeftTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
-                    }
-                    if (storeData.$fixedRightTable) {
-                        storeData.$fixedRightTable.find('tr[data-id="' + id + '"]').children('td').each(_filter);
-                    }
+            if (field) {
+                var td = this.getTdByIdField(id, field);
+                if (!td) {
+                    return;
                 }
-            } else { // 编辑所有的数据
-                storeData.$table.find('td').each(_filter);
-                if (storeData.$fixedLeftTable) {
-                    storeData.$fixedLeftTable.find('td').each(_filter);
-                }
-                if (storeData.$fixedRightTable) {
-                    storeData.$fixedRightTable.find('td').each(_filter);
-                }
+                tds = [td];
+            } else {
+                storeData.$view.find('tr[data-id="' + id + '"]').children('td').each(_filter);
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
                 _edit(td);
+                _setEditMap(td);
+            }
+
+            function _setEditMap(td) {
+                var songBindData = that.getBindDataById(td);
+                var id = songBindData.id;
+                storeData.editMap[id] = storeData.editMap[id] || [];
+                storeData.editMap[id].push(td);
+                storeData.editMap.list.push(td);
             }
 
             function _filter(i, td) {
@@ -702,10 +663,9 @@
                     var rowData = songBindData.rowData;
                     var id = songBindData.id;
                     var $cell = $td.children('.' + tableClass.cell);
-                    var $edit = $('<div class="' + tableClass.edit + '"></div>');
+                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + $cell[0].clientWidth + 'px"></div>');
                     var editable = col.editable === true ? {} : col.editable;
-                    $edit.css('width', $cell[0].clientWidth);
-                    $cell.empty().append($edit);
+                    $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
                         $edit.append(editable.edit(data, rowData, id, col));
@@ -747,7 +707,7 @@
                         }
                     }
                 });
-                $edit.empty().append($input);
+                $edit.html($input);
                 songBindData.$input = $input;
                 // 输入框聚焦
                 $input.trigger('focus');
@@ -1396,9 +1356,6 @@
             } else {
                 this.httpGet(function (res) {
                     storeData._renderedData = res.data;
-                    storeData._loadedData = res.data.map(function (item) {
-                        return Object.assign({}, item);
-                    });
                     storeData._sortedData = storeData._renderedData.concat([]);
                     storeData.pager.count != res.count && storeData.pager.reload({
                         count: res.count
@@ -1711,7 +1668,7 @@
                 limits: storeData.limits,
                 limit: storeData.limit,
                 size: 'small',
-                count: storeData.data ? storeData.data.length : storeData._loadedData.length,
+                count: storeData.data ? storeData.data.length : 0,
                 prev: '<span style="font-weight:bold">' + leftIcon + '</span>',
                 next: '<span style="font-weight:bold">' + rightIon + '</span>'
             });
