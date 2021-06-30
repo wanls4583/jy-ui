@@ -1411,18 +1411,12 @@
                 // 数据排序
                 _sort();
                 // ie6解析css需要一定时间，方式setCellStyle无效
-                if (ieVersion <= 6) {
-                    clearTimeout(storeData.renderTimer)
-                    storeData.renderTimer = setTimeout(function () {
-                        that.renderTr();
-                        that.renderTableFixed();
-                        that.setDataMap();
-                    });
-                } else {
+                Common.cancelNextFrame(storeData.timers.renderTimer)
+                storeData.timers.renderTimer = Common.nextFrame(function () {
                     that.renderTr();
                     that.renderTableFixed();
                     that.setDataMap();
-                }
+                });
             }
 
             // 排序

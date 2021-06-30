@@ -155,10 +155,10 @@
             var storeData = store[this.filter];
             // 首次渲染时不需要触发
             if (!firstRender) {
-                clearTimeout(this.triggerTimer);
-                this.triggerTimer = setTimeout(function () {
+                Common.cancelNextFrame(this.triggerTimer);
+                this.triggerTimer = Common.nextFrame(function () {
                     that.trigger('page', that.option.nowPage);
-                }, 0)
+                })
             }
             if (!storeData.$page) {
                 return;
