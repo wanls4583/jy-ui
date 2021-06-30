@@ -216,8 +216,15 @@
 
         function htmlTemplate(str, data) {
             var result = htmlTemplate[str];
+            var func = null;
             var args = [];
             var params = '';
+            //拼接参数
+            for (var key in data) {
+                params += key + ',';
+                args.push(data[key]);
+            }
+            params = params.slice(0, -1);
             if (!result) {
                 var reg = /<%(.*?)%>/g,
                     match = null,
@@ -237,18 +244,17 @@
                 }
                 result += 'str+=\'' + str.slice(start).replace(/\n|\r/g, '') + '\';';
                 result += 'return str;';
+                func = new Function(params, result);
                 // 缓存结果
                 htmlTemplate[str] = result;
+                // 缓存函数，性能提升明显
+                htmlTemplate[str + params] = func;
+            } else {
+                func = htmlTemplate[str + params] || new Function(params, result);
             }
 
-            //拼接参数
-            for (var key in data) {
-                params += key + ',';
-                args.push(data[key]);
-            }
-            params = params.slice(0, -1);
             //执行代码
-            return new Function(params, result).apply(window, args);
+            return func.apply(window, args);
         }
 
         if (!Array.prototype.indexOf) {

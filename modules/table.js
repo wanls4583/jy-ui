@@ -1524,6 +1524,7 @@
             var storeData = store[this.filter];
             var $table = storeData.$table;
             var data = storeData._sortedData;
+            var startTime = new Date().getTime();
             storeData.timers.renderTimer = storeData.timers.renderTimer || {};
             // 渲染左固定列
             if (fixed == 'left') {
@@ -1569,6 +1570,7 @@
                         $(trs[i]).remove();
                     }
                     Form.render('', storeData.$view);
+                    // console.log(new Date().getTime() - startTime);
                 }
                 that.setFixedWidth();
             }
