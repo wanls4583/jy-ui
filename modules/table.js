@@ -309,7 +309,6 @@
             _addRow();
             cols[0].fixed == 'left' && _addRow('left');
             cols[cols.length - 1].fixed == 'right' && _addRow('right');
-            Form.render('', storeData.$view);
 
             function _addRow(fixed) {
                 var $table = storeData.$table;
@@ -326,11 +325,13 @@
                     data.reverse().map(function (item, i) {
                         var $tr = that.createTr(item, fixed);
                         $tr.insertAfter(tr);
+                        Form.render('', $tr);
                     });
                 } else {
                     data.map(function (item, i) {
                         var $tr = that.createTr(item, fixed);
                         $table.append($tr);
+                        Form.render('', $tr);
                     });
                 }
             }
@@ -1523,54 +1524,45 @@
             var that = this;
             var storeData = store[this.filter];
             var $table = storeData.$table;
+            var $tableHeader = storeData.$tableHeader;
             var data = storeData._sortedData;
-            var startTime = new Date().getTime();
             storeData.timers.renderTimer = storeData.timers.renderTimer || {};
             // 渲染左固定列
             if (fixed == 'left') {
                 $table = storeData.$fixedLeftTable;
-                $tableMain = storeData.$fixedLeftMain;
+                $tableHeader = storeData.$fixedLeftTableHeader;
             }
             // 渲染右固定列
             if (fixed == 'right') {
                 $table = storeData.$fixedRightTable;
-                $tableMain = storeData.$fixedRightMain;
+                $tableHeader = storeData.$fixedRightTableHeader;
             }
-            var trs = $table.children('tbody').children('tr');
+            var startTime = new Date().getTime();
             // 取消全选
             storeData.$tableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData.$fixedLeftTableHeaderHead && storeData.$fixedLeftTableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData.$fixedRightTableHeaderHead && storeData.$fixedRightTableHeaderHead.find('[song-filter="table_checkbox_' + this.filter + '_all"]').prop('checked', false);
             storeData._checkedData = [];
             storeData._selectedData = null;
-            Common.cancelNextFrame(storeData.timers.renderTimer[fixed || 'main']);
-            storeData.timers.renderTimer[fixed || 'main'] = Common.nextFrame(function () {
-                _appendTr(0);
-            }, 0);
+            $table.empty();
+            _appendTr(0);
 
             // 避免加载数据量太大时浏览器卡住
             function _appendTr(start) {
-                var html = '';
+                var html = [];
+                Common.cancelNextFrame(storeData.timers.renderTimer[fixed || 'main']);
                 for (var i = start, count = 0; i < data.length && count < 100; i++, count++) {
-                    if (trs[i]) { // 重复利用（在非ie浏览器中可加速渲染）
-                        that.replaceTr(data[i], trs[i], fixed);
-                    } else {
-                        html += that.createTr(data[i], fixed);
-                    }
+                    html.push(that.createTr(data[i], fixed));
                     that.setDataMap(data[i]);
                 }
-                html && $table.append(html);
+                $table.append(html.join(''));
                 if (i < data.length) {
                     storeData.timers.renderTimer[fixed || 'main'] = Common.nextFrame(function () {
                         _appendTr(i);
                     });
                 } else {
-                    // 删除多余的tr
-                    for (var i = data.length; i < trs.length; i++) {
-                        $(trs[i]).remove();
-                    }
-                    Form.render('', storeData.$view);
-                    // console.log(new Date().getTime() - startTime);
+                    Form.render('', $table);
+                    Form.render('', $tableHeader);
                 }
                 that.setFixedWidth();
             }
@@ -1612,72 +1604,6 @@
             }
             tr += '</tr>';
             return tr;
-        }
-
-        /**
-         * 更换表格行内容(增加渲染效率)
-         * @param {Object} data 
-         * @param {DOM} tr 
-         * @param {String} fixed 
-         */
-        Class.prototype.replaceTr = function (data, tr, fixed) {
-            var storeData = store[this.filter];
-            var cols = storeData.cols;
-            var id = data.id || data._song_table_id;
-            if (id === undefined) {
-                if (fixed == 'left') {
-                    id = storeData._fixeLeftIdCount++;
-                } else if (fixed == 'right') {
-                    id = storeData._fixeRightIdCount++;
-                } else {
-                    id = storeData._idCount++;
-                }
-            }
-            data._song_table_id = id;
-            $(tr).attr('data-id', id);
-            var tds = $(tr).children('td');
-            var td_i = 0;
-            for (var col_i = 0; col_i < cols.length; col_i++) {
-                var col = cols[col_i];
-                var html = getCellHtml(data[col.field], data, id, col);
-                if (fixed) { // 固定列
-                    if (col.fixed == fixed) {
-                        _setHtml(tds[td_i++], html, data, id, col);
-                    }
-                } else {
-                    if (col.fixed == 'left' || col.fixed == 'right') {
-                        $(tds[td_i]).attr('data-id', id + '-' + col._key);
-                        td_i++;
-                    } else {
-                        _setHtml(tds[td_i++], html, data, id, col);
-                    }
-                }
-            }
-
-            // 设置单元格内容
-            function _setHtml(td, html, data, id, col) {
-                var $td = $(td);
-                if (col.type == 'text') {
-                    $td.children('.' + tableClass.cell).html(html);
-                } else if (col.type == 'radio' || col.type == 'checkbox') {
-                    $td.find('input[type="' + col.type + '"]').val(id).prop('checked', false);
-                }
-                // 设置单元格属性
-                if (col.attr) {
-                    for (var key in col.attr) {
-                        $td.removeAttr(key);
-                        $td.attr(key, typeof col.attr[key] == 'function' ? col.attr[key](data[col.field], data, id, col) : col.attr[key]);
-                    }
-                }
-                // 设置单元格样式
-                if (col.style) {
-                    $td.removeAttr('style');
-                    for (var key in col.style) {
-                        $td.css(key, typeof col.style[key] == 'function' ? col.style[key](data[col.field], data, id, col) : col.style[key])
-                    }
-                }
-                $td.attr('data-id', id + '-' + col._key);
-            }
         }
 
         /**

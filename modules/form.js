@@ -179,10 +179,10 @@
                     renderSelect(filter, container);
                     break;
                 default:
-                    renderSwitch();
-                    renderRadio();
-                    renderCheckbox();
-                    renderSelect();
+                    renderSwitch('', container);
+                    renderRadio('', container);
+                    renderCheckbox('', container);
+                    renderSelect('', container);
             }
         }
         //渲染开关
