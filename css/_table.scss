@@ -376,6 +376,13 @@
         }
     }
 
+    // 调整线
+    &-resize-line {
+        position: absolute;
+        z-index: 999999;
+        border-left: 1px solid $light-color;
+    }
+
     // 排序
     &-sort {
         display: inline-block;

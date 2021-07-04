@@ -59,6 +59,7 @@
             sortConfirm: 'song-table-sort-confirm',
             unselect: 'song-table-unselect',
             error: 'song-table-error',
+            resizeLine: 'song-table-resize-line',
             fixedEmpty: 'song-fixed-empty'
         }
         var tpl = {
@@ -1084,6 +1085,21 @@
             }
         }
 
+        // 设置列宽
+        Class.prototype.setColWidth = function (col, width) {
+            var storeData = store[this.filter];
+            col.width = width;
+            this.setCellStyle([col]);
+            storeData.$tableHeader.css({
+                left: -storeData.$tableMain[0].scrollLeft
+            });
+            if (!storeData.ellipsis) {
+                this.setColStyle();
+                this.setViewArea();
+                this.setFixedHeaderHeight();
+            }
+        }
+
         // 设置单元格高度样式表
         Class.prototype.setColStyle = function () {
             var that = this;
@@ -1773,21 +1789,15 @@
                 // 延时执行，避免卡顿
                 Common.cancelNextFrame(storeData.timers.resizingTimer);
                 storeData.timers.resizingTimer = Common.nextFrame(function () {
-                    if (storeData.tempData.resizeData) {
-                        var x = e.pageX - storeData.tempData.resizeData.pageX;
-                        var th = storeData.tempData.resizeData.th;
-                        var songBindData = that.getBindDataById(th);
-                        var col = songBindData.col;
-                        var width = storeData.tempData.resizeData.originWidth + x;
-                        col.width = width;
-                        that.setCellStyle([songBindData.col]);
-                        storeData.$tableHeader.css({
-                            left: -storeData.$tableMain[0].scrollLeft
-                        });
-                        if (!storeData.ellipsis) {
-                            that.setColStyle();
-                            that.setViewArea();
-                            that.setFixedHeaderHeight();
+                    var resizeData = storeData.tempData.resizeData;
+                    if (resizeData) {
+                        var x = e.pageX - resizeData.pageX;
+                        var width = resizeData.originWidth + x;
+                        // 列宽最小为30像素
+                        if (width > 30 - resizeData.originWidth) {
+                            storeData.tempData.$resizeLine.css({
+                                left: resizeData.left + width
+                            });
                         }
                     }
                 }, 0);
@@ -1795,8 +1805,16 @@
             $body.on('mouseup', function (e) {
                 // 调整列宽结束
                 if (storeData.tempData.resizeData) {
-                    storeData.tempData.resizeData = undefined;
+                    var th = storeData.tempData.resizeData.th;
+                    var songBindData = that.getBindDataById(th);
+                    var col = songBindData.col;
+                    var x = e.pageX - storeData.tempData.resizeData.pageX;
+                    var width = storeData.tempData.resizeData.originWidth + x;
+                    storeData.tempData.$resizeLine.remove();
+                    that.setColWidth(col, width);
                     storeData.$view.removeClass(tableClass.colResize);
+                    storeData.tempData.resizeData = undefined;
+                    storeData.tempData.$resizeLine = undefined;
                 }
             });
             _bindScrollEvent();
@@ -1975,8 +1993,17 @@
                         storeData.tempData.resizeData = {
                             pageX: e.pageX,
                             th: this,
+                            left: $(this).offset().left - storeData.$view.offset().left, // 调整线left
                             originWidth: this.clientWidth - hCellPadding
                         }
+                        var top = storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0;
+                        var height = storeData.$view[0].clientHeight - top - (storeData.$pager ? storeData.$pager[0].offsetHeight : 0);
+                        storeData.tempData.$resizeLine = $('<div class="' + tableClass.resizeLine + '"></div>');
+                        storeData.tempData.$resizeLine.css({
+                            top: top,
+                            height: height
+                        });
+                        storeData.$view.append(storeData.tempData.$resizeLine);
                         storeData.$view.addClass(tableClass.colResize);
                     }
                 });

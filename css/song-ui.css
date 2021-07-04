@@ -1140,6 +1140,12 @@ textarea {
           user-select: none;
 }
 
+.song-table-resize-line {
+  position: absolute;
+  z-index: 999999;
+  border-left: 1px solid #eeeeee;
+}
+
 .song-table-sort {
   display: inline-block;
   *display: inline;
