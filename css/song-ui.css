@@ -828,12 +828,14 @@ textarea {
   border-left: 0;
 }
 
+.song-table tbody tr {
+  height: 40px;
+}
+
 .song-table-cell {
   position: relative;
   border: 1px solid transparent;
   overflow: hidden;
-  height: 38px;
-  _height: 40px;
   _width: 100%;
   *zoom: 1;
 }
@@ -860,10 +862,9 @@ textarea {
 .song-table-cell-content {
   padding: 5px 15px;
   overflow: hidden;
-  min-height: 28px;
-  _height: 38px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  word-break: break-all;
   *zoom: 1;
 }
 

@@ -53,12 +53,14 @@
         }
     }
 
+    tbody tr {
+        height: 40px;
+    }
+
     &-cell {
         position: relative;
         border: 1px solid transparent;
         overflow: hidden;
-        height: 38px;
-        _height: 40px;
         // ie6下内容会溢出到旁边的td
         _width: 100%;
         // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
@@ -88,10 +90,9 @@
         &-content {
             padding: 5px $pd15;
             overflow: hidden;
-            min-height: 28px;
-            _height: 38px;
             white-space: nowrap;
             text-overflow: ellipsis;
+            word-break: break-all;
             *zoom: 1;
         }
 

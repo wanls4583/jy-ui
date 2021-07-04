@@ -71,7 +71,7 @@
              <%for(var key in col.attr){%> <%-key%>="<%-col.attr[key]%>"<%}%>>\
                 <%-cell%>\
             </td>',
-            cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-content%></div></div>',
+            cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-(content||"&nbsp;")%></div></div>',
             radio: '<input type="radio" name="table_radio_<%-filter%>" value="<%-id%>" song-filter="table_radio_<%-filter%>" <%-(checked?"checked":"")%>/>',
             checkbox: '<input type="checkbox" name="table_checkbox_<%-filter%>" value="<%-id%>" song-filter="table_checkbox_<%-filter%>" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>'
@@ -107,8 +107,8 @@
             this.filter = this.filter || $elem.attr('song-filter') || 'table_' + Math.random();
             store[this.filter] = store[this.filter] || {};
             storeData = store[this.filter];
-            $view = storeData.$view || $('<div class="' + tableClass.view + '"></div>');
             storeData.tableCount = storeData.tableCount || tableCount++;
+            $view = storeData.$view || $('<div class="' + [tableClass.view, tableClass.view + '-' + storeData.tableCount].join(' ') + '"></div>');
             storeData.$elem = $elem;
             storeData.$view = $view;
             storeData.$table = $table;
@@ -172,7 +172,7 @@
             this.renderTableHeader();
             this.renderTableBody();
             this.renderPage();
-            this.setViewWidth();
+            this.setViewArea();
             this.stretchTable();
             this.bindEvent();
         }
@@ -270,6 +270,12 @@
             node.type = 'text/css';
             document.getElementsByTagName('head')[0].appendChild(node);
             storeData.sheet = node.styleSheet || node.sheet;
+            if (!storeData.ellipsis) {
+                // 行高度自适应
+                Common.insertRule(storeData.sheet, '.' + tableClass.view + '-' + storeData.tableCount + ' tbody tr', 'height:auto');
+                // 单元格高度自适应
+                Common.insertRule(storeData.sheet, '.' + tableClass.view + '-' + storeData.tableCount + ' .' + tableClass.cellContent, 'white-space:normal;text-overflow:unset');
+            }
         }
 
         // 重载表格
@@ -540,7 +546,7 @@
                         data: value
                     });
                 }
-                that.fixRowHeightById(songBindData.id, 'auto');
+                that.fixRowHeight(songBindData.id, 'auto');
             }
         }
 
@@ -613,7 +619,7 @@
                 songBindData.$input = undefined;
                 songBindData.$select = undefined;
                 songBindData.$checkbox = undefined;
-                that.fixRowHeightById(songBindData.id, 'auto');
+                that.fixRowHeight(songBindData.id, 'auto');
             }
         }
 
@@ -687,9 +693,9 @@
                     $(td).addClass(tableClass.editing);
                     songBindData.editing = true;
                     // 高度发送变化时重新调整行高
-                    Common.nextFrame(function() {
+                    Common.nextFrame(function () {
                         if (Math.abs(originTdHeight - td.offsetHeight) > 2) {
-                            that.fixRowHeightById(songBindData.id, td.offsetHeight);
+                            that.fixRowHeight(songBindData.id, td.offsetHeight);
                         }
                     });
                 }
@@ -770,9 +776,26 @@
          * @param {Number} id 
          * @param {Number/String} height 
          */
-        Class.prototype.fixRowHeightById = function (id, height) {
+        Class.prototype.fixRowHeight = function (id, height) {
             var storeData = store[this.filter];
-            storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+            if (storeData.$fixedLeft || storeData.$fixRowHeight) {
+                if (id && height) {
+                    storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+                } else {
+                    storeData.$table.find('tr').each(function (i, tr) {
+                        var id = $(tr).attr('data-id');
+                        var height = 0;
+                        var trs = storeData.$view.find('tr[data-id="' + id + '"]');
+                        trs.each(function (i, _tr) {
+                            var h = _tr.clientHeight;
+                            if (h > height) {
+                                height = h;
+                            }
+                        });
+                        storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+                    });
+                }
+            }
         }
 
         /**
@@ -970,16 +993,16 @@
             var storeData = store[this.filter];
             storeData.width = Number(width || storeData.width) || 0;
             storeData.height = Number(height || storeData.height) || 0;
-            this.setViewWidth();
+            this.setViewArea();
             if (storeData.stretch) {
                 this.stretchTable();
             } else if (height && height != storeData.height) {
-                this.setFixedWidth();
+                this.setFixedArea();
             }
         }
 
         // 设置容器宽高
-        Class.prototype.setViewWidth = function () {
+        Class.prototype.setViewArea = function () {
             var storeData = store[this.filter];
             if (storeData.width) {
                 storeData.$view.css({
@@ -1008,7 +1031,7 @@
         }
 
         // 设置固定表格容器的宽高
-        Class.prototype.setFixedWidth = function () {
+        Class.prototype.setFixedArea = function () {
             var storeData = store[this.filter];
             var top = storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0;
             var hasHscroll = storeData.$tableMain[0].scrollWidth > storeData.$tableMain[0].clientWidth;
@@ -1046,6 +1069,18 @@
                 storeData.$fixedRightMain.css({
                     height: height
                 });
+            }
+        }
+
+        // 设定固定表格的表头的高度
+        Class.prototype.setFixedHeaderHeight = function () {
+            var storeData = store[this.filter];
+            var height = ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height();
+            if (storeData.$fixedLeftHeader) {
+                storeData.$fixedLeftHeader.css('height', height);
+            }
+            if (storeData.$fixedRightHeader) {
+                storeData.$fixedRightHeader.css('height', height);
             }
         }
 
@@ -1111,7 +1146,7 @@
                 Common.deleteRule(storeData.sheet, cellSelector);
                 Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
             });
-            this.setFixedWidth();
+            this.setFixedArea();
         }
 
         // 设置数据映射
@@ -1202,7 +1237,7 @@
                         continue;
                     }
                     col.type = col.type || 'text';
-                    var $content = $('<div class="' + tableClass.cellContent + '">' + (col.title || '') + '</div>');
+                    var $content = $('<div class="' + tableClass.cellContent + '">' + (col.title || '&nbsp;') + '</div>');
                     var $cell = $('<div class="' + ['song-clear', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
                     var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '" data-id="col-' + col._key + '"></th>');
                     $cell.append($content);
@@ -1427,7 +1462,6 @@
                     storeData.$fixedLeft.append(storeData.$fixedLeftHeader);
                     storeData.$fixedLeftMain.append(storeData.$fixedLeftTable);
                     storeData.$fixedLeft.append(storeData.$fixedLeftMain);
-                    storeData.$fixedLeftHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     this.renderTableHeader('left');
                     storeData.$view.append(storeData.$fixedLeft);
                     storeData.$fixedLeftMain.on('mousewheel', function (e) {
@@ -1458,7 +1492,6 @@
                     storeData.$fixedRight.append(storeData.$fixedRightHeader);
                     storeData.$fixedRightMain.append(storeData.$fixedRightTable);
                     storeData.$fixedRight.append(storeData.$fixedRightMain);
-                    storeData.$fixedRightHeader.css('height', ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height());
                     // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
                     storeData.$mend.css('height', storeData.$tableHeader[0].clientHeight);
                     this.renderTableHeader('right');
@@ -1475,6 +1508,7 @@
                     });
                 }
                 this.renderTr('right');
+                this.setFixedHeaderHeight();
             }
         }
 
@@ -1522,10 +1556,22 @@
                         _appendTr(i);
                     });
                 } else {
+                    if (!storeData.ellipsis) {
+                        // 设置固定列行高
+                        if (storeData.$fixedRight) {
+                            if (fixed == 'right') {
+                                that.fixRowHeight();
+                            }
+                        } else if (storeData.$fixedLeft) {
+                            if (fixed == 'left') {
+                                that.fixRowHeight();
+                            }
+                        }
+                    }
                     Form.render('', $table);
                     Form.render('', $tableHeader);
                 }
-                that.setFixedWidth();
+                that.setFixedArea();
             }
         }
 
@@ -1716,7 +1762,7 @@
             var editTrigger = storeData.editTrigger || 'click'; //触发编辑的事件类型
             $body.on('click', function (e) {
                 // 点击表格之外的区域，自动保存编辑中的数据
-                if (!storeData.tempData.editing) {
+                if (!storeData.tempData.viewClick) {
                     that.save();
                 }
                 storeData.$exports && storeData.$exports.hide();
@@ -1738,6 +1784,11 @@
                         storeData.$tableHeader.css({
                             left: -storeData.$tableMain[0].scrollLeft
                         });
+                        if (!storeData.ellipsis) {
+                            that.setColStyle();
+                            that.setViewArea();
+                            that.setFixedHeaderHeight();
+                        }
                     }
                 }, 0);
             });
@@ -1768,6 +1819,11 @@
                     var $td = $target.parents('td')
                     var event = $target.attr('song-event');
                     var stop = $target.attr('song-stop');
+                    // 用于区分是否点击区域
+                    storeData.tempData.viewClick = true;
+                    Common.nextFrame(function () {
+                        storeData.tempData.viewClick = false;
+                    });
                     if (!event) {
                         event = $td.attr('song-event');
                         stop = $td.attr('song-stop');
@@ -1843,14 +1899,11 @@
                     if (storeData.autoSave) {
                         pass = that.save();
                     }
-                    var a = new Date().getTime();
                     if (songBindData.col.editable && songBindData.col.field) {
                         if (pass && songBindData.col.editable) {
                             that.edit(songBindData.id, songBindData.col.field);
                         }
-                        storeData.tempData.editing = true;
                     }
-                    console.log(new Date().getTime() - a);
                 });
             }
 
@@ -1930,6 +1983,10 @@
             }
 
             function _bindOverflowEvent() {
+                // 单元格高度自适应
+                if (!storeData.ellipsis) {
+                    return;
+                }
                 // 内容溢出处理
                 storeData.$view.delegate('th,td', 'mousemove', function () {
                     var td = this;
@@ -2081,7 +2138,7 @@
                     _setParentCol(nowTh);
                     that.setCellStyle(col.parent.child);
                 } else {
-                    that.setFixedWidth();
+                    that.setFixedArea();
                 }
                 storeData.$tableHeader.css({
                     left: -storeData.$tableMain[0].scrollLeft
