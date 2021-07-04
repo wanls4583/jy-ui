@@ -21,6 +21,7 @@
             confirm: 'song-pager-confirm',
             count: 'song-pager-count'
         }
+        var ieVersion = Common.getIeVersion();
         var store = {};
         var Pager = {
             render: function (option) {
@@ -129,6 +130,12 @@
                 storeData.$select.empty();
                 for (var i = 0; i < this.option.limits.length; i++) {
                     storeData.$select.append('<option value="' + this.option.limits[i] + '" ' + (this.option.limit == this.option.limits[i] ? 'selected' : '') + '>' + this.option.limits[i] + '条每页</option>');
+                    if (ieVersion <= 8) {
+                        var limit = this.option.limit;
+                        $(function () {
+                            storeData.$select.val(limit);
+                        });
+                    }
                 }
             } else if (storeData.$select) {
                 storeData.$select.remove();
@@ -147,6 +154,12 @@
                     storeData.$pager.append(storeData.$jump);
                 }
                 storeData.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
+                if (ieVersion <= 8) {
+                    var nowPage = this.option.nowPage;
+                    $(function () {
+                        storeData.$jump.find('input.' + pageClass.input).val(nowPage);
+                    });
+                }
             } else if (storeData.$jump) {
                 storeData.$jump.remove();
                 storeData.$jump = undefined;

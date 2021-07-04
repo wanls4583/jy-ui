@@ -134,6 +134,7 @@
             storeData.stretch = this.option.stretch || false;
             storeData.page = this.option.page === undefined ? true : this.option.page;
             storeData.ellipsis = this.option.ellipsis === undefined ? true : this.option.ellipsis;
+            storeData.ellipsis = ieVersion <= 8 ? true : storeData.ellipsis; // 考虑到性能问题，ie8及以下浏览器ellipsis强制为true
             storeData.autoSave = this.option.autoSave === undefined ? true : this.option.autoSave;
             storeData.enterSave = this.option.enterSave === undefined ? true : this.option.enterSave;
             storeData.originCols = this.option.cols[0] instanceof Array ? this.option.cols : [this.option.cols];
@@ -779,21 +780,24 @@
          */
         Class.prototype.fixRowHeight = function (id, height) {
             var storeData = store[this.filter];
-            if (storeData.$fixedLeft || storeData.$fixRowHeight) {
+            if (storeData.$fixedLeft || storeData.$fixedRight) {
                 if (id && height) {
                     storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
                 } else {
-                    storeData.$table.find('tr').each(function (i, tr) {
-                        var id = $(tr).attr('data-id');
-                        var height = 0;
-                        var trs = storeData.$view.find('tr[data-id="' + id + '"]');
-                        trs.each(function (i, _tr) {
-                            var h = _tr.clientHeight;
-                            if (h > height) {
-                                height = h;
-                            }
+                    storeData.$view.find('tbody').children('tr').css('height', 'auto');
+                    Common.nextFrame(function () {
+                        storeData._sortedData.map(function (item) {
+                            var id = item._song_table_id;
+                            var height = 0;
+                            var trs = storeData.$view.find('tr[data-id="' + id + '"]');
+                            trs.each(function (i, _tr) {
+                                var h = _tr.clientHeight;
+                                if (h > height) {
+                                    height = h;
+                                }
+                            });
+                            storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
                         });
-                        storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
                     });
                 }
             }
@@ -1097,6 +1101,7 @@
                 this.setColStyle();
                 this.setViewArea();
                 this.setFixedHeaderHeight();
+                this.fixRowHeight();
             }
         }
 
@@ -2027,7 +2032,7 @@
                         var songBindData = that.getBindDataById(td);
                         var col = songBindData.col;
                         var $cell = $td.children('.' + tableClass.cell);
-                        if (!songBindData.$tipIcon && col.type == 'text' && !songBindData.editing && Common.checkOverflow($cell[0])) {
+                        if (!songBindData.$tipIcon && col.type == 'text' && !songBindData.editing && Common.checkOverflow($cell[0].children[0])) {
                             var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
                             songBindData.$tipIcon = $div;
                             $cell.append($div);
