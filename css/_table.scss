@@ -55,22 +55,19 @@
 
     &-cell {
         position: relative;
+        border: 1px solid transparent;
+        overflow: hidden;
+        height: 38px;
+        _height: 40px;
         // ie6下内容会溢出到旁边的td
         _width: 100%;
-        _height: 40px;
-        min-height: 28px;
-        padding: 5px $pd15;
-        border: 1px solid transparent;
         // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
         *zoom: 1;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
 
         // 文本溢出详情弹框
         .song-table-tip-icon {
             position: absolute;
-            top: 0;
+            top: -1px;
             right: 0;
             height: 40px;
             width: 24px;
@@ -86,11 +83,28 @@
                 background-color: $lighter-color;
             }
         }
+
+        // 单元格内容
+        &-content {
+            padding: 5px $pd15;
+            overflow: hidden;
+            min-height: 28px;
+            _height: 38px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            *zoom: 1;
+        }
+
+        // 单元格编辑内容
+        &-edit {
+            width: auto;
+            *zoom: 1;
+        }
     }
 
     &-col-radio,
     &-col-checkbox {
-        .song-table-cell {
+        .song-table-cell-content {
             text-overflow: inherit;
             line-height: normal;
         }
@@ -269,7 +283,7 @@
         left: 50%;
         z-index: 1;
         line-height: 22px;
-        padding: 9px $pd15 9px $pd15;
+        padding: 9px $pd15;
         margin-right: 13px;
         background-color: $white-color;
         border: 1px solid $light-color;
@@ -410,17 +424,9 @@
         .song-table-cell {
             z-index: 1;
             overflow: visible;
-            width: auto;
-            padding: 0;
             white-space: normal;
             border-color: $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
-        }
-
-        // 自定义编辑
-        .song-table-edit {
-            width: auto;
-            *zoom: 1;
         }
 
         // 复选框编辑容器

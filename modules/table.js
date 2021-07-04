@@ -15,7 +15,7 @@
         var closeIcon = '&#xe735;';
         var ieVersion = Common.getIeVersion();
         var scrBarWidth = Common.getScrBarWidth();
-        var hCellPadding = 16 * 2;
+        var hCellPadding = 2;
         var store = {};
         var tableCount = 1;
         var tableClass = {
@@ -23,13 +23,14 @@
             table: 'song-table',
             col: 'song-table-col',
             cell: 'song-table-cell',
+            cellContent: 'song-table-cell-content',
+            editCell: 'song-table-cell-edit',
             tableHeader: 'song-table-header',
             main: 'song-table-main',
             tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
-            edit: 'song-table-edit',
             editPrefix: 'song-table-edit-prefix',
             editSuffix: 'song-table-edit-suffix',
             input: 'song-table-input',
@@ -70,7 +71,7 @@
              <%for(var key in col.attr){%> <%-key%>="<%-col.attr[key]%>"<%}%>>\
                 <%-cell%>\
             </td>',
-            cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><%-content%></div>',
+            cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-content%></div></div>',
             radio: '<input type="radio" name="table_radio_<%-filter%>" value="<%-id%>" song-filter="table_radio_<%-filter%>" <%-(checked?"checked":"")%>/>',
             checkbox: '<input type="checkbox" name="table_checkbox_<%-filter%>" value="<%-id%>" song-filter="table_checkbox_<%-filter%>" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>'
@@ -131,6 +132,7 @@
             storeData.limit = this.option.limit || 20;
             storeData.stretch = this.option.stretch || false;
             storeData.page = this.option.page === undefined ? true : this.option.page;
+            storeData.ellipsis = this.option.ellipsis === undefined ? true : this.option.ellipsis;
             storeData.autoSave = this.option.autoSave === undefined ? true : this.option.autoSave;
             storeData.enterSave = this.option.enterSave === undefined ? true : this.option.enterSave;
             storeData.originCols = this.option.cols[0] instanceof Array ? this.option.cols : [this.option.cols];
@@ -513,7 +515,7 @@
                 var originValue = songBindData.colData;
                 songBindData.rowData[col.field] = value;
                 songBindData.colData = value;
-                td.children[0].innerHTML = col.template ? col.template(songBindData.colData, songBindData.rowData, songBindData.id, col) : fValue;
+                td.children[0].innerHTML = '<div class="' + tableClass.cellContent + '">' + (col.template ? col.template(songBindData.colData, songBindData.rowData, songBindData.id, col) : fValue) + '</div>';
                 $td.removeClass(tableClass.editing);
                 songBindData.editing = false;
                 songBindData.$input = undefined;
@@ -658,12 +660,12 @@
                 var col = songBindData.col;
                 if (col.editable && !songBindData.editing) {
                     var data = songBindData.colData;
-                    var originTdHeight = td.offsetHeight;
+                    var originTdHeight = storeData.ellipsis ? 41 : td.offsetHeight;
                     var rowData = songBindData.rowData;
                     var id = songBindData.id;
                     var $cell = $(td.children[0]);
                     var editable = col.editable === true ? {} : col.editable;
-                    var $edit = $('<div class="' + tableClass.edit + '" style="width:' + $cell[0].clientWidth + 'px"></div>');
+                    var $edit = $('<div class="' + tableClass.editCell + '"></div>');
                     $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
@@ -685,9 +687,11 @@
                     $(td).addClass(tableClass.editing);
                     songBindData.editing = true;
                     // 高度发送变化时重新调整行高
-                    if (Math.abs(originTdHeight - td.offsetHeight) > 2) {
-                        that.fixRowHeightById(songBindData.id, td.offsetHeight);
-                    }
+                    Common.nextFrame(function() {
+                        if (Math.abs(originTdHeight - td.offsetHeight) > 2) {
+                            that.fixRowHeightById(songBindData.id, td.offsetHeight);
+                        }
+                    });
                 }
             }
 
@@ -944,11 +948,11 @@
                 var ths = storeData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
                 // 确保选择列宽度不变
                 ths.each(function (i, th) {
-                    $(th).css('width', ieVersion <= 6 ? 51 : 20);
+                    $(th).css('width', 50);
                 });
-                // ie6及以下，table宽度可能会多出一像素，从而撑破父容器
+                // ie下，table宽度可能会多出一像素，从而撑破父容器
                 storeData.$tableHeader.css({
-                    width: storeData.$view[0].clientWidth - (ieVersion <= 6 ? 1 : 0)
+                    width: storeData.$view[0].clientWidth
                 });
                 this.setCellStyle();
                 storeData.$tableHeader.css({
@@ -1198,15 +1202,17 @@
                         continue;
                     }
                     col.type = col.type || 'text';
-                    var $cell = $('<div class="' + ['song-clear', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '">' + (col.title || '') + '</div>');
+                    var $content = $('<div class="' + tableClass.cellContent + '">' + (col.title || '') + '</div>');
+                    var $cell = $('<div class="' + ['song-clear', tableClass.cell + '-' + storeData.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
                     var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + storeData.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '" data-id="col-' + col._key + '"></th>');
+                    $cell.append($content);
                     // 隐藏
                     if (col.hidden) {
                         $th.hide();
                     }
                     // 选择列
                     if (col.type == 'radio' || col.type == 'checkbox') {
-                        col.width = 20;
+                        col.width = 50;
                     }
                     if (col.colspan >= 2) {
                         $th.attr('colspan', col.colspan);
@@ -1242,7 +1248,7 @@
                         // 多选
                         if (col.type == 'checkbox') {
                             var $all = $('<input type="checkbox" song-filter="table_checkbox_' + that.filter + '_all">');
-                            $cell.html($all);
+                            $content.html($all);
                             Form.once('checkbox(table_checkbox_' + that.filter + ')', function (e) {
                                 var checkedData = [];
                                 for (var i = 0; i < e.data.length; i++) {
@@ -1295,7 +1301,7 @@
                 var $sort = $('<div class="' + tableClass.sort + '"></div>');
                 $sort.append($up);
                 $sort.append($down);
-                $cell.append($sort);
+                $($cell[0].children[0]).append($sort);
                 $th.addClass(tableClass.unselect);
                 $up.on('mouseenter', function () {
                     $up.addClass(tableClass.sortHover);
@@ -1709,11 +1715,8 @@
             var storeData = store[this.filter];
             var editTrigger = storeData.editTrigger || 'click'; //触发编辑的事件类型
             $body.on('click', function (e) {
-                var table = $(e.target).parents('table')[0];
                 // 点击表格之外的区域，自动保存编辑中的数据
-                if (storeData.autoSave && table != storeData.$table[0] &&
-                    (!storeData.$fixedLeftTable || table != storeData.$fixedLeftTable[0]) &&
-                    (!storeData.$fixedRightTable || table != storeData.$fixedRightTable[0])) {
+                if (!storeData.tempData.editing) {
                     that.save();
                 }
                 storeData.$exports && storeData.$exports.hide();
@@ -1840,11 +1843,14 @@
                     if (storeData.autoSave) {
                         pass = that.save();
                     }
+                    var a = new Date().getTime();
                     if (songBindData.col.editable && songBindData.col.field) {
                         if (pass && songBindData.col.editable) {
                             that.edit(songBindData.id, songBindData.col.field);
                         }
+                        storeData.tempData.editing = true;
                     }
+                    console.log(new Date().getTime() - a);
                 });
             }
 
@@ -1948,7 +1954,7 @@
                                 var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                                 $td.addClass(tableClass.detail);
                                 $div.remove();
-                                $div = $('<div class="' + tableClass.tip + '">' + $cell.html() + '</div>');
+                                $div = $('<div class="' + tableClass.tip + '">' + $($cell[0].children[0]).html() + '</div>');
                                 $div.append($close);
                                 $body.append($div);
                                 songBindData.$tip = $div;
@@ -1960,6 +1966,7 @@
                                 // 点击关闭弹框
                                 $close.on('click', function () {
                                     songBindData.$tip = undefined;
+                                    songBindData.$tipIcon = undefined;
                                     $div.remove();
                                 });
                             });

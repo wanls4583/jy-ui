@@ -830,20 +830,17 @@ textarea {
 
 .song-table-cell {
   position: relative;
-  _width: 100%;
-  _height: 40px;
-  min-height: 28px;
-  padding: 5px 15px;
   border: 1px solid transparent;
-  *zoom: 1;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  height: 38px;
+  _height: 40px;
+  _width: 100%;
+  *zoom: 1;
 }
 
 .song-table-cell .song-table-tip-icon {
   position: absolute;
-  top: 0;
+  top: -1px;
   right: 0;
   height: 40px;
   width: 24px;
@@ -860,7 +857,22 @@ textarea {
   background-color: #f6f6f6;
 }
 
-.song-table-col-radio .song-table-cell, .song-table-col-checkbox .song-table-cell {
+.song-table-cell-content {
+  padding: 5px 15px;
+  overflow: hidden;
+  min-height: 28px;
+  _height: 38px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  *zoom: 1;
+}
+
+.song-table-cell-edit {
+  width: auto;
+  *zoom: 1;
+}
+
+.song-table-col-radio .song-table-cell-content, .song-table-col-checkbox .song-table-cell-content {
   text-overflow: inherit;
   line-height: normal;
 }
@@ -1025,7 +1037,7 @@ textarea {
   left: 50%;
   z-index: 1;
   line-height: 22px;
-  padding: 9px 15px 9px 15px;
+  padding: 9px 15px;
   margin-right: 13px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
@@ -1167,17 +1179,10 @@ textarea {
 .song-table .song-table-editing .song-table-cell {
   z-index: 1;
   overflow: visible;
-  width: auto;
-  padding: 0;
   white-space: normal;
   border-color: #5FB878;
   -webkit-box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
           box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
-}
-
-.song-table .song-table-editing .song-table-edit {
-  width: auto;
-  *zoom: 1;
 }
 
 .song-table .song-table-editing .song-table-checkboxs {
