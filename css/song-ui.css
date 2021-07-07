@@ -491,6 +491,28 @@ textarea {
           box-shadow: none;
 }
 
+.song-layer.song-layer-loading {
+  background-color: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  text-align: center;
+}
+
+.song-layer .song-layer-loading-icon {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #999999;
+  -webkit-animation-name: song-rotate;
+          animation-name: song-rotate;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
 .song-layer .song-layer-title {
   position: relative;
   line-height: 16px;
@@ -1217,9 +1239,9 @@ textarea {
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_wtx8z89orkk.eot?t=1623834035091");
+  src: url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.eot?t=1625648941146");
   /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_wtx8z89orkk.eot?t=1623834035091#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_wtx8z89orkk.woff2?t=1623834035091") format("woff2"), url("//at.alicdn.com/t/font_2505561_wtx8z89orkk.woff?t=1623834035091") format("woff"), url("//at.alicdn.com/t/font_2505561_wtx8z89orkk.ttf?t=1623834035091") format("truetype");
+  src: url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.eot?t=1625648941146#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.woff2?t=1625648941146") format("woff2"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.woff?t=1625648941146") format("woff"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.ttf?t=1625648941146") format("truetype");
 }
 
 .song-icon {
@@ -1500,5 +1522,27 @@ hr {
 
 .song-border-danger {
   border: 1px solid #FF5722;
+}
+
+@-webkit-keyframes song-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes song-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 /*# sourceMappingURL=song-ui.css.map */

@@ -13,6 +13,7 @@
         var fullIcon = '&#xe644;';
         var recoveryIcon = '&#xe617;';
         var minusIcon = '&#xe62d;';
+        var loadingIcon = '&#xe61e;';
         var menuWidth = 180;
         var bindedEvent = false;
         var docBody = window.document.body;
@@ -27,7 +28,9 @@
             alert: 'song-layer-alert',
             confirm: 'song-layer-confirm',
             msg: 'song-layer-msg',
-            iconMsg: 'song-layer-msg-with-icon'
+            iconMsg: 'song-layer-msg-with-icon',
+            loading: 'song-layer-loading',
+            loadingIcon: 'song-layer-loading-icon'
         }
         var ieVersion = Common.getIeVersion();
         var store = {};
@@ -37,6 +40,7 @@
             alert: alert,
             confirm: confirm,
             msg: msg,
+            loading: loading,
             close: close,
             setPosition: setPosition,
             setArea: setArea
@@ -359,6 +363,21 @@
             }
             return open(option);
         }
+        // 加载
+        function loading(option) {
+            var _option = {
+                title: false,
+                type: 'loading',
+                full: false
+            }
+            var color = '';
+            option = option && Object.assign(_option, option) || _option;
+            if (option.shadow !== false) {
+                color = '#fff';
+            }
+            option.content = '<div ' + (color ? 'style="color:' + color + '"' : '') + '><div class="' + layerClass.loadingIcon + ' song-icon">' + loadingIcon + '</div><div>' + (option.content || '') + '</div></div>';
+            return open(option);
+        }
         // 关闭弹框
         function close(layerIndex) {
             $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex).remove();
@@ -408,9 +427,18 @@
             var ie6MarginTop = 0;
             var ie6MarginLeft = 0;
             if ($layer.length) {
-                var winWidth = docElement.clientWidth || docBody.clientWidth;
-                var winHeight = docElement.clientHeight || docBody.clientHeight;
-                if (ieVersion <= 6) { //i6以下没有fixed定位
+                var $container = $layer.parent();
+                var winWidth = 0;
+                var winHeight = 0;
+                var tagName = $container[0].tagName.toUpperCase();
+                if (tagName == 'BODY') {
+                    winWidth = docElement.clientWidth || docBody.clientWidth;
+                    winHeight = docElement.clientHeight || docBody.clientHeight;
+                } else {
+                    winWidth = $container[0].clientWidth;
+                    winHeight = $container[0].clientHeight;
+                }
+                if (ieVersion <= 6 && tagName == 'BODY') { //i6以下没有fixed定位
                     // 在i6以上浏览器中，指定了DOCTYPE是documentElement.scrollTop有效
                     // body.scrollTop
                     ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
@@ -488,8 +516,8 @@
             var rect = Common.getRect($content[0]);
             if (ieVersion <= 6) {
                 $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
-                    width: window.screen.width + docBody.scrollWidth + 'px',
-                    height: window.screen.height + docBody.scrollHeight + 'px'
+                    width: docBody.scrollWidth + 'px',
+                    height: docBody.scrollHeight + 'px'
                 });
             }
             if (width > winWidth) {

@@ -58,6 +58,23 @@
         box-shadow: none;
     }
 
+    &.song-layer-loading {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    .song-layer-loading-icon {
+        font-size: 36px;
+        margin-bottom: $pd15;
+        color: $color-999;
+        animation-name: song-rotate;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite
+    }
+
     .song-layer-title {
         position: relative;
         // ie6及以下不能用height是定义song-layer-title的高度，否则将触发haslayout使元素撑开父容器
