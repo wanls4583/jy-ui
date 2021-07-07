@@ -785,10 +785,8 @@
                     _fixRowHeight(id);
                 } else {
                     storeData.$view.find('tbody').children('tr').css('height', 'auto');
-                    Common.nextFrame(function () {
-                        storeData._sortedData.map(function (item) {
-                            _fixRowHeight(item._song_table_id);
-                        });
+                    storeData._sortedData.map(function (item) {
+                        _fixRowHeight(item._song_table_id);
                     });
                 }
             }
@@ -1046,16 +1044,18 @@
             var tableMainArea = {
                 clientWidth: storeData.$tableMain[0].clientWidth,
                 clientHeight: storeData.$tableMain[0].clientHeight,
-                scrollWidth: storeData.$tableMain[0].scrollWidth,
                 scrollHeight: storeData.$tableMain[0].scrollHeight
             }
-            var hasHscroll = tableMainArea.scrollWidth > tableMainArea.clientWidth;
-            var hasVscroll = tableMainArea.scrollHeight > tableMainArea.clientHeight
             var height = tableMainArea.clientHeight;
             if (storeData.$fixedLeft) {
+                var hedaerWidth = 'auto';
+                // ie6及以下浏览器不设置宽度将撑破父容器
+                if (ieVersion <= 6) {
+                    hedaerWidth = storeData.$fixedLeftTableHeader[0].offsetWidth;
+                }
                 storeData.$fixedLeft.show();
                 storeData.$fixedLeft.css({
-                    width: storeData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    width: hedaerWidth,
                     top: top
                 });
                 storeData.$fixedLeftMain.css({
@@ -1064,32 +1064,30 @@
                 storeData.$fixedLeftHeader.css('height', headerHeight);
             }
             if (storeData.$fixedRight) {
-                var left = 'auto';
-                var right = 0;
+                var left = 0;
                 var hedaerWidth = 0;
+                var tableWidth = storeData.$table[0].offsetWidth;
+                if (tableWidth > tableMainArea.clientWidth) {
+                    tableWidth = tableMainArea.clientWidth;
+                }
                 storeData.$fixedRight.show();
                 hedaerWidth = storeData.$fixedRightTableHeader[0].offsetWidth;
-                if (!hasHscroll) { // 没有横向滚动条
-                    right = 'auto';
-                    left = storeData.$table[0].offsetWidth - hedaerWidth;
-                } else if (hasVscroll) { // 有纵向滚动条
-                    right = scrBarWidth;
-                }
-                if (hasVscroll) { // 有纵向滚动条
-                    storeData.$mend && storeData.$mend.show();
-                } else {
-                    storeData.$mend && storeData.$mend.hide();
-                }
+                left = tableWidth - hedaerWidth;
                 storeData.$fixedRight.css({
-                    width: hedaerWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    width: hedaerWidth,
                     top: top,
-                    left: left,
-                    right: right
+                    left: left
                 });
                 storeData.$fixedRightMain.css({
                     height: height
                 });
                 storeData.$fixedRightHeader.css('height', headerHeight);
+                if(tableMainArea.scrollHeight > tableMainArea.clientHeight)  {
+                    storeData.$mend.show();
+                } else {
+                    storeData.$mend.hide();
+                }
+                // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
                 storeData.$mend.css('height', headerHeight - 1);
             }
         }
@@ -1530,8 +1528,7 @@
                     storeData.$fixedRight.append(storeData.$fixedRightHeader);
                     storeData.$fixedRightMain.append(storeData.$fixedRightTable);
                     storeData.$fixedRight.append(storeData.$fixedRightMain);
-                    // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
-                    storeData.$mend.css('height', storeData.$tableHeader[0].clientHeight);
+                    storeData.$mend.hide();
                     this.renderTableHeader('right');
                     storeData.$view.append(storeData.$fixedRight);
                     storeData.$fixedRightMain.on('mousewheel', function (e) {
