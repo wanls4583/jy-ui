@@ -68,7 +68,7 @@
              data-id="<%-id%>-<%-col._key%>"\
              data-field="<%-col.field||""%>"\
              song-event="<%-col.event||""%>"\
-             style="<%for(var key in col.style){%><%-key%>:<%-col.style[key]%>;<%}%>"\
+             style="<%for(var key in col.style){%><%-key%>:<%-col.style[key]%>;<%}%><%-(col.hidden?"display:none":"")%>"\
              <%for(var key in col.attr){%> <%-key%>="<%-col.attr[key]%>"<%}%>>\
                 <%-cell%>\
             </td>',
@@ -548,7 +548,7 @@
                         data: value
                     });
                 }
-                that.fixRowHeight(songBindData.id, 'auto');
+                that.fixRowHeight(songBindData.id);
             }
         }
 
@@ -697,7 +697,7 @@
                     // 高度发送变化时重新调整行高
                     Common.nextFrame(function () {
                         if (Math.abs(originTdHeight - td.offsetHeight) > 2) {
-                            that.fixRowHeight(songBindData.id, td.offsetHeight);
+                            that.fixRowHeight(songBindData.id);
                         }
                     });
                 }
@@ -776,30 +776,33 @@
         /**
          * 修复行高
          * @param {Number} id 
-         * @param {Number/String} height 
          */
-        Class.prototype.fixRowHeight = function (id, height) {
+        Class.prototype.fixRowHeight = function (id) {
             var storeData = store[this.filter];
             if (storeData.$fixedLeft || storeData.$fixedRight) {
-                if (id && height) {
-                    storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+                if (id) {
+                    storeData.$view.find('tr[data-id="' + id + '"]').css('height', 'auto');
+                    _fixRowHeight(id);
                 } else {
                     storeData.$view.find('tbody').children('tr').css('height', 'auto');
                     Common.nextFrame(function () {
                         storeData._sortedData.map(function (item) {
-                            var id = item._song_table_id;
-                            var height = 0;
-                            var trs = storeData.$view.find('tr[data-id="' + id + '"]');
-                            trs.each(function (i, _tr) {
-                                var h = _tr.clientHeight;
-                                if (h > height) {
-                                    height = h;
-                                }
-                            });
-                            storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
+                            _fixRowHeight(item._song_table_id);
                         });
                     });
                 }
+            }
+
+            function _fixRowHeight(id) {
+                var height = 0;
+                var trs = storeData.$view.find('tr[data-id="' + id + '"]');
+                trs.each(function (i, _tr) {
+                    var h = _tr.clientHeight;
+                    if (h > height) {
+                        height = h;
+                    }
+                });
+                storeData.$view.find('tr[data-id="' + id + '"]').css('height', height);
             }
         }
 
@@ -982,7 +985,7 @@
                 storeData.$tableHeader.css({
                     width: storeData.$view[0].clientWidth
                 });
-                this.setCellStyle();
+                this.setColsWidth();
                 storeData.$tableHeader.css({
                     width: 'auto'
                 });
@@ -990,7 +993,7 @@
         }
 
         /**
-         * 设置表格肠宽
+         * 设置表格长宽
          * @param {Number/Boolean} width 
          * @param {Number} height 
          */
@@ -1039,10 +1042,19 @@
         Class.prototype.setFixedArea = function () {
             var storeData = store[this.filter];
             var top = storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0;
-            var hasHscroll = storeData.$tableMain[0].scrollWidth > storeData.$tableMain[0].clientWidth;
-            var hasVscroll = storeData.$tableMain[0].scrollHeight > storeData.$tableMain[0].clientHeight
-            var height = storeData.$tableMain[0].clientHeight;
+            var headerHeight = ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height();
+            // 避免重复触发回流
+            var tableMainArea = {
+                clientWidth: storeData.$tableMain[0].clientWidth,
+                clientHeight: storeData.$tableMain[0].clientHeight,
+                scrollWidth: storeData.$tableMain[0].scrollWidth,
+                scrollHeight: storeData.$tableMain[0].scrollHeight,
+            }
+            var hasHscroll = tableMainArea.scrollWidth > tableMainArea.clientWidth;
+            var hasVscroll = tableMainArea.scrollHeight > tableMainArea.clientHeight
+            var height = tableMainArea.clientHeight;
             if (storeData.$fixedLeft) {
+                storeData.$fixedLeft.show();
                 storeData.$fixedLeft.css({
                     width: storeData.$fixedLeftTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
                     top: top
@@ -1050,13 +1062,17 @@
                 storeData.$fixedLeftMain.css({
                     height: height
                 });
+                storeData.$fixedLeftHeader.css('height', headerHeight);
             }
             if (storeData.$fixedRight) {
                 var left = 'auto';
                 var right = 0;
+                var hedaerWidth = 0;
+                storeData.$fixedRight.show();
+                hedaerWidth = storeData.$fixedRightTableHeader[0].offsetWidth;
                 if (!hasHscroll) { // 没有横向滚动条
                     right = 'auto';
-                    left = storeData.$table[0].offsetWidth - storeData.$fixedRightTableHeader[0].offsetWidth;
+                    left = storeData.$table[0].offsetWidth - hedaerWidth;
                 } else if (hasVscroll) { // 有纵向滚动条
                     right = scrBarWidth;
                 }
@@ -1066,7 +1082,7 @@
                     storeData.$mend && storeData.$mend.hide();
                 }
                 storeData.$fixedRight.css({
-                    width: storeData.$fixedRightTableHeader[0].offsetWidth, // ie6及以下浏览器不设置宽度将撑破父容器
+                    width: hedaerWidth, // ie6及以下浏览器不设置宽度将撑破父容器
                     top: top,
                     left: left,
                     right: right
@@ -1074,18 +1090,8 @@
                 storeData.$fixedRightMain.css({
                     height: height
                 });
-            }
-        }
-
-        // 设定固定表格的表头的高度
-        Class.prototype.setFixedHeaderHeight = function () {
-            var storeData = store[this.filter];
-            var height = ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height();
-            if (storeData.$fixedLeftHeader) {
-                storeData.$fixedLeftHeader.css('height', height);
-            }
-            if (storeData.$fixedRightHeader) {
-                storeData.$fixedRightHeader.css('height', height);
+                storeData.$fixedRightHeader.css('height', headerHeight);
+                storeData.$mend.css('height', headerHeight - 1);
             }
         }
 
@@ -1093,38 +1099,23 @@
         Class.prototype.setColWidth = function (col, width) {
             var storeData = store[this.filter];
             col.width = width;
-            this.setCellStyle([col]);
+            this.setColsWidth([col]);
             storeData.$tableHeader.css({
                 left: -storeData.$tableMain[0].scrollLeft
             });
             if (!storeData.ellipsis) {
-                this.setColStyle();
-                this.setViewArea();
-                this.setFixedHeaderHeight();
+                this.setColsHeight();
                 this.fixRowHeight();
+                this.setViewArea();
+                this.setFixedArea();
             }
         }
 
-        // 设置单元格高度样式表
-        Class.prototype.setColStyle = function () {
-            var that = this;
-            var storeData = store[this.filter];
-            var hs = [];
-            var ths = storeData.$tableHeaderHead.find('th');
-            ths.each(function (i, th) {
-                hs.push(ieVersion <= 6 ? th.offsetHeight : $(th).height());
-            });
-            ths.each(function (i, th) {
-                var songBindData = that.getBindDataById(th);
-                Common.insertRule(storeData.sheet, that.getClassNameWithKey(songBindData.col, 'th.' + tableClass.col), 'height:' + hs[i] + 'px;');
-            });
-        }
-
         // 设置单元格宽度样式表
-        Class.prototype.setCellStyle = function (cols) {
+        Class.prototype.setColsWidth = function (cols) {
             var that = this;
-            var storeData = store[this.filter];
             var ws = [];
+            var storeData = store[this.filter];
             var ths = [];
             // 只设置部分列
             if (cols) {
@@ -1153,9 +1144,9 @@
                 }
             });
             ths.map(function (th, i) {
+                var clientWidth = th.clientWidth;
                 ws.push({
-                    tw: ieVersion <= 6 ? th.offsetWidth : th.clientWidth,
-                    cw: ieVersion <= 6 ? th.clientWidth : th.clientWidth - hCellPadding
+                    cw: ieVersion <= 6 ? clientWidth : clientWidth - hCellPadding
                 });
             });
             ths.map(function (th, i) {
@@ -1167,7 +1158,32 @@
                 Common.deleteRule(storeData.sheet, cellSelector);
                 Common.insertRule(storeData.sheet, cellSelector, 'width:' + cw);
             });
-            this.setFixedArea();
+        }
+
+        // 设置单元格高度样式表
+        Class.prototype.setColsHeight = function () {
+            var that = this;
+            var storeData = store[this.filter];
+            var hs = {};
+            var ths = storeData.$tableHeaderHead.find('th');
+            ths.each(function (i, th) {
+                var songBindData = that.getBindDataById(th);
+                if (songBindData.col.fixed == 'left' || songBindData.col.fixed == 'right') {
+                    hs[songBindData.id] = ieVersion <= 6 ? th.offsetHeight : th.clientHeight;
+                }
+            });
+            if (storeData.$fixedLeftTableHeaderHead) {
+                storeData.$fixedLeftTableHeaderHead.find('th').each(function (i, th) {
+                    var songBindData = that.getBindDataById(th);
+                    $(th).css('height', hs[songBindData.id]);
+                });
+            }
+            if (storeData.$fixedRightTableHeaderHead) {
+                storeData.$fixedRightTableHeaderHead.find('th').each(function (i, th) {
+                    var songBindData = that.getBindDataById(th);
+                    $(th).css('height', hs[songBindData.id]);
+                });
+            }
         }
 
         // 设置数据映射
@@ -1346,11 +1362,10 @@
                 storeData.$tableHeader.append(storeData.$tableHeaderHead);
                 storeData.$header.append(storeData.$tableHeader);
                 storeData.$header.insertAfter(storeData.$toolbar);
-                this.setCellStyle();
-                this.setColStyle();
+                this.setColsWidth();
             }
-
             // 渲染排序图标
+
             function _renderSortIcon($th, $cell, col) {
                 var $up = $('<div class="' + tableClass.sortUp + '"></div>');
                 var $down = $('<div class="' + tableClass.sortDown + '"></div>');
@@ -1496,6 +1511,7 @@
                         return false;
                     });
                 }
+                storeData.$fixedLeft.hide();
                 this.renderTr('left');
             }
             if (cols.length && cols[cols.length - 1].fixed == 'right') {
@@ -1528,9 +1544,10 @@
                         return false;
                     });
                 }
+                storeData.$fixedRight.hide();
                 this.renderTr('right');
-                this.setFixedHeaderHeight();
             }
+            this.setColsHeight();
         }
 
         /**
@@ -1577,22 +1594,18 @@
                         _appendTr(i);
                     });
                 } else {
+                    // 设置固定列行高
                     if (!storeData.ellipsis) {
-                        // 设置固定列行高
-                        if (storeData.$fixedRight) {
-                            if (fixed == 'right') {
-                                that.fixRowHeight();
-                            }
-                        } else if (storeData.$fixedLeft) {
-                            if (fixed == 'left') {
-                                that.fixRowHeight();
-                            }
+                        if (storeData.$fixedRight && fixed == 'right') {
+                            that.fixRowHeight();
+                        } else if (!storeData.$fixedRight && storeData.$fixedLeft && fixed == 'left') {
+                            that.fixRowHeight();
                         }
                     }
+                    that.setFixedArea();
                     Form.render('', $table);
                     Form.render('', $tableHeader);
                 }
-                that.setFixedArea();
             }
         }
 
@@ -1909,7 +1922,7 @@
                     if ($target.attr('song-event')) {
                         return;
                     }
-                    var $td = $target.parents('td');
+                    var $td = e.target.tagName.toUpperCase() == 'TD' ? $target : $target.parents('td');
                     if (!$td.length) {
                         return;
                     }
@@ -2158,6 +2171,7 @@
                     if (songBindData.col._key == value) {
                         checked ? $(td).show() : $(td).hide();
                         if (td.tagName.toUpperCase() == 'TH' && !songBindData.holder) {
+                            songBindData.col.hidden = !checked;
                             nowTh = td;
                         }
                     }
@@ -2167,17 +2181,19 @@
                 });
                 // 存在上级父列
                 if (col.parent) {
-                    _setParentCol(nowTh);
-                    that.setCellStyle(col.parent.child);
-                } else {
-                    that.setFixedArea();
+                    _setParentColspan(nowTh);
+                    that.setColsWidth(col.parent.child);
+                }
+                if (!storeData.ellipsis) {
+                    that.fixRowHeight();
                 }
                 storeData.$tableHeader.css({
                     left: -storeData.$tableMain[0].scrollLeft
                 });
+                that.setFixedArea();
 
                 // 设置父级列的colspan
-                function _setParentCol(th) {
+                function _setParentColspan(th) {
                     var songBindData = that.getBindDataById(th);
                     var col = songBindData.col.parent;
                     var ths = _getThByCol(col);
