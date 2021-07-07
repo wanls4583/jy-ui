@@ -1004,9 +1004,8 @@
             this.setViewArea();
             if (storeData.stretch) {
                 this.stretchTable();
-            } else if (height && height != storeData.height) {
-                this.setFixedArea();
             }
+            this.setFixedArea();
         }
 
         // 设置容器宽高
@@ -1048,7 +1047,7 @@
                 clientWidth: storeData.$tableMain[0].clientWidth,
                 clientHeight: storeData.$tableMain[0].clientHeight,
                 scrollWidth: storeData.$tableMain[0].scrollWidth,
-                scrollHeight: storeData.$tableMain[0].scrollHeight,
+                scrollHeight: storeData.$tableMain[0].scrollHeight
             }
             var hasHscroll = tableMainArea.scrollWidth > tableMainArea.clientWidth;
             var hasVscroll = tableMainArea.scrollHeight > tableMainArea.clientHeight
@@ -1107,6 +1106,8 @@
                 this.setColsHeight();
                 this.fixRowHeight();
                 this.setViewArea();
+                this.setFixedArea();
+            } else if (storeData.height) {
                 this.setFixedArea();
             }
         }
