@@ -1691,6 +1691,21 @@
                     content = col.template(data[col.field], data, id, col);
                 }
             }
+            var style = {};
+            var attr = {};
+            col = Object.assign({}, col);
+            for (var key in col.style) {
+                if (typeof col.style[key] == 'function') {
+                    style[key] = col.style[key](data[col.field], data, id, col);
+                }
+            }
+            for (var key in col.attr) {
+                if (typeof col.attr[key] == 'function') {
+                    attr[key] = col.attr[key](data[col.field], data, id, col);
+                }
+            }
+            col.style = style;
+            col.attr = attr;
             cell = Common.htmlTemplate(tpl.cell, {
                 tableCount: storeData.tableCount,
                 col: col,
