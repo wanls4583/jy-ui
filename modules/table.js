@@ -1082,7 +1082,7 @@
                     height: height
                 });
                 storeData.$fixedRightHeader.css('height', headerHeight);
-                if(tableMainArea.scrollHeight > tableMainArea.clientHeight)  {
+                if (tableMainArea.scrollHeight > tableMainArea.clientHeight) {
                     storeData.$mend.show();
                 } else {
                     storeData.$mend.hide();
@@ -1810,10 +1810,11 @@
                         var x = e.pageX - resizeData.pageX;
                         var width = resizeData.originWidth + x;
                         // 列宽最小为30像素
-                        if (width > 30 - resizeData.originWidth) {
+                        if (width > 30) {
                             storeData.tempData.$resizeLine.css({
                                 left: resizeData.left + width
                             });
+                            resizeData.width = width;
                         }
                     }
                 }, 0);
@@ -1824,10 +1825,9 @@
                     var th = storeData.tempData.resizeData.th;
                     var songBindData = that.getBindDataById(th);
                     var col = songBindData.col;
-                    var x = e.pageX - storeData.tempData.resizeData.pageX;
-                    var width = storeData.tempData.resizeData.originWidth + x;
+                    var width = storeData.tempData.resizeData.width;
                     storeData.tempData.$resizeLine.remove();
-                    that.setColWidth(col, width);
+                    width && that.setColWidth(col, width);
                     storeData.$view.removeClass(tableClass.colResize);
                     storeData.tempData.resizeData = undefined;
                     storeData.tempData.$resizeLine = undefined;
