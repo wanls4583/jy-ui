@@ -14,7 +14,6 @@
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
         var ieVersion = Common.getIeVersion();
-        var scrBarWidth = Common.getScrBarWidth();
         var hCellPadding = 2;
         var store = {};
         var tableCount = 1;
@@ -25,8 +24,9 @@
             cell: 'song-table-cell',
             cellContent: 'song-table-cell-content',
             editCell: 'song-table-cell-edit',
-            tableHeader: 'song-table-header',
+            header: 'song-table-header',
             main: 'song-table-main',
+            headerMain: 'song-table-header-main',
             tool: 'song-table-tool',
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
@@ -65,7 +65,8 @@
         }
         var tpl = {
             table: '<table class="' + tableClass.table + '"></table>',
-            header: '<div class="' + tableClass.tableHeader + '"></div>',
+            headerMain: '<div class="' + tableClass.headerMain + '"></div>',
+            header: '<div class="' + tableClass.header + '"></div>',
             tableHeader: '<table class="' + tableClass.table + '"></table>',
             tableHeaderHead: '<thead></thead>',
             tableMain: '<div class="' + tableClass.main + '"></div>',
@@ -106,6 +107,7 @@
         Class.prototype.render = function () {
             var $elem = $(this.option.elem);
             var $table = $(tpl.table);
+            var $headerMain = $(tpl.headerMain);
             var $header = $(tpl.header)
             var $tableHeader = $(tpl.tableHeader);
             var $tableHeaderHead = $(tpl.tableHeaderHead);
@@ -121,6 +123,7 @@
             storeData.$elem = $elem;
             storeData.$view = $view;
             storeData.$table = $table;
+            storeData.$headerMain = $headerMain;
             storeData.$header = $header;
             storeData.$tableHeader = $tableHeader;
             storeData.$tableHeaderHead = $tableHeaderHead;
@@ -1369,7 +1372,8 @@
             if (!fixed) {
                 storeData.$tableHeader.append(storeData.$tableHeaderHead);
                 storeData.$header.append(storeData.$tableHeader);
-                storeData.$header.insertAfter(storeData.$toolbar);
+                storeData.$headerMain.append(storeData.$header);
+                storeData.$headerMain.insertAfter(storeData.$toolbar);
                 this.setColsWidth();
             }
             // 渲染排序图标
@@ -1421,15 +1425,17 @@
                 var viewWidth = storeData.$view.width();
                 storeData.$tableMain.append(storeData.$table);
                 storeData.$tableMain.append(storeData.$empty);
-                storeData.$tableMain.insertAfter(storeData.$header);
+                storeData.$headerMain.append(storeData.$tableMain);
                 storeData.$tableMain.css({
                     width: viewWidth
                 });
                 storeData.$tableMain.inserted = true;
-            }
-            Common.nextFrame(function () {
+                Common.nextFrame(function () {
+                    that.showLoading();
+                }, 0);
+            } else {
                 that.showLoading();
-            }, 0);
+            }
 
             if (justSort) {
                 _render();
@@ -1639,13 +1645,9 @@
             this.hideLoading();
             storeData.$empty.hide();
             storeData.tempData.loading = Dialog.loading({
-                container: storeData.$view,
+                container: storeData.$headerMain,
                 shadow: false,
-                mask: true,
-                offset: {
-                    left: storeData.$view[0].clientWidth / 2 - 40,
-                    top: storeData.$tableMain[0].clientHeight / 2 - 40 + storeData.$header[0].offsetHeight + (storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0)
-                }
+                mask: true
             });
         }
 
@@ -1829,7 +1831,7 @@
             storeData.pager.on('limit', function (limit) {
                 storeData.limit = limit;
             });
-            storeData.$pager.insertAfter(storeData.$tableMain);
+            storeData.$pager.insertAfter(storeData.$headerMain);
         }
 
         Class.prototype.httpGet = function (success, error) {

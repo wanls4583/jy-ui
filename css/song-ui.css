@@ -941,6 +941,10 @@ textarea {
   background-color: #ffffff;
 }
 
+.song-table-header-main {
+  position: relative;
+}
+
 .song-table-header {
   position: relative;
   width: 100%;

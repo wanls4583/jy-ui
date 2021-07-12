@@ -85,7 +85,7 @@
             if (option.shadow || option.mask) {
                 $container.append($shadow);
                 if (option.mask) {
-                    $shadow.css('background-color', 'transparent');
+                    $shadow.css('background-color', '#fff');
                 }
             }
             if (option.move) {
@@ -523,10 +523,11 @@
             var winWidth = docElement.clientWidth || docBody.clientWidth;
             var winHeight = docElement.clientHeight || docBody.clientHeight;
             var rect = Common.getRect($content[0]);
+            var container = $layer.parent()[0];
             if (ieVersion <= 6) {
                 $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
-                    width: docBody.scrollWidth + 'px',
-                    height: docBody.scrollHeight + 'px'
+                    width: container.scrollWidth + 'px',
+                    height: container.scrollHeight + 'px'
                 });
             }
             if (width > winWidth) {
