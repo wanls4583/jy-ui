@@ -130,7 +130,7 @@
                 storeData.$select.empty();
                 for (var i = 0; i < this.option.limits.length; i++) {
                     storeData.$select.append('<option value="' + this.option.limits[i] + '" ' + (this.option.limit == this.option.limits[i] ? 'selected' : '') + '>' + this.option.limits[i] + '条每页</option>');
-                    if (ieVersion <= 8) {
+                    if (ieVersion <= 11) {
                         var limit = this.option.limit;
                         $(function () {
                             storeData.$select.val(limit);
@@ -154,7 +154,7 @@
                     storeData.$pager.append(storeData.$jump);
                 }
                 storeData.$jump.find('input.' + pageClass.input).val(this.option.nowPage);
-                if (ieVersion <= 8) {
+                if (ieVersion <= 11) {
                     var nowPage = this.option.nowPage;
                     $(function () {
                         storeData.$jump.find('input.' + pageClass.input).val(nowPage);

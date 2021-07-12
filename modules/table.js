@@ -146,7 +146,7 @@
             storeData.stretch = this.option.stretch || false;
             storeData.page = this.option.page === undefined ? true : this.option.page;
             storeData.ellipsis = this.option.ellipsis === undefined ? true : this.option.ellipsis;
-            storeData.ellipsis = ieVersion <= 8 ? true : storeData.ellipsis; // 考虑到性能问题，ie8及以下浏览器ellipsis强制为true
+            storeData.ellipsis = ieVersion <= 11 ? true : storeData.ellipsis; // 考虑到性能问题，ie浏览器ellipsis强制为true
             storeData.autoSave = this.option.autoSave === undefined ? true : this.option.autoSave;
             storeData.enterSave = this.option.enterSave === undefined ? true : this.option.enterSave;
             storeData.originCols = this.option.cols[0] instanceof Array ? this.option.cols : [this.option.cols];
