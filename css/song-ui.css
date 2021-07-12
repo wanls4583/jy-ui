@@ -499,6 +499,10 @@ textarea {
   text-align: center;
 }
 
+.song-layer.song-layer-loading .song-layer-content {
+  overflow: visible;
+}
+
 .song-layer .song-layer-loading-icon {
   font-size: 36px;
   -webkit-animation-name: song-rotate;
@@ -943,6 +947,7 @@ textarea {
 
 .song-table-header-main {
   position: relative;
+  *zoom: 1;
 }
 
 .song-table-header {

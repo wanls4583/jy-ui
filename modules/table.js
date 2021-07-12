@@ -1653,8 +1653,10 @@
 
         Class.prototype.hideLoading = function () {
             var storeData = store[this.filter];
-            Dialog.close(storeData.tempData.loading);
-            storeData.tempData.loading = null;
+            if (storeData.tempData.loading) {
+                Dialog.close(storeData.tempData.loading);
+                storeData.tempData.loading = null;
+            }
         }
 
         /**

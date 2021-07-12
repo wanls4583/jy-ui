@@ -63,6 +63,10 @@
         border: none;
         box-shadow: none;
         text-align: center;
+
+        .song-layer-content {
+            overflow: visible;
+        }
     }
 
     .song-layer-loading-icon {
