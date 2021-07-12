@@ -50,7 +50,6 @@
             option.type = option.type || 'dialog';
             option.close = option.close !== false ? true : false;
             option.shadow = option.shadow !== false ? true : false;
-            option.mask = option.mask !== false ? true : false;
             option.move = option.move !== false ? true : false;
             option.full = option.full !== false ? true : false;
             var layerIndex = ++layerCount;

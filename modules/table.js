@@ -1646,8 +1646,7 @@
             storeData.$empty.hide();
             storeData.tempData.loading = Dialog.loading({
                 container: storeData.$headerMain,
-                shadow: false,
-                mask: true
+                shadow: false
             });
         }
 
