@@ -1545,6 +1545,7 @@
                 storeData.$fixedRight.hide();
                 this.renderTr('right');
             }
+            storeData.$tableMain.trigger('scroll')
             this.setColsHeight();
         }
 
@@ -1697,11 +1698,15 @@
             for (var key in col.style) {
                 if (typeof col.style[key] == 'function') {
                     style[key] = col.style[key](data[col.field], data, id, col);
+                } else {
+                    style[key] = col.style[key];
                 }
             }
             for (var key in col.attr) {
                 if (typeof col.attr[key] == 'function') {
                     attr[key] = col.attr[key](data[col.field], data, id, col);
+                } else {
+                    attr[key] = col.attr[key];
                 }
             }
             col.style = style;
