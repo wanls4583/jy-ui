@@ -432,24 +432,24 @@
             var ie6MarginTop = 0;
             var ie6MarginLeft = 0;
             if ($layer.length) {
-                var $container = $layer.parent();
-                var winWidth = 0;
-                var winHeight = 0;
-                var tagName = $container[0].tagName.toUpperCase();
-                if (tagName == 'BODY') {
-                    winWidth = docElement.clientWidth || docBody.clientWidth;
-                    winHeight = docElement.clientHeight || docBody.clientHeight;
-                } else {
-                    winWidth = $container[0].clientWidth;
-                    winHeight = $container[0].clientHeight;
-                }
-                if (ieVersion <= 6 && tagName == 'BODY') { //i6以下没有fixed定位
-                    // 在i6以上浏览器中，指定了DOCTYPE是documentElement.scrollTop有效
-                    // body.scrollTop
-                    ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
-                    ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
-                }
                 if ('string' == typeof offset) {
+                    var $container = $layer.parent();
+                    var winWidth = 0;
+                    var winHeight = 0;
+                    var tagName = $container[0].tagName.toUpperCase();
+                    if (tagName == 'BODY') {
+                        winWidth = docElement.clientWidth || docBody.clientWidth;
+                        winHeight = docElement.clientHeight || docBody.clientHeight;
+                    } else {
+                        winWidth = $container[0].clientWidth;
+                        winHeight = $container[0].clientHeight;
+                    }
+                    if (ieVersion <= 6 && tagName == 'BODY') { //i6以下没有fixed定位
+                        // 在i6以上浏览器中，指定了DOCTYPE是documentElement.scrollTop有效
+                        // body.scrollTop
+                        ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                        ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                    }
                     var width = $layer[0].offsetWidth;
                     var height = $layer[0].offsetHeight;
                     offset = offset.split(' ');
