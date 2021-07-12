@@ -172,8 +172,16 @@
     &-main {
         // ie7必须加position:relative，否则滚动条拖到无效
         position: relative;
+        min-height: 100px;
         overflow: auto;
         transform: translate3d(0, 0, 0);
+    }
+
+    &-empty {
+        height: 100px;
+        line-height: 100px;
+        color: $color-999;
+        text-align: center;
     }
 
     &-toolbar {

@@ -50,6 +50,7 @@
             option.type = option.type || 'dialog';
             option.close = option.close !== false ? true : false;
             option.shadow = option.shadow !== false ? true : false;
+            option.mask = option.mask !== false ? true : false;
             option.move = option.move !== false ? true : false;
             option.full = option.full !== false ? true : false;
             var layerIndex = ++layerCount;
@@ -81,8 +82,11 @@
             if (option.close) {
                 $title.find('i.song-op-close').show();
             }
-            if (option.shadow) {
+            if (option.shadow || option.mask) {
                 $container.append($shadow);
+                if (option.mask) {
+                    $shadow.css('background-color', 'transparent');
+                }
             }
             if (option.move) {
                 $title.css('cursor', 'move');
@@ -374,6 +378,8 @@
             option = option && Object.assign(_option, option) || _option;
             if (option.shadow !== false) {
                 color = '#fff';
+            } else {
+                color = '#999';
             }
             option.content = '<div ' + (color ? 'style="color:' + color + '"' : '') + '><div class="' + layerClass.loadingIcon + ' song-icon">' + loadingIcon + '</div><div>' + (option.content || '') + '</div></div>';
             return open(option);
@@ -444,11 +450,14 @@
                     ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
                     ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
                 }
-                var width = $layer[0].offsetWidth;
-                var height = $layer[0].offsetHeight;
                 if ('string' == typeof offset) {
+                    var width = $layer[0].offsetWidth;
+                    var height = $layer[0].offsetHeight;
                     offset = offset.split(' ');
                     offset[1] = offset[1] || offset[0];
+                    if (offset[0] == 'top' || offset[0] == 'bottom') {
+                        offset.reverse();
+                    }
                     switch (offset[0]) { // 水平位置
                         case 'left':
                             $layer.css({

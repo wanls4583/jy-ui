@@ -501,8 +501,6 @@ textarea {
 
 .song-layer .song-layer-loading-icon {
   font-size: 36px;
-  margin-bottom: 15px;
-  color: #999999;
   -webkit-animation-name: song-rotate;
           animation-name: song-rotate;
   -webkit-animation-duration: 1s;
@@ -511,6 +509,10 @@ textarea {
           animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
           animation-iteration-count: infinite;
+}
+
+.song-layer-loading-text {
+  margin-top: 15px;
 }
 
 .song-layer .song-layer-title {
@@ -948,9 +950,17 @@ textarea {
 
 .song-table-main {
   position: relative;
+  min-height: 100px;
   overflow: auto;
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
+}
+
+.song-table-empty {
+  height: 100px;
+  line-height: 100px;
+  color: #999999;
+  text-align: center;
 }
 
 .song-table-toolbar {

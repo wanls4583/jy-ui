@@ -60,9 +60,16 @@
             unselect: 'song-table-unselect',
             error: 'song-table-error',
             resizeLine: 'song-table-resize-line',
-            fixedEmpty: 'song-fixed-empty'
+            fixedEmpty: 'song-table-fixed-empty',
+            empty: 'song-table-empty'
         }
         var tpl = {
+            table: '<table class="' + tableClass.table + '"></table>',
+            header: '<div class="' + tableClass.tableHeader + '"></div>',
+            tableHeader: '<table class="' + tableClass.table + '"></table>',
+            tableHeaderHead: '<thead></thead>',
+            tableMain: '<div class="' + tableClass.main + '"></div>',
+            empty: '<div class="' + tableClass.empty + '">暂无数据</div>',
             td: '\
             <td class="song-table-col song-table-col-<%-col.type%> song-table-col-<%-tableCount%>-<%-col._key%> <%-(col.align?"song-table-align-"+col.align:"")%>"\
              data-id="<%-id%>-<%-col._key%>"\
@@ -98,11 +105,12 @@
         // 渲染表格
         Class.prototype.render = function () {
             var $elem = $(this.option.elem);
-            var $table = $('<table class="' + tableClass.table + '"></table>');
-            var $header = $('<div class="' + tableClass.tableHeader + '"></div>')
-            var $tableHeader = $('<table class="' + tableClass.table + '"></table>');
-            var $tableHeaderHead = $('<thead></thead>');
-            var $tableMain = $('<div class="' + tableClass.main + '"></div>');
+            var $table = $(tpl.table);
+            var $header = $(tpl.header)
+            var $tableHeader = $(tpl.tableHeader);
+            var $tableHeaderHead = $(tpl.tableHeaderHead);
+            var $tableMain = $(tpl.tableMain);
+            var $empty = $(tpl.empty);
             var storeData = null;
             var $view = null;
             this.filter = this.filter || $elem.attr('song-filter') || 'table_' + Math.random();
@@ -117,6 +125,7 @@
             storeData.$tableHeader = $tableHeader;
             storeData.$tableHeaderHead = $tableHeaderHead;
             storeData.$tableMain = $tableMain;
+            storeData.$empty = $empty;
             storeData.$filter = null;
             storeData.$exports = null;
             storeData.$fixedLeft = null;
@@ -1411,12 +1420,16 @@
             if (!storeData.$tableMain.inserted) {
                 var viewWidth = storeData.$view.width();
                 storeData.$tableMain.append(storeData.$table);
+                storeData.$tableMain.append(storeData.$empty);
                 storeData.$tableMain.insertAfter(storeData.$header);
                 storeData.$tableMain.css({
                     width: viewWidth
                 });
                 storeData.$tableMain.inserted = true;
             }
+            Common.nextFrame(function () {
+                that.showLoading();
+            }, 0);
 
             if (justSort) {
                 _render();
@@ -1443,12 +1456,12 @@
             function _render() {
                 // 数据排序
                 _sort();
-                // ie6解析css需要一定时间，方式setCellStyle无效
+                // ie6解析css需要一定时间，否则setCellStyle无效
                 Common.cancelNextFrame(storeData.timers.renderTimer)
                 storeData.timers.renderTimer = Common.nextFrame(function () {
                     that.renderTr();
                     that.renderTableFixed();
-                });
+                }, 0);
             }
 
             // 排序
@@ -1545,7 +1558,7 @@
                 storeData.$fixedRight.hide();
                 this.renderTr('right');
             }
-            storeData.$tableMain.trigger('scroll')
+            storeData.$tableMain.trigger('scroll');
             this.setColsHeight();
         }
 
@@ -1597,15 +1610,49 @@
                     if (!storeData.ellipsis) {
                         if (storeData.$fixedRight && fixed == 'right') {
                             that.fixRowHeight();
+                            _complate();
                         } else if (!storeData.$fixedRight && storeData.$fixedLeft && fixed == 'left') {
                             that.fixRowHeight();
+                            _complate();
                         }
+                    } else {
+                        _complate();
                     }
                     that.setFixedArea();
                     Form.render('', $table);
                     Form.render('', $tableHeader);
                 }
             }
+
+            function _complate() {
+                if (!storeData._sortedData.length) {
+                    storeData.$empty.show();
+                    storeData.$table.hide();
+                }
+                that.hideLoading();
+            }
+        }
+
+        // 加载提示
+        Class.prototype.showLoading = function () {
+            var storeData = store[this.filter];
+            this.hideLoading();
+            storeData.$empty.hide();
+            storeData.tempData.loading = Dialog.loading({
+                container: storeData.$view,
+                shadow: false,
+                mask: true,
+                offset: {
+                    left: storeData.$view[0].clientWidth / 2 - 40,
+                    top: storeData.$tableMain[0].clientHeight / 2 - 40 + storeData.$header[0].offsetHeight + (storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0)
+                }
+            });
+        }
+
+        Class.prototype.hideLoading = function () {
+            var storeData = store[this.filter];
+            Dialog.close(storeData.tempData.loading);
+            storeData.tempData.loading = null;
         }
 
         /**
