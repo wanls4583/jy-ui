@@ -1564,7 +1564,9 @@
                 storeData.$fixedRight.hide();
                 this.renderTr('right');
             }
-            storeData.$tableMain.trigger('scroll');
+            if (!storeData.ellipsis) {
+                storeData.$tableMain.trigger('scroll');
+            }
             this.setColsHeight();
         }
 
