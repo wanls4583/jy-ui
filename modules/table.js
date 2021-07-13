@@ -2366,25 +2366,8 @@
         Class.prototype.exportsExecl = function () {
             var storeData = store[this.filter];
             if (window.btoa) {
-                var trs = null;
                 var $table = $(storeData.$tableHeader[0].outerHTML);
                 $table.append(storeData.$table.children('tbody').html());
-                trs = $table.children('tbody').children('tr');
-                // 左固定列中的数据
-                storeData.$leftTable && storeData.$leftTable.children('tbody').find('tr').each(function (i, tr) {
-                    var tds = $(trs[i]).children('td');
-                    $(tr).children('td').each(function (i, td) {
-                        $(tds[i]).html($(td).html());
-                    });
-                });
-                // 右固定列中的数据
-                storeData.$rightTable && storeData.$rightTable.children('tbody').find('tr').each(function (i, tr) {
-                    var tds = $(trs[i]).children('td');
-                    var _tds = $(tr).children('td');
-                    _tds.each(function (i, td) {
-                        $(tds[tds.length - _tds.length + i]).html($(td).html());
-                    });
-                });
                 $table.find('.' + tableClass.col + '-radio,.' + tableClass.col + '-checkbox,.' + tableClass.col + '-operate').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
@@ -2487,22 +2470,6 @@
                     text-align:left;\
                 }</style>';
                 $table.append(storeData.$table.children('tbody').html());
-                var trs = $table.children('tbody').children('tr');
-                // 左固定列中的数据
-                storeData.$leftTable && storeData.$leftTable.children('tbody').find('tr').each(function (i, tr) {
-                    var tds = $(trs[i]).children('td');
-                    $(tr).children('td').each(function (i, td) {
-                        $(tds[i]).html($(td).html());
-                    });
-                });
-                // 右固定列中的数据
-                storeData.$rightTable && storeData.$rightTable.children('tbody').find('tr').each(function (i, tr) {
-                    var tds = $(trs[i]).children('td');
-                    var _tds = $(tr).children('td');
-                    _tds.each(function (i, td) {
-                        $(tds[tds.length - _tds.length + i]).html($(td).html());
-                    });
-                });
                 wind.document.write('<head>' + style + '</head><body>' + $table[0].outerHTML + '</body>');
                 wind.document.close();
                 wind.print();
