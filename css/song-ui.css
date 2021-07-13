@@ -606,8 +606,8 @@ textarea {
 .song-layer-animation-fade-out {
   -webkit-animation-name: song-fade-out;
           animation-name: song-fade-out;
-  -webkit-animation-duration: 0.2s;
-          animation-duration: 0.2s;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-timing-function: ease-out;
           animation-timing-function: ease-out;
   -webkit-animation-fill-mode: forwards;
@@ -617,8 +617,8 @@ textarea {
 .song-layer-animation-fade-in {
   -webkit-animation-name: song-fade-in;
           animation-name: song-fade-in;
-  -webkit-animation-duration: 0.2s;
-          animation-duration: 0.2s;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-timing-function: ease-out;
           animation-timing-function: ease-out;
   -webkit-animation-fill-mode: forwards;
