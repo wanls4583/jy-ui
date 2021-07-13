@@ -463,19 +463,19 @@ textarea {
   overflow: hidden;
 }
 
-.song-layer.song-layer-absolute {
+.song-layer-absolute {
   position: absolute;
 }
 
-.song-layer.song-layer-alert {
+.song-layer-alert {
   width: 300px;
 }
 
-.song-layer.song-layer-confirm {
+.song-layer-confirm {
   width: 300px;
 }
 
-.song-layer.song-layer-msg {
+.song-layer-msg {
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.6);
   background-color: #000000\0/;
@@ -485,13 +485,13 @@ textarea {
           box-shadow: none;
 }
 
-.song-layer.song-layer-msg-with-icon {
+.song-layer-msg-with-icon {
   border: 1px solid #d2d2d2;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 
-.song-layer.song-layer-loading {
+.song-layer-loading {
   background-color: transparent;
   border: none;
   -webkit-box-shadow: none;
@@ -499,11 +499,11 @@ textarea {
   text-align: center;
 }
 
-.song-layer.song-layer-loading .song-layer-content {
+.song-layer-loading .song-layer-content {
   overflow: visible;
 }
 
-.song-layer .song-layer-loading-icon {
+.song-layer-loading-icon {
   font-size: 36px;
   -webkit-animation-name: song-rotate;
           animation-name: song-rotate;
@@ -519,7 +519,7 @@ textarea {
   margin-top: 15px;
 }
 
-.song-layer .song-layer-title {
+.song-layer-title {
   position: relative;
   line-height: 16px;
   padding: 17px 95px 17px 20px;
@@ -536,39 +536,39 @@ textarea {
           user-select: none;
 }
 
-.song-layer .song-layer-content {
+.song-layer-content {
   position: relative;
   line-height: 24px;
   padding: 20px;
   overflow: auto;
 }
 
-.song-layer.song-layer-msg .song-layer-content {
+.song-layer-msg .song-layer-content {
   padding: 10px 20px;
 }
 
-.song-layer.song-layer-msg .song-layer-icon {
+.song-layer-msg .song-layer-icon {
   top: 6px;
 }
 
-.song-layer .song-layer-footer {
+.song-layer-footer {
   padding: 10px 20px 10px 0;
   text-align: center;
   white-space: nowrap;
 }
 
-.song-layer .song-layer-footer .song-btn {
+.song-layer-footer .song-btn {
   margin-left: 20px;
 }
 
-.song-layer .song-layer-op {
+.song-layer-op {
   position: absolute;
   right: 10px;
   top: 16px;
   white-space: nowrap;
 }
 
-.song-layer .song-layer-op i {
+.song-layer-op i {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -579,17 +579,50 @@ textarea {
   cursor: pointer;
 }
 
-.song-layer .song-layer-op i:hover {
+.song-layer-op i:hover {
   color: #999999;
 }
 
-.song-layer .song-layer-icon {
+.song-layer-icon {
   position: absolute;
   top: 16px;
   left: 15px;
   line-height: 30px;
   font-family: 'iconfont';
   font-size: 30px;
+}
+
+.song-layer-animation-stretch {
+  -webkit-animation-name: song-stretch;
+          animation-name: song-stretch;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+.song-layer-animation-fade-out {
+  -webkit-animation-name: song-fade-out;
+          animation-name: song-fade-out;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+.song-layer-animation-fade-in {
+  -webkit-animation-name: song-fade-in;
+          animation-name: song-fade-in;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
 }
 
 .song-pager {
@@ -1562,6 +1595,54 @@ hr {
   100% {
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes song-stretch {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes song-stretch {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@-webkit-keyframes song-fade-out {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes song-fade-out {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+    opacity: 0;
   }
 }
 /*# sourceMappingURL=song-ui.css.map */

@@ -52,6 +52,7 @@
             option.shadow = option.shadow !== false ? true : false;
             option.move = option.move !== false ? true : false;
             option.full = option.full !== false ? true : false;
+            option.animation = option.animation !== false ? (option.animation || 'stretch') : '';
             var layerIndex = ++layerCount;
             var $container = $(option.container || docBody);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + 99) + '"></div>');
@@ -74,6 +75,14 @@
                 type: option.type
             }
             $title.find('i.song-icon').hide();
+            // 动画
+            if (option.animation && option.type != 'msg' && option.type != 'loading') {
+                var animation = 'song-layer-animation-' + option.animation;
+                $layer.addClass(animation);
+                setTimeout(function () {
+                    $layer.removeClass(animation);
+                }, 300);
+            }
             if (option.full) {
                 $title.find('i.song-op-minus').show();
                 $title.find('i.song-op-full').show();
@@ -385,8 +394,12 @@
         }
         // 关闭弹框
         function close(layerIndex) {
-            $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex).remove();
+            var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
             $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
+            $layer.addClass('song-layer-animation-fade-out');
+            setTimeout(function () {
+                $layer.remove();
+            }, 300);
         }
         /**
          * 关闭所有弹窗
