@@ -1622,26 +1622,27 @@ hr {
 
 @-webkit-keyframes song-fade-out {
   0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-    opacity: 1;
+    opacity: 0;
   }
   100% {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
-    opacity: 0;
+    opacity: 1;
   }
 }
 
 @keyframes song-fade-out {
   0% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes song-fade-out {
+  0% {
     opacity: 1;
   }
   100% {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
     opacity: 0;
   }
 }
