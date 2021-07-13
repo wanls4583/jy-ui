@@ -1105,7 +1105,7 @@ textarea {
   cursor: pointer;
 }
 
-.song-table-fixed-l {
+.song-table-header-main-l {
   position: absolute;
   left: 0;
   top: 0;
@@ -1115,12 +1115,12 @@ textarea {
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }
 
-.song-table-fixed-l th:last-child,
-.song-table-fixed-l td:last-child {
+.song-table-header-main-l th:last-child,
+.song-table-header-main-l td:last-child {
   border-right: 0;
 }
 
-.song-table-fixed-r {
+.song-table-header-main-r {
   position: absolute;
   top: 0;
   z-index: 1;
@@ -1129,7 +1129,7 @@ textarea {
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
 }
 
-.song-table-fixed-r .song-table-mend {
+.song-table-header-main-r .song-table-mend {
   margin-right: -17px;
 }
 

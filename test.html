@@ -477,6 +477,7 @@
                         type: 'number',
                         rules: [{ type: 'number' }]
                     },
+                    fixed: 'left',
                     sortAble: true,
                     rowspan: 2
                 }, {
@@ -575,7 +576,7 @@
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
             table.addRow({
-                data: { user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
+                data: { user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
         });
         table.on('del', function (obj) {
