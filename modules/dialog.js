@@ -72,7 +72,7 @@
             var $footer = $('<div class="' + layerClass.footer + '"></div>');
             // 存储弹框数据
             store[layerIndex] = {
-                type: option.type
+                option: option
             }
             $title.find('i.song-icon').hide();
             // 动画
@@ -165,7 +165,7 @@
             _bindEvent();
             // 弹框成功回调
             typeof option.success == 'function' && option.success($layer, layerIndex);
-            
+
             return layerIndex;
 
             function _bindEvent() {
@@ -404,6 +404,8 @@
             $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
             $layer.addClass('song-layer-animation-fade-out');
             setTimeout(function () {
+                // 关闭弹框回调
+                typeof store[layerIndex].option.end == 'function' && store[layerIndex].option.end($layer, layerIndex);
                 $layer.remove();
             }, 300);
         }
