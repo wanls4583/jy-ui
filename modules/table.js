@@ -1712,7 +1712,10 @@
             storeData.$empty.hide();
             storeData.tempData.loading = Dialog.loading({
                 container: storeData.$headerMain,
-                shadow: false
+                shadow: false,
+                success: function ($layer) {
+                    $layer.css('margin-top', storeData.$header[0].offsetHeight / 2 - 10);
+                }
             });
         }
 

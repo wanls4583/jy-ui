@@ -1,9 +1,5 @@
 @import 'theme';
 @import 'reset';
-@import 'form';
-@import 'dialog';
-@import 'pager';
-@import 'table';
 
 @font-face {
     font-family: 'iconfont';
@@ -214,19 +210,28 @@ hr {
 @keyframes song-fade-out {
     0% {
         opacity: 0;
+        transform: scale(0);
     }
 
     100% {
         opacity: 1;
+        transform: scale(0.5);
     }
 }
 
 @keyframes song-fade-out {
     0% {
         opacity: 1;
+        transform: scale(1);
     }
 
     100% {
         opacity: 0;
+        transform: scale(0.5);
     }
 }
+
+@import 'form';
+@import 'dialog';
+@import 'pager';
+@import 'table';

@@ -154,12 +154,18 @@
                 }, option.duration);
             }
             $container.append($layer);
+            // 设置弹框尺寸
             setArea(layerIndex, {
                 width: option.width,
                 height: option.height
             });
+            // 设置弹框位置
             setPosition(layerIndex, option.offset || 'center');
+            // 绑定事件
             _bindEvent();
+            // 弹框成功回调
+            typeof option.success == 'function' && option.success($layer, layerIndex);
+            
             return layerIndex;
 
             function _bindEvent() {

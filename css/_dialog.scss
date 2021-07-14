@@ -65,16 +65,17 @@
         text-align: center;
 
         .song-layer-content {
+            line-height: 36px;
             overflow: visible;
+            animation-name: song-rotate;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite
         }
     }
 
     &-loading-icon {
         font-size: 36px;
-        animation-name: song-rotate;
-        animation-duration: 1s;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite
     }
 
     &-loading-text {
@@ -166,14 +167,14 @@
 
     &-animation-fade-out {
         animation-name: song-fade-out;
-        animation-duration: 0.3s;
+        animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 
     &-animation-fade-in {
         animation-name: song-fade-in;
-        animation-duration: 0.3s;
+        animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
