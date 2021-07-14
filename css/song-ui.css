@@ -43,9 +43,9 @@ textarea {
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.eot?t=1625648941146");
+  src: url("//at.alicdn.com/t/font_2505561_bek0clp8deb.eot?t=1626230204431");
   /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.eot?t=1625648941146#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.woff2?t=1625648941146") format("woff2"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.woff?t=1625648941146") format("woff"), url("//at.alicdn.com/t/font_2505561_4ndtt81s3ke.ttf?t=1625648941146") format("truetype");
+  src: url("//at.alicdn.com/t/font_2505561_bek0clp8deb.eot?t=1626230204431#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_bek0clp8deb.woff2?t=1626230204431") format("woff2"), url("//at.alicdn.com/t/font_2505561_bek0clp8deb.woff?t=1626230204431") format("woff"), url("//at.alicdn.com/t/font_2505561_bek0clp8deb.ttf?t=1626230204431") format("truetype");
 }
 
 .song-icon {
@@ -1658,5 +1658,159 @@ hr {
 
 .song-table .song-table-error .song-table-cell {
   border-color: #FF5722;
+}
+
+.song-date {
+  position: absolute;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  background-color: #ffffff;
+}
+
+.song-date-main {
+  width: 274px;
+}
+
+.song-date-header {
+  position: relative;
+  padding: 10px;
+  line-height: 30px;
+  text-align: center;
+  border-bottom: 1px solid #eeeeee;
+  overflow: hidden;
+  *zoom: 1;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-date-header-left {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.song-date-header-center {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+.song-date-header-year, .song-date-header-month {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.song-date-header-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.song-date-header .song-icon {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.song-date-content {
+  padding: 10px;
+  overflow: hidden;
+  *zoom: 1;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-date-content table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.song-date-content th,
+.song-date-content td {
+  width: 26px;
+  height: 20px;
+  _width: 36px;
+  _height: 30px;
+  line-height: 20px;
+  padding: 5px;
+  text-align: center;
+  color: #666666;
+}
+
+.song-date-content th {
+  font-weight: 400;
+  color: #333333;
+}
+
+.song-date-content td {
+  cursor: pointer;
+}
+
+.song-date-content td:hover {
+  background-color: #eeeeee;
+}
+
+.song-date-content .song-date-active {
+  color: #ffffff;
+  background-color: #009688;
+}
+
+.song-date-content .song-date-active:hover {
+  background-color: #009688;
+}
+
+.song-date-content .song-date-prev-month,
+.song-date-content .song-date-next-month {
+  color: #d2d2d2;
+}
+
+.song-date-content .song-date-prev-month:hover,
+.song-date-content .song-date-next-month:hover {
+  color: #666666;
+}
+
+.song-date-footer {
+  position: relative;
+  line-height: 24px;
+  padding: 10px;
+  border-top: 1px solid #eeeeee;
+  font-size: 12px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-date-footer-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.song-date-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 0 10px;
+  margin-left: -1px;
+  _margin-left: 0;
+  border: 1px solid #eeeeee;
+  font-size: 12px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.song-date-btn:hover {
+  color: #5FB878;
 }
 /*# sourceMappingURL=song-ui.css.map */

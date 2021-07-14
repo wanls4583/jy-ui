@@ -1,0 +1,143 @@
+.song-date {
+    position: absolute;
+    border: 1px solid $light-color;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+    background-color: $white-color;
+
+    &-main {
+        width: 274px;
+    }
+
+    &-header {
+        position: relative;
+        padding: $pd10;
+        line-height: 30px;
+        text-align: center;
+        border-bottom: 1px solid $light-color;
+        overflow: hidden;
+        *zoom: 1;
+        user-select: none;
+
+        &-left {
+            position: absolute;
+            top: $pd10;
+            left: $pd10;
+        }
+
+        &-center {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+        }
+
+        &-year,
+        &-month {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            padding: 0 $pd10;
+            cursor: pointer;
+        }
+
+        &-right {
+            position: absolute;
+            top: $pd10;
+            right: $pd10;
+        }
+
+        .song-icon {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            padding: 0 5px;
+            cursor: pointer;
+        }
+    }
+
+    &-content {
+        padding: $pd10;
+        overflow: hidden;
+        *zoom: 1;
+        user-select: none;
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            width: 26px;
+            height: 20px;
+            _width: 36px;
+            _height: 30px;
+            line-height: 20px;
+            padding: 5px;
+            text-align: center;
+            color: $color-666;
+        }
+
+        th {
+            font-weight: 400;
+            color: $color-333;
+        }
+
+        td {
+            cursor: pointer;
+
+            &:hover {
+                background-color: $light-color;
+            }
+        }
+
+        .song-date-active {
+            color: $white-color;
+            background-color: $success-color;
+
+            &:hover {
+                background-color: $success-color;
+            }
+        }
+
+        .song-date-prev-month,
+        .song-date-next-month {
+            color: $gray-color;
+
+            &:hover {
+                color: $color-666;
+            }
+        }
+    }
+
+    &-footer {
+        position: relative;
+        line-height: 24px;
+        padding: $pd10;
+        border-top: 1px solid $light-color;
+        font-size: 12px;
+        user-select: none;
+
+        &-right {
+            position: absolute;
+            top: $pd10;
+            right: $pd10;
+        }
+    }
+
+    &-btn {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        padding: 0 $pd10;
+        margin-left: -1px;
+        _margin-left: 0;
+        border: 1px solid $light-color;
+        font-size: 12px;
+        vertical-align: middle;
+        cursor: pointer;
+
+        &:hover {
+            color: $link-color;
+        }
+    }
+}

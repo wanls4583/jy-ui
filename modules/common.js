@@ -8,6 +8,7 @@
         var Common = {
             getEvent: getEvent,
             getIeVersion: getIeVersion,
+            indexOf: indexOf,
             getNum: getNum,
             insertRule: insertRule,
             deleteRule: deleteRule,
@@ -92,6 +93,16 @@
                     i--;
                 }
             }
+        }
+
+        // 查找数组内容
+        function indexOf(arr, value) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] == value) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         // 获取纯数字
@@ -323,6 +334,7 @@
             var hour = date.getHours();
             var minute = date.getMinutes();
             var second = date.getSeconds();
+            formatStr = formatStr || 'yyyy-MM-dd';
             formatStr = formatStr.replace(/yyyy/i, year);
             formatStr = formatStr.replace('MM', ('0' + month).slice(-2));
             formatStr = formatStr.replace(/dd/i, ('0' + day).slice(-2));
@@ -331,6 +343,18 @@
             formatStr = formatStr.replace(/ss/i, ('0' + second).slice(-2));
             return formatStr;
         };
+
+        Date.prototype.parseDateTime = function (str) {
+            var dateReg = /\d{4}-\d{1,2}-\d{1,2}/.exec(str);
+            var timeReg = /\d{1,2}:\d{1,2}(:\d{1,2})?/.exec(str);
+            if (dateReg && timeReg) {
+                var arr1 = dateReg[0].split('-');
+                var arr2 = timeReg[0].split(':');
+                return new Date(Number(arr1[0]), Number(arr1[1]) - 1, Number(arr1[2]), Number(arr2[0]), Number(arr2[1]), Number(arr2[2]) || 0);
+            } else if (dateReg) {
+                return parseDate(str);
+            }
+        }
 
         var _parseInt = window.parseInt;
         //ie8 默认会将前面有0的字符串以8进制来解析

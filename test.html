@@ -271,6 +271,17 @@
             <div id="test_page"></div>
         </div>
     </fieldset>
+    <fieldset class="song-field song-field-title">
+        <legend>日期</legend>
+        <div class="song-field-box">
+            <div class="song-inline">
+                <label for="" class="song-form-label">日期</label>
+                <div class="song-input-inline">
+                    <input type="text" class="song-input" id="date" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </fieldset>
     <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">
@@ -300,6 +311,7 @@
 <script src="./modules/pager.js"></script>
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
+<script src="./modules/date.js"></script>
 <script>
     window.JSON = window.JSON || {
         stringify: function (d) { return String(d) }
@@ -606,6 +618,9 @@
         last: '尾页',
         prev: '上一页',
         next: '下一页'
+    });
+    SongUi.Date.render({
+        elem: '#date'
     });
 </script>
 

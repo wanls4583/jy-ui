@@ -636,7 +636,7 @@
                 if (col.checkbox) {
                     var arr = [];
                     value && col.checkbox.map(function (item) {
-                        if (hasValue(value, item.value) > -1) {
+                        if (Common.indexOf(value, item.value) > -1) {
                             arr.push(item.label);
                         }
                     });
@@ -800,7 +800,7 @@
                 var checkFilter = 'table_edit_checkbox_' + that.filter + '_' + Math.random();
                 $edit.addClass(tableClass.checkboxs);
                 col.checkbox && col.checkbox.map(function (item) {
-                    $edit.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && hasValue(data, item.value) > -1 ? 'checked' : '') + '/>');
+                    $edit.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && Common.indexOf(data, item.value) > -1 ? 'checked' : '') + '/>');
                 });
                 // 触发checkbox事件
                 Form.render('checkbox(' + checkFilter + ')', td.parentNode);
@@ -1855,7 +1855,7 @@
             } else if (col.checkbox) { // 复选框中的数据
                 html = '';
                 col.checkbox.map(function (obj) {
-                    if (hasValue(cellValue, obj.value) > -1) {
+                    if (Common.indexOf(cellValue, obj.value) > -1) {
                         html += ',' + obj.label;
                     }
                 });
@@ -2422,7 +2422,7 @@
                         } else if (col.checkbox) { // 复选框中的数据
                             html = '';
                             col.checkbox.map(function (obj) {
-                                if (hasValue(data[col.field], obj.value) > -1) {
+                                if (Common.indexOf(data[col.field], obj.value) > -1) {
                                     html += '、' + obj.label;
                                 }
                             });
@@ -2485,16 +2485,6 @@
         }
 
         return Table;
-    }
-
-    // 查找数组内容
-    function hasValue(arr, value) {
-        for (var i = 0; i < arr.length; i++) {
-            if (arr[i] == value) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     if ("function" == typeof define && define.amd) {
