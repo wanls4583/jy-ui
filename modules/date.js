@@ -5,16 +5,16 @@
                 <div class="song-date-main">\
                     <div class="song-date-header">\
                         <div class="song-date-header-left">\
-                            <i class="song-icon left-du">&#xe612;</i>\
-                            <i class="song-icon left">&#xe733;</i>\
+                            <i class="song-icon song-date-prev-year-btn">&#xe612;</i>\
+                            <i class="song-icon song-date-prev-month-btn">&#xe733;</i>\
                         </div>\
                         <div class="song-date-header-center">\
                             <div class="song-date-header-year"></div>\
                             <div class="song-date-header-month"></div>\
                         </div>\
                         <div class="song-date-header-right">\
-                            <i class="song-icon right">&#xe734;</i>\
-                            <i class="song-icon right-du">&#xe61a;</i>\
+                            <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
+                            <i class="song-icon song-date-next-year-btn">&#xe61a;</i>\
                         </div>\
                     </div>\
                     <div class="song-date-content">\
@@ -40,17 +40,22 @@
                         <span class="song-date-result"></span>\
                     </div>\
                     <div class="song-date-footer-right">\
-                        <span class="song-date-btn song-date-cancel">取消</span><span class="song-date-btn song-date-now">现在</span><span class="song-date-btn song-date-confirm">确定</span>\
+                        <span class="song-date-btn song-date-cancel">清空</span><span class="song-date-btn song-date-now">现在</span><span class="song-date-btn song-date-confirm">确定</span>\
                     </div>\
                 </div>\
-            </div>'
+            </div>',
+            timeBtn: '<span class="song-date-btn song-date-time-btn">选择时间</span>'
         }
 
         var dateClass = {
             year: 'song-date-header-year',
             month: 'song-date-header-month',
             preMonth: 'song-date-prev-month',
+            preMonthBtn: 'song-date-prev-month-btn',
+            preYearBtn: 'song-date-prev-year-btn',
             nextMonth: 'song-date-next-month',
+            nextMonthBtn: 'song-date-next-month-btn',
+            nextYearBtn: 'song-date-next-year-btn',
             result: 'song-date-result',
             cancel: 'song-date-cancel',
             now: 'song-date-now',
@@ -83,6 +88,7 @@
         Class.prototype.render = function () {
             var that = this;
             this.value = this.option.value;
+            this.type = this.type || 'date';
             this.$elem = $(this.option.elem);
             this.trigger = ['change', 'focus', 'click'].indexOf(this.option.trigger) > -1 ? this.option.trigger : 'click';
             if (this.$elem && this.$elem.length) {
@@ -92,18 +98,26 @@
                         that.rendered = true;
                     }
                 });
-                // this.$elem.on('blur', function () {
-                //     that.$date.remove();
-                //     that.$elem.val(that.formatTime);
-                // });
+                this.$elem.on('click', function () {
+                    return false;
+                });
+                $(docBody).on('click', function () {
+                    switch (that.type) {
+                        case 'date':
+                        case 'datetime':
+                            that.cancDateTime();
+                            break;
+                    }
+                });
             } else {
                 _render();
             }
 
             function _render() {
                 layerCount++;
-                switch (that.option.type) {
-                    default:
+                switch (that.type) {
+                    case 'date':
+                    case 'datetime':
                         that.renderDate();
                         break;
                 }
@@ -120,6 +134,7 @@
             }
         }
 
+        // 渲染日期选择器
         Class.prototype.renderDate = function () {
             var that = this;
             if (typeof this.value === 'string') {
@@ -128,29 +143,34 @@
             if (!(this.value instanceof Date)) {
                 this.value = new Date();
             }
-            var year = this.value.getFullYear();
-            var month = this.value.getMonth();
-            var date = this.value.getDate();
-            var day = new Date(year, month, 1).getDay();
-            var days = this.getMonthDays(year, month);
+            this.year = this.value.getFullYear();
+            this.month = this.value.getMonth();
+            this.date = this.value.getDate();
+            var day = new Date(this.year, this.month, 1).getDay();
+            var days = this.getMonthDays(this.year, this.month);
             var preMonthDays = 0;
-            if (month == 0) {
-                preMonthDays = this.getMonthDays(year - 1, 11);
+            if (this.month == 0) {
+                preMonthDays = this.getMonthDays(this.year - 1, 11);
             } else {
-                preMonthDays = this.getMonthDays(year, month - 1);
+                preMonthDays = this.getMonthDays(this.year, this.month - 1);
             }
             this.formatTime = this.value.formatTime();
-            this.$date = this.$date || $(tpl.date);
-            this.$table = this.$date.find('tbody');
-            this.$year = this.$date.find('.' + dateClass.year);
-            this.$month = this.$date.find('.' + dateClass.month);
-            this.$result = this.$date.find('.' + dateClass.result);
-            this.$cancel = this.$date.find('.' + dateClass.cancel);
-            this.$now = this.$date.find('.' + dateClass.now);
-            this.$confirm = this.$date.find('.' + dateClass.confirm);
-            this.$year.text(year + '年');
-            this.$month.text(month + 1 + '月');
-            this.$result.text(this.formatTime);
+            if (!this.$date) {
+                this.$date = $(tpl.date);
+                this.$table = this.$date.find('tbody');
+                this.$year = this.$date.find('.' + dateClass.year);
+                this.$month = this.$date.find('.' + dateClass.month);
+                this.$result = this.$date.find('.' + dateClass.result);
+                this.$now = this.$date.find('.' + dateClass.now);
+                if (this.type === 'datetime') {
+                    this.$timeBtn = $(tpl.timeBtn);
+                    this.$result.html(this.$timeBtn);
+                    this.$result = null;
+                }
+            }
+            this.$year.text(this.year + '年');
+            this.$month.text(this.month + 1 + '月');
+            this.$result && this.$result.text(this.formatTime);
             this.$date.addClass('date-layer' + layerCount);
             var count = 0;
             var dateNum = 0;
@@ -175,7 +195,7 @@
                     cn = dateClass.nextMonth;
                 } else if (i < day) {
                     cn = dateClass.preMonth;
-                } else if (dateNum == date) {
+                } else if (dateNum == this.date) {
                     cn = dateClass.active;
                 }
                 html += '<td class="' + cn + '">' + dateNum + '</td>';
@@ -188,42 +208,128 @@
             _bindEvent();
 
             function _bindEvent() {
-                if (that.bindedEvent) {
+                if (that.rendered) {
                     return;
                 }
-                that.bindedEvent = true;
+                that.$date.on('click', function () {
+                    return false;
+                });
                 // 选中日期
-                that.$table.delegate('td', 'click', function () {
+                that.$date.delegate('td', 'click', function () {
                     var date = this.innerText;
                     var $this = $(this);
                     if ($this.hasClass(dateClass.preMonth)) {
-                        if (month == 0) {
-                            year--;
-                            month = 12;
+                        if (that.month == 0) {
+                            that.year--;
+                            that.month = 12;
                         } else {
-                            month--;
+                            that.month--;
                         }
-                        that.value = new Date(year, month, date);
-                        that.renderDate();
+                        that.value = new Date(that.year, that.month, date);
+                        if (that.type === 'date') {
+                            that.confirmDateTime();
+                        } else {
+                            that.renderDate();
+                        }
                     } else if ($this.hasClass(dateClass.nextMonth)) {
-                        if (month == 11) {
-                            year++;
-                            month = 0
+                        if (that.month == 11) {
+                            that.year++;
+                            that.month = 0
                         } else {
-                            month++;
+                            that.month++;
                         }
-                        that.value = new Date(year, month, date);
-                        that.renderDate();
+                        that.value = new Date(that.year, that.month, date);
+                        if (that.type === 'date') {
+                            that.confirmDateTime();
+                        } else {
+                            that.renderDate();
+                        }
                     } else {
-                        that.value = new Date(year, month, date);
-                        that.$result.text(that.value.formatTime());
-                        that.$table.find('.' + dateClass.active).removeClass(dateClass.active);
-                        $this.addClass(dateClass.active);
+                        that.value = new Date(that.year, that.month, date);
+                        if (that.type === 'date') {
+                            that.confirmDateTime();
+                        } else {
+                            that.$result && that.$result.text(that.value.formatTime());
+                            that.$table.find('.' + dateClass.active).removeClass(dateClass.active);
+                            $this.addClass(dateClass.active);
+                        }
                     }
-
-
+                });
+                // 前一个月
+                that.$date.delegate('.' + dateClass.preMonthBtn, 'click', function () {
+                    if (that.month == 0) {
+                        that.month = 11;
+                        that.year--;
+                    } else {
+                        that.month--;
+                    }
+                    that.value = new Date(that.year, that.month, that.date);
+                    that.renderDate();
+                });
+                // 后一个月
+                that.$date.delegate('.' + dateClass.nextMonthBtn, 'click', function () {
+                    if (that.month == 11) {
+                        that.month = 0;
+                        that.year++;
+                    } else {
+                        that.month++;
+                    }
+                    that.value = new Date(that.year, that.month, that.date);
+                    that.renderDate();
+                });
+                // 前一年
+                that.$date.delegate('.' + dateClass.preYearBtn, 'click', function () {
+                    that.year--;
+                    that.value = new Date(that.year, that.month, that.date);
+                    that.renderDate();
+                });
+                // 后一年
+                that.$date.delegate('.' + dateClass.nextYearBtn, 'click', function () {
+                    that.year++;
+                    that.value = new Date(that.year, that.month, that.date);
+                    that.renderDate();
+                });
+                // 确定
+                that.$date.delegate('.' + dateClass.confirm, 'click', function () {
+                    that.confirmDateTime();
+                });
+                // 清空
+                that.$date.delegate('.' + dateClass.cancel, 'click', function () {
+                    if (that.option.position != 'static') {
+                        that.$elem.val('');
+                    }
+                    that.cancDateTime();
+                });
+                // 现在
+                that.$date.delegate('.' + dateClass.now, 'click', function () {
+                    that.value = new Date();
+                    that.confirmDateTime();
                 });
             }
+        }
+
+        Class.prototype.confirmDateTime = function () {
+            this.formatTime = this.value.formatTime(this.type === 'datetime' ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd');
+            this.rendered = false;
+            if (this.option.position != 'static') {
+                this.$elem.val(this.formatTime);
+                this.$date && this.$date.remove();
+                this.$time && this.$time.remove();
+            }
+            typeof this.option.change === 'function' && this.option.change(this.formatTime);
+        }
+
+        Class.prototype.cancDateTime = function () {
+            this.rendered = false;
+            if (this.option.position != 'position') {
+                this.$date && this.$date.remove();
+                this.$time && this.$time.remove();
+            }
+        }
+
+        // 渲染时间选择器
+        Class.prototype.renderTime = function () {
+
         }
 
         Class.prototype.setPosition = function () {

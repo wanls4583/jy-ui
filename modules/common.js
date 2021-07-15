@@ -344,15 +344,82 @@
             return formatStr;
         };
 
-        Date.prototype.parseDateTime = function (str) {
-            var dateReg = /\d{4}-\d{1,2}-\d{1,2}/.exec(str);
-            var timeReg = /\d{1,2}:\d{1,2}(:\d{1,2})?/.exec(str);
-            if (dateReg && timeReg) {
-                var arr1 = dateReg[0].split('-');
-                var arr2 = timeReg[0].split(':');
-                return new Date(Number(arr1[0]), Number(arr1[1]) - 1, Number(arr1[2]), Number(arr2[0]), Number(arr2[1]), Number(arr2[2]) || 0);
-            } else if (dateReg) {
-                return parseDate(str);
+        Date.prototype.parseDateTime = function (str, formatStr) {
+            formatStr = formatStr || 'yyyy-MM-dd hh:mm:ss';
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth();
+            var year = now.getMonth();
+            var date = now.getDate();
+            var hours = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            for (var i = 0; i < formatStr.length && str.length; i++) {
+                if (formatStr.slice(i, i + 4) == 'yyyy') {
+                    year = _getNum();
+                    if (!year) {
+                        break;
+                    } else {
+                        year = Number(year);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'MM') {
+                    month = _getNum();
+                    if (!month) {
+                        break;
+                    } else {
+                        month = Number(month) - 1;
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'dd') {
+                    date = _getNum();
+                    if (!date) {
+                        break;
+                    } else {
+                        date = Number(date);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'hh') {
+                    hours = _getNum();
+                    if (!hours) {
+                        break;
+                    } else {
+                        hours = Number(hours);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'mm') {
+                    minute = _getNum();
+                    if (!minute) {
+                        break;
+                    } else {
+                        minute = Number(minute);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'ss') {
+                    second = _getNum();
+                    if (!second) {
+                        break;
+                    } else {
+                        second = Number(second);
+                    }
+                }
+            }
+
+            return new Date(year, month, date, hours, minute, second)
+
+            function _getNum() {
+                var num = '';
+                for (var i = 0; i < str.length; i++) {
+                    if (!str[i].match(/\d/)) {
+                        i++;
+                    } else {
+                        break;
+                    }
+                }
+                for (; i < str.length; i++) {
+                    if (str[i].match(/\d/)) {
+                        num += str[i];
+                    } else {
+                        str = str.slice(i + 1);
+                        break;
+                    }
+                }
+                return num;
             }
         }
 
