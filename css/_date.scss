@@ -59,11 +59,11 @@
         overflow: hidden;
         *zoom: 1;
         user-select: none;
+    }
 
-        table {
-            border-spacing: 0;
-            border-collapse: collapse;
-        }
+    &-date {
+        border-spacing: 0;
+        border-collapse: collapse;
 
         th,
         td {
@@ -90,15 +90,6 @@
             }
         }
 
-        .song-date-active {
-            color: $white-color;
-            background-color: $success-color;
-
-            &:hover {
-                background-color: $success-color;
-            }
-        }
-
         .song-date-prev-month,
         .song-date-next-month {
             color: $gray-color;
@@ -106,6 +97,15 @@
             &:hover {
                 color: $color-666;
             }
+        }
+    }
+
+    &-active {
+        color: $white-color !important;
+        background-color: $success-color;
+
+        &:hover {
+            background-color: $success-color !important;
         }
     }
 
@@ -138,6 +138,49 @@
 
         &:hover {
             color: $link-color;
+        }
+    }
+
+    &-time {
+        li {
+            width: 85px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        ul {
+            font-size: 0;
+            white-space: nowrap;
+        }
+
+        ul li {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+        }
+
+        ol {
+            height: 178px;
+            _height: 180px;
+            overflow: hidden;
+            *overflow-y: auto;
+            border: 1px solid $light-color;
+
+            &:hover {
+                overflow-y: auto;
+            }
+        }
+
+        ol li {
+            display: block;
+            _width: 65px;
+            cursor: pointer;
+        }
+
+        .song-date-time-minute {
+            border-left: 0;
+            border-right: 0;
         }
     }
 }

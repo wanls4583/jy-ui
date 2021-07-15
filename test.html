@@ -280,6 +280,12 @@
                     <input type="text" class="song-input" id="date" autocomplete="off">
                 </div>
             </div>
+            <div class="song-inline">
+                <label for="" class="song-form-label">时间</label>
+                <div class="song-input-inline">
+                    <input type="text" class="song-input" id="time" autocomplete="off">
+                </div>
+            </div>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -621,6 +627,10 @@
     });
     SongUi.Date.render({
         elem: '#date'
+    });
+    SongUi.Date.render({
+        elem: '#time',
+        type: 'time'
     });
 </script>
 

@@ -7,6 +7,7 @@ body {
 }
 
 ul,
+ol,
 dl,
 dd,
 p {
@@ -1730,13 +1731,13 @@ hr {
           user-select: none;
 }
 
-.song-date-content table {
+.song-date-date {
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-.song-date-content th,
-.song-date-content td {
+.song-date-date th,
+.song-date-date td {
   width: 26px;
   height: 20px;
   _width: 36px;
@@ -1747,36 +1748,36 @@ hr {
   color: #666666;
 }
 
-.song-date-content th {
+.song-date-date th {
   font-weight: 400;
   color: #333333;
 }
 
-.song-date-content td {
+.song-date-date td {
   cursor: pointer;
 }
 
-.song-date-content td:hover {
+.song-date-date td:hover {
   background-color: #eeeeee;
 }
 
-.song-date-content .song-date-active {
-  color: #ffffff;
-  background-color: #009688;
-}
-
-.song-date-content .song-date-active:hover {
-  background-color: #009688;
-}
-
-.song-date-content .song-date-prev-month,
-.song-date-content .song-date-next-month {
+.song-date-date .song-date-prev-month,
+.song-date-date .song-date-next-month {
   color: #d2d2d2;
 }
 
-.song-date-content .song-date-prev-month:hover,
-.song-date-content .song-date-next-month:hover {
+.song-date-date .song-date-prev-month:hover,
+.song-date-date .song-date-next-month:hover {
   color: #666666;
+}
+
+.song-date-active {
+  color: #ffffff !important;
+  background-color: #009688;
+}
+
+.song-date-active:hover {
+  background-color: #009688 !important;
 }
 
 .song-date-footer {
@@ -1812,5 +1813,46 @@ hr {
 
 .song-date-btn:hover {
   color: #5FB878;
+}
+
+.song-date-time li {
+  width: 85px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.song-date-time ul {
+  font-size: 0;
+  white-space: nowrap;
+}
+
+.song-date-time ul li {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+.song-date-time ol {
+  height: 178px;
+  _height: 180px;
+  overflow: hidden;
+  *overflow-y: auto;
+  border: 1px solid #eeeeee;
+}
+
+.song-date-time ol:hover {
+  overflow-y: auto;
+}
+
+.song-date-time ol li {
+  display: block;
+  _width: 65px;
+  cursor: pointer;
+}
+
+.song-date-time .song-date-time-minute {
+  border-left: 0;
+  border-right: 0;
 }
 /*# sourceMappingURL=song-ui.css.map */
