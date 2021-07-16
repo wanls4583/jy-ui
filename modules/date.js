@@ -171,7 +171,7 @@
             if (this.option.position != 'position') {
                 this.data && this.data.$date && this.data.$date.remove();
                 if (this.data && this.$elem.val()) {
-                    this.$elem.val(this.data.value.formatTime(this.data.format));
+                    this.$elem.val(this.data.formatTime);
                 }
                 this.data = null;
             }
