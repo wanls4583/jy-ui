@@ -70,6 +70,7 @@
         }
 
         var dateClass = {
+            date: 'song-date',
             headerLeft: 'song-date-header-left',
             headerCnter: 'song-date-header-center',
             headerRight: 'song-date-header-right',
@@ -96,7 +97,6 @@
         var ieVersion = Common.getIeVersion();
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
-        var store = {};
         var layerCount = 0;
 
         var SongDate = {
@@ -124,6 +124,9 @@
             if (this.$elem && this.$elem.length) {
                 this.$elem.on(this.trigger, function () {
                     if (!that.$date || !that.$date.is(':visible')) {
+                        if (that.option.position != 'static') {
+                            that.value = that.$elem.val();
+                        }
                         _render();
                     }
                 });
@@ -139,6 +142,7 @@
 
             function _render() {
                 layerCount++;
+                $(docBody).children('.song-date').remove();
                 switch (that.type) {
                     case 'date':
                     case 'datetime':
@@ -173,14 +177,14 @@
 
         // 渲染日期选择器
         Class.prototype.renderDate = function () {
-            if (typeof this.value === 'string') {
+            if (typeof this.value === 'string' && this.value) {
                 this.value = Date.prototype.parseDateTime(this.value);
-            }
-            if (!(this.value instanceof Date)) {
+            } else if (typeof this.value === 'number') {
+                this.value = new Date(this.value);
+            } else if (!(this.value instanceof Date)) {
                 this.value = new Date();
             }
             this.format = this.option.format || (this.type == 'datetime' ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd');
-            this.formatTime = this.value.formatTime(this.format);
             this.$date = $(tpl.date);
             this.$table = $(tpl.dateTable);
             this.$content = this.$date.find('.' + dateClass.content);
@@ -195,7 +199,6 @@
             if (this.type === 'datetime') {
                 this.$timeBtn = $(tpl.timeBtn);
                 this.$result.html(this.$timeBtn);
-                this.$result = null;
             }
             // 隐藏底部操作栏
             if (this.option.hideFooter) {
@@ -212,9 +215,12 @@
             this.year = this.value.getFullYear();
             this.month = this.value.getMonth();
             this.date = this.value.getDate();
+            this.formatTime = this.value.formatTime(this.format);
             this.$year.text(this.year + '年');
             this.$month.text(this.month + 1 + '月');
-            this.$result && this.$result.text(this.formatTime);
+            if (this.type === 'date') {
+                this.$result.text(this.formatTime);
+            }
             var day = new Date(this.year, this.month, 1).getDay();
             var days = this.getMonthDays(this.year, this.month);
             var preMonthDays = 0;
@@ -334,7 +340,6 @@
                         that.confirmDateTime();
                     } else {
                         that.formatTime = that.value.formatTime(that.format);
-                        that.$result && that.$result.text(that.formatTime);
                         that.$table.find('.' + dateClass.active).removeClass(dateClass.active);
                         $this.addClass(dateClass.active);
                     }
@@ -374,10 +379,11 @@
         // 渲染时间选择器
         Class.prototype.renderTime = function () {
             this.format = this.option.format || 'hh:mm:ss';
-            if (typeof this.value === 'string') {
+            if (typeof this.value === 'string' && this.value) {
                 this.value = Date.prototype.parseDateTime(this.value, this.format);;
-            }
-            if (!(this.value instanceof Date)) {
+            } else if (typeof this.value === 'number') {
+                this.value = new Date(this.value);
+            } else if (!(this.value instanceof Date)) {
                 this.value = new Date();
             }
             this.$date = $(tpl.date);
@@ -393,6 +399,7 @@
             this.$date.find('.' + dateClass.headerRight).hide();
             this.$date.find('.' + dateClass.headerCnter).html('选择时间');
             this.$content.append(this.$time);
+            this.$date.addClass('date-layer' + layerCount);
             if (this.option.hideFooter) {
                 this.$footer.hide();
             } else {
@@ -428,7 +435,9 @@
                 that.$minute[0].scrollTop = that.minute * 30 - 150 / 2;
                 that.$second[0].scrollTop = that.second * 30 - 150 / 2;
             });
-            this.$result && this.$result.text(this.formatTime);
+            if (this.type === 'time') {
+                this.$result.text(this.formatTime);
+            }
         }
 
         Class.prototype.bindTimeListEvent = function () {
@@ -485,7 +494,6 @@
             date.setSeconds(this.second);
             this.formatTime = date.formatTime(this.format);
             this.value = this.formatTime;
-            this.$result && this.$result.text(this.formatTime);
             if (this.option.position != 'static' && remove) {
                 this.$elem.val(this.formatTime);
                 this.$date.remove();
