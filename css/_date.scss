@@ -28,15 +28,25 @@
             display: inline-block;
             *display: inline;
             *zoom: 1;
+            cursor: pointer;
+
+            &:hover {
+                color: $link-color;
+            }
         }
 
         &-year,
-        &-month {
+        &-month,
+        &-year-range {
             display: inline-block;
             *display: inline;
             *zoom: 1;
             padding: 0 $pd10;
             cursor: pointer;
+
+            &:hover {
+                color: $link-color;
+            }
         }
 
         &-right {
@@ -51,6 +61,10 @@
             *zoom: 1;
             padding: 0 5px;
             cursor: pointer;
+
+            &:hover {
+                color: $link-color;
+            }
         }
     }
 
@@ -143,7 +157,7 @@
 
     &-time {
         li {
-            width: 85px;
+            width: 84px;
             line-height: 30px;
             font-size: 14px;
             text-align: center;
@@ -181,6 +195,31 @@
         .song-date-time-minute {
             border-left: 0;
             border-right: 0;
+        }
+    }
+
+    &-year,
+    &-month {
+        li {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            width: 84px;
+            line-height: 36px;
+            margin: 3px 0;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $light-color;
+            }
+        }
+    }
+
+    &-month {
+        li {
+            margin: 17px 0;
         }
     }
 }

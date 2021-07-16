@@ -1697,14 +1697,23 @@ hr {
   display: inline-block;
   *display: inline;
   *zoom: 1;
+  cursor: pointer;
 }
 
-.song-date-header-year, .song-date-header-month {
+.song-date-header-center:hover {
+  color: #5FB878;
+}
+
+.song-date-header-year, .song-date-header-month, .song-date-header-year-range {
   display: inline-block;
   *display: inline;
   *zoom: 1;
   padding: 0 10px;
   cursor: pointer;
+}
+
+.song-date-header-year:hover, .song-date-header-month:hover, .song-date-header-year-range:hover {
+  color: #5FB878;
 }
 
 .song-date-header-right {
@@ -1719,6 +1728,10 @@ hr {
   *zoom: 1;
   padding: 0 5px;
   cursor: pointer;
+}
+
+.song-date-header .song-icon:hover {
+  color: #5FB878;
 }
 
 .song-date-content {
@@ -1816,7 +1829,7 @@ hr {
 }
 
 .song-date-time li {
-  width: 85px;
+  width: 84px;
   line-height: 30px;
   font-size: 14px;
   text-align: center;
@@ -1854,5 +1867,25 @@ hr {
 .song-date-time .song-date-time-minute {
   border-left: 0;
   border-right: 0;
+}
+
+.song-date-year li, .song-date-month li {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  width: 84px;
+  line-height: 36px;
+  margin: 3px 0;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.song-date-year li:hover, .song-date-month li:hover {
+  background-color: #eeeeee;
+}
+
+.song-date-month li {
+  margin: 17px 0;
 }
 /*# sourceMappingURL=song-ui.css.map */

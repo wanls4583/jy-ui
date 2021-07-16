@@ -63,8 +63,9 @@
                     </li>\
                 </ul>\
             </div>',
-            timeBtn: '<span class="song-date-btn song-date-time-btn">选择时间</span>',
-            dateBtn: '<span class="song-date-btn song-date-date-btn">返回日期</span>'
+            year: '<div class="song-date-year"><ul></ul></div>',
+            month: '<div class="song-date-month"><ul></ul></div>',
+            childBtn: '<span class="song-date-btn">选择时间</span>'
         }
 
         var dateClass = {
@@ -74,6 +75,7 @@
             headerRight: 'song-date-header-right',
             content: 'song-date-content',
             year: 'song-date-header-year',
+            yearRange: 'song-date-header-year-range',
             month: 'song-date-header-month',
             hour: 'song-date-time-hour',
             minute: 'song-date-time-minute',
@@ -142,6 +144,10 @@
                 that.data.value = that.$elem.val() || that.option.value;
                 $(docBody).children('.song-date').remove();
                 switch (that.data.type) {
+                    case 'year':
+                    case 'yearmonth':
+                        that.renderYear();
+                        break;
                     case 'date':
                     case 'datetime':
                         that.renderDate();
@@ -170,9 +176,6 @@
         Class.prototype.cancel = function () {
             if (this.option.position != 'position') {
                 this.data && this.data.$date && this.data.$date.remove();
-                if (this.data && this.$elem.val()) {
-                    this.$elem.val(this.data.formatTime);
-                }
                 this.data = null;
             }
         }
@@ -193,12 +196,11 @@
             this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
-            this.data.$now = this.data.$date.find('.' + dateClass.now);
             this.data.$content.append(this.data.$table);
             this.data.$date.addClass('date-layer' + layerCount);
             if (this.data.type === 'datetime') {
-                this.data.$timeBtn = $(tpl.timeBtn);
-                this.data.$result.html(this.data.$timeBtn);
+                this.data.$childBtn = $(tpl.childBtn).text('选择时间');
+                this.data.$result.html(this.data.$childBtn);
             }
             // 隐藏底部操作栏
             if (this.option.hideFooter) {
@@ -219,7 +221,7 @@
             this.data.minute = this.data.value.getMinutes();
             this.data.second = this.data.value.getSeconds();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + this.data.year + '年</div><div class="' + dateClass.year + '">' + (this.data.month + 1) + '月</div>');
+            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + this.data.year + '年</div><div class="' + dateClass.month + '">' + (this.data.month + 1) + '月</div>');
             if (this.data.type === 'date') {
                 this.data.$result.text(this.data.formatTime);
             }
@@ -363,7 +365,7 @@
                 that.confirmDateTime();
             });
             // 选择时间
-            this.data.$timeBtn && this.data.$timeBtn.on('click', function () {
+            this.data.$childBtn && this.data.$childBtn.on('click', function () {
                 if (!that.data.$time) {
                     _appendTime();
                     _showTime();
@@ -376,7 +378,7 @@
                 function _showTime() {
                     that.data.$time.show();
                     that.data.$table.hide();
-                    that.data.$timeBtn.text('返回日期');
+                    that.data.$childBtn.text('返回日期');
                     that.data.$headerCnter.text('选择时间');
                     that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).hide();
                     that.data.$headerCnter.parent().children('.' + dateClass.headerRight).hide();
@@ -385,8 +387,8 @@
                 function _hideTime() {
                     that.data.$table.show();
                     that.data.$time.hide();
-                    that.data.$timeBtn.text('选择时间');
-                    that.data.$headerCnter.html('<div class="' + dateClass.year + '">' + that.data.year + '年</div><div class="' + dateClass.year + '">' + (that.data.month + 1) + '月</div>');
+                    that.data.$childBtn.text('选择时间');
+                    that.data.$headerCnter.html('<div class="' + dateClass.year + '">' + that.data.year + '年</div><div class="' + dateClass.month + '">' + (that.data.month + 1) + '月</div>');
                     that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).show();
                     that.data.$headerCnter.parent().children('.' + dateClass.headerRight).show();
                 }
@@ -437,7 +439,6 @@
             this.data.$content = this.data.$date.find('.' + dateClass.content);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
-            this.data.$now = this.data.$date.find('.' + dateClass.now);
             this.data.$date.find('.' + dateClass.headerLeft).hide();
             this.data.$date.find('.' + dateClass.headerRight).hide();
             this.data.$date.find('.' + dateClass.headerCnter).html('选择时间');
@@ -545,6 +546,112 @@
                     this.data.$result.text(this.data.formatTime);
                 }
                 ifConfirm && typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
+            }
+        }
+
+        // 渲染时间选择器
+        Class.prototype.renderYear = function () {
+            this.data.format = this.option.format || (this.data.type == 'yearmonth' ? 'yyyy-MM' : 'yyyy');
+            if (typeof this.data.value === 'string' && this.data.value) {
+                this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
+            } else if (typeof this.data.value === 'number') {
+                this.data.value = new Date(this.data.value);
+            } else if (!(this.data.value instanceof Date)) {
+                this.data.value = new Date();
+            }
+            this.data.$date = $(tpl.date);
+            this.data.$year = $(tpl.year);
+            this.data.$yearList = this.data.$year.children('ul');
+            this.data.$content = this.data.$date.find('.' + dateClass.content);
+            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
+            this.data.$footer = this.data.$date.find('.' + dateClass.footer);
+            this.data.$result = this.data.$date.find('.' + dateClass.result);
+            this.data.$date.find('.' + dateClass.preMonthBtn).hide();
+            this.data.$date.find('.' + dateClass.nextMonthBtn).hide();
+            this.data.$content.append(this.data.$year);
+            this.data.$date.addClass('date-layer' + layerCount);
+            if (this.option.hideFooter) {
+                this.data.$footer.hide();
+            } else {
+                this.bindYearFooterEvent();
+            }
+            this.bindYearHeaderEvent();
+            this.renderYearList();
+            this.bindYearListEvent();
+        }
+
+        Class.prototype.renderYearList = function () {
+            var year = this.data.value.getFullYear();
+            var html = '';
+            var startYear = year - 7;
+            var endYear = year + 7;
+            this.data.$headerCnter.html('<div class="' + dateClass.yearRange + '">' + (startYear + '年 - ' + endYear + '年') + '</div>');
+            for (var i = startYear; i <= endYear; i++) {
+                html += '<li data-year="' + i + '" ' + (i === year ? 'class="' + dateClass.active + '"' : '') + '>' + i + '年</li>';
+            }
+            this.data.$year.html(html);
+            this.data.formatTime = this.data.value.formatTime(this.data.format);
+            if (this.data.type === 'year') {
+                this.data.$result.text(this.data.formatTime);
+            }
+        }
+
+        Class.prototype.bindYearHeaderEvent = function () {
+            var that = this;
+            this.data.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+                var year = that.data.value.getFullYear();
+                that.data.value.setFullYear(year - 15);
+                that.renderYearList();
+            });
+            // 清空
+            this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+                var year = that.data.value.getFullYear();
+                that.data.value.setFullYear(year + 15);
+                that.renderYearList();
+            });
+        }
+
+        Class.prototype.bindYearListEvent = function () {
+            var that = this;
+            this.data.$year.delegate('li', 'click', function () {
+                var $this = $(this);
+                var year = $this.attr('data-year');
+                that.data.value.setFullYear(year);
+                that.data.$year.find('.' + dateClass.active).removeClass(dateClass.active);
+                $this.addClass(dateClass.active);
+                that.confirmYear();
+            });
+        }
+
+        Class.prototype.bindYearFooterEvent = function () {
+            var that = this;
+            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
+                that.confirmYear();
+            });
+            // 清空
+            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
+                if (that.option.position != 'static') {
+                    that.$elem.val('');
+                }
+                that.cancel();
+            });
+            // 现在
+            this.data.$footer.find('.' + dateClass.now).on('click', function () {
+                that.data.value = new Date();
+                that.confirmYear();
+            });
+        }
+
+        Class.prototype.confirmYear = function () {
+            if (this.data.type === 'year' || this.data.type === 'yearmonth') {
+                this.data.formatTime = this.data.value.formatTime(this.data.format);
+                if (this.option.position !== 'static') {
+                    this.$elem.val(this.data.formatTime);
+                    this.data.$date.remove();
+                } else {
+                    this.data.$result.text(this.data.formatTime);
+                }
+                typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
             }
         }
 
