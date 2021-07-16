@@ -4,16 +4,6 @@
             date: '<div class="song-date">\
                 <div class="song-date-main">\
                     <div class="song-date-header">\
-                        <div class="song-date-header-left">\
-                            <i class="song-icon song-date-prev-year-btn">&#xe612;</i>\
-                            <i class="song-icon song-date-prev-month-btn">&#xe733;</i>\
-                        </div>\
-                        <div class="song-date-header-center">\
-                        </div>\
-                        <div class="song-date-header-right">\
-                            <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
-                            <i class="song-icon song-date-next-year-btn">&#xe61a;</i>\
-                        </div>\
                     </div>\
                     <div class="song-date-content">\
                     </div>\
@@ -27,6 +17,36 @@
                     </div>\
                 </div>\
             </div>',
+            header: '\
+            <%if(["date","datetime","month","yearmonth","year"].indexOf(type)>-1){%>\
+            <div class="song-date-header-left">\
+                <i class="song-icon song-date-prev-year-btn">&#xe612;</i>\
+                <%if(["date","datetime"].indexOf(type)>-1){%>\
+                <i class="song-icon song-date-prev-month-btn">&#xe733;</i>\
+                <%}%>\
+            </div>\
+            <%}%>\
+            <div class="song-date-header-center">\
+                <%if(["date","datetime"].indexOf(type)>-1){%>\
+                <div class="song-date-header-year"><%-year%>年</div>\
+                <div class="song-date-header-month"><%-month+1%>年</div>\
+                <%}%>\
+                <%if(["month","yearmonth"].indexOf(type)>-1){%>\
+                <div class="song-date-header-year"><%-year%>年</div>\
+                <%}%>\
+                <%if("year" == type){%>\
+                <div class="song-date-header-year"><%-(year-7)+"年 - "+(year+7)+"年"%></div>\
+                <%}%>\
+                <%if("time" == type){%>选择时间<%}%>\
+            </div>\
+            <%if(["date","datetime","month","yearmonth","year"].indexOf(type)>-1){%>\
+            <div class="song-date-header-right">\
+                <%if(["date","datetime"].indexOf(type)>-1){%>\
+                <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
+                <%}%>\
+                <i class="song-icon song-date-next-year-btn">&#xe61a;</i>\
+            </div>\
+            <%}%>',
             dateTable: '<table class="song-date-date">\
                 <thead>\
                     <tr>\
@@ -70,8 +90,9 @@
 
         var dateClass = {
             date: 'song-date',
+            header: 'song-date-header',
             headerLeft: 'song-date-header-left',
-            headerCnter: 'song-date-header-center',
+            headerCenter: 'song-date-header-center',
             headerRight: 'song-date-header-right',
             content: 'song-date-content',
             year: 'song-date-header-year',
@@ -197,7 +218,7 @@
             this.data.$date = $(tpl.date);
             this.data.$table = $(tpl.dateTable);
             this.data.$content = this.data.$date.find('.' + dateClass.content);
-            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
+            this.data.$header = this.data.$date.find('.' + dateClass.header);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
             this.data.$content.append(this.data.$table);
@@ -222,7 +243,11 @@
             this.data.month = this.data.value.getMonth();
             this.data.date = this.data.value.getDate();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + this.data.year + '年</div><div class="' + dateClass.month + '">' + (this.data.month + 1) + '月</div>');
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: 'date',
+                year: this.data.year,
+                month: this.data.month
+            }));
             if (this.data.type === 'date') {
                 this.data.$result.text(this.data.formatTime);
             }
@@ -272,7 +297,7 @@
         Class.prototype.bindDateHeaderEvent = function () {
             var that = this;
             // 前一个月
-            this.data.$date.find('.' + dateClass.preMonthBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.preMonthBtn, 'click', function () {
                 if (that.data.month == 0) {
                     that.data.month = 11;
                     that.data.year--;
@@ -283,7 +308,7 @@
                 that.renderDateTable();
             });
             // 后一个月
-            this.data.$date.find('.' + dateClass.nextMonthBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.nextMonthBtn, 'click', function () {
                 if (that.data.month == 11) {
                     that.data.month = 0;
                     that.data.year++;
@@ -294,13 +319,13 @@
                 that.renderDateTable();
             });
             // 前一年
-            this.data.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
                 that.data.year--;
                 that.data.value = new Date(that.data.year, that.data.month, that.data.date);
                 that.renderDateTable();
             });
             // 后一年
-            this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
                 that.data.year++;
                 that.data.value = new Date(that.data.year, that.data.month, that.data.date);
                 that.renderDateTable();
@@ -310,7 +335,7 @@
         Class.prototype.bidnDateTableEvent = function () {
             var that = this;
             // 选中日期
-            this.data.$date.delegate('td', 'click', function () {
+            this.data.$content.delegate('td', 'click', function () {
                 var date = this.innerText;
                 var $this = $(this);
                 if ($this.hasClass(dateClass.preMonth)) {
@@ -340,7 +365,7 @@
                     that.data.$table.find('.' + dateClass.active).removeClass(dateClass.active);
                     $this.addClass(dateClass.active);
                 }
-                that.confirmDateTime();
+                that.confirmDate();
             });
         }
 
@@ -348,7 +373,7 @@
             var that = this;
             // 确定
             this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
-                that.confirmDateTime();
+                that.confirmDate();
             });
             // 清空
             this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
@@ -360,7 +385,7 @@
             // 现在
             this.data.$footer.find('.' + dateClass.now).on('click', function () {
                 that.data.value = new Date();
-                that.confirmDateTime();
+                that.confirmDate();
             });
             // 选择时间
             this.data.$childBtn && this.data.$childBtn.on('click', function () {
@@ -377,18 +402,20 @@
                     that.data.$time.show();
                     that.data.$table.hide();
                     that.data.$childBtn.text('返回日期');
-                    that.data.$headerCnter.text('选择时间');
-                    that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).hide();
-                    that.data.$headerCnter.parent().children('.' + dateClass.headerRight).hide();
+                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                        type: 'time'
+                    }));
                 }
 
                 function _hideTime() {
                     that.data.$table.show();
                     that.data.$time.hide();
                     that.data.$childBtn.text('选择时间');
-                    that.data.$headerCnter.html('<div class="' + dateClass.year + '">' + that.data.year + '年</div><div class="' + dateClass.month + '">' + (that.data.month + 1) + '月</div>');
-                    that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).show();
-                    that.data.$headerCnter.parent().children('.' + dateClass.headerRight).show();
+                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                        type: 'date',
+                        year: that.data.year,
+                        month: that.data.month
+                    }));
                 }
             });
 
@@ -403,7 +430,7 @@
             }
         }
 
-        Class.prototype.confirmDateTime = function () {
+        Class.prototype.confirmDate = function () {
             if (this.data.type === 'date' || this.data.type === 'datetime') {
                 this.data.formatTime = this.data.value.formatTime(this.data.format);
                 if (this.option.position != 'static') {
@@ -432,13 +459,14 @@
             this.data.$minute = this.data.$time.find('.' + dateClass.minute);
             this.data.$second = this.data.$time.find('.' + dateClass.second);
             this.data.$content = this.data.$date.find('.' + dateClass.content);
+            this.data.$header = this.data.$date.find('.' + dateClass.header);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
-            this.data.$date.find('.' + dateClass.headerLeft).hide();
-            this.data.$date.find('.' + dateClass.headerRight).hide();
-            this.data.$date.find('.' + dateClass.headerCnter).html('选择时间');
             this.data.$content.append(this.data.$time);
             this.data.$date.addClass('date-layer' + layerCount);
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: 'time'
+            }));
             if (this.option.hideFooter) {
                 this.data.$footer.hide();
             } else {
@@ -550,11 +578,9 @@
             this.data.$year = $(tpl.year);
             this.data.$yearList = this.data.$year.children('ul');
             this.data.$content = this.data.$date.find('.' + dateClass.content);
-            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
+            this.data.$header = this.data.$date.find('.' + dateClass.header);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
-            this.data.$date.find('.' + dateClass.preMonthBtn).hide();
-            this.data.$date.find('.' + dateClass.nextMonthBtn).hide();
             this.data.$content.append(this.data.$year);
             this.data.$date.addClass('date-layer' + layerCount);
             if (this.option.hideFooter) {
@@ -572,11 +598,14 @@
             var html = '';
             var startYear = year - 7;
             var endYear = year + 7;
-            this.data.$headerCnter.html('<div class="' + dateClass.yearRange + '">' + (startYear + '年 - ' + endYear + '年') + '</div>');
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: 'year',
+                year: year
+            }));
             for (var i = startYear; i <= endYear; i++) {
                 html += '<li data-year="' + i + '" ' + (i === year ? 'class="' + dateClass.active + '"' : '') + '>' + i + '年</li>';
             }
-            this.data.$year.html(html);
+            this.data.$yearList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             if (this.data.type === 'year') {
                 this.data.$result.text(this.data.formatTime);
@@ -585,12 +614,12 @@
 
         Class.prototype.bindYearHeaderEvent = function () {
             var that = this;
-            this.data.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
                 var year = that.data.value.getFullYear();
                 that.data.value.setFullYear(year - 15);
                 that.renderYearList();
             });
-            this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
                 var year = that.data.value.getFullYear();
                 that.data.value.setFullYear(year + 15);
                 that.renderYearList();
@@ -655,11 +684,9 @@
             this.data.$month = $(tpl.month);
             this.data.$monthList = this.data.$month.children('ul');
             this.data.$content = this.data.$date.find('.' + dateClass.content);
-            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
+            this.data.$header = this.data.$date.find('.' + dateClass.header);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
-            this.data.$date.find('.' + dateClass.preMonthBtn).hide();
-            this.data.$date.find('.' + dateClass.nextMonthBtn).hide();
             this.data.$content.append(this.data.$month);
             this.data.$date.addClass('date-layer' + layerCount);
             if (this.option.hideFooter) {
@@ -676,7 +703,10 @@
             var year = this.data.value.getFullYear();
             var month = this.data.value.getMonth();
             var html = '';
-            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + year + '年</div>');
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: 'month',
+                year: year
+            }));
             for (var i = 0; i < 12; i++) {
                 html += '<li data-month="' + i + '" ' + (i === month ? 'class="' + dateClass.active + '"' : '') + '>' + months[i] + '月</li>';
             }
@@ -689,12 +719,12 @@
 
         Class.prototype.bindMonthHeaderEvent = function () {
             var that = this;
-            this.data.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
                 var year = that.data.value.getFullYear();
                 that.data.value.setFullYear(year - 1);
                 that.renderMonthList();
             });
-            this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
                 var year = that.data.value.getFullYear();
                 that.data.value.setFullYear(year + 1);
                 that.renderMonthList();

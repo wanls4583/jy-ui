@@ -405,15 +405,15 @@
             function _getNum() {
                 var num = '';
                 for (var i = 0; i < str.length; i++) {
-                    if (!str[i].match(/\d/)) {
+                    if (!str.charAt(i).match(/\d/)) {
                         i++;
                     } else {
                         break;
                     }
                 }
                 for (; i < str.length; i++) {
-                    if (str[i].match(/\d/)) {
-                        num += str[i];
+                    if (str.charAt(i).match(/\d/)) {
+                        num += str.charAt(i);
                     } else {
                         str = str.slice(i + 1);
                         break;
