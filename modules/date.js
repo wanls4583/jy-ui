@@ -18,7 +18,7 @@
                 </div>\
             </div>',
             header: '\
-            <%if(["date","datetime","month","yearmonth","year"].indexOf(type)>-1){%>\
+            <%if(["date","datetime","month","year"].indexOf(type)>-1){%>\
             <div class="song-date-header-left">\
                 <i class="song-icon song-date-prev-year-btn">&#xe612;</i>\
                 <%if(["date","datetime"].indexOf(type)>-1){%>\
@@ -31,7 +31,7 @@
                 <div class="song-date-header-year"><%-year%>年</div>\
                 <div class="song-date-header-month"><%-month+1%>年</div>\
                 <%}%>\
-                <%if(["month","yearmonth"].indexOf(type)>-1){%>\
+                <%if(["month"].indexOf(type)>-1){%>\
                 <div class="song-date-header-year"><%-year%>年</div>\
                 <%}%>\
                 <%if("year" == type){%>\
@@ -39,7 +39,7 @@
                 <%}%>\
                 <%if("time" == type){%>选择时间<%}%>\
             </div>\
-            <%if(["date","datetime","month","yearmonth","year"].indexOf(type)>-1){%>\
+            <%if(["date","datetime","month","year"].indexOf(type)>-1){%>\
             <div class="song-date-header-right">\
                 <%if(["date","datetime"].indexOf(type)>-1){%>\
                 <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
@@ -170,7 +170,6 @@
                         that.renderYear();
                         break;
                     case 'month':
-                    case 'yearmonth':
                         that.renderMonth();
                         break;
                     case 'date':
@@ -397,27 +396,27 @@
                 } else {
                     _showTime();
                 }
-
-                function _showTime() {
-                    that.data.$time.show();
-                    that.data.$table.hide();
-                    that.data.$childBtn.text('返回日期');
-                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                        type: 'time'
-                    }));
-                }
-
-                function _hideTime() {
-                    that.data.$table.show();
-                    that.data.$time.hide();
-                    that.data.$childBtn.text('选择时间');
-                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                        type: 'date',
-                        year: that.data.year,
-                        month: that.data.month
-                    }));
-                }
             });
+
+            function _showTime() {
+                that.data.$time.show();
+                that.data.$table.hide();
+                that.data.$childBtn.text('返回日期');
+                that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: 'time'
+                }));
+            }
+
+            function _hideTime() {
+                that.data.$table.show();
+                that.data.$time.hide();
+                that.data.$childBtn.text('选择时间');
+                that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: 'date',
+                    year: that.data.year,
+                    month: that.data.month
+                }));
+            }
 
             function _appendTime() {
                 that.data.$time = $(tpl.time);
@@ -672,7 +671,7 @@
 
         // 渲染年月选择器
         Class.prototype.renderMonth = function () {
-            this.data.format = this.option.format || (this.data.type == 'yearmonth' ? 'yyyy-MM' : 'yyyy');
+            this.data.format = this.option.format || 'yyyy-MM';
             if (typeof this.data.value === 'string' && this.data.value) {
                 this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
@@ -712,7 +711,7 @@
             }
             this.data.$monthList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            if (this.data.type === 'month' || this.data.type === 'yearmonth') {
+            if (this.data.type === 'month') {
                 this.data.$result.text(this.data.formatTime);
             }
         }
@@ -729,6 +728,44 @@
                 that.data.value.setFullYear(year + 1);
                 that.renderMonthList();
             });
+            // 点击年份
+            this.data.$header.delegate('.' + dateClass.year, 'click', function () {
+                var year = that.data.value.getFullYear();
+                if (!that.data.$year) {
+                    _appendYear();
+                    _showYear(year);
+                } else if (that.data.$year.is(':visible')) {
+                    _hideYear(year);
+                } else {
+                    _showYear(year);
+                }
+            });
+
+            function _showYear(year) {
+                that.data.$year.show();
+                that.data.$month.hide();
+                that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: 'year',
+                    year: year
+                }));
+            }
+
+            function _hideYear(year) {
+                that.data.$month.show();
+                that.data.$year.hide();
+                that.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: 'month',
+                    year: year
+                }));
+            }
+
+            function _appendYear() {
+                that.data.$year = $(tpl.year);
+                that.data.$yearList = that.data.$year.children('ul');
+                that.data.$content.append(that.data.$year);
+                that.renderYearList();
+                that.bindYearListEvent();
+            }
         }
 
         Class.prototype.bindMonthListEvent = function () {
@@ -763,7 +800,7 @@
         }
 
         Class.prototype.confirmMonth = function () {
-            if (this.data.type === 'month' || this.data.type === 'yearmonth') {
+            if (this.data.type === 'month') {
                 this.data.formatTime = this.data.value.formatTime(this.data.format);
                 if (this.option.position !== 'static') {
                     this.$elem.val(this.data.formatTime);
