@@ -98,6 +98,7 @@
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var layerCount = 0;
+        var months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
         var SongDate = {
             render: function (option) {
@@ -145,8 +146,11 @@
                 $(docBody).children('.song-date').remove();
                 switch (that.data.type) {
                     case 'year':
-                    case 'yearmonth':
                         that.renderYear();
+                        break;
+                    case 'month':
+                    case 'yearmonth':
+                        that.renderMonth();
                         break;
                     case 'date':
                     case 'datetime':
@@ -549,9 +553,9 @@
             }
         }
 
-        // 渲染时间选择器
+        // 渲染年选择器
         Class.prototype.renderYear = function () {
-            this.data.format = this.option.format || (this.data.type == 'yearmonth' ? 'yyyy-MM' : 'yyyy');
+            this.data.format = this.option.format || 'yyyy';
             if (typeof this.data.value === 'string' && this.data.value) {
                 this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
@@ -603,7 +607,6 @@
                 that.data.value.setFullYear(year - 15);
                 that.renderYearList();
             });
-            // 清空
             this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
                 var year = that.data.value.getFullYear();
                 that.data.value.setFullYear(year + 15);
@@ -613,11 +616,11 @@
 
         Class.prototype.bindYearListEvent = function () {
             var that = this;
-            this.data.$year.delegate('li', 'click', function () {
+            this.data.$yearList.delegate('li', 'click', function () {
                 var $this = $(this);
-                var year = $this.attr('data-year');
+                var year = Number($this.attr('data-year'));
                 that.data.value.setFullYear(year);
-                that.data.$year.find('.' + dateClass.active).removeClass(dateClass.active);
+                that.data.$yearList.find('.' + dateClass.active).removeClass(dateClass.active);
                 $this.addClass(dateClass.active);
                 that.confirmYear();
             });
@@ -643,7 +646,111 @@
         }
 
         Class.prototype.confirmYear = function () {
-            if (this.data.type === 'year' || this.data.type === 'yearmonth') {
+            if (this.data.type === 'year') {
+                this.data.formatTime = this.data.value.formatTime(this.data.format);
+                if (this.option.position !== 'static') {
+                    this.$elem.val(this.data.formatTime);
+                    this.data.$date.remove();
+                } else {
+                    this.data.$result.text(this.data.formatTime);
+                }
+                typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
+            }
+        }
+
+        // 渲染年月选择器
+        Class.prototype.renderMonth = function () {
+            this.data.format = this.option.format || (this.data.type == 'yearmonth' ? 'yyyy-MM' : 'yyyy');
+            if (typeof this.data.value === 'string' && this.data.value) {
+                this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
+            } else if (typeof this.data.value === 'number') {
+                this.data.value = new Date(this.data.value);
+            } else if (!(this.data.value instanceof Date)) {
+                this.data.value = new Date();
+            }
+            this.data.$date = $(tpl.date);
+            this.data.$month = $(tpl.month);
+            this.data.$monthList = this.data.$month.children('ul');
+            this.data.$content = this.data.$date.find('.' + dateClass.content);
+            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
+            this.data.$footer = this.data.$date.find('.' + dateClass.footer);
+            this.data.$result = this.data.$date.find('.' + dateClass.result);
+            this.data.$date.find('.' + dateClass.preMonthBtn).hide();
+            this.data.$date.find('.' + dateClass.nextMonthBtn).hide();
+            this.data.$content.append(this.data.$month);
+            this.data.$date.addClass('date-layer' + layerCount);
+            if (this.option.hideFooter) {
+                this.data.$footer.hide();
+            } else {
+                this.bindMonthFooterEvent();
+            }
+            this.bindMonthHeaderEvent();
+            this.renderMonthList();
+            this.bindMonthListEvent();
+        }
+
+        Class.prototype.renderMonthList = function () {
+            var year = this.data.value.getFullYear();
+            var month = this.data.value.getMonth();
+            var html = '';
+            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + year + '年</div>');
+            for (var i = 0; i < 12; i++) {
+                html += '<li data-month="' + i + '" ' + (i === month ? 'class="' + dateClass.active + '"' : '') + '>' + months[i] + '月</li>';
+            }
+            this.data.$monthList.html(html);
+            this.data.formatTime = this.data.value.formatTime(this.data.format);
+            if (this.data.type === 'month' || this.data.type === 'yearmonth') {
+                this.data.$result.text(this.data.formatTime);
+            }
+        }
+
+        Class.prototype.bindMonthHeaderEvent = function () {
+            var that = this;
+            this.data.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+                var year = that.data.value.getFullYear();
+                that.data.value.setFullYear(year - 1);
+                that.renderMonthList();
+            });
+            this.data.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+                var year = that.data.value.getFullYear();
+                that.data.value.setFullYear(year + 1);
+                that.renderMonthList();
+            });
+        }
+
+        Class.prototype.bindMonthListEvent = function () {
+            var that = this;
+            this.data.$monthList.delegate('li', 'click', function () {
+                var $this = $(this);
+                var month = Number($this.attr('data-month'));
+                that.data.value.setMonth(month);
+                that.data.$monthList.find('.' + dateClass.active).removeClass(dateClass.active);
+                $this.addClass(dateClass.active);
+                that.confirmMonth();
+            });
+        }
+
+        Class.prototype.bindMonthFooterEvent = function () {
+            var that = this;
+            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
+                that.confirmMonth();
+            });
+            // 清空
+            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
+                if (that.option.position != 'static') {
+                    that.$elem.val('');
+                }
+                that.cancel();
+            });
+            // 现在
+            this.data.$footer.find('.' + dateClass.now).on('click', function () {
+                that.data.value = new Date();
+                that.confirmMonth();
+            });
+        }
+
+        Class.prototype.confirmMonth = function () {
+            if (this.data.type === 'month' || this.data.type === 'yearmonth') {
                 this.data.formatTime = this.data.value.formatTime(this.data.format);
                 if (this.option.position !== 'static') {
                     this.$elem.val(this.data.formatTime);
