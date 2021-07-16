@@ -123,9 +123,8 @@
             this.trigger = ['change', 'focus', 'click'].indexOf(this.option.trigger) > -1 ? this.option.trigger : 'click';
             if (this.$elem && this.$elem.length) {
                 this.$elem.on(this.trigger, function () {
-                    if (!that.rendered) {
+                    if (!that.$date || !that.$date.is(':visible')) {
                         _render();
-                        that.rendered = true;
                     }
                 });
                 this.$elem.on('click', function () {
@@ -159,6 +158,16 @@
                     $(docBody).append(that.$date);
                     that.setPosition();
                 }
+                that.$date.on('click', function () {
+                    return false;
+                });
+            }
+        }
+
+        // 销毁弹框
+        Class.prototype.cancel = function () {
+            if (this.option.position != 'position') {
+                this.$date && this.$date.remove();
             }
         }
 
@@ -171,9 +180,41 @@
                 this.value = new Date();
             }
             this.format = this.option.format || (this.type == 'datetime' ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd');
+            this.formatTime = this.value.formatTime(this.format);
+            this.$date = $(tpl.date);
+            this.$table = $(tpl.dateTable);
+            this.$content = this.$date.find('.' + dateClass.content);
+            this.$footer = this.$date.find('.' + dateClass.footer);
+            this.$year = this.$date.find('.' + dateClass.year);
+            this.$month = this.$date.find('.' + dateClass.month);
+            this.$result = this.$date.find('.' + dateClass.result);
+            this.$now = this.$date.find('.' + dateClass.now);
+            this.$content.append(this.$table);
+            this.$table = this.$table.children('tbody');
+            this.$date.addClass('date-layer' + layerCount);
+            if (this.type === 'datetime') {
+                this.$timeBtn = $(tpl.timeBtn);
+                this.$result.html(this.$timeBtn);
+                this.$result = null;
+            }
+            // 隐藏底部操作栏
+            if (this.option.hideFooter) {
+                this.$footer.hide();
+            } else {
+                this.bindDateFooterEvent();
+            }
+            this.bindDateHeaderEvent()
+            this.renderDateTable();
+            this.bidnDateTableEvent();
+        }
+
+        Class.prototype.renderDateTable = function () {
             this.year = this.value.getFullYear();
             this.month = this.value.getMonth();
             this.date = this.value.getDate();
+            this.$year.text(this.year + '年');
+            this.$month.text(this.month + 1 + '月');
+            this.$result && this.$result.text(this.formatTime);
             var day = new Date(this.year, this.month, 1).getDay();
             var days = this.getMonthDays(this.year, this.month);
             var preMonthDays = 0;
@@ -182,27 +223,6 @@
             } else {
                 preMonthDays = this.getMonthDays(this.year, this.month - 1);
             }
-            this.formatTime = this.value.formatTime(this.format);
-            if (!this.$date) {
-                this.$date = $(tpl.date);
-                this.$table = $(tpl.dateTable);
-                this.$content = this.$date.find('.' + dateClass.content);
-                this.$year = this.$date.find('.' + dateClass.year);
-                this.$month = this.$date.find('.' + dateClass.month);
-                this.$result = this.$date.find('.' + dateClass.result);
-                this.$now = this.$date.find('.' + dateClass.now);
-                this.$content.append(this.$table);
-                this.$table = this.$table.children('tbody');
-                if (this.type === 'datetime') {
-                    this.$timeBtn = $(tpl.timeBtn);
-                    this.$result.html(this.$timeBtn);
-                    this.$result = null;
-                }
-            }
-            this.$year.text(this.year + '年');
-            this.$month.text(this.month + 1 + '月');
-            this.$result && this.$result.text(this.formatTime);
-            this.$date.addClass('date-layer' + layerCount);
             var count = 0;
             var dateNum = 0;
             var next = false;
@@ -236,17 +256,48 @@
                 }
             }
             this.$table.html(html);
-            this.bindDateEvent();
         }
 
-        Class.prototype.bindDateEvent = function () {
+        Class.prototype.bindDateHeaderEvent = function () {
             var that = this;
-            if (this.rendered) {
-                return;
-            }
-            this.$date.on('click', function () {
-                return false;
+            // 前一个月
+            this.$date.find('.' + dateClass.preMonthBtn).on('click', function () {
+                if (that.month == 0) {
+                    that.month = 11;
+                    that.year--;
+                } else {
+                    that.month--;
+                }
+                that.value = new Date(that.year, that.month, that.date);
+                that.renderDateTable();
             });
+            // 后一个月
+            this.$date.find('.' + dateClass.nextMonthBtn).on('click', function () {
+                if (that.month == 11) {
+                    that.month = 0;
+                    that.year++;
+                } else {
+                    that.month++;
+                }
+                that.value = new Date(that.year, that.month, that.date);
+                that.renderDateTable();
+            });
+            // 前一年
+            this.$date.find('.' + dateClass.preYearBtn).on('click', function () {
+                that.year--;
+                that.value = new Date(that.year, that.month, that.date);
+                that.renderDateTable();
+            });
+            // 后一年
+            this.$date.find('.' + dateClass.nextYearBtn).on('click', function () {
+                that.year++;
+                that.value = new Date(that.year, that.month, that.date);
+                that.renderDateTable();
+            });
+        }
+
+        Class.prototype.bidnDateTableEvent = function () {
+            var that = this;
             // 选中日期
             this.$date.delegate('td', 'click', function () {
                 var date = this.innerText;
@@ -262,7 +313,7 @@
                     if (that.type === 'date') {
                         that.confirmDateTime();
                     } else {
-                        that.renderDate();
+                        that.renderDateTable();
                     }
                 } else if ($this.hasClass(dateClass.nextMonth)) {
                     if (that.month == 11) {
@@ -275,7 +326,7 @@
                     if (that.type === 'date') {
                         that.confirmDateTime();
                     } else {
-                        that.renderDate();
+                        that.renderDateTable();
                     }
                 } else {
                     that.value = new Date(that.year, that.month, date);
@@ -289,53 +340,23 @@
                     }
                 }
             });
-            // 前一个月
-            this.$date.delegate('.' + dateClass.preMonthBtn, 'click', function () {
-                if (that.month == 0) {
-                    that.month = 11;
-                    that.year--;
-                } else {
-                    that.month--;
-                }
-                that.value = new Date(that.year, that.month, that.date);
-                that.renderDate();
-            });
-            // 后一个月
-            this.$date.delegate('.' + dateClass.nextMonthBtn, 'click', function () {
-                if (that.month == 11) {
-                    that.month = 0;
-                    that.year++;
-                } else {
-                    that.month++;
-                }
-                that.value = new Date(that.year, that.month, that.date);
-                that.renderDate();
-            });
-            // 前一年
-            this.$date.delegate('.' + dateClass.preYearBtn, 'click', function () {
-                that.year--;
-                that.value = new Date(that.year, that.month, that.date);
-                that.renderDate();
-            });
-            // 后一年
-            this.$date.delegate('.' + dateClass.nextYearBtn, 'click', function () {
-                that.year++;
-                that.value = new Date(that.year, that.month, that.date);
-                that.renderDate();
-            });
+        }
+
+        Class.prototype.bindDateFooterEvent = function () {
+            var that = this;
             // 确定
-            this.$date.delegate('.' + dateClass.confirm, 'click', function () {
+            this.$footer.find('.' + dateClass.confirm).on('click', function () {
                 that.confirmDateTime();
             });
             // 清空
-            this.$date.delegate('.' + dateClass.cancel, 'click', function () {
+            this.$footer.find('.' + dateClass.cancel).on('click', function () {
                 if (that.option.position != 'static') {
                     that.$elem.val('');
                 }
                 that.cancel();
             });
             // 现在
-            this.$date.delegate('.' + dateClass.now, 'click', function () {
+            this.$footer.find('.' + dateClass.now).on('click', function () {
                 that.value = new Date();
                 that.confirmDateTime();
             });
@@ -343,7 +364,6 @@
 
         Class.prototype.confirmDateTime = function () {
             this.formatTime = this.value.formatTime(this.format);
-            this.rendered = false;
             if (this.option.position != 'static') {
                 this.$elem.val(this.formatTime);
                 this.$date.remove();
@@ -351,16 +371,8 @@
             typeof this.option.change === 'function' && this.option.change(this.formatTime);
         }
 
-        Class.prototype.cancel = function () {
-            this.rendered = false;
-            if (this.option.position != 'position') {
-                this.$date && this.$date.remove();
-            }
-        }
-
         // 渲染时间选择器
         Class.prototype.renderTime = function () {
-            var that = this;
             this.format = this.option.format || 'hh:mm:ss';
             if (typeof this.value === 'string') {
                 this.value = Date.prototype.parseDateTime(this.value, this.format);;
@@ -368,24 +380,34 @@
             if (!(this.value instanceof Date)) {
                 this.value = new Date();
             }
+            this.$date = $(tpl.date);
+            this.$time = $(tpl.time);
+            this.$hour = this.$time.find('.' + dateClass.hour);
+            this.$minute = this.$time.find('.' + dateClass.minute);
+            this.$second = this.$time.find('.' + dateClass.second);
+            this.$content = this.$date.find('.' + dateClass.content);
+            this.$footer = this.$date.find('.' + dateClass.footer);
+            this.$result = this.$date.find('.' + dateClass.result);
+            this.$now = this.$date.find('.' + dateClass.now);
+            this.$date.find('.' + dateClass.headerLeft).hide();
+            this.$date.find('.' + dateClass.headerRight).hide();
+            this.$date.find('.' + dateClass.headerCnter).html('选择时间');
+            this.$content.append(this.$time);
+            if (this.option.hideFooter) {
+                this.$footer.hide();
+            } else {
+                this.bindTimeFooterEvent();
+            }
+            this.renderTimeList();
+            this.bindTimeListEvent();
+        }
+
+        Class.prototype.renderTimeList = function () {
+            var that = this;
             this.hour = this.value.getHours();
             this.minute = this.value.getMinutes();
             this.second = this.value.getSeconds();
             this.formatTime = this.value.formatTime(this.format);
-            if (!this.$date) {
-                this.$date = $(tpl.date);
-                this.$time = $(tpl.time);
-                this.$hour = this.$time.find('.' + dateClass.hour);
-                this.$minute = this.$time.find('.' + dateClass.minute);
-                this.$second = this.$time.find('.' + dateClass.second);
-                this.$content = this.$date.find('.' + dateClass.content);
-                this.$result = this.$date.find('.' + dateClass.result);
-                this.$now = this.$date.find('.' + dateClass.now);
-                this.$date.find('.' + dateClass.headerLeft).hide();
-                this.$date.find('.' + dateClass.headerRight).hide();
-                this.$date.find('.' + dateClass.headerCnter).html('选择时间');
-                this.$content.append(this.$time);
-            }
             var html = '';
             for (var i = 0; i < 24; i++) {
                 html += '<li ' + (i === this.hour ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
@@ -407,15 +429,10 @@
                 that.$second[0].scrollTop = that.second * 30 - 150 / 2;
             });
             this.$result && this.$result.text(this.formatTime);
-            this.bindTimeEvent();
         }
 
-        Class.prototype.bindTimeEvent = function () {
+        Class.prototype.bindTimeListEvent = function () {
             var that = this;
-            var $footer = this.$date.find('.' + dateClass.footer);
-            this.$date.on('click', function () {
-                return false;
-            });
             this.$hour.delegate('li', 'click', function () {
                 var hour = Number(this.innerText);
                 that.hour = hour;
@@ -437,18 +454,22 @@
                 $(this).addClass(dateClass.active);
                 that.confirmTime();
             });
-            $footer.find('.' + dateClass.confirm).on('click', function () {
+        }
+
+        Class.prototype.bindTimeFooterEvent = function () {
+            var that = this;
+            this.$footer.find('.' + dateClass.confirm).on('click', function () {
                 that.confirmTime(true);
             });
             // 清空
-            $footer.find('.' + dateClass.cancel).on('click', function () {
+            this.$footer.find('.' + dateClass.cancel).on('click', function () {
                 if (that.option.position != 'static') {
                     that.$elem.val('');
                 }
                 that.cancel();
             });
             // 现在
-            $footer.find('.' + dateClass.now).on('click', function () {
+            this.$footer.find('.' + dateClass.now).on('click', function () {
                 var date = new Date();
                 that.hour = date.getHours();
                 that.minute = date.getMinutes();
@@ -468,7 +489,6 @@
             if (this.option.position != 'static' && remove) {
                 this.$elem.val(this.formatTime);
                 this.$date.remove();
-                this.rendered = false;
             }
             typeof this.option.change === 'function' && this.option.change(this.formatTime);
         }
