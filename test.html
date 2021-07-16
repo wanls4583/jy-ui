@@ -277,7 +277,7 @@
             <div class="song-inline">
                 <label for="" class="song-form-label">日期时间</label>
                 <div class="song-input-inline">
-                    <input type="text" class="song-input" id="date" autocomplete="off">
+                    <input type="text" class="song-input" id="datetime" autocomplete="off">
                 </div>
             </div>
             <div class="song-inline">
@@ -288,6 +288,12 @@
             </div>
             <div class="song-inline">
                 <label for="" class="song-form-label">年月</label>
+                <div class="song-input-inline">
+                    <input type="text" class="song-input" id="yearmonth" autocomplete="off">
+                </div>
+            </div>
+            <div class="song-inline">
+                <label for="" class="song-form-label">年</label>
                 <div class="song-input-inline">
                     <input type="text" class="song-input" id="year" autocomplete="off">
                 </div>
@@ -632,12 +638,16 @@
         next: '下一页'
     });
     SongUi.Date.render({
-        elem: '#date',
+        elem: '#datetime',
         type: 'datetime'
     });
     SongUi.Date.render({
         elem: '#time',
         type: 'time'
+    });
+    SongUi.Date.render({
+        elem: '#yearmonth',
+        type: 'yearmonth'
     });
     SongUi.Date.render({
         elem: '#year',

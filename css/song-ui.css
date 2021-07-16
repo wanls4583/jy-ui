@@ -1886,6 +1886,7 @@ hr {
 }
 
 .song-date-month li {
+  width: 63px;
   margin: 17px 0;
 }
 /*# sourceMappingURL=song-ui.css.map */

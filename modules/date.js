@@ -221,9 +221,6 @@
             this.data.year = this.data.value.getFullYear();
             this.data.month = this.data.value.getMonth();
             this.data.date = this.data.value.getDate();
-            this.data.hour = this.data.value.getHours();
-            this.data.minute = this.data.value.getMinutes();
-            this.data.second = this.data.value.getSeconds();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + this.data.year + '年</div><div class="' + dateClass.month + '">' + (this.data.month + 1) + '月</div>');
             if (this.data.type === 'date') {
@@ -363,9 +360,6 @@
             // 现在
             this.data.$footer.find('.' + dateClass.now).on('click', function () {
                 that.data.value = new Date();
-                that.data.hour = that.data.value.getHours();
-                that.data.minute = that.data.value.getMinutes();
-                that.data.second = that.data.value.getSeconds();
                 that.confirmDateTime();
             });
             // 选择时间
@@ -411,9 +405,6 @@
 
         Class.prototype.confirmDateTime = function () {
             if (this.data.type === 'date' || this.data.type === 'datetime') {
-                this.data.value.setHours(this.data.hour);
-                this.data.value.setMinutes(this.data.minute);
-                this.data.value.setSeconds(this.data.second);
                 this.data.formatTime = this.data.value.formatTime(this.data.format);
                 if (this.option.position != 'static') {
                     this.$elem.val(this.data.formatTime);
@@ -459,29 +450,29 @@
 
         Class.prototype.renderTimeList = function () {
             var that = this;
-            this.data.hour = this.data.value.getHours();
-            this.data.minute = this.data.value.getMinutes();
-            this.data.second = this.data.value.getSeconds();
+            var hour = this.data.value.getHours();
+            var minute = this.data.value.getMinutes();
+            var second = this.data.value.getSeconds();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             var html = '';
             for (var i = 0; i < 24; i++) {
-                html += '<li ' + (i === this.data.hour ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
+                html += '<li ' + (i === hour ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
             }
             this.data.$hour.append(html);
             html = '';
             for (var i = 0; i < 60; i++) {
-                html += '<li ' + (i === this.data.minute ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
+                html += '<li ' + (i === minute ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
             }
             this.data.$minute.append(html);
             html = '';
             for (var i = 0; i < 60; i++) {
-                html += '<li ' + (i === this.data.second ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
+                html += '<li ' + (i === second ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
             }
             this.data.$second.append(html);
             Common.nextFrame(function () {
-                that.data.$hour[0].scrollTop = that.data.hour * 30 - 150 / 2;
-                that.data.$minute[0].scrollTop = that.data.minute * 30 - 150 / 2;
-                that.data.$second[0].scrollTop = that.data.second * 30 - 150 / 2;
+                that.data.$hour[0].scrollTop = hour * 30 - 150 / 2;
+                that.data.$minute[0].scrollTop = minute * 30 - 150 / 2;
+                that.data.$second[0].scrollTop = second * 30 - 150 / 2;
             });
             if (this.data.type === 'time') {
                 this.data.$result.text(this.data.formatTime);
@@ -492,21 +483,21 @@
             var that = this;
             this.data.$hour.delegate('li', 'click', function () {
                 var hour = Number(this.innerText);
-                that.data.hour = hour;
+                that.data.value.setHours(hour);
                 that.data.$hour.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
                 that.confirmTime();
             });
             this.data.$minute.delegate('li', 'click', function () {
                 var minute = Number(this.innerText);
-                that.data.minute = minute;
+                that.data.value.setMinutes(minute);
                 that.data.$minute.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
                 that.confirmTime();
             });
             this.data.$second.delegate('li', 'click', function () {
                 var second = Number(this.innerText);
-                that.data.second = second;
+                that.data.value.setSeconds(second);
                 that.data.$second.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
                 that.confirmTime();
@@ -527,22 +518,14 @@
             });
             // 现在
             this.data.$footer.find('.' + dateClass.now).on('click', function () {
-                var date = new Date();
-                that.data.hour = date.getHours();
-                that.data.minute = date.getMinutes();
-                that.data.second = date.getSeconds();
+                that.data.value = new Date();
                 that.confirmTime(true);
             });
         }
 
         Class.prototype.confirmTime = function (ifConfirm) {
             if (this.data.type === 'time') {
-                var date = new Date();
-                date.setHours(this.data.hour);
-                date.setMinutes(this.data.minute);
-                date.setSeconds(this.data.second);
-                this.data.formatTime = date.formatTime(this.data.format);
-                this.data.value = this.data.formatTime;
+                this.data.formatTime = this.data.value.formatTime(this.data.format);
                 if (this.option.position != 'static' && ifConfirm) {
                     this.$elem.val(this.data.formatTime);
                     this.data.$date.remove();
