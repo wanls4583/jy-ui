@@ -9,8 +9,6 @@
                             <i class="song-icon song-date-prev-month-btn">&#xe733;</i>\
                         </div>\
                         <div class="song-date-header-center">\
-                            <div class="song-date-header-year"></div>\
-                            <div class="song-date-header-month"></div>\
                         </div>\
                         <div class="song-date-header-right">\
                             <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
@@ -172,6 +170,9 @@
         Class.prototype.cancel = function () {
             if (this.option.position != 'position') {
                 this.data && this.data.$date && this.data.$date.remove();
+                if (this.data && this.$elem.val()) {
+                    this.$elem.val(this.data.value.formatTime(this.data.format));
+                }
                 this.data = null;
             }
         }
@@ -189,9 +190,8 @@
             this.data.$date = $(tpl.date);
             this.data.$table = $(tpl.dateTable);
             this.data.$content = this.data.$date.find('.' + dateClass.content);
+            this.data.$headerCnter = this.data.$date.find('.' + dateClass.headerCnter);
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
-            this.data.$year = this.data.$date.find('.' + dateClass.year);
-            this.data.$month = this.data.$date.find('.' + dateClass.month);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
             this.data.$now = this.data.$date.find('.' + dateClass.now);
             this.data.$content.append(this.data.$table);
@@ -219,8 +219,7 @@
             this.data.minute = this.data.value.getMinutes();
             this.data.second = this.data.value.getSeconds();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            this.data.$year.text(this.data.year + '年');
-            this.data.$month.text(this.data.month + 1 + '月');
+            this.data.$headerCnter.html('<div class="' + dateClass.year + '">' + this.data.year + '年</div><div class="' + dateClass.year + '">' + (this.data.month + 1) + '月</div>');
             if (this.data.type === 'date') {
                 this.data.$result.text(this.data.formatTime);
             }
@@ -367,16 +366,29 @@
             this.data.$timeBtn && this.data.$timeBtn.on('click', function () {
                 if (!that.data.$time) {
                     _appendTime();
-                    that.data.$table.hide();
-                    that.data.$timeBtn.text('返回日期');
+                    _showTime();
                 } else if (that.data.$time.is(':visible')) {
-                    that.data.$time.hide();
-                    that.data.$table.show();
-                    that.data.$timeBtn.text('选择时间');
+                    _hideTime();
                 } else {
+                    _showTime();
+                }
+
+                function _showTime() {
                     that.data.$time.show();
                     that.data.$table.hide();
                     that.data.$timeBtn.text('返回日期');
+                    that.data.$headerCnter.text('选择时间');
+                    that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).hide();
+                    that.data.$headerCnter.parent().children('.' + dateClass.headerRight).hide();
+                }
+
+                function _hideTime() {
+                    that.data.$table.show();
+                    that.data.$time.hide();
+                    that.data.$timeBtn.text('选择时间');
+                    that.data.$headerCnter.html('<div class="' + dateClass.year + '">' + that.data.year + '年</div><div class="' + dateClass.year + '">' + (that.data.month + 1) + '月</div>');
+                    that.data.$headerCnter.parent().children('.' + dateClass.headerLeft).show();
+                    that.data.$headerCnter.parent().children('.' + dateClass.headerRight).show();
                 }
             });
 
