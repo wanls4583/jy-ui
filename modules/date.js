@@ -13,7 +13,7 @@
                         <span class="song-date-result"></span>\
                     </div>\
                     <div class="song-date-footer-right">\
-                        <span class="song-date-btn song-date-cancel">清空</span><span class="song-date-btn song-date-now">现在</span><span class="song-date-btn song-date-confirm">确定</span>\
+                        <span class="song-date-btn song-date-empty">清空</span><span class="song-date-btn song-date-now">现在</span><span class="song-date-btn song-date-confirm">确定</span>\
                     </div>\
                 </div>\
             </div>',
@@ -35,7 +35,7 @@
                 <div class="song-date-header-year"><%-year%>年</div>\
                 <%}%>\
                 <%if("year" == type){%>\
-                <div class="song-date-header-year"><%-(year-7)+"年 - "+(year+7)+"年"%></div>\
+                <div class="song-date-header-year-range"><%-(year-7)+"年 - "+(year+7)+"年"%></div>\
                 <%}%>\
                 <%if("time" == type){%>选择时间<%}%>\
             </div>\
@@ -85,7 +85,7 @@
             </div>',
             year: '<div class="song-date-year"><ul></ul></div>',
             month: '<div class="song-date-month"><ul></ul></div>',
-            childBtn: '<span class="song-date-btn">选择时间</span>'
+            childBtn: '<span class="song-date-btn song-date-child">选择时间</span>'
         }
 
         var dateClass = {
@@ -109,9 +109,10 @@
             nextYearBtn: 'song-date-next-year-btn',
             result: 'song-date-result',
             footer: 'song-date-footer',
-            cancel: 'song-date-cancel',
+            empty: 'song-date-empty',
             now: 'song-date-now',
             confirm: 'song-date-confirm',
+            child: 'song-date-child',
             active: 'song-date-active'
         }
 
@@ -193,14 +194,8 @@
                 that.data.$date.on('click', function () {
                     return false;
                 });
-            }
-        }
-
-        // 销毁弹框
-        Class.prototype.cancel = function () {
-            if (this.option.position != 'position') {
-                this.data && this.data.$date && this.data.$date.remove();
-                this.data = null;
+                that.bindHeaderEvent();
+                that.bindFooterEvent();
             }
         }
 
@@ -226,37 +221,30 @@
                 this.data.$childBtn = $(tpl.childBtn).text('选择时间');
                 this.data.$result.html(this.data.$childBtn);
             }
-            // 隐藏底部操作栏
-            if (this.option.hideFooter) {
-                this.data.$footer.hide();
-            } else {
-                this.bindDateFooterEvent();
-            }
-            this.bindDateHeaderEvent()
             this.renderDateTable();
             this.bidnDateTableEvent();
         }
 
         Class.prototype.renderDateTable = function () {
-            this.data.year = this.data.value.getFullYear();
-            this.data.month = this.data.value.getMonth();
-            this.data.date = this.data.value.getDate();
+            var year = this.data.value.getFullYear();
+            var month = this.data.value.getMonth();
+            var date = this.data.value.getDate();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             this.data.$header.html(Common.htmlTemplate(tpl.header, {
                 type: 'date',
-                year: this.data.year,
-                month: this.data.month
+                year: year,
+                month: month
             }));
             if (this.data.type === 'date') {
                 this.data.$result.text(this.data.formatTime);
             }
-            var day = new Date(this.data.year, this.data.month, 1).getDay();
-            var days = this.getMonthDays(this.data.year, this.data.month);
+            var day = new Date(year, month, 1).getDay();
+            var days = this.getMonthDays(year, month);
             var preMonthDays = 0;
-            if (this.data.month == 0) {
-                preMonthDays = this.getMonthDays(this.data.year - 1, 11);
+            if (month == 0) {
+                preMonthDays = this.getMonthDays(year - 1, 11);
             } else {
-                preMonthDays = this.getMonthDays(this.data.year, this.data.month - 1);
+                preMonthDays = this.getMonthDays(year, month - 1);
             }
             var count = 0;
             var dateNum = 0;
@@ -264,14 +252,14 @@
             var html = '';
             for (var i = 0; i < 42; i++) { //总共渲染6周
                 var cn = '';
-                if (count == 0) {
+                if (count === 0) {
                     html += '<tr>';
                 }
                 if (i < day) {
                     dateNum = preMonthDays - (day - 1) + i;
-                } else if (i == day) {
+                } else if (i === day) {
                     dateNum = 1;
-                } else if (dateNum == days) {
+                } else if (dateNum === days) {
                     next = true;
                     dateNum = 1;
                 } else {
@@ -281,54 +269,16 @@
                     cn = dateClass.nextMonth;
                 } else if (i < day) {
                     cn = dateClass.preMonth;
-                } else if (dateNum == this.data.date) {
+                } else if (dateNum === date) {
                     cn = dateClass.active;
                 }
                 html += '<td class="' + cn + '">' + dateNum + '</td>';
-                if (++count == 7) { // 满一周
+                if (++count === 7) { // 满一周
                     html += '</tr>';
                     count = 0;
                 }
             }
             this.data.$table.children('tbody').html(html);
-        }
-
-        Class.prototype.bindDateHeaderEvent = function () {
-            var that = this;
-            // 前一个月
-            this.data.$header.delegate('.' + dateClass.preMonthBtn, 'click', function () {
-                if (that.data.month == 0) {
-                    that.data.month = 11;
-                    that.data.year--;
-                } else {
-                    that.data.month--;
-                }
-                that.data.value = new Date(that.data.year, that.data.month, that.data.date);
-                that.renderDateTable();
-            });
-            // 后一个月
-            this.data.$header.delegate('.' + dateClass.nextMonthBtn, 'click', function () {
-                if (that.data.month == 11) {
-                    that.data.month = 0;
-                    that.data.year++;
-                } else {
-                    that.data.month++;
-                }
-                that.data.value = new Date(that.data.year, that.data.month, that.data.date);
-                that.renderDateTable();
-            });
-            // 前一年
-            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
-                that.data.year--;
-                that.data.value = new Date(that.data.year, that.data.month, that.data.date);
-                that.renderDateTable();
-            });
-            // 后一年
-            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
-                that.data.year++;
-                that.data.value = new Date(that.data.year, that.data.month, that.data.date);
-                that.renderDateTable();
-            });
         }
 
         Class.prototype.bidnDateTableEvent = function () {
@@ -337,109 +287,17 @@
             this.data.$content.delegate('td', 'click', function () {
                 var date = this.innerText;
                 var $this = $(this);
+                that.data.value.setDate(date);
                 if ($this.hasClass(dateClass.preMonth)) {
-                    if (that.data.month == 0) {
-                        that.data.year--;
-                        that.data.month = 12;
-                    } else {
-                        that.data.month--;
-                    }
-                    that.data.value = new Date(that.data.year, that.data.month, date);
-                    if (that.data.type !== 'date' || that.option.position === 'static') {
-                        that.renderDateTable();
-                    }
+                    that.setPreMonth();
                 } else if ($this.hasClass(dateClass.nextMonth)) {
-                    if (that.data.month == 11) {
-                        that.data.year++;
-                        that.data.month = 0
-                    } else {
-                        that.data.month++;
-                    }
-                    that.data.value = new Date(that.data.year, that.data.month, date);
-                    if (that.data.type !== 'date' || that.option.position === 'static') {
-                        that.renderDateTable();
-                    }
+                    that.setNextMonth();
                 } else {
-                    that.data.value = new Date(that.data.year, that.data.month, date);
                     that.data.$table.find('.' + dateClass.active).removeClass(dateClass.active);
                     $this.addClass(dateClass.active);
                 }
-                that.confirmDate();
+                that.confirm();
             });
-        }
-
-        Class.prototype.bindDateFooterEvent = function () {
-            var that = this;
-            // 确定
-            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
-                that.confirmDate();
-            });
-            // 清空
-            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
-                if (that.option.position != 'static') {
-                    that.$elem.val('');
-                }
-                that.cancel();
-            });
-            // 现在
-            this.data.$footer.find('.' + dateClass.now).on('click', function () {
-                that.data.value = new Date();
-                that.confirmDate();
-            });
-            // 选择时间
-            this.data.$childBtn && this.data.$childBtn.on('click', function () {
-                if (!that.data.$time) {
-                    _appendTime();
-                    _showTime();
-                } else if (that.data.$time.is(':visible')) {
-                    _hideTime();
-                } else {
-                    _showTime();
-                }
-            });
-
-            function _showTime() {
-                that.data.$time.show();
-                that.data.$table.hide();
-                that.data.$childBtn.text('返回日期');
-                that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                    type: 'time'
-                }));
-            }
-
-            function _hideTime() {
-                that.data.$table.show();
-                that.data.$time.hide();
-                that.data.$childBtn.text('选择时间');
-                that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                    type: 'date',
-                    year: that.data.year,
-                    month: that.data.month
-                }));
-            }
-
-            function _appendTime() {
-                that.data.$time = $(tpl.time);
-                that.data.$content.append(that.data.$time);
-                that.data.$hour = that.data.$time.find('.' + dateClass.hour);
-                that.data.$minute = that.data.$time.find('.' + dateClass.minute);
-                that.data.$second = that.data.$time.find('.' + dateClass.second);
-                that.renderTimeList();
-                that.bindTimeListEvent();
-            }
-        }
-
-        Class.prototype.confirmDate = function () {
-            if (this.data.type === 'date' || this.data.type === 'datetime') {
-                this.data.formatTime = this.data.value.formatTime(this.data.format);
-                if (this.option.position != 'static') {
-                    this.$elem.val(this.data.formatTime);
-                    this.data.$date.remove();
-                } else if (this.data.type === 'date') {
-                    this.data.$result.text(this.data.formatTime);
-                }
-                typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
-            }
         }
 
         // 渲染时间选择器
@@ -466,11 +324,6 @@
             this.data.$header.html(Common.htmlTemplate(tpl.header, {
                 type: 'time'
             }));
-            if (this.option.hideFooter) {
-                this.data.$footer.hide();
-            } else {
-                this.bindTimeFooterEvent();
-            }
             this.renderTimeList();
             this.bindTimeListEvent();
         }
@@ -531,25 +384,6 @@
             });
         }
 
-        Class.prototype.bindTimeFooterEvent = function () {
-            var that = this;
-            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
-                that.confirmTime(true);
-            });
-            // 清空
-            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
-                if (that.option.position != 'static') {
-                    that.$elem.val('');
-                }
-                that.cancel();
-            });
-            // 现在
-            this.data.$footer.find('.' + dateClass.now).on('click', function () {
-                that.data.value = new Date();
-                that.confirmTime(true);
-            });
-        }
-
         Class.prototype.confirmTime = function (ifConfirm) {
             if (this.data.type === 'time') {
                 this.data.formatTime = this.data.value.formatTime(this.data.format);
@@ -582,12 +416,6 @@
             this.data.$result = this.data.$date.find('.' + dateClass.result);
             this.data.$content.append(this.data.$year);
             this.data.$date.addClass('date-layer' + layerCount);
-            if (this.option.hideFooter) {
-                this.data.$footer.hide();
-            } else {
-                this.bindYearFooterEvent();
-            }
-            this.bindYearHeaderEvent();
             this.renderYearList();
             this.bindYearListEvent();
         }
@@ -611,20 +439,6 @@
             }
         }
 
-        Class.prototype.bindYearHeaderEvent = function () {
-            var that = this;
-            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
-                var year = that.data.value.getFullYear();
-                that.data.value.setFullYear(year - 15);
-                that.renderYearList();
-            });
-            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
-                var year = that.data.value.getFullYear();
-                that.data.value.setFullYear(year + 15);
-                that.renderYearList();
-            });
-        }
-
         Class.prototype.bindYearListEvent = function () {
             var that = this;
             this.data.$yearList.delegate('li', 'click', function () {
@@ -633,25 +447,6 @@
                 that.data.value.setFullYear(year);
                 that.data.$yearList.find('.' + dateClass.active).removeClass(dateClass.active);
                 $this.addClass(dateClass.active);
-                that.confirmYear();
-            });
-        }
-
-        Class.prototype.bindYearFooterEvent = function () {
-            var that = this;
-            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
-                that.confirmYear();
-            });
-            // 清空
-            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
-                if (that.option.position != 'static') {
-                    that.$elem.val('');
-                }
-                that.cancel();
-            });
-            // 现在
-            this.data.$footer.find('.' + dateClass.now).on('click', function () {
-                that.data.value = new Date();
                 that.confirmYear();
             });
         }
@@ -688,12 +483,6 @@
             this.data.$result = this.data.$date.find('.' + dateClass.result);
             this.data.$content.append(this.data.$month);
             this.data.$date.addClass('date-layer' + layerCount);
-            if (this.option.hideFooter) {
-                this.data.$footer.hide();
-            } else {
-                this.bindMonthFooterEvent();
-            }
-            this.bindMonthHeaderEvent();
             this.renderMonthList();
             this.bindMonthListEvent();
         }
@@ -716,58 +505,6 @@
             }
         }
 
-        Class.prototype.bindMonthHeaderEvent = function () {
-            var that = this;
-            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
-                var year = that.data.value.getFullYear();
-                that.data.value.setFullYear(year - 1);
-                that.renderMonthList();
-            });
-            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
-                var year = that.data.value.getFullYear();
-                that.data.value.setFullYear(year + 1);
-                that.renderMonthList();
-            });
-            // 点击年份
-            this.data.$header.delegate('.' + dateClass.year, 'click', function () {
-                var year = that.data.value.getFullYear();
-                if (!that.data.$year) {
-                    _appendYear();
-                    _showYear(year);
-                } else if (that.data.$year.is(':visible')) {
-                    _hideYear(year);
-                } else {
-                    _showYear(year);
-                }
-            });
-
-            function _showYear(year) {
-                that.data.$year.show();
-                that.data.$month.hide();
-                that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                    type: 'year',
-                    year: year
-                }));
-            }
-
-            function _hideYear(year) {
-                that.data.$month.show();
-                that.data.$year.hide();
-                that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                    type: 'month',
-                    year: year
-                }));
-            }
-
-            function _appendYear() {
-                that.data.$year = $(tpl.year);
-                that.data.$yearList = that.data.$year.children('ul');
-                that.data.$content.append(that.data.$year);
-                that.renderYearList();
-                that.bindYearListEvent();
-            }
-        }
-
         Class.prototype.bindMonthListEvent = function () {
             var that = this;
             this.data.$monthList.delegate('li', 'click', function () {
@@ -776,25 +513,6 @@
                 that.data.value.setMonth(month);
                 that.data.$monthList.find('.' + dateClass.active).removeClass(dateClass.active);
                 $this.addClass(dateClass.active);
-                that.confirmMonth();
-            });
-        }
-
-        Class.prototype.bindMonthFooterEvent = function () {
-            var that = this;
-            this.data.$footer.find('.' + dateClass.confirm).on('click', function () {
-                that.confirmMonth();
-            });
-            // 清空
-            this.data.$footer.find('.' + dateClass.cancel).on('click', function () {
-                if (that.option.position != 'static') {
-                    that.$elem.val('');
-                }
-                that.cancel();
-            });
-            // 现在
-            this.data.$footer.find('.' + dateClass.now).on('click', function () {
-                that.data.value = new Date();
                 that.confirmMonth();
             });
         }
@@ -840,6 +558,163 @@
             }
             date = new Date(year, month, 1) - 1000;
             return new Date(date).getDate();
+        }
+
+        Class.prototype.bindHeaderEvent = function () {
+            var that = this;
+            // 前一个月
+            this.data.$header.delegate('.' + dateClass.preMonthBtn, 'click', function () {
+                that.renderPreMonth();
+            });
+            // 后一个月
+            this.data.$header.delegate('.' + dateClass.nextMonthBtn, 'click', function () {
+                that.renderNextMonth();
+            });
+            // 前一年
+            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
+                that.renderPrevYear();
+            });
+            // 后一年
+            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
+                that.renderNextYear();
+            });
+        }
+
+        Class.prototype.bindFooterEvent = function () {
+            var that = this;
+            // 子选择器
+            this.data.$header.delegate('.' + dateClass.child, 'click', function () {
+                that.renderChild();
+            });
+            // 清空
+            this.data.$header.delegate('.' + dateClass.cancel, 'click', function () {
+                that.cancel();
+            });
+            // 现在
+            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
+                that.now();
+            });
+            // 确定
+            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
+                that.confirm();
+            });
+        }
+
+        // 渲染上一个月
+        Class.prototype.renderPreMonth = function () {
+            this.setPreMonth();
+            switch (this.data.type) {
+                case 'date':
+                case 'datetime':
+                    this.renderDateTable();
+                    break;
+            }
+        }
+
+        // 设置成上一个月
+        Class.prototype.setPreMonth = function() {
+            var year = this.data.value.getFullYear();
+            var month = this.data.value.getMonth();
+            if (month == 0) {
+                this.data.value.setMonth(11);
+                this.data.value.setFullYear(year - 1);
+            } else {
+                this.data.value.setMonth(month - 1);
+            }
+        }
+
+        // 渲染下一个月
+        Class.prototype.renderNextMonth = function () {
+            this.setNextMonth();
+            switch (this.data.type) {
+                case 'date':
+                case 'datetime':
+                    this.renderDateTable();
+                    break;
+            }
+        }
+
+        // 设置成下一个月
+        Class.prototype.setNextMonth = function() {
+            var year = this.data.value.getFullYear();
+            var month = this.data.value.getMonth();
+            if (month == 11) {
+                this.data.value.setMonth(0);
+                this.data.value.setFullYear(year + 1);
+            } else {
+                this.data.value.setMonth(month + 1);
+            }
+        }
+
+        // 上一年
+        Class.prototype.renderPrevYear = function () {
+            var year = this.data.value.getFullYear();
+            this.data.value.setFullYear(year - 1);
+            switch (this.data.type) {
+                case 'year':
+                    this.renderYearList();
+                    break;
+                case 'month':
+                    this.renderMonthList();
+                    break;
+                case 'date':
+                case 'datetime':
+                    this.renderDateTable();
+                    break;
+            }
+        }
+
+        // 下一年
+        Class.prototype.renderNextYear = function () {
+            var year = this.data.value.getFullYear();
+            this.data.value.setFullYear(year + 1);
+            switch (this.data.type) {
+                case 'year':
+                    this.renderYearList();
+                    break;
+                case 'month':
+                    this.renderMonthList();
+                    break;
+                case 'date':
+                case 'datetime':
+                    this.renderDateTable();
+                    break;
+            }
+        }
+
+        Class.prototype.renderChild = function() {
+
+        }
+
+        // 销毁弹框
+        Class.prototype.cancel = function () {
+            if (this.option.position != 'position') {
+                this.data && this.data.$date && this.data.$date.remove();
+                this.data = null;
+            }
+        }
+
+        // 清空
+        Class.prototype.empty = function () {
+            if (this.option.position != 'position') {
+                this.$elem.val('');
+            }
+            this.cancel();
+        }
+
+        // 现在
+        Class.prototype.now = function () {
+            this.data.value = new Date();
+            this.confirm();
+        }
+
+        Class.prototype.confirm = function () {
+            this.data.formatTime = this.data.value.formatTime(this.data.format);
+            if (this.option.position !== 'static') {
+                this.$elem.val(this.data.formatTime);
+                this.data.$date.remove();
+            }
+            typeof this.option.change === 'function' && this.option.change(this.data.value, this.data.formatTime);
         }
 
         return SongDate;
