@@ -76,6 +76,7 @@
     }
 
     &-date {
+        display: none;
         border-spacing: 0;
         border-collapse: collapse;
 
@@ -156,6 +157,8 @@
     }
 
     &-time {
+        display: none;
+
         li {
             width: 84px;
             line-height: 30px;
@@ -200,6 +203,8 @@
 
     &-year,
     &-month {
+        display: none;
+
         li {
             display: inline-block;
             *display: inline;
@@ -221,6 +226,30 @@
         li {
             width: 63px;
             margin: 17px 0;
+        }
+    }
+
+    &-show-year {
+        .song-date-year {
+            display: block;
+        }
+    }
+
+    &-show-month {
+        .song-date-month {
+            display: block;
+        }
+    }
+
+    &-show-date {
+        .song-date-date {
+            display: block;
+        }
+    }
+
+    &-show-time {
+        .song-date-time {
+            display: block;
         }
     }
 }

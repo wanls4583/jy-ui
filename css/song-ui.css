@@ -1745,6 +1745,7 @@ hr {
 }
 
 .song-date-date {
+  display: none;
   border-spacing: 0;
   border-collapse: collapse;
 }
@@ -1828,6 +1829,10 @@ hr {
   color: #5FB878;
 }
 
+.song-date-time {
+  display: none;
+}
+
 .song-date-time li {
   width: 84px;
   line-height: 30px;
@@ -1869,6 +1874,10 @@ hr {
   border-right: 0;
 }
 
+.song-date-year, .song-date-month {
+  display: none;
+}
+
 .song-date-year li, .song-date-month li {
   display: inline-block;
   *display: inline;
@@ -1888,5 +1897,21 @@ hr {
 .song-date-month li {
   width: 63px;
   margin: 17px 0;
+}
+
+.song-date-show-year .song-date-year {
+  display: block;
+}
+
+.song-date-show-month .song-date-month {
+  display: block;
+}
+
+.song-date-show-date .song-date-date {
+  display: block;
+}
+
+.song-date-show-time .song-date-time {
+  display: block;
 }
 /*# sourceMappingURL=song-ui.css.map */
