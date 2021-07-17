@@ -366,35 +366,22 @@
                 that.data.value.setHours(hour);
                 that.data.$hour.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                that.confirmTime();
+                that.confirm();
             });
             this.data.$minute.delegate('li', 'click', function () {
                 var minute = Number(this.innerText);
                 that.data.value.setMinutes(minute);
                 that.data.$minute.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                that.confirmTime();
+                that.confirm();
             });
             this.data.$second.delegate('li', 'click', function () {
                 var second = Number(this.innerText);
                 that.data.value.setSeconds(second);
                 that.data.$second.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                that.confirmTime();
+                that.confirm();
             });
-        }
-
-        Class.prototype.confirmTime = function (ifConfirm) {
-            if (this.data.type === 'time') {
-                this.data.formatTime = this.data.value.formatTime(this.data.format);
-                if (this.option.position != 'static' && ifConfirm) {
-                    this.$elem.val(this.data.formatTime);
-                    this.data.$date.remove();
-                } else {
-                    this.data.$result.text(this.data.formatTime);
-                }
-                ifConfirm && typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
-            }
         }
 
         // 渲染年选择器
@@ -447,21 +434,8 @@
                 that.data.value.setFullYear(year);
                 that.data.$yearList.find('.' + dateClass.active).removeClass(dateClass.active);
                 $this.addClass(dateClass.active);
-                that.confirmYear();
+                that.confirm();
             });
-        }
-
-        Class.prototype.confirmYear = function () {
-            if (this.data.type === 'year') {
-                this.data.formatTime = this.data.value.formatTime(this.data.format);
-                if (this.option.position !== 'static') {
-                    this.$elem.val(this.data.formatTime);
-                    this.data.$date.remove();
-                } else {
-                    this.data.$result.text(this.data.formatTime);
-                }
-                typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
-            }
         }
 
         // 渲染年月选择器
@@ -513,21 +487,8 @@
                 that.data.value.setMonth(month);
                 that.data.$monthList.find('.' + dateClass.active).removeClass(dateClass.active);
                 $this.addClass(dateClass.active);
-                that.confirmMonth();
+                that.confirm();
             });
-        }
-
-        Class.prototype.confirmMonth = function () {
-            if (this.data.type === 'month') {
-                this.data.formatTime = this.data.value.formatTime(this.data.format);
-                if (this.option.position !== 'static') {
-                    this.$elem.val(this.data.formatTime);
-                    this.data.$date.remove();
-                } else {
-                    this.data.$result.text(this.data.formatTime);
-                }
-                typeof this.option.change === 'function' && this.option.change(this.data.formatTime);
-            }
         }
 
         Class.prototype.setPosition = function () {
