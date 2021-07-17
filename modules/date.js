@@ -583,19 +583,19 @@
         Class.prototype.bindFooterEvent = function () {
             var that = this;
             // 子选择器
-            this.data.$header.delegate('.' + dateClass.child, 'click', function () {
+            this.data.$footer.delegate('.' + dateClass.child, 'click', function () {
                 that.renderChild();
             });
             // 清空
-            this.data.$header.delegate('.' + dateClass.cancel, 'click', function () {
-                that.cancel();
+            this.data.$footer.delegate('.' + dateClass.empty, 'click', function () {
+                that.empty();
             });
             // 现在
-            this.data.$header.delegate('.' + dateClass.preYearBtn, 'click', function () {
+            this.data.$footer.delegate('.' + dateClass.now, 'click', function () {
                 that.now();
             });
             // 确定
-            this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
+            this.data.$footer.delegate('.' + dateClass.confirm, 'click', function () {
                 that.confirm();
             });
         }
