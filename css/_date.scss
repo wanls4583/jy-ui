@@ -33,9 +33,6 @@
 
         &-year,
         &-month {
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
             padding: 0 $pd10;
             cursor: pointer;
 
@@ -51,9 +48,6 @@
         }
 
         .song-icon {
-            display: inline-block;
-            *display: inline;
-            *zoom: 1;
             padding: 0 5px;
             cursor: pointer;
 
@@ -224,27 +218,86 @@
         }
     }
 
+    &-header {
+
+        &-year,
+        &-month,
+        &-year-range,
+        &-time {
+            display: none;
+        }
+
+    }
+
+    &-prev-year-btn,
+    &-prev-month-btn,
+    &-next-year-btn,
+    &-next-month-btn {
+        display: none;
+    }
+
     &-show-year {
-        .song-date-year {
-            display: block;
+        .song-date {
+            &-year {
+                display: block;
+            }
+
+            &-header-year-range,
+            &-prev-year-btn,
+            &-next-year-btn {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+            }
         }
     }
 
     &-show-month {
-        .song-date-month {
-            display: block;
+        .song-date {
+            &-month {
+                display: block;
+            }
+
+            &-header-year,
+            &-prev-year-btn,
+            &-next-year-btn {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+            }
         }
     }
 
     &-show-date {
-        .song-date-date {
-            display: block;
+        .song-date {
+            &-date {
+                display: block;
+            }
+
+            &-header-year,
+            &-header-month,
+            &-prev-year-btn,
+            &-prev-month-btn,
+            &-next-year-btn,
+            &-next-month-btn {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+            }
         }
     }
 
     &-show-time {
-        .song-date-time {
-            display: block;
+        .song-date {
+            &-time {
+                display: block;
+            }
+
+            &-header-time {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+            }
         }
     }
 }

@@ -1701,9 +1701,6 @@ hr {
 }
 
 .song-date-header-year, .song-date-header-month {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
   padding: 0 10px;
   cursor: pointer;
 }
@@ -1719,9 +1716,6 @@ hr {
 }
 
 .song-date-header .song-icon {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
   padding: 0 5px;
   cursor: pointer;
 }
@@ -1895,19 +1889,51 @@ hr {
   margin: 17px 0;
 }
 
+.song-date-header-year, .song-date-header-month, .song-date-header-year-range, .song-date-header-time {
+  display: none;
+}
+
+.song-date-prev-year-btn, .song-date-prev-month-btn, .song-date-next-year-btn, .song-date-next-month-btn {
+  display: none;
+}
+
 .song-date-show-year .song-date-year {
   display: block;
+}
+
+.song-date-show-year .song-date-header-year-range, .song-date-show-year .song-date-prev-year-btn, .song-date-show-year .song-date-next-year-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
 }
 
 .song-date-show-month .song-date-month {
   display: block;
 }
 
+.song-date-show-month .song-date-header-year, .song-date-show-month .song-date-prev-year-btn, .song-date-show-month .song-date-next-year-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
 .song-date-show-date .song-date-date {
   display: block;
 }
 
+.song-date-show-date .song-date-header-year, .song-date-show-date .song-date-header-month, .song-date-show-date .song-date-prev-year-btn, .song-date-show-date .song-date-prev-month-btn, .song-date-show-date .song-date-next-year-btn, .song-date-show-date .song-date-next-month-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
 .song-date-show-time .song-date-time {
   display: block;
+}
+
+.song-date-show-time .song-date-header-time {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
 }
 /*# sourceMappingURL=song-ui.css.map */
