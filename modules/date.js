@@ -29,7 +29,7 @@
             <div class="song-date-header-center">\
                 <%if(["date","datetime"].indexOf(type)>-1){%>\
                 <div class="song-date-header-year"><%-year%>年</div>\
-                <div class="song-date-header-month"><%-month+1%>年</div>\
+                <div class="song-date-header-month"><%-month+1%>月</div>\
                 <%}%>\
                 <%if(["month"].indexOf(type)>-1){%>\
                 <div class="song-date-header-year"><%-year%>年</div>\
@@ -550,6 +550,14 @@
             this.data.$header.delegate('.' + dateClass.nextYearBtn, 'click', function () {
                 that.renderNextYear();
             });
+            // 点击年份
+            this.data.$header.delegate('.' + dateClass.year, 'click', function () {
+                that.renderChild('year');
+            });
+            // 点击月份
+            this.data.$header.delegate('.' + dateClass.month, 'click', function () {
+                that.renderChild('month');
+            });
         }
 
         Class.prototype.bindFooterEvent = function () {
@@ -660,42 +668,86 @@
         }
 
         Class.prototype.renderChild = function (type) {
-            var that = this;
-            var preType = this.data.type;
-            this.data.type = type;
             switch (type) {
+                case 'year':
+                    this.renderYearChild()
+                    break;
+                case 'month':
+                    this.renderMonthChild()
+                    break;
                 case 'time':
-                    _renderTime();
+                    this.renderTimeChild();
                     break;
             }
+        }
 
-            function _renderTime() {
-                if (!that.data.$time) {
-                    that.data.$time = $(tpl.time);
-                    that.data.$hour = that.data.$time.find('.' + dateClass.hour);
-                    that.data.$minute = that.data.$time.find('.' + dateClass.minute);
-                    that.data.$second = that.data.$time.find('.' + dateClass.second);
-                    that.data.$content.append(that.data.$time);
-                    that.renderTimeList();
-                    that.bindTimeListEvent();
-                }
-                that.data.$date.toggleClass(dateClass.showTime).toggleClass(dateClass.showDate);
-                if (that.data.type != preType) {
-                    that.data.$childBtn.text('返回日期');
-                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                        type: 'time'
-                    }));
-                } else {
-                    var year = that.data.value.getFullYear();
-                    var month = that.data.value.getMonth();
-                    that.data.$header.html(Common.htmlTemplate(tpl.header, {
-                        type: 'date',
-                        year: year,
-                        month: month
-                    }));
-                    that.data.$childBtn.text('选择时间');
-                    that.data.type = that.data.originType;
-                }
+        Class.prototype.renderYearChild = function () {
+            var year = this.data.value.getFullYear();
+            this.data.type = 'year';
+            if (!this.data.$year) {
+                this.data.$year = $(tpl.year);
+                this.data.$yearList = this.data.$year.children('ul');
+                this.data.$content.append(this.data.$year);
+                this.renderYearList();
+                this.bindYearListEvent();
+            }
+            this.data.$date.toggleClass(dateClass.showYear);
+            if (this.data.originType === 'month') {
+                this.data.$date.toggleClass(dateClass.showMonth);
+            } else {
+                this.data.$date.toggleClass(dateClass.showDate);
+            }
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: this.data.type,
+                year: year
+            }));
+        }
+
+        Class.prototype.renderMonthChild = function () {
+            var year = this.data.value.getFullYear();
+            this.data.type = 'month';
+            if (!this.data.$month) {
+                this.data.$month = $(tpl.month);
+                this.data.$monthList = this.data.$month.children('ul');
+                this.data.$content.append(this.data.$month);
+                this.renderMonthList();
+                this.bindMonthListEvent();
+            }
+            this.data.$date.toggleClass(dateClass.showMonth).toggleClass(dateClass.showDate);
+            this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                type: this.data.type,
+                year: year
+            }));
+        }
+
+        Class.prototype.renderTimeChild = function () {
+            var preType = this.data.type;
+            this.data.type = 'time';
+            if (!this.data.$time) {
+                this.data.$time = $(tpl.time);
+                this.data.$hour = this.data.$time.find('.' + dateClass.hour);
+                this.data.$minute = this.data.$time.find('.' + dateClass.minute);
+                this.data.$second = this.data.$time.find('.' + dateClass.second);
+                this.data.$content.append(this.data.$time);
+                this.renderTimeList();
+                this.bindTimeListEvent();
+            }
+            this.data.$date.toggleClass(dateClass.showTime).toggleClass(dateClass.showDate);
+            if (this.data.type != preType) {
+                this.data.$childBtn.text('返回日期');
+                this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: this.data.type
+                }));
+            } else {
+                var year = this.data.value.getFullYear();
+                var month = this.data.value.getMonth();
+                this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: this.data.originType,
+                    year: year,
+                    month: month
+                }));
+                this.data.$childBtn.text('选择时间');
+                this.data.type = this.data.originType;
             }
         }
 
@@ -728,6 +780,8 @@
         Class.prototype.confirm = function (force) {
             var formatTime = this.data.value.formatTime(this.data.format);
             if (!force && this.data.type !== this.data.originType) { // 子选择器触发的确认
+                var year = this.data.value.getFullYear();
+                var month = this.data.value.getMonth();
                 switch (this.data.type) {
                     case 'year':
                         this.data.$date.removeClass(dateClass.showYear);
@@ -748,6 +802,11 @@
                         this.data.$date.addClass(dateClass.showDate);
                         break;
                 }
+                this.data.$header.html(Common.htmlTemplate(tpl.header, {
+                    type: this.data.originType,
+                    year: year,
+                    month: month
+                }));
                 this.data.type = this.data.originType;
                 this.data.originType != 'datetime' && this.data.$result.text(formatTime);
                 return;

@@ -29,15 +29,10 @@
             *display: inline;
             *zoom: 1;
             cursor: pointer;
-
-            &:hover {
-                color: $link-color;
-            }
         }
 
         &-year,
-        &-month,
-        &-year-range {
+        &-month {
             display: inline-block;
             *display: inline;
             *zoom: 1;

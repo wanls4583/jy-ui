@@ -1700,11 +1700,7 @@ hr {
   cursor: pointer;
 }
 
-.song-date-header-center:hover {
-  color: #5FB878;
-}
-
-.song-date-header-year, .song-date-header-month, .song-date-header-year-range {
+.song-date-header-year, .song-date-header-month {
   display: inline-block;
   *display: inline;
   *zoom: 1;
@@ -1712,7 +1708,7 @@ hr {
   cursor: pointer;
 }
 
-.song-date-header-year:hover, .song-date-header-month:hover, .song-date-header-year-range:hover {
+.song-date-header-year:hover, .song-date-header-month:hover {
   color: #5FB878;
 }
 
