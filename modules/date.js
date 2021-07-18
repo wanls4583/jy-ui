@@ -268,8 +268,8 @@
             var month = this.data.value.getMonth();
             var date = this.data.value.getDate();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            if (this.data.originType === 'date') {
-                this.data.$result.text(this.data.formatTime);
+            if (this.data.originType === 'date' || this.isChild) {
+                this.setResult();
             }
             var day = new Date(year, month, 1).getDay();
             var days = this.getMonthDays(year, month);
@@ -366,7 +366,9 @@
                     that.confirmRange();
                 }
             });
-            this.data.$result.text(this.data.child1.data.formatTime + ' - ' + this.data.child2.data.formatTime);
+            this.setResult();
+            this.data.child1.isChild = true;
+            this.data.child2.isChild = true;
             if (this.data.type === 'datetime') {
                 this.data.$childBtn = $(tpl.childBtn).text('选择时间');
                 this.data.$childBtn.insertBefore(this.data.$result);
@@ -425,7 +427,7 @@
                 that.data.$second[0].scrollTop = second * 30 - 150 / 2;
             });
             if (this.data.originType === 'time') {
-                this.data.$result.text(this.data.formatTime);
+                this.setResult();
             }
         }
 
@@ -455,7 +457,7 @@
 
             function _setResult() {
                 if (that.data.originType === 'time') {
-                    that.data.$result.text(that.data.value.formatTime(that.data.format));
+                    this.setResult();
                 }
             }
         }
@@ -495,7 +497,7 @@
             this.data.$yearList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             if (this.data.originType === 'year') {
-                this.data.$result.text(this.data.formatTime);
+                this.setResult();
             }
         }
 
@@ -544,7 +546,7 @@
             this.data.$monthList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
             if (this.data.originType === 'month') {
-                this.data.$result.text(this.data.formatTime);
+                this.setResult();
             }
         }
 
@@ -586,6 +588,20 @@
             $headerCenter.find('.' + dateClass.year).text(year + '年');
             $headerCenter.find('.' + dateClass.month).text(month + '月');
             $headerCenter.children('.' + dateClass.yearRange).text((year - 7) + '年 - ' + (year + 7) + '年');
+        }
+
+        // 设置当前时间标签
+        Class.prototype.setResult = function () {
+            var formatTime = '';
+            if (this.option.range) {
+                formatTime = this.data.child1.data.value.formatTime(this.data.format) + ' - ' + this.data.child2.data.value.formatTime(this.data.format);
+            } else {
+                formatTime = this.data.value.formatTime(this.data.format);
+            }
+            this.data.$result.text(formatTime);
+            if (this.isChild) {
+                this.option.change(formatTime, this.data.value);
+            }
         }
 
         // 显示当前选择器
@@ -872,10 +888,11 @@
             var formatTime = this.data.value.formatTime(this.data.format);
             if (!force && this.data.type !== this.data.originType) { // 子选择器触发的确认
                 this.data.type = this.data.originType;
-                this.data.originType != 'datetime' && this.data.$result.text(formatTime);
                 this.showType();
-            }
-            if (force || this.option.position === 'static') {
+                if (this.data.originType !== 'datetime' || this.isChild) {
+                    this.setResult();
+                }
+            } else {
                 this.data.formatTime = formatTime;
                 if (this.option.position !== 'static') {
                     this.$elem.val(this.data.formatTime);
@@ -889,7 +906,7 @@
         // 确认选择范围
         Class.prototype.confirmRange = function (force) {
             if (!force) {
-                this.data.$result.text(this.data.child1.data.formatTime + ' - ' + this.data.child2.data.formatTime);
+                this.setResult();
             }
         }
 
