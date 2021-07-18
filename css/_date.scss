@@ -3,6 +3,14 @@
     border: 1px solid $light-color;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
     background-color: $white-color;
+    font-size: 14px;
+
+    &-static {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+    }
 
     &-main {
         width: 274px;
@@ -113,7 +121,8 @@
         }
     }
 
-    &-footer {
+    &-footer,
+    &-range-footer {
         position: relative;
         line-height: 24px;
         padding: $pd10;
@@ -126,6 +135,11 @@
             top: $pd10;
             right: $pd10;
         }
+    }
+
+    &-result,
+    &-range-result {
+        vertical-align: middle;
     }
 
     &-btn {
@@ -143,6 +157,10 @@
         &:hover {
             color: $link-color;
         }
+    }
+
+    &-child {
+        margin-right: $pd10;
     }
 
     &-time {
@@ -297,6 +315,28 @@
                 display: inline-block;
                 *display: inline;
                 *zoom: 1;
+            }
+        }
+    }
+
+    &-range {
+        position: absolute;
+        width: 274px * 2 + 1px;
+        border: 1px solid $light-color;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+        background-color: $white-color;
+        font-size: 0;
+
+        .song-date {
+            box-shadow: none;
+            border: 0;
+
+            .song-date-footer {
+                display: none;
+            }
+
+            &:first-child {
+                border-right: 1px solid $light-color;
             }
         }
     }

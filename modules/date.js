@@ -31,6 +31,18 @@
                     </div>\
                 </div>\
             </div>',
+            dateRange: '<div class="song-date-range">\
+                <div class="song-date-range-content">\
+                </div>\
+                <div class="song-date-range-footer">\
+                    <div class="song-date-range-footer-left">\
+                        <span class="song-date-range-result"></span>\
+                    </div>\
+                    <div class="song-date-range-footer-right">\
+                        <span class="song-date-btn song-date-range-empty">清空</span><span class="song-date-btn song-date-range-confirm">确定</span>\
+                    </div>\
+                </div>\
+            </div>',
             dateTable: '<table class="song-date-date">\
                 <thead>\
                     <tr>\
@@ -74,11 +86,14 @@
 
         var dateClass = {
             date: 'song-date',
+            dateRange: 'song-date-range',
+            static: 'song-date-static',
             header: 'song-date-header',
             headerLeft: 'song-date-header-left',
             headerCenter: 'song-date-header-center',
             headerRight: 'song-date-header-right',
             content: 'song-date-content',
+            rangeContent: 'song-date-range-content',
             year: 'song-date-header-year',
             yearRange: 'song-date-header-year-range',
             month: 'song-date-header-month',
@@ -92,11 +107,16 @@
             nextMonthBtn: 'song-date-next-month-btn',
             nextYearBtn: 'song-date-next-year-btn',
             result: 'song-date-result',
+            rangeResult: 'song-date-range-result',
             footer: 'song-date-footer',
+            rangeFooter: 'song-date-range-footer',
             empty: 'song-date-empty',
+            rangeEmpty: 'song-date-range-empty',
             now: 'song-date-now',
             confirm: 'song-date-confirm',
+            rangeConfirm: 'song-date-range-confirm',
             child: 'song-date-child',
+            rangeChild: 'song-date-range-child',
             active: 'song-date-active',
             showYear: 'song-date-show-year',
             showMonth: 'song-date-show-month',
@@ -108,6 +128,7 @@
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var layerCount = 0;
+        var $docBody = $(docBody);
         var months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
         var SongDate = {
@@ -131,14 +152,18 @@
             this.$elem = $(this.option.elem);
             this.trigger = ['change', 'focus', 'click'].indexOf(this.option.trigger) > -1 ? this.option.trigger : 'click';
             if (this.$elem && this.$elem.length) {
-                this.$elem.on(this.trigger, function () {
+                if (this.option.position === 'static') {
                     _render();
-                });
+                } else {
+                    this.$elem.on(this.trigger, function () {
+                        _render();
+                    });
+                    $(docBody).on('click', function () {
+                        that.cancel();
+                    });
+                }
                 this.$elem.on('click', function () {
                     return false;
-                });
-                $(docBody).on('click', function () {
-                    that.cancel();
                 });
             } else {
                 this.option.position = 'static';
@@ -152,22 +177,43 @@
                 that.data = {};
                 that.data.type = that.option.type || 'date';
                 that.data.originType = that.data.type;
-                layerCount++;
                 that.data.value = that.$elem.val() || that.option.value;
-                $(docBody).children('.song-date').remove();
+                layerCount++;
+                $docBody.children('.' + dateClass.date + ',.' + dateClass.dateRange).each(function (i, dom) {
+                    var $dom = $(dom);
+                    if (!$dom.hasClass(dateClass.static)) {
+                        $dom.remove();
+                    }
+                });
                 switch (that.data.type) {
                     case 'year':
-                        that.renderYear();
+                        if (that.option.range) {
+                            that.renderYearRange();
+                        } else {
+                            that.renderYear();
+                        }
                         break;
                     case 'month':
-                        that.renderMonth();
+                        if (that.option.range) {
+                            that.renderMonthRange();
+                        } else {
+                            that.renderMonth();
+                        }
                         break;
                     case 'date':
                     case 'datetime':
-                        that.renderDate();
+                        if (that.option.range) {
+                            that.renderDateRange();
+                        } else {
+                            that.renderDate();
+                        }
                         break;
                     case 'time':
-                        that.renderTime();
+                        if (that.option.range) {
+                            that.renderTimeRange();
+                        } else {
+                            that.renderTime();
+                        }
                         break;
                 }
                 if (that.option.position == 'static') {
@@ -176,6 +222,7 @@
                     } else {
                         $(docBody).append(that.data.$date);
                     }
+                    that.data.$date.addClass(dateClass.static);
                 } else {
                     $(docBody).append(that.data.$date);
                     that.setPosition();
@@ -183,7 +230,9 @@
                 that.data.$date.on('click', function () {
                     return false;
                 });
-                that.bindHeaderEvent();
+                if (!that.option.range) {
+                    that.bindHeaderEvent();
+                }
                 that.bindFooterEvent();
             }
         }
@@ -211,7 +260,7 @@
                 this.data.$result.html(this.data.$childBtn);
             }
             this.renderDateTable();
-            this.bidnDateTableEvent();
+            this.bindDateTableEvent();
         }
 
         Class.prototype.renderDateTable = function () {
@@ -266,23 +315,62 @@
             this.setHeader();
         }
 
-        Class.prototype.bidnDateTableEvent = function () {
+        Class.prototype.bindDateTableEvent = function () {
             var that = this;
             // 选中日期
             this.data.$content.delegate('td', 'click', function () {
-                var date = this.innerText;
+                var date = Number(this.innerText);
                 var $this = $(this);
-                that.data.value.setDate(date);
                 if ($this.hasClass(dateClass.preMonth)) {
-                    that.setPreMonth();
+                    if (that.option.position === 'static') {
+                        that.renderPreMonth(date);
+                    } else {
+                        that.setPreMonth(date);
+                    }
                 } else if ($this.hasClass(dateClass.nextMonth)) {
-                    that.setNextMonth();
+                    if (that.option.position === 'static') {
+                        that.renderNextMonth(date);
+                    } else {
+                        that.setNextMonth(date);
+                    }
                 } else {
+                    that.data.value.setDate(date);
                     that.data.$table.find('.' + dateClass.active).removeClass(dateClass.active);
                     $this.addClass(dateClass.active);
                 }
                 that.confirm();
             });
+        }
+
+        Class.prototype.renderDateRange = function () {
+            var that = this;
+            this.data.format = this.option.format || (this.data.type == 'datetime' ? 'yyyy-MM-dd hh:mm:ss' : 'yyyy-MM-dd');
+            this.data.$date = $(tpl.dateRange);
+            this.data.$content = this.data.$date.find('.' + dateClass.rangeContent);
+            this.data.$footer = this.data.$date.find('.' + dateClass.rangeFooter);
+            this.data.$result = this.data.$date.find('.' + dateClass.rangeResult);
+            this.data.$date.addClass('date-layer' + layerCount);
+            this.data.child1 = new Class({
+                elem: this.data.$content,
+                type: this.data.originType,
+                position: 'static',
+                change: function () {
+                    that.confirmRange();
+                }
+            });
+            this.data.child2 = new Class({
+                elem: this.data.$content,
+                type: this.data.originType,
+                position: 'static',
+                change: function () {
+                    that.confirmRange();
+                }
+            });
+            this.data.$result.text(this.data.child1.data.formatTime + ' - ' + this.data.child2.data.formatTime);
+            if (this.data.type === 'datetime') {
+                this.data.$childBtn = $(tpl.childBtn).text('选择时间');
+                this.data.$childBtn.insertBefore(this.data.$result);
+            }
         }
 
         // 渲染时间选择器
@@ -594,8 +682,8 @@
         }
 
         // 渲染上一个月
-        Class.prototype.renderPreMonth = function () {
-            this.setPreMonth();
+        Class.prototype.renderPreMonth = function (date) {
+            this.setPreMonth(date);
             switch (this.data.type) {
                 case 'date':
                 case 'datetime':
@@ -605,20 +693,30 @@
         }
 
         // 设置成上一个月
-        Class.prototype.setPreMonth = function () {
+        Class.prototype.setPreMonth = function (originDate) {
             var year = this.data.value.getFullYear();
             var month = this.data.value.getMonth();
+            var date = this.data.value.getDate();
             if (month == 0) {
-                this.data.value.setMonth(11);
-                this.data.value.setFullYear(year - 1);
+                month = 11;
+                year = year - 1;
             } else {
-                this.data.value.setMonth(month - 1);
+                month = month - 1;
+            }
+            var days = this.getMonthDays(year, month);
+            if (days < date) {
+                this.data.value.setDate(days);
+            }
+            this.data.value.setMonth(month);
+            this.data.value.setFullYear(year);
+            if (originDate) {
+                this.data.value.setDate(originDate);
             }
         }
 
         // 渲染下一个月
-        Class.prototype.renderNextMonth = function () {
-            this.setNextMonth();
+        Class.prototype.renderNextMonth = function (date) {
+            this.setNextMonth(date);
             switch (this.data.type) {
                 case 'date':
                 case 'datetime':
@@ -628,14 +726,24 @@
         }
 
         // 设置成下一个月
-        Class.prototype.setNextMonth = function () {
+        Class.prototype.setNextMonth = function (originDate) {
             var year = this.data.value.getFullYear();
             var month = this.data.value.getMonth();
+            var date = this.data.value.getDate();
             if (month == 11) {
-                this.data.value.setMonth(0);
-                this.data.value.setFullYear(year + 1);
+                month = 0;
+                year = year + 1;
             } else {
-                this.data.value.setMonth(month + 1);
+                month = month + 1;
+            }
+            var days = this.getMonthDays(year, month);
+            if (days < date) {
+                this.data.value.setDate(days);
+            }
+            this.data.value.setMonth(month);
+            this.data.value.setFullYear(year);
+            if (originDate) {
+                this.data.value.setDate(originDate);
             }
         }
 
@@ -766,7 +874,8 @@
                 this.data.type = this.data.originType;
                 this.data.originType != 'datetime' && this.data.$result.text(formatTime);
                 this.showType();
-            } else {
+            }
+            if (force || this.option.position === 'static') {
                 this.data.formatTime = formatTime;
                 if (this.option.position !== 'static') {
                     this.$elem.val(this.data.formatTime);
@@ -775,6 +884,13 @@
                 typeof this.option.change === 'function' && this.option.change(this.data.value, this.data.formatTime);
             }
             this.setHeader();
+        }
+
+        // 确认选择范围
+        Class.prototype.confirmRange = function (force) {
+            if (!force) {
+                this.data.$result.text(this.data.child1.data.formatTime + ' - ' + this.data.child2.data.formatTime);
+            }
         }
 
         return SongDate;

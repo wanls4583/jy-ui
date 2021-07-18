@@ -1667,6 +1667,14 @@ hr {
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   background-color: #ffffff;
+  font-size: 14px;
+}
+
+.song-date-static {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
 }
 
 .song-date-main {
@@ -1784,7 +1792,7 @@ hr {
   background-color: #009688 !important;
 }
 
-.song-date-footer {
+.song-date-footer, .song-date-range-footer {
   position: relative;
   line-height: 24px;
   padding: 10px;
@@ -1796,10 +1804,14 @@ hr {
           user-select: none;
 }
 
-.song-date-footer-right {
+.song-date-footer-right, .song-date-range-footer-right {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+.song-date-result, .song-date-range-result {
+  vertical-align: middle;
 }
 
 .song-date-btn {
@@ -1817,6 +1829,10 @@ hr {
 
 .song-date-btn:hover {
   color: #5FB878;
+}
+
+.song-date-child {
+  margin-right: 10px;
 }
 
 .song-date-time {
@@ -1935,5 +1951,29 @@ hr {
   display: inline-block;
   *display: inline;
   *zoom: 1;
+}
+
+.song-date-range {
+  position: absolute;
+  width: 549px;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  background-color: #ffffff;
+  font-size: 0;
+}
+
+.song-date-range .song-date {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 0;
+}
+
+.song-date-range .song-date .song-date-footer {
+  display: none;
+}
+
+.song-date-range .song-date:first-child {
+  border-right: 1px solid #eeeeee;
 }
 /*# sourceMappingURL=song-ui.css.map */
