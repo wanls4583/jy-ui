@@ -1971,6 +1971,7 @@ hr {
 .song-date-range {
   position: absolute;
   width: 549px;
+  _width: 550px;
   border: 1px solid #eeeeee;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
