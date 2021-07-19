@@ -259,6 +259,7 @@
             if (this.data.type === 'datetime') {
                 this.data.$childBtn = $(tpl.childBtn).text('选择时间');
                 this.data.$result.html(this.data.$childBtn);
+                this.data.$result = null;
             }
             this.renderDateTable();
             this.bindDateTableEvent();
