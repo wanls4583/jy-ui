@@ -246,7 +246,8 @@
         &-year,
         &-month,
         &-year-range,
-        &-time {
+        &-time-label,
+        &-month-label {
             display: none;
         }
 
@@ -275,7 +276,7 @@
         }
     }
 
-    &-show-month {
+    &-show-year-month {
         .song-date {
             &-month {
                 display: block;
@@ -284,6 +285,20 @@
             &-header-year,
             &-prev-year-btn,
             &-next-year-btn {
+                display: inline-block;
+                *display: inline;
+                *zoom: 1;
+            }
+        }
+    }
+
+    &-show-month {
+        .song-date {
+            &-month {
+                display: block;
+            }
+
+            &-header-month-label {
                 display: inline-block;
                 *display: inline;
                 *zoom: 1;
@@ -316,7 +331,7 @@
                 display: block;
             }
 
-            &-header-time {
+            &-header-time-label {
                 display: inline-block;
                 *display: inline;
                 *zoom: 1;

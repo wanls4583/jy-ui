@@ -283,21 +283,33 @@
                     </div>
                 </div>
                 <div class="song-inline">
-                    <label for="" class="song-form-label">时间</label>
+                    <label for="" class="song-form-label">日期</label>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="time" autocomplete="off">
+                        <input type="text" class="song-input" id="date" autocomplete="off">
                     </div>
                 </div>
                 <div class="song-inline">
                     <label for="" class="song-form-label">年月</label>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="month" autocomplete="off">
+                        <input type="text" class="song-input" id="yearmonth" autocomplete="off">
                     </div>
                 </div>
                 <div class="song-inline">
                     <label for="" class="song-form-label">年</label>
                     <div class="song-input-inline">
                         <input type="text" class="song-input" id="year" autocomplete="off">
+                    </div>
+                </div>
+                <div class="song-inline">
+                    <label for="" class="song-form-label">月</label>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="month" autocomplete="off">
+                    </div>
+                </div>
+                <div class="song-inline">
+                    <label for="" class="song-form-label">时间</label>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="time" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -314,23 +326,23 @@
                     </div>
                 </div>
                 <div class="song-form-item">
-                    <label for="" class="song-form-label" style="white-space:nowrap;">时间范围</label>
+                    <label for="" class="song-form-label" style="white-space:nowrap;">日期范围</label>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="time1" autocomplete="off">
+                        <input type="text" class="song-input" id="date1" autocomplete="off">
                     </div>
                     <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="time2" autocomplete="off">
+                        <input type="text" class="song-input" id="date2" autocomplete="off">
                     </div>
                 </div>
                 <div class="song-form-item">
                     <label for="" class="song-form-label" style="white-space:nowrap;">年月范围</label>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="month1" autocomplete="off">
+                        <input type="text" class="song-input" id="yearmonth1" autocomplete="off">
                     </div>
                     <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
                     <div class="song-input-inline">
-                        <input type="text" class="song-input" id="month2" autocomplete="off">
+                        <input type="text" class="song-input" id="yearmonth2" autocomplete="off">
                     </div>
                 </div>
                 <div class="song-form-item">
@@ -341,6 +353,26 @@
                     <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
                     <div class="song-input-inline">
                         <input type="text" class="song-input" id="year2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label" style="white-space:nowrap;">月范围</label>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="month1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="month2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="song-form-item">
+                    <label for="" class="song-form-label" style="white-space:nowrap;">时间范围</label>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="time1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="song-input-inline">
+                        <input type="text" class="song-input" id="time2" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -688,16 +720,24 @@
         type: 'datetime'
     });
     SongUi.Date.render({
-        elem: '#time',
-        type: 'time'
+        elem: '#date',
+        type: 'date'
+    });
+    SongUi.Date.render({
+        elem: '#yearmonth',
+        type: 'yearmonth'
+    });
+    SongUi.Date.render({
+        elem: '#year',
+        type: 'year'
     });
     SongUi.Date.render({
         elem: '#month',
         type: 'month'
     });
     SongUi.Date.render({
-        elem: '#year',
-        type: 'year'
+        elem: '#time',
+        type: 'time'
     });
     SongUi.Date.render({
         elem: '#datetime1,#datetime2',
@@ -705,8 +745,13 @@
         range: true
     });
     SongUi.Date.render({
-        elem: '#time1,#time2',
-        type: 'time',
+        elem: '#date1,#date2',
+        type: 'date',
+        range: true
+    });
+    SongUi.Date.render({
+        elem: '#yearmonth1,#yearmonth2',
+        type: 'yearmonth',
         range: true
     });
     SongUi.Date.render({
@@ -717,6 +762,11 @@
     SongUi.Date.render({
         elem: '#year1,#year2',
         type: 'year',
+        range: true
+    });
+    SongUi.Date.render({
+        elem: '#time1,#time2',
+        type: 'time',
         range: true
     });
 </script>

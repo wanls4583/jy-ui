@@ -12,7 +12,8 @@
                             <div class="song-date-header-year"></div>\
                             <div class="song-date-header-month"></div>\
                             <div class="song-date-header-year-range"></div>\
-                            <div class="song-date-header-time">选择时间</div>\
+                            <div class="song-date-header-time-label">选择时间</div>\
+                            <div class="song-date-header-month-label">选择月份</div>\
                         </div>\
                         <div class="song-date-header-right">\
                             <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
@@ -122,6 +123,7 @@
             active: 'song-date-active',
             showYear: 'song-date-show-year',
             showMonth: 'song-date-show-month',
+            showYearMonth: 'song-date-show-year-month',
             showDate: 'song-date-show-date',
             showTime: 'song-date-show-time',
             disabled: 'song-date-btn-disabled'
@@ -186,6 +188,7 @@
                             that.renderYear();
                             break;
                         case 'month':
+                        case 'yearmonth':
                             that.renderMonth();
                             break;
                         case 'date':
@@ -490,7 +493,7 @@
             this.data.$footer = this.data.$date.find('.' + dateClass.footer);
             this.data.$result = this.data.$date.find('.' + dateClass.result);
             this.data.$content.append(this.data.$month);
-            this.data.$date.addClass('date-layer' + layerCount).addClass(dateClass.showMonth);;
+            this.data.$date.addClass('date-layer' + layerCount).addClass(this.data.type === 'yearmonth' ? dateClass.showYearMonth : dateClass.showMonth);;
             this.renderMonthList();
             this.bindMonthListEvent();
         }
@@ -598,8 +601,10 @@
         // 显示当前选择器
         Class.prototype.showType = function () {
             var className = this.data.$date[0].className;
-            className = className.replace(' ' + dateClass.showYear, '')
+            className = className
+                .replace(' ' + dateClass.showYearMonth, '')
                 .replace(' ' + dateClass.showMonth, '')
+                .replace(' ' + dateClass.showYear, '')
                 .replace(' ' + dateClass.showDate, '')
                 .replace(' ' + dateClass.showTime, '');
             switch (this.data.type) {
@@ -608,6 +613,9 @@
                     break;
                 case 'month':
                     className += ' ' + dateClass.showMonth;
+                    break;
+                case 'yearmonth':
+                    className += ' ' + dateClass.showYearMonth;
                     break;
                 case 'date':
                 case 'datetime':
@@ -658,7 +666,7 @@
             });
             // 点击月份
             this.data.$header.delegate('.' + dateClass.month, 'click', function () {
-                that.renderChild('month');
+                that.renderChild('yearmonth');
             });
         }
 
@@ -778,7 +786,7 @@
                 case 'year':
                     this.renderYearList();
                     break;
-                case 'month':
+                case 'yearmonth':
                     this.renderMonthList();
                     break;
                 case 'date':
@@ -796,7 +804,7 @@
                 case 'year':
                     this.renderYearList();
                     break;
-                case 'month':
+                case 'yearmonth':
                     this.renderMonthList();
                     break;
                 case 'date':
@@ -811,7 +819,7 @@
                 case 'year':
                     this.renderYearChild()
                     break;
-                case 'month':
+                case 'yearmonth':
                     this.renderMonthChild()
                     break;
                 case 'time':
@@ -833,7 +841,7 @@
         }
 
         Class.prototype.renderMonthChild = function () {
-            this.data.type = 'month';
+            this.data.type = 'yearmonth';
             if (!this.data.$month) {
                 this.data.$month = $(tpl.month);
                 this.data.$monthList = this.data.$month.children('ul');

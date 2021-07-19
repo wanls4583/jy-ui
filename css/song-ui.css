@@ -1910,7 +1910,7 @@ hr {
   margin: 17px 0;
 }
 
-.song-date-header-year, .song-date-header-month, .song-date-header-year-range, .song-date-header-time {
+.song-date-header-year, .song-date-header-month, .song-date-header-year-range, .song-date-header-time-label, .song-date-header-month-label {
   display: none;
 }
 
@@ -1928,11 +1928,21 @@ hr {
   *zoom: 1;
 }
 
+.song-date-show-year-month .song-date-month {
+  display: block;
+}
+
+.song-date-show-year-month .song-date-header-year, .song-date-show-year-month .song-date-prev-year-btn, .song-date-show-year-month .song-date-next-year-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
 .song-date-show-month .song-date-month {
   display: block;
 }
 
-.song-date-show-month .song-date-header-year, .song-date-show-month .song-date-prev-year-btn, .song-date-show-month .song-date-next-year-btn {
+.song-date-show-month .song-date-header-month-label {
   display: inline-block;
   *display: inline;
   *zoom: 1;
@@ -1952,7 +1962,7 @@ hr {
   display: block;
 }
 
-.song-date-show-time .song-date-header-time {
+.song-date-show-time .song-date-header-time-label {
   display: inline-block;
   *display: inline;
   *zoom: 1;
