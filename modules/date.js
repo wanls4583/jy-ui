@@ -269,9 +269,7 @@
             var month = this.data.value.getMonth();
             var date = this.data.value.getDate();
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            if (!this.data.$childBtn) {
-                this.setResult();
-            }
+            this.setResult();
             var day = new Date(year, month, 1).getDay();
             var days = this.getMonthDays(year, month);
             var preMonthDays = 0;
@@ -361,8 +359,6 @@
             })];
             this.data.childs[0].data.parent = this;
             this.data.childs[1].data.parent = this;
-            this.data.childs[0].data.$childBtn = null;
-            this.data.childs[1].data.$childBtn = null;
             this.setResult();
             if (this.data.type === 'datetime') {
                 this.data.$childBtn = $(tpl.rangeChildBtn).text('选择时间');
@@ -421,9 +417,7 @@
                 that.data.$minute[0].scrollTop = minute * 30 - 150 / 2;
                 that.data.$second[0].scrollTop = second * 30 - 150 / 2;
             });
-            if (!this.data.$childBtn) {
-                this.setResult();
-            }
+            this.setResult();
         }
 
         Class.prototype.bindTimeListEvent = function () {
@@ -433,28 +427,22 @@
                 that.data.value.setHours(hour);
                 that.data.$hour.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                _setResult();
+                that.setResult();
             });
             this.data.$minute.delegate('li', 'click', function () {
                 var minute = Number(this.innerText);
                 that.data.value.setMinutes(minute);
                 that.data.$minute.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                _setResult();
+                that.setResult();
             });
             this.data.$second.delegate('li', 'click', function () {
                 var second = Number(this.innerText);
                 that.data.value.setSeconds(second);
                 that.data.$second.find('.' + dateClass.active).removeClass(dateClass.active);
                 $(this).addClass(dateClass.active);
-                _setResult();
+                that.setResult();
             });
-
-            function _setResult() {
-                if (!that.data.$childBtn) {
-                    that.setResult();
-                }
-            }
         }
 
         // 渲染年选择器
@@ -491,9 +479,7 @@
             this.setHeader();
             this.data.$yearList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            if (!this.data.$childBtn) {
-                this.setResult();
-            }
+            this.setResult();
         }
 
         Class.prototype.bindYearListEvent = function () {
@@ -540,9 +526,7 @@
             this.setHeader();
             this.data.$monthList.html(html);
             this.data.formatTime = this.data.value.formatTime(this.data.format);
-            if (!this.data.$childBtn) {
-                this.setResult();
-            }
+            this.setResult();
         }
 
         Class.prototype.bindMonthListEvent = function () {
@@ -585,15 +569,17 @@
             $headerCenter.children('.' + dateClass.yearRange).text((year - 7) + '年 - ' + (year + 7) + '年');
         }
 
-        // 设置当前时间标签
+        // 设置弹框左下角时间
         Class.prototype.setResult = function () {
             var formatTime = '';
-            if (this.option.range) {
-                formatTime = this.data.childs[0].data.value.formatTime(this.data.format) + ' - ' + this.data.childs[1].data.value.formatTime(this.data.format);
-            } else {
-                formatTime = this.data.value.formatTime(this.data.format);
+            if (this.data.$result) {
+                if (this.option.range) {
+                    formatTime = this.data.childs[0].data.value.formatTime(this.data.format) + ' - ' + this.data.childs[1].data.value.formatTime(this.data.format);
+                } else {
+                    formatTime = this.data.value.formatTime(this.data.format);
+                }
+                this.data.$result.text(formatTime);
             }
-            this.data.$result.text(formatTime);
             if (this.data.parent && !this.data.parent.data.parent) {
                 this.data.parent.setResult();
             }
@@ -900,9 +886,7 @@
             if (!force && this.data.type !== this.data.originType || this.data.parent) { // 子选择器触发的确认
                 this.data.type = this.data.originType;
                 this.showType();
-                if (!this.data.$childBtn) {
-                    this.setResult();
-                }
+                this.setResult();
             } else {
                 this.data.formatTime = formatTime;
                 if (this.option.position !== 'static') {
