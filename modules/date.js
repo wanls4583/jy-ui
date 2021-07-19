@@ -591,11 +591,12 @@
             if (this.data.$result) {
                 if (this.option.range) {
                     formatTime = this.data.childs[0].data.value.formatTime(this.data.format) + ' - ' + this.data.childs[1].data.value.formatTime(this.data.format);
-                    if (this.data.childs[0].value > this.data.childs[1].value) {
-                        this.$footer.find('.' + dateClass.confirmRange).addClass(dateClass.disabled);
+                    if (this.data.childs[0].data.value > this.data.childs[1].data.value) {
+                        this.data.$footer.find('.' + dateClass.rangeConfirm).addClass(dateClass.disabled);
                     } else {
-                        this.$footer.find('.' + dateClass.confirmRange).removeClass(dateClass.disabled);
+                        this.data.$footer.find('.' + dateClass.rangeConfirm).removeClass(dateClass.disabled);
                     }
+                    this.data.value = [this.data.childs[0].data.value, this.data.childs[1].data.value];
                 } else {
                     formatTime = this.data.value.formatTime(this.data.format);
                 }
@@ -928,7 +929,11 @@
 
         // 确认选择范围
         Class.prototype.confirmRange = function () {
-            var formatTime = [this.data.childs[0].data.value.formatTime(this.data.format), this.data.childs[1].data.value.formatTime(this.data.format)];
+            var formatTime = [this.data.value[0].formatTime(this.data.format), this.data.value[1].formatTime(this.data.format)];
+            if (this.data.value[0] > this.data.value[1]) {
+                this.showTip('开始时间不能大于结束时间');
+                return;
+            }
             if (this.option.position !== 'static') {
                 if (this.$elem.length == 1) {
                     this.$elem.val(formatTime.join(' - '));
@@ -938,14 +943,15 @@
                 }
                 this.data.$date.remove();
             }
+            typeof this.option.change === 'function' && this.option.change(this.data.value, formatTime);
         }
 
         Class.prototype.showTip = function (tip) {
             var $tip = $(tpl.tip).text(tip);
-            this.$date.append($tip);
+            this.data.$date.append($tip);
             $tip.css({
-                marginLeft: $tip[0].offsetWidth / 2,
-                marginTop: $tip[0].offsetHeight / 2
+                marginLeft: -$tip[0].offsetWidth / 2,
+                marginTop: -$tip[0].offsetHeight / 2
             });
             setTimeout(function () {
                 $tip.remove();
