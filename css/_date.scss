@@ -157,6 +157,10 @@
         &:hover {
             color: $link-color;
         }
+
+        &-disabled {
+            color: $gray-color;
+        }
     }
 
     &-child {
@@ -339,5 +343,18 @@
                 border-right: 1px solid $light-color;
             }
         }
+    }
+
+    &-tip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        line-height: 24px;
+        padding: 10px 20px;
+        color: $white-color;
+        background-color: rgba(0, 0, 0, 0.6);
+        // 只兼容ie8的样式，在属性值后面加\0/
+        background-color: #{'#000000\\0/'};
+        *background-color: #000000;
     }
 }

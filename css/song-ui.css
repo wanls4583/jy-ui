@@ -1831,6 +1831,10 @@ hr {
   color: #5FB878;
 }
 
+.song-date-btn-disabled {
+  color: #d2d2d2;
+}
+
 .song-date-child {
   margin-right: 10px;
 }
@@ -1975,5 +1979,17 @@ hr {
 
 .song-date-range .song-date:first-child {
   border-right: 1px solid #eeeeee;
+}
+
+.song-date-tip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 24px;
+  padding: 10px 20px;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #000000\0/;
+  *background-color: #000000;
 }
 /*# sourceMappingURL=song-ui.css.map */

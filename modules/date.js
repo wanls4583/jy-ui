@@ -82,7 +82,8 @@
             year: '<div class="song-date-year"><ul></ul></div>',
             month: '<div class="song-date-month"><ul></ul></div>',
             childBtn: '<span class="song-date-btn song-date-child"></span>',
-            rangeChildBtn: '<span class="song-date-btn song-date-range-child"></span>'
+            rangeChildBtn: '<span class="song-date-btn song-date-range-child"></span>',
+            tip: '<span class="song-date-tip"></span>'
         }
 
         var dateClass = {
@@ -122,7 +123,8 @@
             showYear: 'song-date-show-year',
             showMonth: 'song-date-show-month',
             showDate: 'song-date-show-date',
-            showTime: 'song-date-show-time'
+            showTime: 'song-date-show-time',
+            disabled: 'song-date-btn-disabled'
         }
 
         var ieVersion = Common.getIeVersion();
@@ -175,17 +177,7 @@
                 if (that.data && that.data.$date.is(':visible')) {
                     return;
                 }
-                that.data = {};
-                that.data.type = that.option.type || 'date';
-                that.data.originType = that.data.type;
-                that.data.value = that.$elem.val() || that.option.value;
-                layerCount++;
-                $docBody.children('.' + dateClass.date + ',.' + dateClass.dateRange).each(function (i, dom) {
-                    var $dom = $(dom);
-                    if (!$dom.hasClass(dateClass.static)) {
-                        $dom.remove();
-                    }
-                });
+                _init();
                 switch (that.data.type) {
                     case 'year':
                         if (that.option.range) {
@@ -236,6 +228,31 @@
                 }
                 that.bindFooterEvent();
             }
+
+            function _init() {
+                that.data = {};
+                that.data.type = that.option.type || 'date';
+                that.data.originType = that.data.type;
+                layerCount++;
+                $docBody.children('.' + dateClass.date + ',.' + dateClass.dateRange).each(function (i, dom) {
+                    var $dom = $(dom);
+                    if (!$dom.hasClass(dateClass.static)) {
+                        $dom.remove();
+                    }
+                });
+                if (that.option.range) {
+                    that.data.value = [];
+                    that.$elem.each(function (i, dom) {
+                        that.data.value.push($(dom).val());
+                    });
+                    if (that.option.value) {
+                        that.data.value[0] = that.data.value[0] || that.option.value[0];
+                        that.data.value[1] = that.data.value[1] || that.option.value[1];
+                    }
+                } else {
+                    that.data.value = that.$elem.val() || that.option.value;
+                }
+            }
         }
 
         // 渲染日期选择器
@@ -269,7 +286,6 @@
             var year = this.data.value.getFullYear();
             var month = this.data.value.getMonth();
             var date = this.data.value.getDate();
-            this.data.formatTime = this.data.value.formatTime(this.data.format);
             this.setResult();
             var day = new Date(year, month, 1).getDay();
             var days = this.getMonthDays(year, month);
@@ -352,10 +368,12 @@
             this.data.childs = [new Class({
                 elem: this.data.$content,
                 type: this.data.originType,
+                value: this.data.value[0],
                 position: 'static'
             }), new Class({
                 elem: this.data.$content,
                 type: this.data.originType,
+                value: this.data.value[1],
                 position: 'static'
             })];
             this.data.childs[0].data.parent = this;
@@ -397,7 +415,6 @@
             var hour = this.data.value.getHours();
             var minute = this.data.value.getMinutes();
             var second = this.data.value.getSeconds();
-            this.data.formatTime = this.data.value.formatTime(this.data.format);
             var html = '';
             for (var i = 0; i < 24; i++) {
                 html += '<li ' + (i === hour ? 'class="' + dateClass.active + '"' : '') + '>' + i + '</li>';
@@ -479,7 +496,6 @@
             }
             this.setHeader();
             this.data.$yearList.html(html);
-            this.data.formatTime = this.data.value.formatTime(this.data.format);
             this.setResult();
         }
 
@@ -526,7 +542,6 @@
             }
             this.setHeader();
             this.data.$monthList.html(html);
-            this.data.formatTime = this.data.value.formatTime(this.data.format);
             this.setResult();
         }
 
@@ -576,6 +591,11 @@
             if (this.data.$result) {
                 if (this.option.range) {
                     formatTime = this.data.childs[0].data.value.formatTime(this.data.format) + ' - ' + this.data.childs[1].data.value.formatTime(this.data.format);
+                    if (this.data.childs[0].value > this.data.childs[1].value) {
+                        this.$footer.find('.' + dateClass.confirmRange).addClass(dateClass.disabled);
+                    } else {
+                        this.$footer.find('.' + dateClass.confirmRange).removeClass(dateClass.disabled);
+                    }
                 } else {
                     formatTime = this.data.value.formatTime(this.data.format);
                 }
@@ -889,12 +909,11 @@
                 this.showType();
                 this.setResult();
             } else {
-                this.data.formatTime = formatTime;
                 if (this.option.position !== 'static') {
-                    this.$elem.val(this.data.formatTime);
+                    this.$elem.val(formatTime);
                     this.data.$date.remove();
                 }
-                typeof this.option.change === 'function' && this.option.change(this.data.value, this.data.formatTime);
+                typeof this.option.change === 'function' && this.option.change(this.data.value, formatTime);
             }
             this.setHeader();
         }
@@ -909,18 +928,35 @@
 
         // 确认选择范围
         Class.prototype.confirmRange = function () {
-            this.data.formatTimes = [this.data.childs[0].data.value.formatTime(this.data.format), this.data.childs[1].data.value.formatTime(this.data.format)];
+            var formatTime = [this.data.childs[0].data.value.formatTime(this.data.format), this.data.childs[1].data.value.formatTime(this.data.format)];
             if (this.option.position !== 'static') {
-                this.$elem.val(this.data.formatTimes.join(' - '));
+                if (this.$elem.length == 1) {
+                    this.$elem.val(formatTime.join(' - '));
+                } else {
+                    $(this.$elem[0]).val(formatTime[0]);
+                    $(this.$elem[1]).val(formatTime[1]);
+                }
                 this.data.$date.remove();
             }
+        }
+
+        Class.prototype.showTip = function (tip) {
+            var $tip = $(tpl.tip).text(tip);
+            this.$date.append($tip);
+            $tip.css({
+                marginLeft: $tip[0].offsetWidth / 2,
+                marginTop: $tip[0].offsetHeight / 2
+            });
+            setTimeout(function () {
+                $tip.remove();
+            }, 1500);
         }
 
         return SongDate;
     }
     if ("function" == typeof define && define.amd) {
-        define('dialog', ['./jquery', './common', './dialog'], function ($, Common) {
-            return factory($, Common, Dialog);
+        define('dialog', ['./jquery', './common'], function ($, Common) {
+            return factory($, Common);
         });
     } else {
         window.SongUi = window.SongUi || {};
