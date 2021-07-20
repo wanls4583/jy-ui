@@ -939,7 +939,6 @@
                     fixed = 'right';
                 }
                 tr = $(that.createTr(rowData, fixed))[0];
-                storeData._renderedData.splice(i, rowData);
                 $tr.replaceWith(tr);
                 that.setDomMap(id, tr);
             });
