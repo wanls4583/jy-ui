@@ -858,6 +858,7 @@
          * @param {Object} option 
          */
         Class.prototype.setData = function (option) {
+            var that = this;
             var storeData = store[this.filter];
             var id = option.id;
             var field = option.field;
@@ -866,16 +867,16 @@
             var editFields = [];
             trs.map(function (tr) {
                 var $tr = $(tr);
-                $tr.children('td').each(function (i, td) {
-                    var songBindData = that.getBindData(td);
-                    if (songBindData.editing) {
-                        editFields.push(songBindData.col.field);
-                    }
-                });
                 for (var i = 0; i < storeData._renderedData.length; i++) {
                     var rowData = storeData._renderedData[i];
                     if (rowData._song_table_id == id) {
                         var _data = null;
+                        $tr.children('td').each(function (i, td) {
+                            var songBindData = that.getBindData(td);
+                            if (songBindData.editing) {
+                                editFields.push(songBindData.col.field);
+                            }
+                        });
                         if (field) {
                             if (rowData[field] != data) {
                                 rowData[field] = data;
@@ -887,16 +888,16 @@
                         }
                         if (_data) {
                             storeData._renderedData.splice(i, _data);
-                            $tr.replaceWith(this.createTr(_data));
+                            $tr.replaceWith(that.createTr(_data));
                             editFields.map(function (field) {
-                                this.edit(_data._song_table_id, field);
+                                that.edit(_data._song_table_id, field);
                             });
                         }
+                        that.renderForm();
                         break;
                     }
                 }
             });
-            this.renderForm();
         }
 
         /**
