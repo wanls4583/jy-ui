@@ -1820,7 +1820,7 @@
         Class.prototype.createTr = function (data, fixed) {
             var storeData = store[this.filter];
             var cols = storeData.cols;
-            var id = data._song_table_id || data.id;
+            var id = data._song_table_id === undefined ? data.id : data._song_table_id;
             if (id === undefined) {
                 if (fixed == 'left') {
                     id = storeData._fixeLeftIdCount++;
