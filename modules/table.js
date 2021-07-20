@@ -173,6 +173,12 @@
             storeData.editMap = { // 存储编辑中的单元格
                 list: []
             };
+            if (!storeData.$elem ||
+                storeData.$elem.length == 0 ||
+                !this.option ||
+                !this.option.cols.length) {
+                return;
+            }
             // 已存在view，则不再插入
             if (!$view.parent().length) {
                 $view.insertAfter($elem);
@@ -248,6 +254,12 @@
             }
             for (var i = 1; i <= fixedRightCount; i++) {
                 storeData.cols[storeData.cols.length - i].fixed = 'right';
+            }
+            if (storeData.cols[0].fixed === 'left') {
+                storeData.hasLeftFixed = true;
+            }
+            if (storeData.cols[storeData.cols.length - 1].fixed === 'right') {
+                storeData.hasRightFixed = true;
             }
 
             function _getDataCol(cols, level, colspan, pCol) {
@@ -819,11 +831,12 @@
         Class.prototype.fixRowHeight = function (id, height) {
             var storeData = store[this.filter];
             if (storeData.$leftHeaderMain || storeData.$rightHeaderMain) {
-                if (id) {
+                if (id !== undefined) {
                     $(storeData.domMap[id][0]).css('height', height);
                     storeData.domMap[id].map(function (tr, i) {
                         if (i > 0) {
-                            $(tr).css('height', storeData.domMap[id][0].clientHeight);
+                            height = storeData.domMap[id][0].clientHeight;
+                            $(tr).css('height', ieVersion == 7 ? height - 1 : height);
                         }
                     });
                 } else {
@@ -831,7 +844,8 @@
                         var id = data._song_table_id;
                         storeData.domMap[id].map(function (tr, i) {
                             if (i > 0) {
-                                $(tr).css('height', storeData.domMap[id][0].clientHeight);
+                                height = storeData.domMap[id][0].clientHeight;
+                                $(tr).css('height', ieVersion == 7 ? height - 1 : height);
                             }
                         });
                     });
@@ -1264,7 +1278,7 @@
         Class.prototype.setDomMap = function (id, tr) {
             var storeData = store[this.filter];
             var data = storeData._sortedData;
-            if (id != undefined && tr) {
+            if (id !== undefined && tr) {
                 _setDomMap(id, tr);
                 return;
             }
@@ -1670,10 +1684,10 @@
                     });
                 } else {
                     // 设置固定列行高
-                    if (storeData.$leftHeaderMain || storeData.$rightHeaderMain) {
-                        if (storeData.$rightHeaderMain && fixed == 'right') {
+                    if (storeData.hasLeftFixed || storeData.hasRightFixed) {
+                        if (storeData.hasRightFixed && fixed == 'right') {
                             _complate();
-                        } else if (!storeData.$rightHeaderMain && storeData.$leftHeaderMain && fixed == 'left') {
+                        } else if (!storeData.hasRightFixed && storeData.hasLeftFixed && fixed == 'left') {
                             _complate();
                         }
                     } else {
