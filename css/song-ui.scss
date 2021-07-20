@@ -1,5 +1,10 @@
 @import 'theme';
 @import 'reset';
+@import 'form';
+@import 'dialog';
+@import 'pager';
+@import 'table';
+@import 'date';
 
 @font-face {
     font-family: 'iconfont';
@@ -230,9 +235,3 @@ hr {
         transform: scale(0.5);
     }
 }
-
-@import 'form';
-@import 'dialog';
-@import 'pager';
-@import 'table';
-@import 'date';

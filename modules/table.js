@@ -17,6 +17,7 @@
         var hCellPadding = 2;
         var store = {};
         var tableCount = 1;
+        var dataPrefix = 'song-row-'; // 数据映射中id的前缀
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
@@ -89,7 +90,27 @@
         var ruleMap = Form.verifyRules;
         var Table = {
             render: function (option) {
-                return new Class(option);
+                var table = new Class(option);
+                return {
+                    on: table.on,
+                    once: table.once,
+                    trigger: table.trigger,
+                    reload: table.reload.bind(table),
+                    addRow: table.addRow.bind(table),
+                    deleteRow: table.deleteRow.bind(table),
+                    save: table.save.bind(table),
+                    cancel: table.cancel.bind(table),
+                    edit: table.edit.bind(table),
+                    setData: table.setData.bind(table),
+                    getData: table.getData.bind(table),
+                    setArea: table.setArea.bind(table),
+                    setColWidth: table.setColWidth.bind(table),
+                    showLoading: table.showLoading.bind(table),
+                    hideLoading: table.hideLoading.bind(table),
+                    exportsExecl: table.exportsExecl.bind(table),
+                    exportsCsv: table.exportsCsv.bind(table),
+                    print: table.print.bind(table)
+                };
             }
         }
 
@@ -323,6 +344,7 @@
             var storeData = store[this.filter];
             var cols = storeData.cols;
             var data = option.data instanceof Array ? option.data : [option.data];
+            var addedData = [];
             var index = 0;
             if (typeof option.id == undefined) {
                 index = storeData._sortedData.length - 1;
@@ -337,14 +359,14 @@
             if (option.position == 'before') {
                 index--;
             }
-            storeData._sortedData = storeData._sortedData.slice(0, index).concat(data).concat(storeData._sortedData.slice(index));
-            storeData._renderedData = storeData._renderedData.concat(data);
-            data.map(function (item) {
-                storeData._addedData.push(item);
-            });
             _addRow();
             cols[0].fixed == 'left' && _addRow('left');
             cols[cols.length - 1].fixed == 'right' && _addRow('right');
+            storeData._sortedData = storeData._sortedData.slice(0, index).concat(addedData).concat(storeData._sortedData.slice(index));
+            storeData._renderedData = storeData._renderedData.concat(addedData);
+            addedData.map(function (item) {
+                storeData._addedData.push(item);
+            });
             this.setFixedArea();
             this.renderForm();
 
@@ -372,6 +394,10 @@
                     data.reverse().map(function (item, i) {
                         var $tr = $(that.createTr(item, fixed));
                         $tr.insertAfter(tr);
+                        if (!fixed) {
+                            storeData.domMap[item._song_table_id] = [];
+                            addedData.push(item);
+                        }
                         that.setDomMap(item._song_table_id, $tr[0]);
                         that.fixRowHeight(item._song_table_id, 'auto');
                     });
@@ -379,6 +405,10 @@
                     data.map(function (item, i) {
                         var $tr = $(that.createTr(item, fixed));
                         $table.append($tr);
+                        if (!fixed) {
+                            storeData.domMap[item._song_table_id] = [];
+                            addedData.push(item);
+                        }
                         that.setDomMap(item._song_table_id, $tr[0]);
                         that.fixRowHeight(item._song_table_id, 'auto');
                     });
@@ -396,7 +426,7 @@
             var that = this;
             var storeData = store[this.filter];
             var cols = storeData.cols;
-            var rowData = storeData.dataMap[id];
+            var rowData = this.getRowDataById(id).rowData;
             if (!rowData) {
                 return;
             }
@@ -698,6 +728,9 @@
                 _edit(td);
                 _setEditMap(td);
             }
+            if (!storeData.ellipsis) {
+                storeData.$main.trigger('scroll');
+            }
 
             function _setEditMap(td) {
                 var songBindData = that.getBindData(td);
@@ -832,7 +865,7 @@
             var storeData = store[this.filter];
             if (storeData.$leftHeaderMain || storeData.$rightHeaderMain) {
                 if (id !== undefined) {
-                    $(storeData.domMap[id][0]).css('height', height);
+                    height && $(storeData.domMap[id][0]).css('height', height);
                     storeData.domMap[id].map(function (tr, i) {
                         if (i > 0) {
                             height = storeData.domMap[id][0].clientHeight;
@@ -861,43 +894,69 @@
             var that = this;
             var storeData = store[this.filter];
             var id = option.id;
+            var trs = storeData.domMap[id];
+            if (!trs) {
+                return;
+            }
             var field = option.field;
             var data = option.data;
-            var trs = storeData.domMap[id];
             var editFields = [];
-            trs.map(function (tr) {
+            var rowData = this.getRowDataById(id).rowData;
+            storeData.domMap[id] = [];
+            if (field) {
+                if (rowData[field] != data) {
+                    rowData[field] = data;
+                }
+            } else {
+                data = Object.assign({}, data);
+                data._song_table_id = id;
+                rowData = data;
+                if (storeData._selectedData && storeData._selectedData._song_table_id == id) {
+                    storeData._selectedData = data;
+                }
+                _setData(storeData._addedData, data);
+                _setData(storeData._editedData, data);
+                _setData(storeData._checkedData, data);
+                _setData(storeData._renderedData, data);
+                _setData(storeData._sortedData, data);
+            }
+            trs.map(function (tr, index) {
                 var $tr = $(tr);
-                for (var i = 0; i < storeData._renderedData.length; i++) {
-                    var rowData = storeData._renderedData[i];
-                    if (rowData._song_table_id == id) {
-                        var _data = null;
-                        $tr.children('td').each(function (i, td) {
-                            var songBindData = that.getBindData(td);
-                            if (songBindData.editing) {
-                                editFields.push(songBindData.col.field);
-                            }
-                        });
-                        if (field) {
-                            if (rowData[field] != data) {
-                                rowData[field] = data;
-                                _data = rowData;
-                            }
-                        } else {
-                            data._song_table_id = rowData._song_table_id;
-                            _data = Object.assign({}, data);
-                        }
-                        if (_data) {
-                            storeData._renderedData.splice(i, _data);
-                            $tr.replaceWith(that.createTr(_data));
-                            editFields.map(function (field) {
-                                that.edit(_data._song_table_id, field);
-                            });
-                        }
-                        that.renderForm();
+                $tr.children('td').each(function (i, td) {
+                    var songBindData = that.getBindData(td);
+                    if (songBindData.editing && editFields.indexOf(songBindData.col.field) == -1) {
+                        editFields.push(songBindData.col.field);
+                    }
+                });
+                var fixed = '';
+                if (index === 1) {
+                    if (storeData.hasLeftFixed) {
+                        fixed = 'left';
+                    } else {
+                        fixed = 'right';
+                    }
+                } else if (index === 2) {
+                    fixed = 'right';
+                }
+                tr = $(that.createTr(rowData, fixed))[0];
+                storeData._renderedData.splice(i, rowData);
+                $tr.replaceWith(tr);
+                that.setDomMap(id, tr);
+            });
+            editFields.map(function (field) {
+                that.edit(id, field);
+            });
+            this.fixRowHeight(id);
+            this.renderForm();
+
+            function _setData(dataList, data) {
+                for (var i = 0; i < dataList.length; i++) {
+                    if (dataList[i]._song_table_id == id) {
+                        dataList.splice(i, 1, data);
                         break;
                     }
                 }
-            });
+            }
         }
 
         /**
@@ -1002,7 +1061,7 @@
          */
         Class.prototype.getRowDataById = function (id) {
             var storeData = store[this.filter];
-            return storeData.dataMap[id];
+            return storeData.dataMap[dataPrefix + id];
         }
 
         /**
@@ -1014,10 +1073,10 @@
             return className + '-' + storeData.tableCount + '-' + col._key;
         }
 
-        // 获取行或单元格的数据
+        // 获取行或单元格绑定的数据
         Class.prototype.getBindData = function (dom) {
             var storeData = store[this.filter];
-            return storeData.dataMap[$(dom).attr('data-id')];
+            return storeData.dataMap[dataPrefix + $(dom).attr('data-id')];
         }
 
         Class.prototype.getCheckFilter = function (fixed, all) {
@@ -1225,7 +1284,18 @@
             var that = this;
             var storeData = store[this.filter];
             var hs = {};
+            var needAdjust = false;
             var ths = storeData.$tableHeaderHead.find('th');
+            var height = storeData.$tableHeaderHead[0].clientHeight;
+            if (storeData.hasLeftFixed && storeData.$leftTableHeaderHead[0].clientHeight != height) {
+                needAdjust = true;
+            }
+            if (storeData.hasRightFixed && storeData.$rightTableHeaderHead[0].clientHeight != height) {
+                needAdjust = true;
+            }
+            if (!needAdjust) {
+                return;
+            }
             ths.each(function (i, th) {
                 var songBindData = that.getBindData(th);
                 if (songBindData.col.fixed) {
@@ -1250,13 +1320,13 @@
         Class.prototype.setDataMap = function (data) {
             var storeData = store[this.filter];
             var cols = storeData.cols;
-            if (data && !storeData.dataMap[data._song_table_id]) {
-                storeData.dataMap[data._song_table_id] = {
+            if (data) {
+                storeData.dataMap[dataPrefix + data._song_table_id] = {
                     id: data._song_table_id,
                     rowData: data
                 };
                 cols.map(function (col) {
-                    storeData.dataMap[data._song_table_id + '-' + col._key] = {
+                    storeData.dataMap[dataPrefix + data._song_table_id + '-' + col._key] = {
                         id: data._song_table_id,
                         colData: data[col.field],
                         rowData: data,
@@ -1264,10 +1334,10 @@
                     }
                 });
             }
-            if (!storeData.dataMap['col-' + cols[0]._key]) {
+            if (!storeData.dataMap[dataPrefix + 'col-' + cols[0]._key]) {
                 storeData.originCols.map(function (cols) {
                     cols.map(function (col) {
-                        storeData.dataMap['col-' + col._key] = {
+                        storeData.dataMap[dataPrefix + 'col-' + col._key] = {
                             col: col
                         }
                     });
@@ -1412,7 +1482,7 @@
                     // 单选
                     if (col.type == 'radio') {
                         Form.once('radio(table_radio_' + that.filter + (fixed ? '_' + fixed : '') + ')', function (e) {
-                            storeData._selectedData = that.getRowDataById(e.data);
+                            storeData._selectedData = that.getRowDataById(e.data).rowData;
                         });
                     }
                     // 多选
@@ -1424,7 +1494,7 @@
                         Form.once('checkbox(' + checkFilter + ')', function (e) {
                             var checkedData = [];
                             for (var i = 0; i < e.data.length; i++) {
-                                checkedData.push(that.getRowDataById(e.data[i]));
+                                checkedData.push(that.getRowDataById(e.data[i]).rowData);
                             }
                             storeData._checkedData = checkedData
                             $all.prop('checked', checkedData.length == storeData._sortedData.length);
@@ -1750,7 +1820,7 @@
         Class.prototype.createTr = function (data, fixed) {
             var storeData = store[this.filter];
             var cols = storeData.cols;
-            var id = data.id || data._song_table_id;
+            var id = data._song_table_id || data.id;
             if (id === undefined) {
                 if (fixed == 'left') {
                     id = storeData._fixeLeftIdCount++;
@@ -2345,6 +2415,7 @@
                 storeData.$tableHeader.css({
                     left: -storeData.$main[0].scrollLeft
                 });
+                that.setColsHeight();
                 that.setFixedArea();
 
                 // 设置父级列的colspan
