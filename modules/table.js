@@ -408,21 +408,14 @@
         Class.prototype.deleteRow = function (key) {
             var that = this;
             var storeData = store[this.filter];
-            var rowData = this.getRowDataById(key).rowData;
+            var rowData = this.getRowDataByKey(key);
             _deleteRow();
             storeData.hasLeftFixed && _deleteRow('left');
             storeData.hasRightFixed && _deleteRow('right');
             this.setFixedArea();
 
             function _deleteRow(fixed) {
-                var $tr = null;
-                if (fixed == 'left') {
-                    $tr = storeData.$leftTable.children('tbody').children('tr[data-key="' + key + '"]');
-                } else if (fixed == 'right') {
-                    $tr = storeData.$rightTable.children('tbody').children('tr[data-key="' + key + '"]');
-                } else {
-                    $tr = storeData.$table.children('tbody').children('tr[data-key="' + key + '"]');
-                }
+                var $tr = that.getTrByKey(key, fixed);
                 // 删除溢出内容弹框
                 $tr.children('td').each(function (i, td) {
                     var songBindData = that.getBindData(td);
@@ -584,7 +577,7 @@
                 songBindData.$checkbox = undefined;
                 td.children[0].innerHTML = '<div class="' + tableClass.cellContent + '">' + (col.template ? col.template(songBindData.colData, songBindData.rowData, key, col) : fValue) + '</div>';
                 if (col.fixed) {
-                    storeData.$table.children('tbody').children('tr[data-key="' + key + '"]').children('td[data-key="' + key + '-' + col._key + '"]')[0].children[0].innerHTML = html;
+                    that.getTrByKey(key).children('td[data-key="' + key + '-' + col._key + '"]')[0].children[0].innerHTML = html;
                 }
                 // 值被修改过
                 if (String(originValue) != String(value)) {
@@ -698,15 +691,15 @@
                 }
                 tds = [td];
             } else {
-                storeData.$table.children('tbody').children('tr[data-key="' + key + '"]').children('td').each(function (i, td) {
+                this.getTrByKey(key).children('td').each(function (i, td) {
                     if (!$(td).hasClass(tableClass.fixedEmpty)) {
                         tds.push(td);
                     }
                 });
-                storeData.hasLeftFixed && storeData.$leftTable.children('tbody').children('tr[data-key="' + key + '"]').children('td').each(function (i, td) {
+                storeData.hasLeftFixed && this.getTrByKey(key, 'left').children('td').each(function (i, td) {
                     tds.push(td);
                 });
-                storeData.hasRightFixed && storeData.$rightTable.children('tbody').children('tr[data-key="' + key + '"]').children('td').each(function (i, td) {
+                storeData.hasRightFixed && this.getTrByKey(key, 'right').children('td').each(function (i, td) {
                     tds.push(td);
                 });
             }
@@ -879,7 +872,7 @@
             var field = option.field;
             var data = option.data;
             var editFields = [];
-            var rowData = this.getRowDataById(key).rowData;
+            var rowData = this.getRowDataByKey(key);
             if (field) {
                 if (rowData[field] != data) {
                     rowData[field] = data;
@@ -1049,9 +1042,9 @@
          * 根据id获取行数据
          * @param {String} key 
          */
-        Class.prototype.getRowDataById = function (key) {
+        Class.prototype.getRowDataByKey = function (key) {
             var storeData = store[this.filter];
-            return storeData.dataMap[key];
+            return storeData.dataMap[key].rowData;
         }
 
         // 获取行或单元格绑定的数据
@@ -1441,7 +1434,7 @@
                     // 单选
                     if (col.type == 'radio') {
                         Form.once('radio(table_radio_' + that.filter + (fixed ? '_' + fixed : '') + ')', function (e) {
-                            storeData._selectedData = that.getRowDataById(e.data).rowData;
+                            storeData._selectedData = that.getRowDataByKey(e.data);
                         });
                     }
                     // 多选
@@ -1453,7 +1446,7 @@
                         Form.once('checkbox(' + checkFilter + ')', function (e) {
                             var checkedData = [];
                             for (var i = 0; i < e.data.length; i++) {
-                                checkedData.push(that.getRowDataById(e.data[i]).rowData);
+                                checkedData.push(that.getRowDataByKey(e.data[i]));
                             }
                             storeData._checkedData = checkedData
                             $all.prop('checked', checkedData.length == storeData._sortedData.length);
