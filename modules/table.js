@@ -13,6 +13,7 @@
         var rightIon = '&#xe734;';
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
+        var errorIcon = '&#xe60b;';
         var ieVersion = Common.getIeVersion();
         var hCellPadding = 2;
         var store = {};
@@ -83,7 +84,8 @@
             cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-(content||"&nbsp;")%></div></div>',
             radio: '<input type="radio" name="table_radio_<%-filter%>" value="<%-key%>" song-filter="table_radio_<%-filter%>" <%-(checked?"checked":"")%>/>',
             checkbox: '<input type="checkbox" name="table_checkbox_<%-filter%>" value="<%-key%>" song-filter="table_checkbox_<%-filter%>" <%-(checked?"checked":"")%>/>',
-            btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>'
+            btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
+            tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>'
         }
         // 常用正则验证
         var ruleMap = Form.verifyRules;
@@ -544,9 +546,7 @@
                             pass = rule.rule.test(String(value || ''));
                         }
                         if (!pass) {
-                            Dialog.msg(msg, {
-                                icon: 'error'
-                            });
+                            that.showTip(msg);
                             break;
                         }
                     }
@@ -1961,6 +1961,20 @@
             })
         }
 
+        Class.prototype.showTip = function (tip) {
+            var storeData = store[this.filter];
+            var $tip = $(tpl.tip);
+            $tip.children('span').text(tip);
+            storeData.$view.append($tip);
+            $tip.css({
+                marginLeft: -$tip[0].offsetWidth / 2,
+                marginTop: -$tip[0].offsetHeight / 2
+            });
+            setTimeout(function () {
+                $tip.remove();
+            }, 1500);
+        }
+
         // 绑定容器的事件
         Class.prototype.bindEvent = function () {
             var that = this;
@@ -2449,9 +2463,7 @@
                 </head><body><table>' + $table.html() + '</table></body></html>';
                 window.location.href = uri + window.btoa(unescape(encodeURIComponent(template)));
             } else {
-                Dialog.alert('该浏览器不支持导出，请使用谷歌浏览器', {
-                    icon: 'error'
-                });
+                this.showTip('该浏览器不支持导出，请使用谷歌浏览器');
             }
         }
 
@@ -2537,9 +2549,7 @@
                 wind.print();
                 wind.close();
             } else {
-                Dialog.alert('该浏览器不支持打印，请使用谷歌浏览器', {
-                    icon: 'error'
-                });
+                this.showTip('该浏览器不支持打印，请使用谷歌浏览器');
             }
         }
 

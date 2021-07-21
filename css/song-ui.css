@@ -1290,6 +1290,31 @@ textarea {
   border-color: #FF5722;
 }
 
+.song-table-tip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 30px;
+  padding: 10px 20px;
+  font-size: 12px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+  -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+          box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+}
+
+.song-table-icon {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin-right: 5px;
+  font-family: 'iconfont';
+  font-size: 30px;
+  vertical-align: middle;
+  color: #FF5722;
+}
+
 .song-date {
   position: absolute;
   border: 1px solid #eeeeee;

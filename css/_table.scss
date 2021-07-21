@@ -475,4 +475,28 @@
             border-color: $danger-color;
         }
     }
+
+    &-tip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        line-height: 30px;
+        padding: 10px 20px;
+        font-size: 12px;
+        background-color: $white-color;
+        border: 1px solid $light-color;
+        border-radius: 2px;
+        box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+    }
+
+    &-icon {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        margin-right: 5px;
+        font-family: 'iconfont';
+        font-size: 30px;
+        vertical-align: middle;
+        color: $danger-color;
+    }
 }
