@@ -267,15 +267,12 @@
             //执行代码
             return func.apply(window, args);
         }
-
-        if (!Array.prototype.indexOf) {
-            Array.prototype.indexOf = function (item) {
-                for (var i = 0; i < this.length; i++) {
-                    if (item == this[i]) {
-                        return i;
-                    }
+        if(!Function.prototype.bind) {
+            Function.prototype.bind = function(context) {
+                var self = this;
+                return function() {
+                    self.apply(context,arguments);
                 }
-                return -1;
             }
         }
         if (!Object.assign) {
@@ -295,6 +292,16 @@
                     }
                 }
                 return keys;
+            }
+        }
+        if (!Array.prototype.indexOf) {
+            Array.prototype.indexOf = function (item) {
+                for (var i = 0; i < this.length; i++) {
+                    if (item == this[i]) {
+                        return i;
+                    }
+                }
+                return -1;
             }
         }
         if (!Array.prototype.map) {

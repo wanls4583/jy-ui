@@ -1147,6 +1147,7 @@
             var storeData = store[this.filter];
             var top = storeData.$toolbar ? storeData.$toolbar[0].offsetHeight : 0;
             var headerHeight = ieVersion <= 6 ? storeData.$tableHeader.outerHeight() : storeData.$tableHeader.height();
+            var tableWidth = storeData.$table[0].offsetWidth;
             // 避免重复触发回流
             var tableMainArea = {
                 clientWidth: storeData.$main[0].clientWidth,
@@ -1160,42 +1161,48 @@
                 if (ieVersion <= 6) {
                     hedaerWidth = storeData.$leftTableHeader[0].offsetWidth;
                 }
-                storeData.$leftHeaderMain.show();
-                storeData.$leftHeaderMain.css({
-                    width: hedaerWidth,
-                    top: top
-                });
-                storeData.$leftMain.css({
-                    height: height
-                });
-                storeData.$leftHeader.css('height', headerHeight);
+                if (tableWidth > tableMainArea.clientWidth) {
+                    storeData.$leftHeaderMain.show();
+                    storeData.$leftHeaderMain.css({
+                        width: hedaerWidth,
+                        top: top
+                    });
+                    storeData.$leftMain.css({
+                        height: height
+                    });
+                    storeData.$leftHeader.css('height', headerHeight);
+                } else {
+                    storeData.$leftHeaderMain.hide();
+                }
             }
             if (storeData.$rightHeaderMain) {
                 var left = 0;
                 var hedaerWidth = 0;
-                var tableWidth = storeData.$table[0].offsetWidth;
                 if (tableWidth > tableMainArea.clientWidth) {
                     tableWidth = tableMainArea.clientWidth;
-                }
-                storeData.$rightHeaderMain.show();
-                hedaerWidth = storeData.$rightTableHeader[0].offsetWidth;
-                left = tableWidth - hedaerWidth;
-                storeData.$rightHeaderMain.css({
-                    width: hedaerWidth,
-                    top: top,
-                    left: left
-                });
-                storeData.$rightMain.css({
-                    height: height
-                });
-                storeData.$rightHeader.css('height', headerHeight);
-                if (tableMainArea.scrollHeight > tableMainArea.clientHeight) {
-                    storeData.$mend.show();
+                    storeData.$rightHeaderMain.show();
+                    hedaerWidth = storeData.$rightTableHeader[0].offsetWidth;
+                    left = tableWidth - hedaerWidth;
+                    storeData.$rightHeaderMain.css({
+                        width: hedaerWidth,
+                        top: top,
+                        left: left
+                    });
+                    storeData.$rightMain.css({
+                        height: height
+                    });
+                    storeData.$rightHeader.css('height', headerHeight);
+                    if (tableMainArea.scrollHeight > tableMainArea.clientHeight) {
+                        storeData.$mend.show();
+                    } else {
+                        storeData.$mend.hide();
+                    }
+                    // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
+                    storeData.$mend.css('height', headerHeight - 1);
                 } else {
-                    storeData.$mend.hide();
+                    storeData.$rightHeaderMain.hide();
+                    return;
                 }
-                // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
-                storeData.$mend.css('height', headerHeight - 1);
             }
         }
 
@@ -1271,11 +1278,11 @@
             var hs = {};
             var needAdjust = false;
             var ths = storeData.$tableHeaderHead.find('th');
-            var height = storeData.$tableHeaderHead[0].clientHeight;
-            if (storeData.hasLeftFixed && storeData.$leftTableHeaderHead[0].clientHeight != height) {
+            var height = storeData.$tableHeader[0].clientHeight;
+            if (storeData.hasLeftFixed && storeData.$leftTableHeader[0].clientHeight != height) {
                 needAdjust = true;
             }
-            if (storeData.hasRightFixed && storeData.$rightTableHeaderHead[0].clientHeight != height) {
+            if (storeData.hasRightFixed && storeData.$rightTableHeader[0].clientHeight != height) {
                 needAdjust = true;
             }
             if (!needAdjust) {
