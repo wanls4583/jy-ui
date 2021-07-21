@@ -557,7 +557,7 @@
             width: 800,
             height: 500,
             data: data,
-            limit: 50,
+            limit: 20,
             ellipsis: false,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="add">添加行</button>\
@@ -688,7 +688,7 @@
             });
         });
         table.on('del', function (obj) {
-            table.deleteRow(obj.id);
+            table.deleteRow(obj.key);
         });
         table.on('checked', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
