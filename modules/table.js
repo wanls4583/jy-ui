@@ -17,7 +17,6 @@
         var hCellPadding = 2;
         var store = {};
         var tableCount = 1;
-        var dataPrefix = 'song-row-'; // 数据映射中id的前缀
         var tableClass = {
             view: 'song-table-view',
             table: 'song-table',
@@ -1060,7 +1059,7 @@
          */
         Class.prototype.getRowDataById = function (id) {
             var storeData = store[this.filter];
-            return storeData.dataMap[dataPrefix + id];
+            return storeData.dataMap[id];
         }
 
         /**
@@ -1075,7 +1074,7 @@
         // 获取行或单元格绑定的数据
         Class.prototype.getBindData = function (dom) {
             var storeData = store[this.filter];
-            return storeData.dataMap[dataPrefix + $(dom).attr('data-id')];
+            return storeData.dataMap[$(dom).attr('data-id')];
         }
 
         Class.prototype.getCheckFilter = function (fixed, all) {
@@ -1320,12 +1319,12 @@
             var storeData = store[this.filter];
             var cols = storeData.cols;
             if (data) {
-                storeData.dataMap[dataPrefix + data._song_table_id] = {
+                storeData.dataMap[data._song_table_id] = {
                     id: data._song_table_id,
                     rowData: data
                 };
                 cols.map(function (col) {
-                    storeData.dataMap[dataPrefix + data._song_table_id + '-' + col._key] = {
+                    storeData.dataMap[data._song_table_id + '-' + col._key] = {
                         id: data._song_table_id,
                         colData: data[col.field],
                         rowData: data,
@@ -1333,10 +1332,10 @@
                     }
                 });
             }
-            if (!storeData.dataMap[dataPrefix + 'col-' + cols[0]._key]) {
+            if (!storeData.dataMap['col-' + cols[0]._key]) {
                 storeData.originCols.map(function (cols) {
                     cols.map(function (col) {
-                        storeData.dataMap[dataPrefix + 'col-' + col._key] = {
+                        storeData.dataMap['col-' + col._key] = {
                             col: col
                         }
                     });
