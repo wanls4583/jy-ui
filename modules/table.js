@@ -4,7 +4,7 @@
  * @Description: 
  */
 !(function () {
-    function factory($, Common, Form, Pager, Dialog) {
+    function factory($, Common, Form, Pager) {
         var $body = $(window.document.body);
         var filterIcon = '&#xe61d;';
         var exportsIcon = '&#xe618;';
@@ -1951,13 +1951,14 @@
         // 加载提示
         Class.prototype.showLoading = function () {
             var storeData = store[this.filter];
-            var $loading = $(tpl.loading)
+            var $loading = $(tpl.loading);
+            var headerHeight = storeData.$header[0].clientHeight;
             this.hideLoading();
             storeData.$empty.hide();
-            storeData.$view.append($loading);
+            storeData.$headerMain.append($loading);
             $loading.css({
                 marginLeft: -$loading[0].offsetWidth / 2,
-                marginTop: -$loading[0].offsetHeight / 2
+                marginTop: headerHeight / 2 - $loading[0].offsetHeight / 2 - 8
             });
             storeData.tempData.$loading = $loading;
         }
@@ -1975,11 +1976,12 @@
         Class.prototype.showTip = function (tip) {
             var storeData = store[this.filter];
             var $tip = $(tpl.tip);
+            var headerHeight = storeData.$header[0].clientHeight;
             $tip.children('span').text(tip);
-            storeData.$view.append($tip);
+            storeData.$headerMain.append($tip);
             $tip.css({
                 marginLeft: -$tip[0].offsetWidth / 2,
-                marginTop: -$tip[0].offsetHeight / 2
+                marginTop: headerHeight / 2 - $tip[0].offsetHeight / 2 - 8
             });
             setTimeout(function () {
                 $tip.remove();
@@ -2568,11 +2570,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['./jquery', './common', './form', './pager', './dialog'], function ($, Common, Form, Dialog) {
-            return factory($, Common, Form, Pager, Dialog);
+        define("table", ['./jquery', './common', './form', './pager'], function ($, Common, Form) {
+            return factory($, Common, Form, Pager);
         });
     } else {
         window.SongUi = window.SongUi || {};
-        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form, window.SongUi.Pager, window.SongUi.Dialog);
+        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form, window.SongUi.Pager);
     }
 })(window)
