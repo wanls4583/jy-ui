@@ -499,4 +499,21 @@
         vertical-align: middle;
         color: $danger-color;
     }
+
+    &-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        line-height: 36px;
+        animation-name: song-rotate;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+
+        .song-table-icon {
+            margin-right: 0;
+            font-size: 36px;
+            color: #999;
+        }
+    }
 }

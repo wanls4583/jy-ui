@@ -1315,6 +1315,27 @@ textarea {
   color: #FF5722;
 }
 
+.song-table-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 36px;
+  -webkit-animation-name: song-rotate;
+          animation-name: song-rotate;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+.song-table-loading .song-table-icon {
+  margin-right: 0;
+  font-size: 36px;
+  color: #999;
+}
+
 .song-date {
   position: absolute;
   border: 1px solid #eeeeee;

@@ -14,6 +14,7 @@
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
         var errorIcon = '&#xe60b;';
+        var loadingIcon = '&#xe61e;';
         var ieVersion = Common.getIeVersion();
         var hCellPadding = 2;
         var store = {};
@@ -85,7 +86,8 @@
             radio: '<input type="radio" name="table_radio_<%-filter%>" value="<%-key%>" song-filter="table_radio_<%-filter%>" <%-(checked?"checked":"")%>/>',
             checkbox: '<input type="checkbox" name="table_checkbox_<%-filter%>" value="<%-key%>" song-filter="table_checkbox_<%-filter%>" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
-            tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>'
+            tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>',
+            loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
         }
         // 常用正则验证
         var ruleMap = Form.verifyRules;
@@ -168,7 +170,6 @@
             storeData.stretch = this.option.stretch || false;
             storeData.page = this.option.page === undefined ? true : this.option.page;
             storeData.ellipsis = this.option.ellipsis === undefined ? true : this.option.ellipsis;
-            // storeData.ellipsis = ieVersion <= 11 ? true : storeData.ellipsis; // 考虑到性能问题，ie浏览器ellipsis强制为true
             storeData.autoSave = this.option.autoSave === undefined ? true : this.option.autoSave;
             storeData.enterSave = this.option.enterSave === undefined ? true : this.option.enterSave;
             storeData.originCols = this.option.cols[0] instanceof Array ? this.option.cols : [this.option.cols];
@@ -176,7 +177,6 @@
             storeData._idCount = 0; // 主表自增id
             storeData._fixeLeftIdCount = 0; // 左固定表自增id
             storeData._fixeRightIdCount = 0; // 右固定表自增id
-            storeData._$tips = []; // 展开的详情弹框
             storeData._renderedData = []; // 渲染的数据
             storeData._sortedData = []; // 排过序的数据
             storeData._addedData = []; // 手动添加的数据
@@ -184,6 +184,10 @@
             storeData._editedData = []; // 编辑过的数据
             storeData._checkedData = []; // 选中的数据(多选)
             storeData._selectedData = null; // 选中的数据(单选)
+            storeData._$tips = []; // 展开的详情弹框
+            storeData.fixedVisible = false; // 固定表格是否可见
+            storeData.hasLeftFixed = false; // 是否有左侧固定表格
+            storeData.hasRightFixed = false; // 是否有右侧固定表格
             storeData._sortObj = { // 排序数据
                 field: '',
                 sort: ''
@@ -692,16 +696,19 @@
                 tds = [td];
             } else {
                 this.getTrByKey(key).children('td').each(function (i, td) {
-                    if (!$(td).hasClass(tableClass.fixedEmpty)) {
+                    var songBindData = that.getBindData(td);
+                    if (!storeData.fixedVisible || !songBindData.col.fixed) {
                         tds.push(td);
                     }
                 });
-                storeData.hasLeftFixed && this.getTrByKey(key, 'left').children('td').each(function (i, td) {
-                    tds.push(td);
-                });
-                storeData.hasRightFixed && this.getTrByKey(key, 'right').children('td').each(function (i, td) {
-                    tds.push(td);
-                });
+                if (storeData.fixedVisible) {
+                    storeData.hasLeftFixed && this.getTrByKey(key, 'left').children('td').each(function (i, td) {
+                        tds.push(td);
+                    });
+                    storeData.hasRightFixed && this.getTrByKey(key, 'right').children('td').each(function (i, td) {
+                        tds.push(td);
+                    });
+                }
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
@@ -1163,6 +1170,7 @@
                 }
                 if (tableWidth > tableMainArea.clientWidth) {
                     storeData.$leftHeaderMain.show();
+                    storeData.fixedVisible = true;
                     storeData.$leftHeaderMain.css({
                         width: hedaerWidth,
                         top: top
@@ -1173,6 +1181,7 @@
                     storeData.$leftHeader.css('height', headerHeight);
                 } else {
                     storeData.$leftHeaderMain.hide();
+                    storeData.fixedVisible = false;
                 }
             }
             if (storeData.$rightHeaderMain) {
@@ -1748,28 +1757,6 @@
             storeData.$rightHeaderMain && Form.render('', storeData.$rightHeaderMain);
         }
 
-        // 加载提示
-        Class.prototype.showLoading = function () {
-            var storeData = store[this.filter];
-            this.hideLoading();
-            storeData.$empty.hide();
-            storeData.tempData.loading = Dialog.loading({
-                container: storeData.$headerMain,
-                shadow: false,
-                success: function ($layer) {
-                    $layer.css('margin-top', storeData.$header[0].offsetHeight / 2 - 10);
-                }
-            });
-        }
-
-        Class.prototype.hideLoading = function () {
-            var storeData = store[this.filter];
-            if (storeData.tempData.loading) {
-                Dialog.close(storeData.tempData.loading);
-                storeData.tempData.loading = null;
-            }
-        }
-
         /**
          * 创建表格行
          * @param {Object} data 
@@ -1961,6 +1948,30 @@
             })
         }
 
+        // 加载提示
+        Class.prototype.showLoading = function () {
+            var storeData = store[this.filter];
+            var $loading = $(tpl.loading)
+            this.hideLoading();
+            storeData.$empty.hide();
+            storeData.$view.append($loading);
+            $loading.css({
+                marginLeft: -$loading[0].offsetWidth / 2,
+                marginTop: -$loading[0].offsetHeight / 2
+            });
+            storeData.tempData.$loading = $loading;
+        }
+
+        // 隐藏加载提示
+        Class.prototype.hideLoading = function () {
+            var storeData = store[this.filter];
+            if (storeData.tempData.$loading) {
+                storeData.tempData.$loading.remove();
+                storeData.tempData.$loading = undefined;
+            }
+        }
+
+        // 显示错误提示
         Class.prototype.showTip = function (tip) {
             var storeData = store[this.filter];
             var $tip = $(tpl.tip);
