@@ -67,7 +67,7 @@
         *zoom: 1;
 
         // 文本溢出详情弹框
-        .song-table-tip-icon {
+        .song-table-detail-icon {
             position: absolute;
             top: -1px;
             right: 0;
@@ -292,7 +292,7 @@
         background-color: $lighter-color;
     }
 
-    &-tip {
+    &-detail {
         position: absolute;
         top: 50%;
         left: 50%;

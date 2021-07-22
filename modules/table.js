@@ -38,9 +38,9 @@
             pager: 'song-table-pager',
             filter: 'song-table-filter',
             exports: 'song-table-exports',
-            tipIcon: 'song-table-tip-icon',
-            tip: 'song-table-tip',
-            tipClose: 'song-table-tip-close',
+            detailIcon: 'song-table-detail-icon',
+            detail: 'song-table-detail',
+            tipClose: 'song-table-detail-close',
             detail: 'song-table-detail',
             hover: 'song-table-hover',
             leftHeaderMain: 'song-table-header-main-l',
@@ -180,7 +180,7 @@
             storeData._editedData = []; // 编辑过的数据
             storeData._checkedData = []; // 选中的数据(多选)
             storeData._selectedData = null; // 选中的数据(单选)
-            storeData._$tips = []; // 展开的详情弹框
+            storeData._$details = []; // 展开的详情弹框
             storeData.fixedVisible = false; // 固定表格是否可见
             storeData.hasLeftFixed = false; // 是否有左侧固定表格
             storeData.hasRightFixed = false; // 是否有右侧固定表格
@@ -216,7 +216,6 @@
             this.renderTableBody();
             this.renderPage();
             this.setViewArea();
-            this.stretchTable();
             this.bindEvent();
         }
 
@@ -421,10 +420,10 @@
                 // 删除溢出内容弹框
                 $tr.children('td').each(function (i, td) {
                     var songBindData = that.getBindData(td);
-                    if (songBindData.$tip) {
-                        var index = storeData._$tips.indexOf(songBindData.$tip);
-                        storeData._$tips.splice(index, 1);
-                        songBindData.$tip.remove();
+                    if (songBindData.$detail) {
+                        var index = storeData._$details.indexOf(songBindData.$detail);
+                        storeData._$details.splice(index, 1);
+                        songBindData.$detail.remove();
                     }
                 });
                 $tr.remove();
@@ -1070,23 +1069,26 @@
         // 拉伸表格至100%
         Class.prototype.stretchTable = function () {
             var storeData = store[this.filter];
-            var hedaerWidth = storeData.$header[0].clientWidth;
-            var tableHeaderWidth = storeData.$tableHeader[0].offsetWidth;
-            //表格拉伸至容器的宽度
-            if (storeData.stretch && tableHeaderWidth < hedaerWidth) {
-                var ths = storeData.$view.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
-                // 确保选择列宽度不变
-                ths.each(function (i, th) {
-                    $(th).css('width', 50);
-                });
-                // ie下，table宽度可能会多出一像素，从而撑破父容器
-                storeData.$tableHeader.css({
-                    width: storeData.$view[0].clientWidth
-                });
-                this.setColsWidth();
-                storeData.$tableHeader.css({
-                    width: 'auto'
-                });
+            if (storeData.stretch) {
+                var hedaerWidth = storeData.$header[0].clientWidth;
+                var tableHeaderWidth = storeData.$tableHeader[0].offsetWidth;
+                //表格拉伸至容器的宽度
+                if (tableHeaderWidth < hedaerWidth) {
+                    var ths = storeData.$headerMain.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
+                    // 确保选择列宽度不变
+                    ths.each(function (i, th) {
+                        $(th).css('width', 50);
+                    });
+                    // ie下，table宽度可能会多出一像素，从而撑破父容器
+                    storeData.$tableHeader.css({
+                        width: storeData.$main[0].clientWidth
+                    });
+                    this.setColsWidth();
+                    storeData.$tableHeader.css({
+                        width: 'auto'
+                    });
+                }
+                storeData.stretch = false;
             }
         }
 
@@ -1730,6 +1732,7 @@
                 }
                 that.setFixedArea();
                 that.renderForm();
+                that.stretchTable();
                 !storeData.ellipsis && that.fixRowHeight();
                 that.hideLoading();
             }
@@ -2185,14 +2188,14 @@
                     if (storeData.$rightMain) {
                         storeData.$rightMain[0].scrollTop = storeData.$main[0].scrollTop;
                     }
-                    if (storeData._$tips.length) {
+                    if (storeData._$details.length) {
                         var tds = storeData.$view.find('td');
-                        storeData._$tips.map(function ($tip) {
-                            $tip.remove();
+                        storeData._$details.map(function ($detail) {
+                            $detail.remove();
                         });
                         tds.each(function (i, td) {
                             var songBindData = that.getBindData(td);
-                            songBindData.$tip = undefined;
+                            songBindData.$detail = undefined;
                         });
                     }
                 });
@@ -2209,8 +2212,8 @@
                             var $th = $(th);
                             if (e.offsetX > th.clientWidth - 10) {
                                 $th.addClass(tableClass.colResize);
-                                songBindData.$tipIcon && songBindData.$tipIcon.remove();
-                                songBindData.$tipIcon = undefined;
+                                songBindData.$detailIcon && songBindData.$detailIcon.remove();
+                                songBindData.$detailIcon = undefined;
                             } else {
                                 $th.removeClass(tableClass.colResize);
                             }
@@ -2256,30 +2259,29 @@
                         var songBindData = that.getBindData(td);
                         var col = songBindData.col;
                         var $cell = $td.children('.' + tableClass.cell);
-                        if (!songBindData.$tipIcon && col.type == 'text' && !songBindData.editing && Common.checkOverflow($cell[0].children[0])) {
-                            var $div = $('<div class="' + tableClass.tipIcon + '">' + downIcon + '</div>');
-                            songBindData.$tipIcon = $div;
+                        if (!songBindData.$detailIcon && col.type == 'text' && !songBindData.editing && Common.checkOverflow($cell[0].children[0])) {
+                            var $div = $('<div class="' + tableClass.detailIcon + '">' + downIcon + '</div>');
+                            songBindData.$detailIcon = $div;
                             $cell.append($div);
                             // 点击打开内容详情弹框
                             $div.on('click', function () {
                                 var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
                                 var offset = $cell.offset();
                                 var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                                $td.addClass(tableClass.detail);
                                 $div.remove();
-                                $div = $('<div class="' + tableClass.tip + '">' + $($cell[0].children[0]).html() + '</div>');
+                                $div = $('<div class="' + tableClass.detail + '">' + $($cell[0].children[0]).html() + '</div>');
                                 $div.append($close);
                                 $body.append($div);
-                                songBindData.$tip = $div;
-                                storeData._$tips.push($div);
+                                songBindData.$detail = $div;
+                                storeData._$details.push($div);
                                 $div.css({
                                     top: offset.top - 1 + (ieVersion <= 6 ? ie6MarginTop : 0),
                                     left: offset.left - 1
                                 });
                                 // 点击关闭弹框
                                 $close.on('click', function () {
-                                    songBindData.$tip = undefined;
-                                    songBindData.$tipIcon = undefined;
+                                    songBindData.$detail = undefined;
+                                    songBindData.$detailIcon = undefined;
                                     $div.remove();
                                 });
                             });
@@ -2287,8 +2289,8 @@
                     });
                 }).delegate('th,td', 'mouseleave', function () {
                     var songBindData = that.getBindData(this);
-                    songBindData.$tipIcon && songBindData.$tipIcon.remove();
-                    songBindData.$tipIcon = undefined;
+                    songBindData.$detailIcon && songBindData.$detailIcon.remove();
+                    songBindData.$detailIcon = undefined;
                 });
             }
 

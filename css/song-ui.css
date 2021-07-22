@@ -903,7 +903,7 @@ textarea {
   *zoom: 1;
 }
 
-.song-table-cell .song-table-tip-icon {
+.song-table-cell .song-table-detail-icon {
   position: absolute;
   top: -1px;
   right: 0;
@@ -918,7 +918,7 @@ textarea {
   cursor: pointer;
 }
 
-.song-table-cell .song-table-tip-icon:hover {
+.song-table-cell .song-table-detail-icon:hover {
   background-color: #f6f6f6;
 }
 
@@ -1109,7 +1109,7 @@ textarea {
   background-color: #f6f6f6;
 }
 
-.song-table-tip {
+.song-table-detail {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1123,7 +1123,7 @@ textarea {
           box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
 }
 
-.song-table-tip-close {
+.song-table-detail-close {
   position: absolute;
   right: -13px;
   top: -13px;
