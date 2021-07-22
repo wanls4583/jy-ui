@@ -216,6 +216,7 @@
             this.renderTableBody();
             this.renderPage();
             this.setViewArea();
+            ieVersion <= 6 && this.stretchTable();
             this.bindEvent();
         }
 
@@ -1102,7 +1103,8 @@
             storeData.width = Number(width || storeData.width) || 0;
             storeData.height = Number(height || storeData.height) || 0;
             this.setViewArea();
-            if (storeData.stretch) {
+            if (this.option.stretch) {
+                storeData.stretch = true;
                 this.stretchTable();
             }
             this.setFixedArea();
