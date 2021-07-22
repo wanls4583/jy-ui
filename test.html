@@ -561,11 +561,11 @@
             limit: 20,
             ellipsis: false,
             defaultToolbar: true,
-            toolbar: '<button class="song-btn song-btn-sm" song-event="add">添加行</button>\
-            <button class="song-btn song-btn-sm" song-event="checked">获取选中的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="getadd">获取添加的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="getdel">获取删除的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="getedit">获取修改过的数据</button>',
+            toolbar: '<button class="song-btn song-btn-sm" song-event="custom-add">添加行</button>\
+            <button class="song-btn song-btn-sm" song-event="custom-checked">获取选中的数据</button>\
+            <button class="song-btn song-btn-sm" song-event="custom-getadd">获取添加的数据</button>\
+            <button class="song-btn song-btn-sm" song-event="custom-getdel">获取删除的数据</button>\
+            <button class="song-btn song-btn-sm" song-event="custom-getedit">获取修改过的数据</button>',
             cols: [
                 [{
                     type: 'checkbox',
@@ -637,7 +637,7 @@
                     width: 120,
                     btns: [{
                         text: '删除',
-                        event: 'del',
+                        event: 'custom-del',
                         type: 'danger',
                         stop: true
                     }],
@@ -678,7 +678,7 @@
         table.on('edit', function (obj) {
             // console.log(obj);
         });
-        table.on('add', function (obj) {
+        table.on('custom-add', function (obj) {
             var sex = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
@@ -689,23 +689,23 @@
                 data: { id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
         });
-        table.on('del', function (obj) {
+        table.on('custom-del', function (obj) {
             table.deleteRow(obj.rowData.id);
         });
-        table.on('checked', function (obj) {
+        table.on('custom-checked', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
         });
-        table.on('getadd', function (obj) {
+        table.on('custom-getadd', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('add')));
         });
-        table.on('getdel', function (obj) {
+        table.on('custom-getdel', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('delelte')));
         });
-        table.on('getedit', function (obj) {
+        table.on('custom-getedit', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
         });
-        table.on('name', function (obj) {
-            SongUi.Dialog.alert(obj.data.user);
+        table.on('custom-name', function (obj) {
+            SongUi.Dialog.alert(obj.rowData.user);
         });
         return table;
     }
