@@ -33,8 +33,6 @@
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
-            editPrefix: 'song-table-edit-prefix',
-            editSuffix: 'song-table-edit-suffix',
             input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
@@ -47,7 +45,6 @@
             hover: 'song-table-hover',
             leftHeaderMain: 'song-table-header-main-l',
             rightHeaderMain: 'song-table-header-main-r',
-            fixedShadow: 'song-table-fixed-shadow',
             fixedMain: 'song-table-fixed-main',
             fixeHeader: 'song-table-fixed-header',
             confirm: 'song-table-confirm',
@@ -62,17 +59,16 @@
             unselect: 'song-table-unselect',
             error: 'song-table-error',
             resizeLine: 'song-table-resize-line',
-            fixedEmpty: 'song-table-fixed-empty',
             empty: 'song-table-empty'
         }
         var tpl = {
-            table: '<table class="' + tableClass.table + '"></table>',
-            headerMain: '<div class="' + tableClass.headerMain + '"></div>',
-            header: '<div class="' + tableClass.header + '"></div>',
-            main: '<div class="' + tableClass.main + '"></div>',
-            tableHeader: '<table class="' + tableClass.table + '"></table>',
+            table: '<table class="song-table"></table>',
+            headerMain: '<div class="song-table-header-main"></div>',
+            header: '<div class="song-table-header"></div>',
+            main: '<div class="song-table-main"></div>',
+            tableHeader: '<table class="song-table"></table>',
             tableHeaderHead: '<thead></thead>',
-            empty: '<div class="' + tableClass.empty + '">暂无数据</div>',
+            empty: '<div class="song-table-empty">暂无数据</div>',
             td: '\
             <td class="song-table-col song-table-col-<%-col.type%> song-table-col-<%-tableCount%>-<%-col._key%> <%-(col.align?"song-table-align-"+col.align:"")%>"\
              data-key="<%-key%>-<%-col._key%>"\
@@ -572,16 +568,18 @@
                 var value = _getValue(td);
                 var fValue = _getValue(td, true);
                 var originValue = songBindData.colData;
+                var html = '';
                 songBindData.rowData[col.field] = value;
                 songBindData.colData = value;
                 $td.removeClass(tableClass.editing);
+                html = '<div class="' + tableClass.cellContent + '">' + (col.template ? col.template(songBindData.colData, songBindData.rowData, key, col) : fValue) + '</div>';
                 songBindData.editing = false;
                 songBindData.$input = undefined;
                 songBindData.$select = undefined;
                 songBindData.$checkbox = undefined;
-                td.children[0].innerHTML = '<div class="' + tableClass.cellContent + '">' + (col.template ? col.template(songBindData.colData, songBindData.rowData, key, col) : fValue) + '</div>';
+                td.children[0].innerHTML = html;
                 if (col.fixed) {
-                    that.getTrByKey(key).children('td[data-key="' + key + '-' + col._key + '"]')[0].children[0].innerHTML = html;
+                    that.getTrByKey(key, storeData.fixedVisible ? '' : col.fixed).children('td[data-key="' + key + '-' + col._key + '"]')[0].children[0].innerHTML = html;
                 }
                 // 值被修改过
                 if (String(originValue) != String(value)) {
@@ -689,7 +687,13 @@
             var storeData = store[this.filter];
             var tds = [];
             if (field) {
-                var td = this.getTdByIdField(key, field);
+                var col = this.getColByField(field);
+                var td = null;
+                if (storeData.fixedVisible && col.fixed) {
+                    td = this.getTrByKey(key, col.fixed).children('td[data-field="' + field + '"]')[0];
+                } else {
+                    td = this.getTrByKey(key).children('td[data-field="' + field + '"]')[0];
+                }
                 if (!td) {
                     return;
                 }
@@ -999,24 +1003,6 @@
             } else {
                 return storeData.$table.children('tbody').children('tr[data-key="' + key + '"]');
             }
-        }
-
-        /**
-         * 获取td
-         * @param {Number} key 
-         * @param {String} field 
-         */
-        Class.prototype.getTdByIdField = function (key, field) {
-            var col = this.getColByField(field);
-            var td = null;
-            if (col.fixed == 'left') {
-                td = this.getTrByKey(key, 'left').children('td[data-field="' + field + '"]')[0];
-            } else if (col.fixed == 'right') {
-                td = this.getTrByKey(key, 'right').children('td[data-field="' + field + '"]')[0];
-            } else {
-                td = this.getTrByKey(key).children('td[data-field="' + field + '"]')[0];
-            }
-            return td;
         }
 
         /**
