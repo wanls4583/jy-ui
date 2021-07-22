@@ -95,12 +95,47 @@
                     once: table.once,
                     trigger: table.trigger,
                     reload: table.reload.bind(table),
-                    addRow: table.addRow.bind(table),
-                    deleteRow: table.deleteRow.bind(table),
-                    save: table.save.bind(table),
-                    cancel: table.cancel.bind(table),
-                    edit: table.edit.bind(table),
-                    setData: table.setData.bind(table),
+                    addRow: function (option) {
+                        var option = Object.assign(option);
+                        option.key = table.getKeyById(option.id);
+                        table.addRow(option);
+                    },
+                    deleteRow: function (id) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.deleteRow(key);
+                    },
+                    save: function (id, field) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.save(key, field);
+                    },
+                    cancel: function (id, field) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.cancel(key, field);
+                    },
+                    edit: function (id, field) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.edit(key, field);
+                    },
+                    setData: function (option) {
+                        var option = Object.assign(option);
+                        option.key = table.getKeyById(option.id);
+                        if (option.key === undefined) {
+                            return;
+                        }
+                        table.setData(option);
+                    },
                     getData: table.getData.bind(table),
                     setArea: table.setArea.bind(table),
                     setColWidth: table.setColWidth.bind(table),
@@ -190,8 +225,8 @@
             };
             storeData.timers = {}; // 计时器
             storeData.tempData = {}; // 临时数据
+            storeData.idKeyMap = {}; // 存储原始数据id到内部key的映射
             storeData.dataMap = {}; // 存储数据映射，可快速找到数据
-            storeData.domMap = {}; // 存储dom映射，可快速找到dom
             storeData.editMap = { // 存储编辑中的单元格
                 list: []
             };
@@ -338,7 +373,7 @@
 
         /**
          * 添加数据行
-         * @param {Object} option [{data, index, position}]
+         * @param {Object} option [{data, key, position}]
          */
         Class.prototype.addRow = function (option) {
             var that = this;
@@ -346,10 +381,7 @@
             var cols = storeData.cols;
             var data = option.data instanceof Array ? option.data : [option.data];
             var addedData = [];
-            var index = Number(option.index);
-            index = isNaN(index) ? storeData._sortedData.length : index;
-            index = index < 0 ? 0 : index;
-            index = index > storeData._sortedData.length ? storeData._sortedData.length : index;
+            var index = _getIndex(option.key);
             _addRow();
             cols[0].fixed == 'left' && _addRow('left');
             cols[cols.length - 1].fixed == 'right' && _addRow('right');
@@ -360,6 +392,17 @@
             });
             this.setFixedArea();
             this.renderForm();
+
+            function _getIndex(key) {
+                if (key !== undefined) {
+                    for (var i = 0; i < storeData._sortedData.length; i++) {
+                        if (storeData._sortedData[i]._song_table_key == key) {
+                            return i;
+                        }
+                    }
+                }
+                return storeData._sortedData.length;
+            }
 
             function _addRow(fixed) {
                 var $table = storeData.$table;
@@ -436,6 +479,9 @@
                     storeData._selectedData = null;
                 }
                 storeData._deletedData.push(rowData);
+                if (rowData.id) {
+                    storeData.idKeyMap[rowData.id] = undefined;
+                }
                 _deleteData(storeData._addedData);
                 _deleteData(storeData._editedData);
                 _deleteData(storeData._checkedData);
@@ -456,15 +502,18 @@
         /**
          * 保存编辑中的数据
          * @param {Number} key
+         * @param {String} field
          */
-        Class.prototype.save = function (key) {
+        Class.prototype.save = function (key, field) {
             var that = this;
             var storeData = store[this.filter];
             var result = true;
             var tds = [];
             if (key !== undefined) { // 保存某一行的数据
                 storeData.editMap[key] && storeData.editMap[key].map(function (td) {
-                    tds.push(td);
+                    if (!field || $(td).attr('data-field') == field) {
+                        tds.push(td);
+                    }
                 });
             } else { // 保存所有的数据
                 storeData.editMap.list && storeData.editMap.list.map(function (td) {
@@ -595,9 +644,9 @@
                     }
                     // 触发保存事件
                     that.trigger('save', {
-                        key: key,
                         field: col.field,
-                        data: value
+                        data: value,
+                        rowData: that.delInnerProperty(songBindData.rowData)
                     });
                 }
                 that.fixRowHeight(key, 'auto');
@@ -607,14 +656,17 @@
         /**
          * 取消编辑
          * @param {Number} key 
+         * @param {String} field 
          */
-        Class.prototype.cancel = function (key) {
+        Class.prototype.cancel = function (key, field) {
             var that = this;
             var storeData = store[this.filter];
             var tds = [];
             if (key !== undefined) { // 保存某一行的数据
                 storeData.editMap[key] && storeData.editMap[key].map(function (td) {
-                    tds.push(td);
+                    if (!field || $(td).attr('data-field') == field) {
+                        tds.push(td);
+                    }
                 });
             } else { // 保存所有的数据
                 storeData.editMap.list && storeData.editMap.list.map(function (td) {
@@ -756,9 +808,9 @@
                     }
                     // 触发编辑事件
                     that.trigger('edit', {
-                        key: key,
                         field: col.field,
-                        data: data
+                        data: data,
+                        rowData: that.delInnerProperty(songBindData.rowData)
                     });
                     $(td).addClass(tableClass.editing);
                     songBindData.editing = true;
@@ -943,6 +995,7 @@
          * @param {String} type 
          */
         Class.prototype.getData = function (type) {
+            var that = this;
             var storeData = store[this.filter];
             var data = null;
             type = type || 'render';
@@ -969,23 +1022,13 @@
             if (data) {
                 if (data instanceof Array) {
                     data = data.map(function (item) {
-                        return _delInnerProperty(item);
+                        return that.delInnerProperty(item);
                     });
                 } else {
-                    data = _delInnerProperty(data);
+                    data = this.delInnerProperty(data);
                 }
             }
 
-            function _delInnerProperty(data) {
-                var obj = {};
-                for (var key in data) {
-                    // 去掉内部数据字段
-                    if (key.slice(0, 11) != '_song_table') {
-                        obj[key] = data[key];
-                    }
-                }
-                return obj;
-            }
             return data;
         }
 
@@ -1312,6 +1355,9 @@
             var storeData = store[this.filter];
             var cols = storeData.cols;
             if (data) {
+                if (data.id !== undefined && storeData.idKeyMap[data.id] === undefined) {
+                    storeData.idKeyMap[data.id] = data._song_table_key;
+                }
                 storeData.dataMap[data._song_table_key] = {
                     rowData: data
                 };
@@ -1563,6 +1609,8 @@
 
             // 渲染
             function _render() {
+                storeData.idKeyMap = {};
+                storeData.dataMap = {};
                 // 数据排序
                 _sort();
                 // ie6解析css需要一定时间，否则setCellStyle无效
@@ -1794,7 +1842,7 @@
             if (col.type == 'text') { //文本列
                 content = getCellHtml(data[col.field], data, key, col);
             } else if (col.type == 'radio') { // 单选列
-                var checked = storeData._selectedData && storeData._selectedData._song_table_key === key;
+                var checked = storeData._selectedData && storeData._selectedData._song_table_key == key;
                 content = Common.htmlTemplate(tpl.radio, {
                     filter: this.filter + (fixed ? '_' + fixed : ''),
                     checked: checked,
@@ -1803,7 +1851,7 @@
             } else if (col.type == 'checkbox') { // 多选列
                 var checked = false;
                 for (var i = 0; i < storeData._checkedData.length; i++) {
-                    if (storeData._checkedData[i]._song_table_key === key) {
+                    if (storeData._checkedData[i]._song_table_key == key) {
                         checked = true;
                         break;
                     }
@@ -1979,6 +2027,24 @@
             }, 1500);
         }
 
+        // 删除内部使用属性
+        Class.prototype.delInnerProperty = function (data) {
+            var obj = {};
+            for (var key in data) {
+                // 去掉内部数据字段
+                if (key.slice(0, 11) != '_song_table') {
+                    obj[key] = data[key];
+                }
+            }
+            return obj;
+        }
+
+        // 通过id获取key
+        Class.prototype.getKeyById = function (id) {
+            var storeData = store[this.filter];
+            return storeData.idKeyMap[id];
+        }
+
         // 绑定容器的事件
         Class.prototype.bindEvent = function () {
             var that = this;
@@ -2061,8 +2127,8 @@
                         if ($td[0]) {
                             var songBindData = that.getBindData($td[0]);
                             if (songBindData) {
-                                data.key = songBindData.rowData._song_table_key;
-                                data.data = songBindData.rowData;
+                                data.dom = e.target;
+                                data.rowData = that.delInnerProperty(songBindData.rowData);
                             }
                         }
                         // 触发自定义事件
@@ -2078,9 +2144,8 @@
                     var songBindData = that.getBindData(this);
                     // 触发行点击事件
                     that.trigger('row', {
-                        key: songBindData.rowData._song_table_key,
                         dom: this,
-                        data: songBindData.rowData
+                        rowData: that.delInnerProperty(songBindData.rowData)
                     });
                 });
                 // 列点击事件
@@ -2088,9 +2153,9 @@
                     var songBindData = that.getBindData(this);
                     // 触发单元格点击事件
                     that.trigger('col', {
-                        key: songBindData.rowData._song_table_key,
                         dom: this,
-                        data: songBindData.colData
+                        data: songBindData.colData,
+                        rowData: that.delInnerProperty(songBindData.rowData)
                     });
                 })
             }

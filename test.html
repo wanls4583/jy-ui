@@ -471,7 +471,7 @@
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
-            data.push({ user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            data.push({ id: i, user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table1',
@@ -551,7 +551,7 @@
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
-            data.push({ user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table3',
@@ -685,11 +685,12 @@
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
             table.addRow({
-                data: { user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
+                id: 1,
+                data: { id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
         });
         table.on('del', function (obj) {
-            table.deleteRow(obj.key);
+            table.deleteRow(obj.rowData.id);
         });
         table.on('checked', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
