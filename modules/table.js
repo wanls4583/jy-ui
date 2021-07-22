@@ -479,9 +479,7 @@
                     storeData._selectedData = null;
                 }
                 storeData._deletedData.push(rowData);
-                if (rowData.id) {
-                    storeData.idKeyMap[rowData.id] = undefined;
-                }
+                that.deleteKeyById(rowData.id);
                 _deleteData(storeData._addedData);
                 _deleteData(storeData._editedData);
                 _deleteData(storeData._checkedData);
@@ -1355,8 +1353,9 @@
             var storeData = store[this.filter];
             var cols = storeData.cols;
             if (data) {
-                if (data.id !== undefined && storeData.idKeyMap[data.id] === undefined) {
-                    storeData.idKeyMap[data.id] = data._song_table_key;
+                if (data.id !== undefined) {
+                    storeData.idKeyMap[data.id] = storeData.idKeyMap[data.id] || [];
+                    storeData.idKeyMap[data.id].push(data._song_table_key);
                 }
                 storeData.dataMap[data._song_table_key] = {
                     rowData: data
@@ -2042,7 +2041,19 @@
         // 通过id获取key
         Class.prototype.getKeyById = function (id) {
             var storeData = store[this.filter];
-            return storeData.idKeyMap[id];
+            var key = storeData.idKeyMap[id];
+            if (key && key.length) {
+                key = key[0];
+            }
+            return key;
+        }
+
+        Class.prototype.deleteKeyById = function (id) {
+            var storeData = store[this.filter];
+            var key = storeData.idKeyMap[id];
+            if (key) {
+                storeData.idKeyMap[id] = key.slice(1);
+            }
         }
 
         // 绑定容器的事件
