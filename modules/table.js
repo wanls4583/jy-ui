@@ -1006,9 +1006,6 @@
             var that = this;
             var storeData = store[this.filter];
             var key = option.key;
-            if (!trs) {
-                return;
-            }
             var field = option.field;
             var data = option.data;
             var editFields = [];
@@ -1020,6 +1017,7 @@
             } else {
                 data = Object.assign({}, data);
                 data._song_table_key = key;
+                data.id = rowData.id;
                 rowData = data;
                 if (storeData._selectedData && storeData._selectedData._song_table_key == key) {
                     storeData._selectedData = data;
@@ -1034,17 +1032,17 @@
             editFields.map(function (field) {
                 that.edit(key, field);
             });
-            this.fixRowHeight(key);
-            this.renderForm();
-            this.getTrByKey(tr).each(function (i, tr) {
+            this.getTrByKey(key).each(function (i, tr) {
                 _setDom(tr);
             });
-            storeData.hasLeftFixed && this.getTrByKey(tr, 'left').each(function (i, tr) {
+            storeData.hasLeftFixed && this.getTrByKey(key, 'left').each(function (i, tr) {
                 _setDom(tr, 'left');
             });
-            storeData.hasRightFixed && this.getTrByKey(tr, 'right').each(function (i, tr) {
+            storeData.hasRightFixed && this.getTrByKey(key, 'right').each(function (i, tr) {
                 _setDom(tr, 'right');
             });
+            this.fixRowHeight(key);
+            this.renderForm();
 
             function _setDom(tr, fixed) {
                 var $tr = $(tr);
@@ -1447,7 +1445,9 @@
             if (data) {
                 if (data.id !== undefined) {
                     storeData.idKeyMap[data.id] = storeData.idKeyMap[data.id] || [];
-                    storeData.idKeyMap[data.id].push(data._song_table_key);
+                    if (storeData.idKeyMap[data.id].indexOf(data._song_table_key) == -1) {
+                        storeData.idKeyMap[data.id].push(data._song_table_key);
+                    }
                 }
                 storeData.dataMap[data._song_table_key] = {
                     rowData: data
@@ -2148,6 +2148,8 @@
             var key = storeData.idKeyMap[id];
             if (key && key.length) {
                 key = key[0];
+            } else {
+                key = undefined;
             }
             return key;
         }
