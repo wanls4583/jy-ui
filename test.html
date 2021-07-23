@@ -379,6 +379,12 @@
         </div>
     </fieldset>
     <fieldset class="song-field">
+        <legend>菜单</legend>
+        <div class="song-field-box">
+            <div id="menu"></div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">
             <hr>
@@ -408,6 +414,7 @@
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
 <script src="./modules/date.js"></script>
+<script src="./modules/menu.js"></script>
 <script>
     window.JSON = window.JSON || {
         stringify: function (d) { return String(d) }
@@ -775,6 +782,12 @@
         type: 'time',
         range: true
     });
+    SongUi.Menu.render({
+        elem: '#menu',
+        data: [{ title: 'item1' },
+        { title: 'item2', children: [{ title: 'item3' }] },
+        { title: 'item4', openType: 'right', children: [{ title: 'item5' }] }]
+    })
 </script>
 
 </html>

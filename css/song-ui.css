@@ -1684,6 +1684,92 @@ textarea {
   *background-color: #000000;
 }
 
+.song-menu {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  width: 212px;
+  padding: 5px 0;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+}
+
+.song-menu-item {
+  position: relative;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.song-menu-item ul {
+  display: none;
+}
+
+.song-menu-item:hover {
+  background-color: #eeeeee;
+}
+
+.song-menu-group:hover {
+  background-color: transparent;
+}
+
+.song-menu-right ul {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 10px;
+  margin-top: -5px;
+  padding: 5px 0;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+}
+
+.song-menu-right:hover {
+  background-color: #eeeeee;
+}
+
+.song-menu-border {
+  height: 0;
+  margin: 5px 0;
+  border-top: 1px solid #eeeeee;
+}
+
+.song-menu-item-title {
+  position: relative;
+  line-height: 36px;
+}
+
+.song-menu-item-title .song-icon {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-menu-item-title .song-menu-down-icon,
+.song-menu-item-title .song-menu-right-icon {
+  display: block;
+}
+
+.song-menu-open ul {
+  display: block;
+}
+
+.song-menu-open .song-menu-down-icon {
+  display: none;
+}
+
+.song-menu-open .song-menu-up-icon {
+  display: block;
+}
+
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */

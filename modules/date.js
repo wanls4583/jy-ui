@@ -138,7 +138,10 @@
 
         var SongDate = {
             render: function (option) {
-                return new Class(option);
+                var date = new Class(option);
+                return {
+
+                };
             }
         }
 
@@ -957,7 +960,7 @@
         return SongDate;
     }
     if ("function" == typeof define && define.amd) {
-        define('dialog', ['./jquery', './common'], function ($, Common) {
+        define('date', ['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {

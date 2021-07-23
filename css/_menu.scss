@@ -1,0 +1,86 @@
+.song-menu {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 212px;
+    padding: 5px 0;
+    border: 1px solid $light-color;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, .15);
+    background-color: #fff;
+
+    &-item {
+        position: relative;
+        padding: 0 $pd15;
+        cursor: pointer;
+
+        ul {
+            display: none;
+        }
+
+        &:hover {
+            background-color: $light-color;
+        }
+    }
+
+    &-group {
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    &-right {
+        ul {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 10px;
+            margin-top: -5px;
+            padding: 5px 0;
+            border: 1px solid $light-color;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, .15);
+            background-color: #fff;
+        }
+
+        &:hover {
+            background-color: $light-color;
+        }
+    }
+
+    &-border {
+        height: 0;
+        margin: 5px 0;
+        border-top: 1px solid $light-color;
+    }
+
+    &-item-title {
+        position: relative;
+        line-height: 36px;
+
+        .song-icon {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            user-select: none;
+        }
+
+        .song-menu-down-icon,
+        .song-menu-right-icon {
+            display: block;
+        }
+    }
+
+    &-open {
+        ul {
+            display: block;
+        }
+
+        .song-menu-down-icon {
+            display: none;
+        }
+
+        .song-menu-up-icon {
+            display: block;
+        }
+    }
+}
