@@ -256,7 +256,6 @@
             this.initCols();
             this.createSheet();
             this.renderToolbar();
-            this.setDataMap();
             this.renderTableHeader();
             this.renderTableBody();
             this.renderPage();
@@ -328,6 +327,7 @@
             if (storeData.cols[storeData.cols.length - 1].fixed === 'right') {
                 storeData.hasRightFixed = true;
             }
+            this.setDataMap();
 
             function _getDataCol(cols, level, colspan, pCol) {
                 for (var i = 0, count = 0; i < colspan && cols[level][i] && count < colspan; i++) {
@@ -1712,13 +1712,13 @@
 
             // 渲染
             function _render() {
-                storeData.idKeyMap = {};
-                storeData.dataMap = {};
                 // 数据排序
                 _sort();
                 // ie6解析css需要一定时间，否则setCellStyle无效
                 Common.cancelNextFrame(storeData.timers.renderTimer)
                 storeData.timers.renderTimer = Common.nextFrame(function () {
+                    storeData.idKeyMap = {};
+                    storeData.dataMap = {};
                     that.renderTr();
                     that.renderTableFixed();
                 }, 0);
