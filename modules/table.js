@@ -107,6 +107,16 @@
                         }
                         table.deleteRow(key);
                     },
+                    checkRow: function (id, checked) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.checkRow(key, checked);
+                    },
+                    checkAll: function (checked) {
+                        table.checkAll(checked);
+                    },
                     save: function (id, field) {
                         var key = table.getKeyById(id);
                         if (key === undefined) {
@@ -494,6 +504,75 @@
                         break;
                     }
                 }
+            }
+        }
+
+        // 更改行的选中状态
+        Class.prototype.checkRow = function (key, checked) {
+            var storeData = store[this.filter];
+            var col = this.getColByType('checkbox');
+            var tr = null;
+            if (col) {
+                tr = this.getTrByKey(key, storeData.fixedVisible ? col.fixed : '');
+                if (checked !== undefined) {
+                    checked = Boolean(checked);
+                    for (var i = 0; i < storeData.checkedData; i++) {
+                        if (storeData.checkedData[i]._song_table_key == key) {
+                            if (!checked) {
+                                _check();
+                            }
+                            return;
+                        }
+                    }
+                    _check();
+                } else {
+                    _check();
+                }
+            }
+
+            function _check() {
+                $(tr).children('td.' + tableClass.col + '-checkbox').find('.song-form-checkbox').trigger('click');
+            }
+        }
+
+        Class.prototype.checkAll = function (checked) {
+            var storeData = store[this.filter];
+            var col = this.getColByType('checkbox');
+            var $tableHeader = storeData.$tableHeader;
+            if (col) {
+                if (col.fixed) {
+                    if (storeData.fixedVisible) {
+                        if (col.fixed === 'left') {
+                            $tableHeader = storeData.$leftTableHeader;
+                        } else {
+                            $tableHeader = storeData.$rightTableHeader;
+                        }
+                    }
+                }
+                if (checked !== undefined) {
+                    checked = Boolean(checked);
+                    if (storeData._checkedData.length == storeData._sortedData.length && !checked ||
+                        storeData._checkedData.length != storeData._sortedData.length && checked) {
+                        _check();
+                    }
+                } else {
+                    _check();
+                }
+            }
+
+            function _check() {
+                $tableHeader.find('th.' + tableClass.col + '-checkbox').find('.song-form-checkbox').trigger('click');
+            }
+        }
+
+        // 更改行的选中状态
+        Class.prototype.selectRow = function (key, checked) {
+            var storeData = store[this.filter];
+            var col = this.getColByType('raido');
+            var tr = null;
+            if (col) {
+                tr = this.getTrByKey(key, storeData.fixedVisible ? col.fixed : '');
+                $(tr).children('td.' + tableClass.col + '-raido').find('.song-form-raido').trigger('click');
             }
         }
 
@@ -1060,13 +1139,26 @@
         }
 
         /**
-         * 根据字段唯一key返回列配置对象
+         * 根据列字段唯一key返回列配置对象
          * @param {String} key 
          */
         Class.prototype.getColByKey = function (key) {
             var storeData = store[this.filter];
             for (var i = 0; i < storeData.cols.length; i++) {
                 if (storeData.cols[i]._key == key) {
+                    return storeData.cols[i];
+                }
+            }
+        }
+
+        /**
+         * 根据列类型返回列配置对象
+         * @param {String} key 
+         */
+        Class.prototype.getColByType = function (type) {
+            var storeData = store[this.filter];
+            for (var i = 0; i < storeData.cols.length; i++) {
+                if (storeData.cols[i].type == type) {
                     return storeData.cols[i];
                 }
             }
@@ -1387,7 +1479,7 @@
                 var defaultToolbar = storeData.defaultToolbar;
                 var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
                 // 默认工具条
-                if (defaultToolbar === true) {
+                if (defaultToolbar) {
                     defaultToolbar = ['filter', 'exports', 'print']
                 }
                 for (var i = 0; i < defaultToolbar.length; i++) {
@@ -1502,6 +1594,12 @@
                             storeData._checkedData = checkedData
                             $all.prop('checked', checkedData.length == storeData._sortedData.length);
                             Form.render('checkbox(' + allFilter + ')', $headerMain);
+                            that.trigger('checkbox', {
+                                dom: e.dom,
+                                data: checkedData.map(function (item) {
+                                    return item.id;
+                                })
+                            });
                         });
                         // 全选或者全不选
                         Form.once('checkbox(' + allFilter + ')', function (e) {
@@ -1513,6 +1611,12 @@
                             });
                             storeData._checkedData = checkedData
                             Form.render('checkbox(' + checkFilter + ')', $headerMain);
+                            that.trigger('checkbox', {
+                                dom: e.dom,
+                                data: checkedData.map(function (item) {
+                                    return item.id;
+                                })
+                            });
                         });
                     }
                 }
@@ -1937,7 +2041,7 @@
         Class.prototype.renderPage = function () {
             var that = this;
             var storeData = store[this.filter];
-            if (storeData.page === false) {
+            if (!storeData.page) {
                 return;
             }
             var $pager = $('<div class="' + tableClass.pager + '"></div>');
@@ -2139,7 +2243,7 @@
                             var songBindData = that.getBindData($td[0]);
                             if (songBindData) {
                                 data.dom = e.target;
-                                data.rowData = that.delInnerProperty(songBindData.rowData);
+                                data.data = that.delInnerProperty(songBindData.rowData);
                             }
                         }
                         // 触发自定义事件
@@ -2156,7 +2260,7 @@
                     // 触发行点击事件
                     that.trigger('row', {
                         dom: this,
-                        rowData: that.delInnerProperty(songBindData.rowData)
+                        data: that.delInnerProperty(songBindData.rowData)
                     });
                 });
                 // 列点击事件

@@ -1010,6 +1010,8 @@ textarea {
 .song-table-toolbar {
   position: relative;
   z-index: 2;
+  min-height: 30px;
+  _height: 30px;
   padding: 10px 15px;
   padding-right: 130px;
   border-bottom: 1px solid #eeeeee;
@@ -1270,6 +1272,7 @@ textarea {
 }
 
 .song-table .song-table-editing .song-table-checkboxs {
+  line-height: 18px;
   padding-bottom: 10px;
   text-align: left;
 }

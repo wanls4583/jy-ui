@@ -260,9 +260,9 @@
         <legend>表格</legend>
         <div class="song-field-box">
             <div style="margin:15px 0;">单选表格</div>
-            <table id="table1" song-filter="table1"></table>
+            <table id="table1"></table>
             <div style="margin:15px 0;">多选表格</div>
-            <table id="table3" song-filter="table3"></table>
+            <table id="table2"></table>
         </div>
     </fieldset>
     <fieldset class="song-field song-field-title">
@@ -460,8 +460,8 @@
             }
         });
     }
-    renderTable1();
-    window.table = renderTable3();
+    window.table1 = renderTable1();
+    window.table2 = renderTable2();
     // 单选表格
     function renderTable1() {
         var data = [];
@@ -475,7 +475,7 @@
         };
         var table = SongUi.Table.render({
             elem: '#table1',
-            width: 800,
+            width: 1000,
             height: 500,
             data: data,
             limit: 10,
@@ -543,7 +543,7 @@
         return table;
     }
     // 可编辑表格
-    function renderTable3() {
+    function renderTable2() {
         var data = [];
         for (var i = 0; i < 10000; i++) {
             var sex = Math.ceil(Math.random() * 2);
@@ -554,14 +554,15 @@
             data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
-            elem: '#table3',
-            width: 800,
+            elem: '#table2',
+            width: 1000,
             height: 500,
             data: data,
             limit: 20,
             ellipsis: false,
             defaultToolbar: true,
             toolbar: '<button class="song-btn song-btn-sm" song-event="custom-add">添加行</button>\
+            <button class="song-btn song-btn-sm" song-event="custom-checkall">全选/全不选</button>\
             <button class="song-btn song-btn-sm" song-event="custom-checked">获取选中的数据</button>\
             <button class="song-btn song-btn-sm" song-event="custom-getadd">获取添加的数据</button>\
             <button class="song-btn song-btn-sm" song-event="custom-getdel">获取删除的数据</button>\
@@ -575,13 +576,13 @@
                     title: '用户',
                     field: 'user',
                     width: 90,
-                    event: 'name',
+                    event: 'custom-name',
                     fixed: 'left',
                     rowspan: 2
                 }, {
                     title: '手机号',
                     field: 'phone',
-                    width: 120,
+                    width: 150,
                     editable: {
                         type: 'number',
                         rules: [{ type: 'number' }]
@@ -647,13 +648,13 @@
                 [{
                     title: '签名',
                     field: 'sign',
-                    width: 100,
+                    width: 200,
                     align: 'center',
                     editable: true
                 }, {
                     title: '爱好',
                     field: 'like',
-                    width: 100,
+                    width: 250,
                     align: 'center',
                     checkbox: [{
                         label: '听歌',
@@ -690,7 +691,10 @@
             });
         });
         table.on('custom-del', function (obj) {
-            table.deleteRow(obj.rowData.id);
+            table.deleteRow(obj.data.id);
+        });
+        table.on('custom-checkall', function (obj) {
+            table.checkAll();
         });
         table.on('custom-checked', function (obj) {
             SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
@@ -705,7 +709,7 @@
             SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
         });
         table.on('custom-name', function (obj) {
-            SongUi.Dialog.alert(obj.rowData.user);
+            SongUi.Dialog.alert(obj.data.user);
         });
         return table;
     }

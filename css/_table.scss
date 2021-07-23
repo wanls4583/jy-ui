@@ -192,6 +192,8 @@
     &-toolbar {
         position: relative;
         z-index: 2;
+        min-height: 30px;
+        _height: 30px;
         padding: $pd10 $pd15;
         padding-right: 130px;
         border-bottom: 1px solid $light-color;
@@ -453,6 +455,7 @@
 
         // 复选框编辑容器
         .song-table-checkboxs {
+            line-height: 18px;
             padding-bottom: $pd10;
             text-align: left;
 
