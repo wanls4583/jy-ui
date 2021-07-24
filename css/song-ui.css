@@ -1693,12 +1693,13 @@ textarea {
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
           box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
   background-color: #fff;
-  _width: 200px;
+  *width: 200px;
 }
 
 .song-menu-static {
   position: relative;
   display: inline-block;
+  *width: 200px;
   *display: inline;
   *zoom: 1;
 }
@@ -1710,7 +1711,7 @@ textarea {
   *zoom: 1;
 }
 
-.song-menu-item ul {
+.song-menu-item .song-menu-ul {
   display: none;
 }
 
@@ -1745,11 +1746,12 @@ textarea {
   background-color: transparent;
 }
 
-.song-menu-right ul {
+.song-menu-right .song-menu-ul {
   position: absolute;
-  top: -5px;
+  top: -6px;
   left: 100%;
   margin-left: 10px;
+  *margin-left: 0;
   padding: 5px 0;
   border: 1px solid #eeeeee;
   border-radius: 2px;
@@ -1758,21 +1760,17 @@ textarea {
   background-color: #fff;
 }
 
-.song-menu-right ul:before {
+.song-menu-right .song-menu-ul:before {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -11px;
-  width: 12px;
+  left: -15px;
+  width: 20px;
 }
 
 .song-menu-right:hover {
   background-color: #f6f6f6;
-}
-
-.song-menu-right:hover ul {
-  display: block;
 }
 
 .song-menu-border {
@@ -1806,11 +1804,7 @@ textarea {
   display: block;
 }
 
-.song-menu-open ul {
-  display: block;
-}
-
-.song-menu-open .song-menu-right-content {
+.song-menu-open .song-menu-ul {
   display: block;
 }
 

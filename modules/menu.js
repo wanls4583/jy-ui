@@ -2,13 +2,13 @@
     function factory($, Common) {
         var downIcon = '&#xe74b;';
         var upIcon = '&#xe757;';
-        var leftIcon = '&#xe733;';
         var rightIcon = '&#xe734;';
         var tpl = {
-            menu: '<ul class="song-menu"></ul>',
-            item: '<li class="song-menu-item">\
+            menu: '<div class="song-menu"></div>',
+            ul: '<div class="song-menu-ul"></div>',
+            item: '<div class="song-menu-item">\
                 <div class="song-menu-item-title"></div>\
-            </li>',
+            </div>',
             right: '<i class="song-icon song-menu-right-icon">' + rightIcon + '</i>',
             down: '<i class="song-icon song-menu-down-icon">' + downIcon + '</i>',
             up: '<i class="song-icon song-menu-up-icon">' + upIcon + '</i>',
@@ -17,6 +17,8 @@
 
         var menuClass = {
             menu: 'song-menu',
+            ul: 'song-menu-ul',
+            item: 'song-menu-item',
             title: 'song-menu-item-title',
             group: 'song-menu-group',
             static: 'song-menu-static',
@@ -139,9 +141,9 @@
                 that.dataMap[that.key] = item;
                 that.key++;
                 if (item.children && item.children.length) {
-                    var $ul = $('<ul></ul>');
+                    var $ul = $(tpl.ul);
                     $item.addClass(menuClass.group);
-                    if (item.openType == 'right' && ieVersion > 7) {
+                    if (item.openType == 'right') {
                         $item.append($ul);
                         $item.addClass(menuClass.right);
                         $title.append(tpl.right);
@@ -159,7 +161,7 @@
 
         // 给group添加分割线
         Class.prototype.addBorder = function () {
-            this.$menu.find('li.' + menuClass.group).each(function (i, li) {
+            this.$menu.find('.' + menuClass.group).each(function (i, li) {
                 var $li = $(li);
                 if (!$li.hasClass(menuClass.right)) {
                     $(tpl.border).insertAfter($li);
@@ -189,8 +191,8 @@
 
         // 打开/关闭菜单项
         Class.prototype.toggle = function (key, open) {
-            var $li = this.$menu.find('li.' + menuClass.group + '[data-key="' + key + '"]');
-            var $ul = $li.children('ul');
+            var $li = this.$menu.find('.' + menuClass.group + '[data-key="' + key + '"]');
+            var $ul = $li.children('.' + menuClass.ul);
             $ul = $ul.length ? $ul : $li.children('div.' + menuClass.rightWrap);
             if (open && !$ul.is(':visible') || !open && $ul.is(':visible')) {
                 if ($ul.hasClass(menuClass.rightWrap)) {
@@ -226,7 +228,7 @@
         // 绑定事件
         Class.prototype.bindEvent = function () {
             var that = this;
-            this.$menu.delegate('li.' + menuClass.group, 'click', function () {
+            this.$menu.delegate('.' + menuClass.group, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.right)) {
@@ -237,14 +239,32 @@
                     });
                 }
             });
-            this.$menu.delegate('li', 'click', function () {
+            this.$menu.delegate('.' + menuClass.right, 'mouseenter', function () {
+                var $this = $(this);
+                var data = that.getBindData(this);
+                $this.addClass(menuClass.open);
+                that.trigger('open', {
+                    dom: this,
+                    data: that.delInnerProperty(data)
+                });
+            });
+            this.$menu.delegate('.' + menuClass.right, 'mouseleave', function () {
+                var $this = $(this);
+                var data = that.getBindData(this);
+                $this.removeClass(menuClass.open);
+                that.trigger('close', {
+                    dom: this,
+                    data: that.delInnerProperty(data)
+                });
+            });
+            this.$menu.delegate('.' + menuClass.item, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.group)) {
                     if (that.option.check) {
                         that.$menu.find('.' + menuClass.checked).removeClass(menuClass.checked);
                         $this.addClass(menuClass.checked);
-                        $this.parents('li').addClass(menuClass.checked);
+                        $this.parents('.' + menuClass.item).addClass(menuClass.checked);
                     }
                     that.trigger('click', {
                         dom: this,
