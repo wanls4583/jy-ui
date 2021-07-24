@@ -8,6 +8,7 @@ body {
 
 ul,
 ol,
+li,
 dl,
 dd,
 p {
@@ -1685,21 +1686,28 @@ textarea {
 }
 
 .song-menu {
+  position: absolute;
+  padding: 5px 0;
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+  _width: 200px;
+}
+
+.song-menu-static {
+  position: relative;
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  width: 212px;
-  padding: 5px 0;
-  border: 1px solid #eeeeee;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
 }
 
 .song-menu-item {
   position: relative;
   padding: 0 15px;
   cursor: pointer;
+  *zoom: 1;
 }
 
 .song-menu-item ul {
@@ -1707,7 +1715,30 @@ textarea {
 }
 
 .song-menu-item:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
+}
+
+.song-menu-checked {
+  color: #5FB878;
+  background-color: #f6f6f6;
+}
+
+.song-menu-checked:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 36px;
+  background-color: #5FB878;
+}
+
+.song-menu-group {
+  background-color: transparent;
+}
+
+.song-menu-group:after {
+  display: none;
 }
 
 .song-menu-group:hover {
@@ -1716,23 +1747,35 @@ textarea {
 
 .song-menu-right ul {
   position: absolute;
-  top: 0;
+  top: -5px;
   left: 100%;
   margin-left: 10px;
-  margin-top: -5px;
   padding: 5px 0;
   border: 1px solid #eeeeee;
-  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
-          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
   background-color: #fff;
 }
 
+.song-menu-right ul:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -11px;
+  width: 12px;
+}
+
 .song-menu-right:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
+}
+
+.song-menu-right:hover ul {
+  display: block;
 }
 
 .song-menu-border {
-  height: 0;
   margin: 5px 0;
   border-top: 1px solid #eeeeee;
 }
@@ -1740,6 +1783,11 @@ textarea {
 .song-menu-item-title {
   position: relative;
   line-height: 36px;
+  padding-right: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  *zoom: 1;
 }
 
 .song-menu-item-title .song-icon {
@@ -1759,6 +1807,10 @@ textarea {
 }
 
 .song-menu-open ul {
+  display: block;
+}
+
+.song-menu-open .song-menu-right-content {
   display: block;
 }
 

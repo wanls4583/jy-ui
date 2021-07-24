@@ -381,7 +381,10 @@
     <fieldset class="song-field">
         <legend>菜单</legend>
         <div class="song-field-box">
-            <div id="menu"></div>
+            <div style="padding:20px 0;">普通菜单</div>
+            <div id="menu1"></div>
+            <div style="padding:20px 0;">下拉菜单</div>
+            <button class="song-btn" id="menu2">下拉菜单</button>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -782,12 +785,57 @@
         type: 'time',
         range: true
     });
+    var menu = SongUi.Menu.render({
+        position: 'static',
+        elem: '#menu1',
+        check: true,
+        template: function (item) {
+            if (item.title == 'item1') {
+                return '<span style="color:red">' + '★' + '</span>' + item.title;
+            } else {
+                return item.title;
+            }
+        },
+        data: [{
+            title: 'item1',
+            id: 0
+        },
+        {
+            title: 'item2',
+            children: [{ title: 'item3' }],
+            id: 1
+        },
+        {
+            title: 'item4',
+            openType: 'right',
+            children: [{ title: 'item5' }],
+            id: 2
+        }]
+    });
+    menu.on('click', function (obj) {
+        // console.log('click');
+        // console.log(obj);
+    });
+    menu.on('open', function (obj) {
+        // console.log('open');
+        // console.log(obj);
+    });
+    menu.on('close', function (obj) {
+        // console.log('close');
+        // console.log(obj);
+    });
     SongUi.Menu.render({
-        elem: '#menu',
-        data: [{ title: 'item1' },
-        { title: 'item2', children: [{ title: 'item3' }] },
-        { title: 'item4', openType: 'right', children: [{ title: 'item5' }] }]
-    })
+        elem: '#menu2',
+        data: [{
+            title: 'item1'
+        },
+        {
+            title: 'item2'
+        },
+        {
+            title: 'item3'
+        }]
+    });
 </script>
 
 </html>

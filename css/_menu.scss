@@ -1,53 +1,95 @@
 .song-menu {
-    display: inline-block;
-    *display: inline;
-    *zoom: 1;
-    width: 212px;
+    position: absolute;
     padding: 5px 0;
     border: 1px solid $light-color;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, .15);
+    border-radius: 2px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
     background-color: #fff;
+    _width: 200px;
+
+    &-static {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+    }
 
     &-item {
         position: relative;
         padding: 0 $pd15;
         cursor: pointer;
+        *zoom: 1;
 
         ul {
             display: none;
         }
 
         &:hover {
-            background-color: $light-color;
+            background-color: $lighter-color;
+        }
+    }
+
+    &-checked {
+        color: $link-color;
+        background-color: $lighter-color;
+
+        &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3px;
+            height: 36px;
+            background-color: $link-color;
         }
     }
 
     &-group {
+        background-color: transparent;
+
+        &:after {
+            display: none;
+        }
+
         &:hover {
             background-color: transparent;
         }
     }
 
     &-right {
+
         ul {
             position: absolute;
-            top: 0;
+            top: -5px;
             left: 100%;
             margin-left: 10px;
-            margin-top: -5px;
             padding: 5px 0;
             border: 1px solid $light-color;
-            box-shadow: 1px 1px 4px rgba(0, 0, 0, .15);
+            border-radius: 2px;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
             background-color: #fff;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: -11px;
+                width: 12px;
+            }
         }
 
+
         &:hover {
-            background-color: $light-color;
+            ul {
+                display: block;
+            }
+
+            background-color: $lighter-color;
         }
     }
 
     &-border {
-        height: 0;
         margin: 5px 0;
         border-top: 1px solid $light-color;
     }
@@ -55,6 +97,11 @@
     &-item-title {
         position: relative;
         line-height: 36px;
+        padding-right: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        *zoom: 1;
 
         .song-icon {
             display: none;
@@ -72,6 +119,10 @@
 
     &-open {
         ul {
+            display: block;
+        }
+
+        .song-menu-right-content {
             display: block;
         }
 
