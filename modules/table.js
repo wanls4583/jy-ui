@@ -443,15 +443,29 @@
          */
         Class.prototype.deleteRow = function (key) {
             var that = this;
+            var col = this.getColByType('checkbox');
             var rowData = this.getRowDataByKey(key);
             _deleteRow();
-            this.hasLeftFixed && _deleteRow('left');
-            this.hasRightFixed && _deleteRow('right');
+            if (this.hasLeftFixed) {
+                _deleteRow('left');
+            }
+            if (this.hasRightFixed) {
+                _deleteRow('right');
+            }
+            if (col) {
+                if (!col.fixed || !this.fixedVisible) {
+                    _checkAll();
+                } else if (col.fixed === 'left') {
+                    _checkAll('left');
+                } else {
+                    _checkAll('right');
+                }
+            }
+
             this.setFixedArea();
 
             function _deleteRow(fixed) {
                 var $tr = that.getTrByKey(key, fixed);
-                var $headerMain = null;
                 // 删除溢出内容弹框
                 $tr.children('td').each(function (i, td) {
                     var songBindData = that.getBindData(td);
@@ -485,6 +499,19 @@
                         break;
                     }
                 }
+            }
+
+            function _checkAll(fixed) {
+                var allFilter = that.getCheckFilter(fixed, true);
+                var checked = that.sortedData.length === that.checkedData.length;
+                var $tableHeader = that.$tableHeader;
+                if (fixed === 'left') {
+                    $tableHeader = that.$leftTableHeader;
+                } else if (fixed === 'right') {
+                    $tableHeader = that.$rightTableHeader;
+                }
+                $tableHeader.find('input[type="checkbox"][song-filter="' + allFilter + '"]').prop('checked', checked);
+                Form.render('checkbox(' + allFilter + ')', $tableHeader);
             }
         }
 
@@ -545,7 +572,7 @@
         }
 
         // 更改行的选中状态
-        Class.prototype.selectRow = function (key, checked) {
+        Class.prototype.selectRow = function (key) {
             var col = this.getColByType('raido');
             var tr = null;
             if (col) {
