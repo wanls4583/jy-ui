@@ -446,22 +446,13 @@
             var col = this.getColByType('checkbox');
             var rowData = this.getRowDataByKey(key);
             _deleteRow();
-            if (this.hasLeftFixed) {
-                _deleteRow('left');
-            }
-            if (this.hasRightFixed) {
-                _deleteRow('right');
-            }
+            this.hasLeftFixed && _deleteRow('left');
+            this.hasRightFixed && _deleteRow('right');
             if (col) {
-                if (!col.fixed || !this.fixedVisible) {
-                    _checkAll();
-                } else if (col.fixed === 'left') {
-                    _checkAll('left');
-                } else {
-                    _checkAll('right');
-                }
+                _checkAll();
+                col.fixed === 'left' && _checkAll('left');
+                col.fixed === 'right' && _checkAll('right');
             }
-
             this.setFixedArea();
 
             function _deleteRow(fixed) {
@@ -1502,16 +1493,15 @@
          */
         Class.prototype.renderTableHeader = function (fixed) {
             var that = this;
-            var $view = this.$view;
             var originCols = this.originCols;
             var $tableHeaderHead = this.$tableHeaderHead;
-            var $headerMain = this.$headerMain;
+            var $table = this.$table;
             if (fixed == 'left') {
                 $tableHeaderHead = this.$leftTableHeaderHead;
-                $headerMain = this.$leftHeaderMain;
+                $table = this.$leftTable;
             } else if (fixed == 'right') {
                 $tableHeaderHead = this.$rightTableHeaderHead;
-                $headerMain = this.$rightHeaderMain;
+                $table = this.$rightTable;
             }
             // 创建多级表头
             originCols.map(function (cols) {
@@ -1559,8 +1549,14 @@
                     $tr.append($th);
                     // 单选
                     if (col.type == 'radio') {
-                        Form.once('radio(table_radio_' + that.filter + (fixed ? '_' + fixed : '') + ')', function (e) {
+                        var radioFilter = that.getRadioFilter(fixed);
+                        Form.once('radio(' + radioFilter + ')', function (e) {
                             that.selectedData = that.getRowDataByKey(e.data);
+                            that.trigger('radio', {
+                                dom: e.dom,
+                                data: that.selectedData.id
+                            });
+                            _syncCheckRadio(col, 'radio', false, e.dom.value);
                         });
                     }
                     // 多选
@@ -1576,30 +1572,32 @@
                             }
                             that.checkedData = checkedData
                             $all.prop('checked', checkedData.length == that.sortedData.length);
-                            Form.render('checkbox(' + allFilter + ')', $headerMain);
+                            Form.render('checkbox(' + allFilter + ')', $tableHeaderHead);
                             that.trigger('checkbox', {
                                 dom: e.dom,
                                 data: checkedData.map(function (item) {
                                     return item.id;
                                 })
                             });
+                            _syncCheckRadio(col, 'checkbox', false, e.dom.value);
                         });
                         // 全选或者全不选
                         Form.once('checkbox(' + allFilter + ')', function (e) {
                             var checked = $(e.dom).prop('checked');
                             var checkedData = checked ? that.sortedData.concat([]) : [];
-                            var boxs = $view.find('input[type="checkbox"][song-filter="' + checkFilter + '"]');
+                            var boxs = $table.find('input[song-filter="' + checkFilter + '"]')
                             boxs.each(function (i, box) {
                                 $(box).prop('checked', checked);
                             });
                             that.checkedData = checkedData
-                            Form.render('checkbox(' + checkFilter + ')', $headerMain);
+                            Form.render('checkbox(' + checkFilter + ')', $table);
                             that.trigger('checkbox', {
                                 dom: e.dom,
                                 data: checkedData.map(function (item) {
                                     return item.id;
                                 })
                             });
+                            _syncCheckRadio(col, 'checkbox', true);
                         });
                     }
                 }
@@ -1647,6 +1645,31 @@
                     that.renderTableBody(true);
                     return false;
                 });
+            }
+
+            // 同步不同表格中的单选/多选
+            function _syncCheckRadio(col, type, all, value) {
+                if (fixed || col.fixed && !that.fixedVisible) {
+                    var _filter = '';
+                    if (fixed) {
+                        _filter = type === 'radio' ? that.getRadioFilter() : that.getCheckFilter('', all);
+                        _$table = that.$table;
+                        if (all) {
+                            _$table = that.$tableHeaderHead;
+                        }
+                    } else if (col.fixed) {
+                        _filter = type === 'radio' ? that.getRadioFilter(col.fixed) : that.getCheckFilter(col.fixed, all);
+                        _$table = col.fixed === 'left' ? that.$leftTable : that.$rightTable;
+                        if (all) {
+                            _$table = col.fixed === 'left' ? that.$leftTableHeaderHead : that.$rightTableHeaderHead;
+                        }
+                    }
+                    if (all) {
+                        _$table.find('input[song-filter="' + _filter + '"]').next().trigger('click');
+                    } else {
+                        _$table.find('input[song-filter="' + _filter + '"][value="' + value + '"]').next().trigger('click');
+                    }
+                }
             }
         }
 
