@@ -433,7 +433,7 @@
                     });
                 }
                 // 取消全选
-                $headerMain.find('input[type="checkbox"][song-filter="' + that.getCheckFilter(fixed, true) + '"]').prop('checked', false);
+                $headerMain.find('input[song-filter="' + that.getCheckFilter(fixed, true) + '"]').prop('checked', false);
             }
         }
 
@@ -501,7 +501,7 @@
                 } else if (fixed === 'right') {
                     $tableHeader = that.$rightTableHeader;
                 }
-                $tableHeader.find('input[type="checkbox"][song-filter="' + allFilter + '"]').prop('checked', checked);
+                $tableHeader.find('input[song-filter="' + allFilter + '"]').prop('checked', checked);
                 Form.render('checkbox(' + allFilter + ')', $tableHeader);
             }
         }
@@ -1848,7 +1848,7 @@
                 $headerMain = this.$rightHeaderMain;
             }
             // 取消全选
-            $headerMain.find('input[type="checkbox"][song-filter="' + this.getCheckFilter(fixed, true) + '"]').prop('checked', false);
+            $headerMain.find('input[song-filter="' + this.getCheckFilter(fixed, true) + '"]').prop('checked', false);
             this.checkedData = [];
             this.selectedData = null;
             $table.empty();
