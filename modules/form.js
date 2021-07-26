@@ -29,11 +29,11 @@
         }
         var event = Common.getEvent();
         var Form = {
-            init: init,
-            render: render,
             on: event.on,
             once: event.once,
             trigger: event.trigger,
+            init: init,
+            render: render,
             verify: verify,
             getJsonFromForm: getJsonFromForm,
             verifyRules: {
@@ -188,7 +188,11 @@
         //渲染开关
         function renderSwitch(filter, container) {
             var $container = $(container || window.document.body);
-            var inputs = $container.find('input[type="checkbox"][song-skin="switch"]' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            var selector = 'input[type="checkbox"][song-skin="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var inputs = $container.find(selector);
+            if ($container.is(selector)) {
+                inputs = $container;
+            }
             inputs.each(function (i, input) {
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
@@ -252,7 +256,11 @@
         // 渲染单选按钮
         function renderRadio(filter, container) {
             var $container = $(container || window.document.body);
-            var inputs = $container.find('input[type="radio"]' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            var selector = 'input[type="radio"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var inputs = $container.find(selector);
+            if ($container.is(selector)) {
+                inputs = $container;
+            }
             inputs.each(function (i, input) {
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
@@ -288,7 +296,9 @@
                 $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                _bindEvent($html);
+                if (inputs != $container) {
+                    _bindEvent($html);
+                }
             });
             //绑定事件
             function _bindEvent($dom) {
@@ -324,7 +334,11 @@
         // 渲染复选框
         function renderCheckbox(filter, container) {
             var $container = $(container || window.document.body);
-            var inputs = $container.find('input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            var selector = 'input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var inputs = $container.find(selector);
+            if ($container.is(selector)) {
+                inputs = $container;
+            }
             inputs.each(function (i, input) {
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
@@ -359,7 +373,9 @@
                 $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                _bindEvent($html);
+                if (inputs != $container) {
+                    _bindEvent($html);
+                }
             });
 
             function _bindEvent($dom) {
@@ -397,7 +413,11 @@
         // 渲染下拉选择框
         function renderSelect(filter, container) {
             var $container = $(container || window.document.body);
-            var selects = $container.find('select' + (filter ? '[song-filter="' + filter + '"]' : ''));
+            var selector = 'select' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var selects = $container.find(selector);
+            if ($container.is(selector)) {
+                selects = $container;
+            }
             selects.each(function (i, select) {
                 var $select = $(select);
                 var ignore = $select.attr('song-ignore') === undefined ? false : true;

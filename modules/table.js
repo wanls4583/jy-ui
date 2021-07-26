@@ -1649,7 +1649,7 @@
 
             // 同步不同表格中的单选/多选
             function _syncCheckRadio(col, type, all, value) {
-                if (fixed || col.fixed && !that.fixedVisible) {
+                if (fixed && that.fixedVisible || col.fixed && !that.fixedVisible) {
                     var _filter = '';
                     if (fixed) {
                         _filter = type === 'radio' ? that.getRadioFilter() : that.getCheckFilter('', all);
