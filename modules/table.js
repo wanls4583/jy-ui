@@ -239,6 +239,7 @@
             this.createSheet();
             this.renderToolbar();
             this.renderTableHeader();
+            this.renderTableFixed();
             this.renderTableBody();
             this.renderPage();
             this.setViewArea();
@@ -368,19 +369,28 @@
          */
         Class.prototype.addRow = function (option) {
             var that = this;
-            var cols = this.cols;
             var data = option.data instanceof Array ? option.data : [option.data];
             var addedData = [];
             var index = _getIndex(option.key);
             _addRow();
-            cols[0].fixed == 'left' && _addRow('left');
-            cols[cols.length - 1].fixed == 'right' && _addRow('right');
+            this.setFixedArea();
+            this.renderHeaderCheckbox();
+            this.renderBodyRadioCheckbox();
+            if (this.hasLeftFixed) {
+                _addRow('left');
+                this.renderHeaderCheckbox('left');
+                this.renderBodyRadioCheckbox('left');
+            }
+            if (this.hasRightFixed) {
+                _addRow('right');
+                this.renderHeaderCheckbox('right');
+                this.renderBodyRadioCheckbox('right');
+            }
             this.sortedData = this.sortedData.slice(0, index).concat(addedData).concat(this.sortedData.slice(index));
             this.renderedData = this.renderedData.concat(addedData);
             addedData.map(function (item) {
                 that.addedData.push(item);
             });
-            this.setFixedArea();
 
             function _getIndex(key) {
                 if (key !== undefined) {
@@ -432,9 +442,6 @@
                 }
                 // 取消全选
                 $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', false);
-                Form.render('checkbox(song_table_checkbox)', $tableHeader);
-                Form.render('checkbox(song_table_checkbox)', $table);
-                Form.render('radio(song_table_radio)', $table);
             }
         }
 
@@ -502,7 +509,7 @@
                     $tableHeader = that.$rightTableHeader;
                 }
                 $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', checked);
-                Form.render('checkbox(song_table_checkbox)', $tableHeader);
+                that.renderHeaderCheckbox(fixed);
             }
         }
 
@@ -1495,6 +1502,19 @@
             }
             // 创建多级表头
             originCols.map(function (cols) {
+                _renderCols(cols);
+            });
+            // 挂载主表表头
+            if (!fixed) {
+                this.$tableHeader.append(this.$tableHeaderHead);
+                this.$header.append(this.$tableHeader);
+                this.$headerMain.append(this.$header);
+                this.$headerMain.insertAfter(this.$toolbar);
+                this.setColsWidth();
+            }
+            this.renderHeaderCheckbox(fixed);
+
+            function _renderCols(cols) {
                 var $tr = $('<tr></tr>');
                 for (var i = 0; i < cols.length; i++) {
                     var col = cols[i];
@@ -1590,16 +1610,7 @@
                     }
                 }
                 $tableHeaderHead.append($tr);
-            });
-            // 挂载主表表头
-            if (!fixed) {
-                this.$tableHeader.append(this.$tableHeaderHead);
-                this.$header.append(this.$tableHeader);
-                this.$headerMain.append(this.$header);
-                this.$headerMain.insertAfter(this.$toolbar);
-                this.setColsWidth();
             }
-            Form.render('checkbox(song_table_checkbox)', $tableHeader);
 
             // 渲染排序图标
             function _renderSortIcon($th, $cell, col) {
@@ -1712,7 +1723,8 @@
                     that.idKeyMap = {};
                     that.dataMap = {};
                     that.renderTr();
-                    that.renderTableFixed();
+                    that.hasLeftFixed && that.renderTr('left');
+                    that.hasRightFixed && that.renderTr('right');
                 }, 0);
             }
 
@@ -1748,70 +1760,61 @@
          */
         Class.prototype.renderTableFixed = function () {
             var that = this;
-            var cols = this.cols;
-            if (cols.length && cols[0].fixed == 'left') {
-                if (!this.$leftHeaderMain) {
-                    this.$leftHeaderMain = $('<div class="' + tableClass.leftHeaderMain + '"></div>');
-                    this.$leftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
-                    this.$leftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
-                    this.$leftTable = $('<table class="' + tableClass.table + '"></table>');
-                    this.$leftTableHeader = $('<table class="' + tableClass.table + '"></table>');
-                    this.$leftTableHeaderHead = $('<thead></thead>');
-                    this.$leftTableHeader.append(this.$leftTableHeaderHead);
-                    this.$leftHeader.append(this.$leftTableHeader);
-                    this.$leftHeaderMain.append(this.$leftHeader);
-                    this.$leftMain.append(this.$leftTable);
-                    this.$leftHeaderMain.append(this.$leftMain);
-                    this.renderTableHeader('left');
-                    this.$view.append(this.$leftHeaderMain);
-                    this.$leftMain.on('mousewheel', function (e) {
-                        var wheelDelta = e.originalEvent.wheelDelta;
-                        if (wheelDelta < 0) {
-                            wheelDelta += 20;
-                        } else {
-                            wheelDelta -= 20;
-                        }
-                        that.$main[0].scrollTop -= wheelDelta;
-                        return false;
-                    });
-                }
+            if (this.hasLeftFixed) {
+                this.$leftHeaderMain = $('<div class="' + tableClass.leftHeaderMain + '"></div>');
+                this.$leftHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
+                this.$leftMain = $('<div class="' + tableClass.fixedMain + '"></div>');
+                this.$leftTable = $('<table class="' + tableClass.table + '"></table>');
+                this.$leftTableHeader = $('<table class="' + tableClass.table + '"></table>');
+                this.$leftTableHeaderHead = $('<thead></thead>');
+                this.$leftTableHeader.append(this.$leftTableHeaderHead);
+                this.$leftHeader.append(this.$leftTableHeader);
+                this.$leftHeaderMain.append(this.$leftHeader);
+                this.$leftMain.append(this.$leftTable);
+                this.$leftHeaderMain.append(this.$leftMain);
+                this.$view.append(this.$leftHeaderMain);
+                this.$leftMain.on('mousewheel', function (e) {
+                    var wheelDelta = e.originalEvent.wheelDelta;
+                    if (wheelDelta < 0) {
+                        wheelDelta += 20;
+                    } else {
+                        wheelDelta -= 20;
+                    }
+                    that.$main[0].scrollTop -= wheelDelta;
+                    return false;
+                });
                 this.$leftHeaderMain.hide();
+                this.renderTableHeader('left');
             }
-            if (cols.length && cols[cols.length - 1].fixed == 'right') {
-                if (!this.$rightHeaderMain) {
-                    this.$mend = $('<div class="' + tableClass.mend + '"></div>');
-                    this.$rightHeaderMain = $('<div class="' + tableClass.rightHeaderMain + '"></div>');
-                    this.$rightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
-                    this.$rightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
-                    this.$rightTable = $('<table class="' + tableClass.table + '"></table>');
-                    this.$rightTableHeader = $('<table class="' + tableClass.table + '"></table>');
-                    this.$rightTableHeaderHead = $('<thead></thead>');
-                    this.$rightTableHeader.append(this.$rightTableHeaderHead);
-                    this.$rightHeader.append(this.$rightTableHeader);
-                    this.$rightHeader.append(this.$mend);
-                    this.$rightHeaderMain.append(this.$rightHeader);
-                    this.$rightMain.append(this.$rightTable);
-                    this.$rightHeaderMain.append(this.$rightMain);
-                    this.$mend.hide();
-                    this.renderTableHeader('right');
-                    this.$view.append(this.$rightHeaderMain);
-                    this.$rightMain.on('mousewheel', function (e) {
-                        var wheelDelta = e.originalEvent.wheelDelta;
-                        if (wheelDelta < 0) {
-                            wheelDelta += 20;
-                        } else {
-                            wheelDelta -= 20;
-                        }
-                        that.$main[0].scrollTop -= wheelDelta;
-                        return false;
-                    });
-                }
+            if (this.hasRightFixed) {
+                this.$mend = $('<div class="' + tableClass.mend + '"></div>');
+                this.$rightHeaderMain = $('<div class="' + tableClass.rightHeaderMain + '"></div>');
+                this.$rightHeader = $('<div class="' + tableClass.fixeHeader + '"></div>');
+                this.$rightMain = $('<div class="' + tableClass.fixedMain + '"></div>');
+                this.$rightTable = $('<table class="' + tableClass.table + '"></table>');
+                this.$rightTableHeader = $('<table class="' + tableClass.table + '"></table>');
+                this.$rightTableHeaderHead = $('<thead></thead>');
+                this.$rightTableHeader.append(this.$rightTableHeaderHead);
+                this.$rightHeader.append(this.$rightTableHeader);
+                this.$rightHeader.append(this.$mend);
+                this.$rightHeaderMain.append(this.$rightHeader);
+                this.$rightMain.append(this.$rightTable);
+                this.$rightHeaderMain.append(this.$rightMain);
+                this.$mend.hide();
+                this.renderTableHeader('right');
+                this.$view.append(this.$rightHeaderMain);
+                this.$rightMain.on('mousewheel', function (e) {
+                    var wheelDelta = e.originalEvent.wheelDelta;
+                    if (wheelDelta < 0) {
+                        wheelDelta += 20;
+                    } else {
+                        wheelDelta -= 20;
+                    }
+                    that.$main[0].scrollTop -= wheelDelta;
+                    return false;
+                });
                 this.$rightHeaderMain.hide();
-            }
-            this.$leftHeaderMain && this.renderTr('left');
-            this.$rightHeaderMain && this.renderTr('right');
-            if (!this.ellipsis) {
-                this.$main.trigger('scroll');
+                this.renderTableHeader('right');
             }
             this.setColsHeight();
         }
@@ -1854,8 +1857,7 @@
                         _appendTr(i);
                     });
                 } else {
-                    Form.render('checkbox(song_table_checkbox)', $table);
-                    Form.render('radio(song_table_radio)', $table);
+                    that.renderBodyRadioCheckbox(fixed);
                     // 设置固定列行高
                     if (that.hasLeftFixed || that.hasRightFixed) {
                         if (that.hasRightFixed && fixed == 'right') {
@@ -2045,6 +2047,35 @@
                 that.limit = limit;
             });
             this.$pager.insertAfter(this.$headerMain);
+        }
+
+        // 渲染表头多选框
+        Class.prototype.renderHeaderCheckbox = function (fixed) {
+            var col = this.getColByType('checkbox');
+            if (col && (!fixed || col.fixed == fixed)) {
+                var $tableHeader = this.$tableHeader;
+                if (fixed === 'left') {
+                    $tableHeader = this.$leftTableHeader;
+                } else if (fixed === 'right') {
+                    $tableHeader = this.$rightTableHeader;
+                }
+                Form.render('checkbox(song_table_checkbox)', $tableHeader);
+            }
+        }
+
+        // 渲染表格体单选/多选
+        Class.prototype.renderBodyRadioCheckbox = function (fixed) {
+            var col = this.getColByType('radio') || this.getColByType('checkbox');
+            if (col && (!fixed || col.fixed == fixed)) {
+                var type = col.type;
+                var $table = this.$table;
+                if (fixed === 'left') {
+                    $table = this.$leftTable;
+                } else if (fixed === 'right') {
+                    $table = this.$rightTable;
+                }
+                Form.render(type + '(song_table_' + type + ')', $table);
+            }
         }
 
         Class.prototype.httpGet = function (success, error) {
