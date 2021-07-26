@@ -1827,16 +1827,13 @@
         Class.prototype.renderTr = function (fixed) {
             var that = this;
             var $table = this.$table;
-            var $tableHeader = this.$tableHeader;
             var data = this.sortedData;
             this.timers.renderTimer = this.timers.renderTimer || {};
 
             if (fixed == 'left') { // 渲染左固定列
                 $table = this.$leftTable;
-                $tableHeader = this.$leftTableHeader;
             } else if (fixed == 'right') { // 渲染右固定列
                 $table = this.$rightTable;
-                $tableHeader = this.$rightTableHeader;
             }
             this.renderHeaderCheckbox(fixed, false);
             this.checkedData = [];
