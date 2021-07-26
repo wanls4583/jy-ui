@@ -374,16 +374,16 @@
             var index = _getIndex(option.key);
             _addRow();
             this.setFixedArea();
-            this.renderHeaderCheckbox();
+            this.renderHeaderCheckbox('', false);
             this.renderBodyRadioCheckbox();
             if (this.hasLeftFixed) {
                 _addRow('left');
-                this.renderHeaderCheckbox('left');
+                this.renderHeaderCheckbox('left', false);
                 this.renderBodyRadioCheckbox('left');
             }
             if (this.hasRightFixed) {
                 _addRow('right');
-                this.renderHeaderCheckbox('right');
+                this.renderHeaderCheckbox('right', false);
                 this.renderBodyRadioCheckbox('right');
             }
             this.sortedData = this.sortedData.slice(0, index).concat(addedData).concat(this.sortedData.slice(index));
@@ -440,8 +440,6 @@
                         that.fixRowHeight(item._song_table_key, 'auto');
                     });
                 }
-                // 取消全选
-                $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', false);
             }
         }
 
@@ -508,8 +506,7 @@
                 } else if (fixed === 'right') {
                     $tableHeader = that.$rightTableHeader;
                 }
-                $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', checked);
-                that.renderHeaderCheckbox(fixed);
+                that.renderHeaderCheckbox(fixed, checked);
             }
         }
 
@@ -985,12 +982,16 @@
                     this.hasRightFixed && this.getTrByKey(key, 'right').css('height', ieVersion == 7 ? height - 1 : height);
                 } else {
                     var trs = this.$table.children('tbody').children('tr');
+                    var heights = [];
+                    trs.each(function(i, tr) {
+                        heights.push(tr.clientHeight);
+                    });
                     this.hasLeftFixed && this.$leftTable.children('tbody').children('tr').each(function (i, tr) {
-                        height = trs[i].clientHeight;
+                        height = heights[i];
                         $(tr).css('height', ieVersion == 7 ? height - 1 : height);
                     });
                     this.hasRightFixed && this.$rightTable.children('tbody').children('tr').each(function (i, tr) {
-                        height = trs[i].clientHeight;
+                        height = heights[i];
                         $(tr).css('height', ieVersion == 7 ? height - 1 : height);
                     });
                 }
@@ -1837,8 +1838,7 @@
                 $table = this.$rightTable;
                 $tableHeader = this.$rightTableHeader;
             }
-            // 取消全选
-            $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', false);
+            this.renderHeaderCheckbox(fixed, false);
             this.checkedData = [];
             this.selectedData = null;
             $table.empty();
@@ -1882,6 +1882,7 @@
                 that.stretchTable();
                 !that.ellipsis && that.fixRowHeight();
                 that.hideLoading();
+                that.$main.trigger('scroll');
             }
         }
 
@@ -2050,7 +2051,7 @@
         }
 
         // 渲染表头多选框
-        Class.prototype.renderHeaderCheckbox = function (fixed) {
+        Class.prototype.renderHeaderCheckbox = function (fixed, checked) {
             var col = this.getColByType('checkbox');
             if (col && (!fixed || col.fixed == fixed)) {
                 var $tableHeader = this.$tableHeader;
@@ -2058,6 +2059,9 @@
                     $tableHeader = this.$leftTableHeader;
                 } else if (fixed === 'right') {
                     $tableHeader = this.$rightTableHeader;
+                }
+                if (typeof checked === 'boolean') {
+                    $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', checked);
                 }
                 Form.render('checkbox(song_table_checkbox)', $tableHeader);
             }
