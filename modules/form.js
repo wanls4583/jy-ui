@@ -28,6 +28,7 @@
             selectActive: 'song-select-active'
         }
         var event = Common.getEvent();
+        var docBody = window.document.body;
         var Form = {
             on: event.on,
             once: event.once,
@@ -187,7 +188,7 @@
         }
         //渲染开关
         function renderSwitch(filter, container) {
-            var $container = $(container || window.document.body);
+            var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][song-skin="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
             var inputs = $container.find(selector);
             if ($container.is(selector)) {
@@ -231,6 +232,7 @@
             });
 
             function _bindEvent($dom) {
+                container = $container[0] === docBody ? false : $container[0];
                 $dom.on('click', function () {
                     var $this = $(this);
                     var filter = this.$input.attr('song-filter');
@@ -245,17 +247,17 @@
                     filter && Form.trigger('switch(' + filter + ')', {
                         data: $this[0].$input.prop('checked'),
                         dom: $this[0].$input[0]
-                    });
+                    }, container);
                     Form.trigger('switch', {
                         data: $this[0].$input.prop('checked'),
                         dom: $this[0].$input[0]
-                    });
+                    }, container);
                 });
             }
         }
         // 渲染单选按钮
         function renderRadio(filter, container) {
-            var $container = $(container || window.document.body);
+            var $container = $(container || docBody);
             var selector = 'input[type="radio"]' + (filter ? '[song-filter="' + filter + '"]' : '');
             var inputs = $container.find(selector);
             if ($container.is(selector)) {
@@ -302,6 +304,7 @@
             });
             //绑定事件
             function _bindEvent($dom) {
+                container = $container[0] === docBody ? false : $container[0];
                 $dom.on('click', function () {
                     var $this = $(this);
                     var name = $this[0].$input.attr('name');
@@ -323,17 +326,17 @@
                     filter && Form.trigger('radio(' + filter + ')', {
                         data: this.$input.val(),
                         dom: this.$input[0]
-                    });
+                    }, container);
                     Form.trigger('radio', {
                         data: this.$input.val(),
                         dom: this.$input[0]
-                    });
+                    }, container);
                 });
             }
         }
         // 渲染复选框
         function renderCheckbox(filter, container) {
-            var $container = $(container || window.document.body);
+            var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
             var inputs = $container.find(selector);
             if ($container.is(selector)) {
@@ -379,6 +382,7 @@
             });
 
             function _bindEvent($dom) {
+                container = $container[0] === docBody ? false : $container[0];
                 $dom.on('click', function () {
                     var $this = $(this);
                     var name = this.$input.attr('name');
@@ -402,17 +406,17 @@
                     filter && Form.trigger('checkbox(' + filter + ')', {
                         data: data,
                         dom: this.$input[0]
-                    });
+                    }, container);
                     Form.trigger('checkbox', {
                         data: data,
                         dom: this.$input[0]
-                    });
+                    }, container);
                 });
             }
         }
         // 渲染下拉选择框
         function renderSelect(filter, container) {
-            var $container = $(container || window.document.body);
+            var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[song-filter="' + filter + '"]' : '');
             var selects = $container.find(selector);
             if ($container.is(selector)) {
@@ -467,6 +471,7 @@
             });
             // 绑定事件
             function _bindEvent($dom) {
+                container = $container[0] === docBody ? false : $container[0];
                 var search = $dom[0].$select.attr('song-search') === undefined ? false : true;
                 var $title = $dom.children('div.' + formClass.selectTitle);
                 var $cont = $dom.children('dl.' + formClass.selectBody);
@@ -515,11 +520,11 @@
                     filter && Form.trigger('select(' + filter + ')', {
                         data: value,
                         dom: $dom[0].$select[0]
-                    });
+                    }, container);
                     Form.trigger('select', {
                         data: value,
                         dom: $dom[0].$select[0]
-                    });
+                    }, container);
                 });
                 // 可搜索
                 if (search) {
@@ -548,7 +553,6 @@
         // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
         $(function () {
             Form.init();
-            Form.render();
         });
 
         return Form;

@@ -17,7 +17,6 @@
         var loadingIcon = '&#xe61e;';
         var ieVersion = Common.getIeVersion();
         var hCellPadding = 2;
-        var store = {};
         var tableCount = 1;
         var tableClass = {
             view: 'song-table-view',
@@ -79,8 +78,8 @@
                 <%-cell%>\
             </td>',
             cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-(content||"&nbsp;")%></div></div>',
-            radio: '<input type="radio" name="table_radio_<%-filter%>" value="<%-key%>" song-filter="table_radio_<%-filter%>" <%-(checked?"checked":"")%>/>',
-            checkbox: '<input type="checkbox" name="table_checkbox_<%-filter%>" value="<%-key%>" song-filter="table_checkbox_<%-filter%>" <%-(checked?"checked":"")%>/>',
+            radio: '<input type="radio" name="song_table_radio" value="<%-key%>" song-filter="song_table_radio" <%-(checked?"checked":"")%>/>',
+            checkbox: '<input type="checkbox" name="song_table_checkbox" value="<%-key%>" song-filter="song_table_checkbox" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
             tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>',
             loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
@@ -382,7 +381,6 @@
                 that.addedData.push(item);
             });
             this.setFixedArea();
-            this.renderForm();
 
             function _getIndex(key) {
                 if (key !== undefined) {
@@ -397,14 +395,14 @@
 
             function _addRow(fixed) {
                 var $table = that.$table;
-                var $headerMain = that.$headerMain;
+                var $tableHeader = that.$tableHeader;
                 var tr = null;
                 if (fixed == 'left') {
                     $table = that.$leftTable;
-                    $headerMain = that.$leftHeaderMain;
+                    $tableHeader = that.$leftTableHeader;
                 } else if (fixed == 'right') {
                     $table = that.$rightTable;
-                    $headerMain = that.$rightHeaderMain;
+                    $tableHeader = that.$rightTableHeader;
                 }
                 if (fixed == 'left') {
                     tr = that.$leftTable.children('tbody').children('tr')[index - 1];
@@ -433,7 +431,10 @@
                     });
                 }
                 // 取消全选
-                $headerMain.find('input[song-filter="' + that.getCheckFilter(fixed, true) + '"]').prop('checked', false);
+                $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', false);
+                Form.render('checkbox(song_table_checkbox)', $tableHeader);
+                Form.render('checkbox(song_table_checkbox)', $table);
+                Form.render('radio(song_table_radio)', $table);
             }
         }
 
@@ -493,7 +494,6 @@
             }
 
             function _checkAll(fixed) {
-                var allFilter = that.getCheckFilter(fixed, true);
                 var checked = that.sortedData.length === that.checkedData.length;
                 var $tableHeader = that.$tableHeader;
                 if (fixed === 'left') {
@@ -501,8 +501,8 @@
                 } else if (fixed === 'right') {
                     $tableHeader = that.$rightTableHeader;
                 }
-                $tableHeader.find('input[song-filter="' + allFilter + '"]').prop('checked', checked);
-                Form.render('checkbox(' + allFilter + ')', $tableHeader);
+                $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', checked);
+                Form.render('checkbox(song_table_checkbox)', $tableHeader);
             }
         }
 
@@ -920,7 +920,7 @@
                 var col = songBindData.col;
                 var data = songBindData.colData;
                 var $edit = $(td.children[0].children[0]);
-                var selectFilter = 'table_edit_select_' + that.filter + '_' + Math.random();
+                var selectFilter = 'table_edit_select';
                 var $select = $('<select song-filter="' + selectFilter + '"></select>');
                 col.select && col.select.map(function (item) {
                     $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
@@ -929,13 +929,13 @@
                 $edit.empty().append($div);
                 $div.append($select);
                 // 触发select事件
-                Form.render('select(' + selectFilter + ')', td.parentNode);
+                Form.render('select(' + selectFilter + ')', td);
                 Form.on('select(' + selectFilter + ')', function (e) {
                     $select[0].value = e.data;
                     if (that.autoSave) {
                         that.save(key);
                     }
-                });
+                }, td);
                 $select[0].value = data;
                 songBindData.$select = $select;
                 // 展开下拉框
@@ -949,16 +949,16 @@
                 var col = songBindData.col;
                 var data = songBindData.colData;
                 var $edit = $(td.children[0].children[0]);
-                var checkFilter = 'table_edit_checkbox_' + that.filter + '_' + Math.random();
+                var checkFilter = 'table_edit_checkbox';
                 $edit.addClass(tableClass.checkboxs);
                 col.checkbox && col.checkbox.map(function (item) {
                     $edit.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && Common.indexOf(data, item.value) > -1 ? 'checked' : '') + '/>');
                 });
                 // 触发checkbox事件
-                Form.render('checkbox(' + checkFilter + ')', td.parentNode);
+                Form.render('checkbox(' + checkFilter + ')', td);
                 Form.on('checkbox(' + checkFilter + ')', function (e) {
                     $edit[0].value = e.data;
-                });
+                }, td);
                 $edit[0].value = data;
                 songBindData.$checkbox = $edit;
             }
@@ -1033,7 +1033,6 @@
                 _setDom(tr, 'right');
             });
             this.fixRowHeight(key);
-            this.renderForm();
 
             function _setDom(tr, fixed) {
                 var $tr = $(tr);
@@ -1167,18 +1166,6 @@
          */
         Class.prototype.getClassNameWithKey = function (col, className) {
             return className + '-' + this.tableCount + '-' + col._key;
-        }
-
-        // 获取多选框过滤器名称
-        Class.prototype.getCheckFilter = function (fixed, all) {
-            all = all ? '_all' : '';
-            return 'table_checkbox_' + this.filter + (fixed ? '_' + fixed : '') + all;
-        }
-
-        // 获取单选框过滤器名称
-        Class.prototype.getRadioFilter = function (fixed, all) {
-            all = all ? '_all' : '';
-            return 'table_radio_' + this.filter + (fixed ? '_' + fixed : '') + all;
         }
 
         // 拉伸表格至100%
@@ -1495,12 +1482,15 @@
             var that = this;
             var originCols = this.originCols;
             var $tableHeaderHead = this.$tableHeaderHead;
+            var $tableHeader = this.$tableHeader;
             var $table = this.$table;
             if (fixed == 'left') {
                 $tableHeaderHead = this.$leftTableHeaderHead;
+                $tableHeader = this.$leftTableHeader;
                 $table = this.$leftTable;
             } else if (fixed == 'right') {
                 $tableHeaderHead = this.$rightTableHeaderHead;
+                $tableHeader = this.$rightTableHeader;
                 $table = this.$rightTable;
             }
             // 创建多级表头
@@ -1549,21 +1539,19 @@
                     $tr.append($th);
                     // 单选
                     if (col.type == 'radio') {
-                        var radioFilter = that.getRadioFilter(fixed);
-                        Form.once('radio(' + radioFilter + ')', function (e) {
+                        Form.once('radio(song_table_radio)', function (e) {
                             that.selectedData = that.getRowDataByKey(e.data);
                             that.trigger('radio', {
                                 dom: e.dom,
                                 data: that.selectedData.id
                             });
                             _syncCheckRadio(col, 'radio', false, e.dom.value);
-                        });
+                        }, $table[0]);
                     }
                     // 多选
                     if (col.type == 'checkbox') {
-                        var checkFilter = that.getCheckFilter(fixed);
-                        var allFilter = that.getCheckFilter(fixed, true);
-                        var $all = $('<input type="checkbox" song-filter="' + allFilter + '">');
+                        var checkFilter = 'song_table_checkbox';
+                        var $all = $('<input type="checkbox" song-filter="' + checkFilter + '">');
                         $content.html($all);
                         Form.once('checkbox(' + checkFilter + ')', function (e) {
                             var checkedData = [];
@@ -1572,7 +1560,7 @@
                             }
                             that.checkedData = checkedData
                             $all.prop('checked', checkedData.length == that.sortedData.length);
-                            Form.render('checkbox(' + allFilter + ')', $tableHeaderHead);
+                            Form.render('checkbox(' + checkFilter + ')', $tableHeader);
                             that.trigger('checkbox', {
                                 dom: e.dom,
                                 data: checkedData.map(function (item) {
@@ -1580,9 +1568,9 @@
                                 })
                             });
                             _syncCheckRadio(col, 'checkbox', false, e.dom.value);
-                        });
+                        }, $table[0]);
                         // 全选或者全不选
-                        Form.once('checkbox(' + allFilter + ')', function (e) {
+                        Form.once('checkbox(' + checkFilter + ')', function (e) {
                             var checked = $(e.dom).prop('checked');
                             var checkedData = checked ? that.sortedData.concat([]) : [];
                             var boxs = $table.find('input[song-filter="' + checkFilter + '"]')
@@ -1598,7 +1586,7 @@
                                 })
                             });
                             _syncCheckRadio(col, 'checkbox', true);
-                        });
+                        }, $tableHeader[0]);
                     }
                 }
                 $tableHeaderHead.append($tr);
@@ -1611,6 +1599,7 @@
                 this.$headerMain.insertAfter(this.$toolbar);
                 this.setColsWidth();
             }
+            Form.render('checkbox(song_table_checkbox)', $tableHeader);
 
             // 渲染排序图标
             function _renderSortIcon($th, $cell, col) {
@@ -1650,18 +1639,16 @@
             // 同步不同表格中的单选/多选
             function _syncCheckRadio(col, type, all, value) {
                 if (fixed && that.fixedVisible || col.fixed && !that.fixedVisible) {
-                    var _filter = '';
+                    var _filter = type === 'radio' ? 'song_table_radio' : 'song_table_checkbox';
                     if (fixed) {
-                        _filter = type === 'radio' ? that.getRadioFilter() : that.getCheckFilter('', all);
                         _$table = that.$table;
                         if (all) {
-                            _$table = that.$tableHeaderHead;
+                            _$table = that.$tableHeader;
                         }
                     } else if (col.fixed) {
-                        _filter = type === 'radio' ? that.getRadioFilter(col.fixed) : that.getCheckFilter(col.fixed, all);
                         _$table = col.fixed === 'left' ? that.$leftTable : that.$rightTable;
                         if (all) {
-                            _$table = col.fixed === 'left' ? that.$leftTableHeaderHead : that.$rightTableHeaderHead;
+                            _$table = col.fixed === 'left' ? that.$leftTableHeader : that.$rightTableHeader;
                         }
                     }
                     if (all) {
@@ -1836,19 +1823,19 @@
         Class.prototype.renderTr = function (fixed) {
             var that = this;
             var $table = this.$table;
-            var $headerMain = this.$headerMain;
+            var $tableHeader = this.$tableHeader;
             var data = this.sortedData;
             this.timers.renderTimer = this.timers.renderTimer || {};
 
             if (fixed == 'left') { // 渲染左固定列
                 $table = this.$leftTable;
-                $headerMain = this.$leftHeaderMain;
+                $tableHeader = this.$leftTableHeader;
             } else if (fixed == 'right') { // 渲染右固定列
                 $table = this.$rightTable;
-                $headerMain = this.$rightHeaderMain;
+                $tableHeader = this.$rightTableHeader;
             }
             // 取消全选
-            $headerMain.find('input[song-filter="' + this.getCheckFilter(fixed, true) + '"]').prop('checked', false);
+            $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', false);
             this.checkedData = [];
             this.selectedData = null;
             $table.empty();
@@ -1867,6 +1854,8 @@
                         _appendTr(i);
                     });
                 } else {
+                    Form.render('checkbox(song_table_checkbox)', $table);
+                    Form.render('radio(song_table_radio)', $table);
                     // 设置固定列行高
                     if (that.hasLeftFixed || that.hasRightFixed) {
                         if (that.hasRightFixed && fixed == 'right') {
@@ -1888,18 +1877,10 @@
                     return;
                 }
                 that.setFixedArea();
-                that.renderForm();
                 that.stretchTable();
                 !that.ellipsis && that.fixRowHeight();
                 that.hideLoading();
             }
-        }
-
-        // 渲染控件
-        Class.prototype.renderForm = function () {
-            Form.render('', this.$headerMain);
-            this.$leftHeaderMain && Form.render('', this.$leftHeaderMain);
-            this.$rightHeaderMain && Form.render('', this.$rightHeaderMain);
         }
 
         /**
@@ -1948,7 +1929,6 @@
             } else if (col.type == 'radio') { // 单选列
                 var checked = this.selectedData && this.selectedData._song_table_key == key;
                 content = Common.htmlTemplate(tpl.radio, {
-                    filter: this.filter + (fixed ? '_' + fixed : ''),
                     checked: checked,
                     key: key
                 });
@@ -1961,7 +1941,6 @@
                     }
                 }
                 content = Common.htmlTemplate(tpl.checkbox, {
-                    filter: this.filter + (fixed ? '_' + fixed : ''),
                     checked: checked,
                     key: key
                 });
@@ -2540,7 +2519,7 @@
             for (var i = 0; i < this.cols.length; i++) {
                 var col = this.cols[i];
                 if (col.type == 'text') {
-                    $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col._key + '" checked song-filter="song_table_' + this.filter + '_filter"></li>');
+                    $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col._key + '" checked song-filter="song_table_filter"></li>');
                 }
             }
             // 在工具图标下挂载
@@ -2548,7 +2527,7 @@
             $filter.on('click', function () {
                 return false;
             });
-            Form.on('checkbox(song_table_' + this.filter + '_filter)', function (e) {
+            Form.on('checkbox(song_table_filter)', function (e) {
                 var $input = $(e.dom);
                 var value = $input.val();
                 var checked = $input.prop('checked');
@@ -2611,8 +2590,8 @@
                     }
                     return ths;
                 }
-            });
-            Form.render('checkbox(song_table_' + this.filter + '_filter)', $filter);
+            }, $filter[0]);
+            Form.render('checkbox(song_table_filter)', $filter);
         }
 
         // 导出
