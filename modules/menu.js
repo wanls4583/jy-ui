@@ -249,7 +249,7 @@
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.right)) {
                     var $ul = $this.children('.' + menuClass.ul);
-                    var $icon = $this.children('.' + menuClass.icon);
+                    var $icon = $this.children('.' + menuClass.title).children('.' + menuClass.icon);
                     $ul.toggle();
                     $icon.toggle();
                     that.trigger($ul.is(':visible') ? 'open' : 'close', {
