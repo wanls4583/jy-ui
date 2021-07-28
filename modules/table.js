@@ -983,7 +983,7 @@
                 } else {
                     var trs = this.$table.children('tbody').children('tr');
                     var heights = [];
-                    trs.each(function(i, tr) {
+                    trs.each(function (i, tr) {
                         heights.push(tr.clientHeight);
                     });
                     this.hasLeftFixed && this.$leftTable.children('tbody').children('tr').each(function (i, tr) {
@@ -1248,7 +1248,7 @@
         // 设置固定表格容器的宽高
         Class.prototype.setFixedArea = function () {
             var top = this.$toolbar ? this.$toolbar[0].offsetHeight : 0;
-            var headerHeight = ieVersion <= 6 ? this.$tableHeader.outerHeight() : this.$tableHeader.height();
+            var headerHeight = ieVersion <= 6 ? this.$tableHeader[0].offsetHeight : this.$tableHeader[0].clientHeight;
             var tableWidth = this.$table[0].offsetWidth;
             // 避免重复触发回流
             var tableMainArea = {
@@ -1256,14 +1256,15 @@
                 clientHeight: this.$main[0].clientHeight,
                 scrollHeight: this.$main[0].scrollHeight
             }
+            var hasHscroll = tableWidth > tableMainArea.clientWidth;
             var height = tableMainArea.clientHeight;
             if (this.$leftHeaderMain) {
                 var hedaerWidth = 'auto';
-                // ie6及以下浏览器不设置宽度将撑破父容器
-                if (ieVersion <= 6) {
-                    hedaerWidth = this.$leftTableHeader[0].offsetWidth;
-                }
-                if (tableWidth > tableMainArea.clientWidth) {
+                if (hasHscroll) {
+                    // ie6及以下浏览器不设置宽度将撑破父容器
+                    if (ieVersion <= 6) {
+                        hedaerWidth = this.$leftTableHeader[0].offsetWidth;
+                    }
                     this.$leftHeaderMain.show();
                     this.fixedVisible = true;
                     this.$leftHeaderMain.css({
@@ -1280,30 +1281,26 @@
                 }
             }
             if (this.$rightHeaderMain) {
-                var left = 0;
-                var hedaerWidth = 0;
-                if (tableWidth > tableMainArea.clientWidth) {
-                    tableWidth = tableMainArea.clientWidth;
+                var hasVscroll = tableMainArea.scrollHeight > tableMainArea.clientHeight;
+                var hedaerWidth = 'auto';
+                if (hasHscroll) {
+                    // ie6及以下浏览器不设置宽度将撑破父容器
+                    if (ieVersion <= 6) {
+                        hedaerWidth = this.$rightTableHeader[0].offsetWidth;
+                    }
                     this.$rightHeaderMain.show();
-                    hedaerWidth = this.$rightTableHeader[0].offsetWidth;
-                    left = tableWidth - hedaerWidth;
                     this.$rightHeaderMain.css({
                         width: hedaerWidth,
                         top: top,
-                        left: left
+                        right: hasVscroll ? 16 : 0
                     });
                     this.$rightMain.css({
                         height: height
                     });
                     this.$rightHeader.css('height', headerHeight);
-                    if (tableMainArea.scrollHeight > tableMainArea.clientHeight) {
-                        this.$mend.show();
-                    } else {
-                        this.$mend.hide();
-                    }
-                    // ie6及以下浏览器在父容器高度不固定的情况下100%高度无效
-                    this.$mend.css('height', headerHeight - 1);
+                    this.$mend.show();
                 } else {
+                    this.$mend.hide();
                     this.$rightHeaderMain.hide();
                     return;
                 }
@@ -1802,7 +1799,6 @@
                 this.$rightMain.append(this.$rightTable);
                 this.$rightHeaderMain.append(this.$rightMain);
                 this.$mend.hide();
-                this.renderTableHeader('right');
                 this.$view.append(this.$rightHeaderMain);
                 this.$rightMain.on('mousewheel', function (e) {
                     var wheelDelta = e.originalEvent.wheelDelta;

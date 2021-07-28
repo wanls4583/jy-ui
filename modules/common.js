@@ -150,14 +150,6 @@
             _ml = getNum(_ml);
             var _mr = styles['marginRight'];
             _mr = getNum(_mr);
-            var _bt = styles['borderTop'];
-            // _bt = getNum(_bt);
-            var _bb = styles['borderBottom'];
-            // _bb = getNum(_bb);
-            var _bl = styles['borderLeft'];
-            // _bl = getNum(_bl);
-            var _br = styles['borderRight'];
-            // _br = getNum(_br);
             return {
                 top: _r.top,
                 bottom: _r.bottom,
@@ -171,10 +163,6 @@
                 marginBottom: _mb,
                 marginLeft: _ml,
                 marginRight: _mr,
-                borderTop: _bt,
-                borderBottom: _bb,
-                borderLeft: _bl,
-                borderRight: _br,
                 offsetTop: dom.offsetTop,
                 offsetBottom: dom.offsetBottom,
                 offsetLeft: dom.offsetLeft,
