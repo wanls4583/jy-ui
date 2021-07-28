@@ -1694,6 +1694,7 @@ textarea {
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
           box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
   background-color: #fff;
+  _width: 200px;
 }
 
 .song-menu-static {
@@ -1701,12 +1702,14 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
+  _width: 200px;
 }
 
 .song-menu-item {
   position: relative;
   padding: 0 15px;
   cursor: pointer;
+  _zoom: 1;
 }
 
 .song-menu-item .song-menu-ul {
@@ -1783,6 +1786,7 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  *zoom: 1;
 }
 
 .song-menu-item-title .song-icon {
