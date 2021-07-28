@@ -1161,6 +1161,7 @@ textarea {
 .song-table-header-main-r {
   position: absolute;
   top: 0;
+  right: 0;
   z-index: 1;
   border-left: 1px solid #eeeeee;
   -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
@@ -1693,13 +1694,11 @@ textarea {
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
           box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
   background-color: #fff;
-  *width: 200px;
 }
 
 .song-menu-static {
   position: relative;
   display: inline-block;
-  *width: 200px;
   *display: inline;
   *zoom: 1;
 }
@@ -1708,7 +1707,6 @@ textarea {
   position: relative;
   padding: 0 15px;
   cursor: pointer;
-  *zoom: 1;
 }
 
 .song-menu-item .song-menu-ul {
@@ -1785,7 +1783,6 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  *zoom: 1;
 }
 
 .song-menu-item-title .song-icon {
