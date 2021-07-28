@@ -226,6 +226,7 @@
             function _init() {
                 that.data = {};
                 that.data.type = that.option.type || 'date';
+                that.data.split = that.option.split || '-';
                 that.data.originType = that.data.type;
                 layerCount++;
                 $docBody.children('.' + dateClass.date + ',.' + dateClass.dateRange).each(function (i, dom) {
@@ -236,9 +237,13 @@
                 });
                 if (that.option.range) {
                     that.data.value = [];
-                    that.$elem.each(function (i, dom) {
-                        that.data.value.push($(dom).val());
-                    });
+                    if (that.$elem.length >= 2) {
+                        that.$elem.each(function (i, dom) {
+                            that.data.value.push($(dom).val());
+                        });
+                    } else {
+                        that.data.value = that.$elem.val() && that.$elem.val().split(that.data.split) || [];
+                    }
                     if (that.option.value) {
                         that.data.value[0] = that.data.value[0] || that.option.value[0];
                         that.data.value[1] = that.data.value[1] || that.option.value[1];
@@ -935,7 +940,7 @@
             }
             if (this.option.position !== 'static') {
                 if (this.$elem.length == 1) {
-                    this.$elem.val(formatTime.join(' - '));
+                    this.$elem.val(formatTime.join(this.data.split));
                 } else {
                     $(this.$elem[0]).val(formatTime[0]);
                     $(this.$elem[1]).val(formatTime[1]);
