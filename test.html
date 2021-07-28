@@ -818,13 +818,20 @@
         },
         {
             title: 'item2',
-            children: [{ title: 'item3' }],
+            children: [
+                { title: 'item2-1', children: [{ title: 'item2-1-1' }] },
+                { title: 'item2-2' }
+            ],
             id: 1
         },
         {
-            title: 'item4',
+            title: 'item3',
             openType: 'right',
-            children: [{ title: 'item5' }],
+            children: [
+                { title: 'item3-1' },
+                { title: 'item3-2', children: [{ title: 'item3-2-1' }] },
+                { title: 'item3-3', openType: 'right', children: [{ title: 'item3-3-1' }] }
+            ],
             id: 2
         }]
     });

@@ -12,9 +12,10 @@
 
     &-item {
         position: relative;
-        padding: 0 $pd15;
+        padding-left: $pd15;
+        color: #666666;
         cursor: pointer;
-        // 在ie7中，如果开启haslayout，item将不能随着父容器的伸展而伸展，除非固定父容器宽度
+        // 在ie7及以下浏览器中，开启haslayout后，item将不能随着父容器的伸展而伸展，除非固定父容器宽度
         _zoom: 1;
 
         .song-menu-ul {
@@ -55,31 +56,30 @@
 
     &-right {
 
-        .song-menu-ul {
-            position: absolute;
-            top: -6px;
-            left: 100%;
-            margin-left: 10px;
-            *margin-left: 0;
-            padding: 5px 0;
-            border: 1px solid $light-color;
-            border-radius: 2px;
-            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
-            background-color: #fff;
-
-            &:before {
-                content: "";
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: -15px;
-                width: 20px;
-            }
-        }
-
-
         &:hover {
             background-color: $lighter-color;
+        }
+    }
+
+    &-ul-right {
+        position: absolute;
+        top: -6px;
+        left: 100%;
+        margin-left: 10px;
+        *margin-left: 0;
+        padding: 5px 0;
+        border: 1px solid $light-color;
+        border-radius: 2px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+        background-color: #fff;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -15px;
+            width: 20px;
         }
     }
 
@@ -91,17 +91,17 @@
     &-item-title {
         position: relative;
         line-height: 36px;
-        padding-right: 30px;
+        padding-right: 36px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         *zoom: 1;
 
-        .song-icon {
+        .song-menu-icon {
             display: none;
             position: absolute;
             top: 0;
-            right: 0;
+            right: 10px;
             user-select: none;
         }
 
@@ -111,17 +111,9 @@
         }
     }
 
-    &-open {
-        .song-menu-ul {
-            display: block;
-        }
-
-        .song-menu-down-icon {
-            display: none;
-        }
-
-        .song-menu-up-icon {
-            display: block;
-        }
+    &-icon {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        font-style: normal;
     }
 }

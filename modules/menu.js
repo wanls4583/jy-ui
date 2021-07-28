@@ -9,24 +9,25 @@
             item: '<div class="song-menu-item">\
                 <div class="song-menu-item-title"></div>\
             </div>',
-            right: '<i class="song-icon song-menu-right-icon">' + rightIcon + '</i>',
-            down: '<i class="song-icon song-menu-down-icon">' + downIcon + '</i>',
-            up: '<i class="song-icon song-menu-up-icon">' + upIcon + '</i>',
+            right: '<i class="song-menu-icon song-menu-right-icon">' + rightIcon + '</i>',
+            down: '<i class="song-menu-icon song-menu-down-icon">' + downIcon + '</i>',
+            up: '<i class="song-menu-icon song-menu-up-icon">' + upIcon + '</i>',
             border: '<div class="song-menu-border"></div>'
         }
 
         var menuClass = {
             menu: 'song-menu',
             ul: 'song-menu-ul',
+            ulRight: 'song-menu-ul-right',
             item: 'song-menu-item',
             title: 'song-menu-item-title',
             group: 'song-menu-group',
             static: 'song-menu-static',
-            open: 'song-menu-open',
             right: 'song-menu-right',
             rightWrap: 'song-menu-right-content',
             border: 'song-menu-border',
-            checked: 'song-menu-checked'
+            checked: 'song-menu-checked',
+            icon: 'song-menu-icon'
         }
 
         var ieVersion = Common.getIeVersion();
@@ -147,13 +148,15 @@
                     if (item.openType == 'right') {
                         $item.append($ul);
                         $item.addClass(menuClass.right);
+                        $ul.addClass(menuClass.ulRight);
                         $title.append(tpl.right);
                     } else {
                         $item.append($ul);
                         $title.append(tpl.down + tpl.up);
                     }
                     if (that.option.open) {
-                        $item.addClass(menuClass.open);
+                        $ul.show();
+                        $ul.parents('.' + menuClass.ul).show();
                     }
                     that.appendItem(item.children, $ul);
                 }
@@ -165,7 +168,9 @@
             this.$menu.find('.' + menuClass.group).each(function (i, li) {
                 var $li = $(li);
                 if (!$li.hasClass(menuClass.right)) {
-                    $(tpl.border).insertAfter($li);
+                    if ($li.next().length) {
+                        $(tpl.border).insertAfter($li);
+                    }
                     if (!$li.prev().hasClass(menuClass.border)) {
                         $(tpl.border).insertBefore($li);
                     }
@@ -243,8 +248,11 @@
                 var $this = $(this);
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.right)) {
-                    $this.toggleClass(menuClass.open);
-                    that.trigger($this.hasClass(menuClass.open) ? 'open' : 'close', {
+                    var $ul = $this.children('.' + menuClass.ul);
+                    var $icon = $this.children('.' + menuClass.icon);
+                    $ul.toggle();
+                    $icon.toggle();
+                    that.trigger($ul.is(':visible') ? 'open' : 'close', {
                         dom: this,
                         data: that.delInnerProperty(data)
                     });
@@ -253,7 +261,7 @@
             this.$menu.delegate('.' + menuClass.right, 'mouseenter', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
-                $this.addClass(menuClass.open);
+                $this.children('.' + menuClass.ul).show();
                 that.trigger('open', {
                     dom: this,
                     data: that.delInnerProperty(data)
@@ -262,7 +270,7 @@
             this.$menu.delegate('.' + menuClass.right, 'mouseleave', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
-                $this.removeClass(menuClass.open);
+                $this.children('.' + menuClass.ul).hide();
                 that.trigger('close', {
                     dom: this,
                     data: that.delInnerProperty(data)
