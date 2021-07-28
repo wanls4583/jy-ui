@@ -5,14 +5,9 @@
     border-radius: 2px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
     background-color: #fff;
-    _width: 200px;
-    
+
     &-static {
         position: relative;
-        display: inline-block;
-        *display: inline;
-        *zoom: 1;
-        _width: 200px;
     }
 
     &-item {

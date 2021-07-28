@@ -86,13 +86,14 @@
             this.idKeyMap = {};
             this.dataMap = {};
             this.key = 0;
+            this.width = this.option.width || (this.option.position !== 'static' && ieVersion <= 6 ? 200 : 0);
+            this.height = this.option.height || 0;
             this.appendItem(this.data, this.$menu);
             this.addBorder();
             this.bindEvent();
-            if (ieVersion == 6) {
-                this.$menu.css('width', this.$menu[0].clientWidth);
-            }
             if (this.$elem && this.$elem.length) {
+                this.width && this.$menu.css('width', this.width);
+                this.height && this.$menu.css('height', this.height);
                 if (this.option.position == 'static') {
                     this.$elem.append(this.$menu);
                     this.$menu.addClass(menuClass.static);
@@ -228,6 +229,16 @@
         // 绑定事件
         Class.prototype.bindEvent = function () {
             var that = this;
+            this.$menu.on('mousewheel', function (e) {
+                var wheelDelta = e.originalEvent.wheelDelta;
+                if (wheelDelta < 0) {
+                    wheelDelta += 20;
+                } else {
+                    wheelDelta -= 20;
+                }
+                that.$menu[0].scrollTop -= wheelDelta;
+                return false;
+            });
             this.$menu.delegate('.' + menuClass.group, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
