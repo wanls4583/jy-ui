@@ -15,6 +15,9 @@
         var closeIcon = '&#xe735;';
         var errorIcon = '&#xe60b;';
         var loadingIcon = '&#xe61e;';
+        var radioedIcon = '&#xe61c;';
+        var radioIcon = '&#xe619;';
+        var checkedIcon = '&#xe737;';
         var ieVersion = Common.getIeVersion();
         var hCellPadding = 2;
         var tableCount = 1;
@@ -78,8 +81,16 @@
                 <%-cell%>\
             </td>',
             cell: '<div class="song-clear song-table-cell song-table-cell-<%-tableCount%>-<%-col._key%>"><div class="song-table-cell-content"><%-(content||"&nbsp;")%></div></div>',
-            radio: '<input type="radio" name="song_table_radio" value="<%-key%>" song-filter="song_table_radio" <%-(checked?"checked":"")%>/>',
-            checkbox: '<input type="checkbox" name="song_table_checkbox" value="<%-key%>" song-filter="song_table_checkbox" <%-(checked?"checked":"")%>/>',
+            radio: '<div class="song-table-radio <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
+                <i class="song-radio-icon-checked">' + radioedIcon + '</i>\
+                <i class="song-radio-icon-uncheck">' + radioIcon + '</i>\
+                <span>&nbsp;</span>\
+            </div>',
+            checkbox: '<div class="song-table-checkbox <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
+                <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
+                <span>&nbsp;</span>\
+            </div>',
+            // checkbox: '<input type="checkbox" name="song_table_checkbox" value="<%-key%>" song-filter="song_table_checkbox" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
             tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>',
             loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
@@ -1555,56 +1566,12 @@
                     col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
                     $th.append($cell);
                     $tr.append($th);
-                    // 单选
-                    if (col.type == 'radio') {
-                        Form.once('radio(song_table_radio)', function (e) {
-                            that.selectedData = that.getRowDataByKey(e.data);
-                            that.trigger('radio', {
-                                dom: e.dom,
-                                data: that.selectedData.id
-                            });
-                            _syncCheckRadio(col, 'radio', false, e.dom.value);
-                        }, $table[0]);
-                    }
-                    // 多选
+                    // 全选框
                     if (col.type == 'checkbox') {
-                        var checkFilter = 'song_table_checkbox';
-                        var $all = $('<input type="checkbox" song-filter="' + checkFilter + '">');
-                        $content.html($all);
-                        Form.once('checkbox(' + checkFilter + ')', function (e) {
-                            var checkedData = [];
-                            for (var i = 0; i < e.data.length; i++) {
-                                checkedData.push(that.getRowDataByKey(e.data[i]));
-                            }
-                            that.checkedData = checkedData
-                            $all.prop('checked', checkedData.length == that.sortedData.length);
-                            Form.render('checkbox(' + checkFilter + ')', $tableHeader);
-                            that.trigger('checkbox', {
-                                dom: e.dom,
-                                data: checkedData.map(function (item) {
-                                    return item.id;
-                                })
-                            });
-                            _syncCheckRadio(col, 'checkbox', false, e.dom.value);
-                        }, $table[0]);
-                        // 全选或者全不选
-                        Form.once('checkbox(' + checkFilter + ')', function (e) {
-                            var checked = $(e.dom).prop('checked');
-                            var checkedData = checked ? that.sortedData.concat([]) : [];
-                            var boxs = $table.find('input[song-filter="' + checkFilter + '"]')
-                            boxs.each(function (i, box) {
-                                $(box).prop('checked', checked);
-                            });
-                            that.checkedData = checkedData
-                            Form.render('checkbox(' + checkFilter + ')', $table);
-                            that.trigger('checkbox', {
-                                dom: e.dom,
-                                data: checkedData.map(function (item) {
-                                    return item.id;
-                                })
-                            });
-                            _syncCheckRadio(col, 'checkbox', true);
-                        }, $tableHeader[0]);
+                        $content.html(Common.htmlTemplate(tpl.checkbox, {
+                            checked: false,
+                            key: 'all'
+                        }));
                     }
                 }
                 $tableHeaderHead.append($tr);
@@ -2213,6 +2180,7 @@
                 return;
             }
             this.tempData.bindedEvent = true;
+            _bindRadioCheckboxEvent();
             _bindClickEvent();
             _bindEditEvent();
             _bindHoverEvent();
@@ -2220,6 +2188,63 @@
             _bindOverflowEvent();
             _bindOrderByEvent();
             _bindToolbarEvent();
+
+            function _bindRadioCheckboxEvent() {
+                // 点击单选框
+                that.$view.delegate('td.song-table-col-radio .song-table-radio', 'click', function () {
+                    var $this = $(this);
+                    var key = $this.attr('data-key');
+                    that.$view.find('.song-table-checked').removeClass('song-table-checked');
+                    that.$view.find('.song-table-radio[data-key="' + key + '"]').addClass('song-table-checked');
+                    that.selectedData = that.getRowDataByKey(key);
+                    that.trigger('radio', {
+                        dom: this,
+                        data: that.selectedData.id
+                    });
+                });
+                // 点击多选框
+                that.$view.delegate('td.song-table-col-checkbox .song-table-checkbox', 'click', function () {
+                    var $this = $(this);
+                    var key = $this.attr('data-key');
+                    var data = that.getRowDataByKey(key);
+                    var checked = !$this.hasClass('song-table-checked');
+                    that.$view.find('.song-table-checkbox[data-key="' + key + '"]').toggleClass('song-table-checked');
+                    if (checked) {
+                        that.checkedData.push(data);
+                    } else {
+                        for (var i = 0; i < that.checkedData.length; i++) {
+                            if (that.checkedData[i]._song_table_key == key) {
+                                that.checkedData.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    that.trigger('checkbox', {
+                        dom: this,
+                        data: that.checkedData.map(function (item) {
+                            return item.id;
+                        })
+                    });
+                });
+                // 点击全选
+                that.$view.delegate('th.song-table-col-checkbox .song-table-checkbox', 'click', function () {
+                    var $this = $(this);
+                    var checked = !$this.hasClass('song-table-checked');
+                    if (checked) {
+                        that.checkedData = that.sortedData.concat([]);
+                        that.$view.find('.song-table-checkbox').addClass('song-table-checked');
+                    } else {
+                        that.checkedData = [];
+                        that.$view.find('.song-table-checkbox').removeClass('song-table-checked');
+                    }
+                    that.trigger('checkbox', {
+                        dom: this,
+                        data: that.checkedData.map(function (item) {
+                            return item.id;
+                        })
+                    });
+                });
+            }
 
             function _bindClickEvent() {
                 // 表格中的所有点击事件

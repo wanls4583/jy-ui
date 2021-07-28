@@ -520,4 +520,87 @@
             color: #999;
         }
     }
+
+    // 单选框
+    &-radio {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        line-height: 22px;
+        margin-top: 10px;
+        margin-right: $pd15;
+        padding-left: 25px;
+        cursor: pointer;
+        user-select: none;
+
+        .song-radio-icon-checked,
+        .song-radio-icon-uncheck {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'iconfont';
+            font-size: 22px;
+            color: $gray-color;
+        }
+
+        .song-radio-icon-checked {
+            display: none;
+            color: $link-color;
+        }
+
+        &.song-table-checked {
+            .song-radio-icon-checked {
+                display: block;
+            }
+
+            .song-radio-icon-uncheck {
+                display: none;
+            }
+        }
+    }
+
+    // 多选框
+    &-checkbox {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        line-height: 18px;
+        margin-top: 10px;
+        margin-right: $pd15;
+        padding-left: 25px;
+        cursor: pointer;
+        user-select: none;
+
+        .song-checkbox-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border: 1px solid $gray-color;
+            border-radius: 2px;
+            text-align: center;
+            line-height: 16px;
+            font-family: 'iconfont';
+            font-size: 14px;
+            color: $white-color;
+
+            i {
+                display: none;
+            }
+        }
+
+        &.song-table-checked {
+            .song-checkbox-icon {
+                background-color: $link-color;
+                border-color: $link-color;
+
+                i {
+                    display: inline;
+                }
+            }
+        }
+    }
 }
