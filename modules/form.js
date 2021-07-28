@@ -7,8 +7,8 @@
     function factory($, Common) {
         var checkedIcon = '&#xe737;';
         var downIcon = '&#xe74b;';
-        var radioIcon = '&#xe61c;';
-        var radioedIcon = '&#xe619;';
+        var radioedIcon = '&#xe61c;';
+        var radioIcon = '&#xe619;';
         var formClass = {
             switchClass: 'song-form-switch',
             switchDisabled: 'song-switch-disabled',
@@ -267,7 +267,6 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.radio];
-                var icon = radioedIcon;
                 // 忽略标签
                 if (ignore) {
                     input.$ui && input.$ui.remove();
@@ -280,17 +279,16 @@
                 // 已选中
                 if ($input.prop('checked')) {
                     classNames.push(formClass.radioChecked);
-                    icon = radioIcon;
                 }
                 // 已经渲染过
                 if (input.$ui) {
                     input.$ui.attr('class', classNames.join(' '));
-                    input.$ui.children('i').html(icon);
                     return;
                 }
                 var html =
                     '<div class="' + classNames.join(' ') + '">\
-                        <i>' + icon + '</i>\
+                        <i class="song-radio-icon-checked">' + radioedIcon + '</i>\
+                        <i class="song-radio-icon-uncheck">' + radioIcon + '</i>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>';
                 var $html = $(html);
@@ -316,11 +314,10 @@
                     $container.find('div.' + formClass.radio).each(function (i, radio) {
                         var $_this = $(this);
                         if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
-                            $_this.removeClass(formClass.radioChecked).find('i').html(radioedIcon);
+                            $_this.removeClass(formClass.radioChecked);
                         }
                     });
                     $this.addClass(formClass.radioChecked);
-                    $this.find('i').html(radioIcon);
                     this.$input.prop('checked', true);
                     // 触发radio事件
                     filter && Form.trigger('radio(' + filter + ')', {
@@ -346,7 +343,6 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.checkbox];
-                var icon = '';
                 // 忽略标签
                 if (ignore) {
                     input.$ui && input.$ui.remove();
@@ -359,17 +355,15 @@
                 // 已选中
                 if ($input.prop('checked')) {
                     classNames.push(formClass.checkboxCheckd);
-                    icon = checkedIcon;
                 }
                 // 已经渲染过
                 if (input.$ui) {
                     input.$ui.attr('class', classNames.join(' '));
-                    input.$ui.children('i').html(icon);
                     return;
                 }
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
-                        <i>' + icon + '</i>\
+                        <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>');
                 $html.insertAfter(input);
@@ -393,7 +387,6 @@
                         return;
                     }
                     $this.toggleClass(formClass.checkboxCheckd);
-                    $this.find('i').html(checked ? '' : checkedIcon);
                     this.$input.prop('checked', !checked);
                     // 获取同组的选中数据
                     $container.find('div.' + formClass.checkboxCheckd).each(function (i, radio) {

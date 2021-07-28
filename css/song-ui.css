@@ -281,7 +281,7 @@ textarea {
           user-select: none;
 }
 
-.song-form-checkbox i {
+.song-form-checkbox .song-checkbox-icon {
   position: absolute;
   left: 0;
   top: 0;
@@ -296,6 +296,10 @@ textarea {
   color: #ffffff;
 }
 
+.song-form-checkbox .song-checkbox-icon i {
+  display: none;
+}
+
 .song-form-checkbox.song-checkbox-disabled {
   color: #c2c2c2;
   cursor: not-allowed;
@@ -305,9 +309,13 @@ textarea {
   border-color: #eeeeee;
 }
 
-.song-form-checkbox.song-checkbox-checked i {
+.song-form-checkbox.song-checkbox-checked .song-checkbox-icon {
   background-color: #5FB878;
   border-color: #5FB878;
+}
+
+.song-form-checkbox.song-checkbox-checked .song-checkbox-icon i {
+  display: inline;
 }
 
 .song-form-radio {
@@ -315,7 +323,7 @@ textarea {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  line-height: 20px;
+  line-height: 22px;
   margin-top: 10px;
   margin-right: 15px;
   padding-left: 25px;
@@ -326,7 +334,8 @@ textarea {
           user-select: none;
 }
 
-.song-form-radio i {
+.song-form-radio .song-radio-icon-checked,
+.song-form-radio .song-radio-icon-uncheck {
   position: absolute;
   left: 0;
   top: 0;
@@ -335,17 +344,27 @@ textarea {
   color: #d2d2d2;
 }
 
+.song-form-radio .song-radio-icon-checked {
+  display: none;
+  color: #5FB878;
+}
+
 .song-form-radio.song-radio-disabled {
   color: #c2c2c2;
   cursor: not-allowed;
 }
 
-.song-form-radio.song-radio-disabled i {
+.song-form-radio.song-radio-disabled .song-radio-icon-checked,
+.song-form-radio.song-radio-disabled .song-radio-icon-uncheck {
   color: #eeeeee;
 }
 
-.song-form-radio.song-radio-checked i {
-  color: #5FB878;
+.song-form-radio.song-radio-checked .song-radio-icon-checked {
+  display: block;
+}
+
+.song-form-radio.song-radio-checked .song-radio-icon-uncheck {
+  display: none;
 }
 
 .song-form-select {
