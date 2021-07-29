@@ -896,6 +896,13 @@ textarea {
   font-size: 14px;
 }
 
+.song-table th .song-table-radio,
+.song-table th .song-table-checkbox,
+.song-table td .song-table-radio,
+.song-table td .song-table-checkbox {
+  display: block;
+}
+
 .song-table tr:first-child td,
 .song-table tr:first-child th {
   border-top: 0;
@@ -1401,11 +1408,6 @@ textarea {
 
 .song-table-checkbox.song-table-checked .song-checkbox-icon i {
   display: inline;
-}
-
-.song-table-col-radio .song-table-cell-content, .song-table-col-checkbox .song-table-cell-content {
-  white-space: normal;
-  text-overflow: unset;
 }
 
 .song-date {

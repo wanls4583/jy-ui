@@ -72,9 +72,9 @@
             tableHeaderHead: '<thead></thead>',
             empty: '<div class="song-table-empty">暂无数据</div>',
             td: '\
-            <td class="song-table-col song-table-col-<%-col.type%> song-table-col-<%-tableCount%>-<%-col._key%> <%-(col.align?"song-table-align-"+col.align:"")%>"\
+            <td class="<%-(col.align?"song-table-align-"+col.align:"")%>"\
              data-key="<%-key%>-<%-col._key%>"\
-             data-field="<%-col.field||""%>"\
+             data-col="<%-col._key%>"\
              song-event="<%-col.event||""%>"\
              style="<%for(var k in col.style){%><%-k%>:<%-col.style[k]%>;<%}%><%-(col.hidden?"display:none":"")%>"\
              <%for(var k in col.attr){%> <%-k%>="<%-col.attr[k]%>"<%}%>>\
@@ -568,9 +568,10 @@
             var that = this;
             var result = true;
             var tds = [];
+            var col = this.getColByField(field);
             if (key !== undefined) { // 保存某一行的数据
                 this.editMap[key] && this.editMap[key].map(function (td) {
-                    if (!field || $(td).attr('data-field') == field) {
+                    if (!field || col && $(td).attr('data-col') == col._key) {
                         tds.push(td);
                     }
                 });
@@ -720,9 +721,10 @@
         Class.prototype.cancel = function (key, field) {
             var that = this;
             var tds = [];
+            var col = this.getColByField(field);
             if (key !== undefined) { // 保存某一行的数据
                 this.editMap[key] && this.editMap[key].map(function (td) {
-                    if (!field || $(td).attr('data-field') == field) {
+                    if (!field || col && $(td).attr('data-col') == col._key) {
                         tds.push(td);
                     }
                 });
@@ -795,13 +797,13 @@
         Class.prototype.edit = function (key, field) {
             var that = this;
             var tds = [];
-            if (field) {
-                var col = this.getColByField(field);
+            var col = this.getColByField(field);
+            if (field && col) {
                 var td = null;
                 if (this.fixedVisible && col.fixed) {
-                    td = this.getTrByKey(key, col.fixed).children('td[data-field="' + field + '"]')[0];
+                    td = this.getTrByKey(key, col.fixed).children('td[data-col="' + col._key + '"]')[0];
                 } else {
-                    td = this.getTrByKey(key).children('td[data-field="' + field + '"]')[0];
+                    td = this.getTrByKey(key).children('td[data-col="' + col._key + '"]')[0];
                 }
                 if (!td) {
                     return;
@@ -1166,11 +1168,9 @@
                 var tableHeaderWidth = this.$tableHeader[0].offsetWidth;
                 //表格拉伸至容器的宽度
                 if (tableHeaderWidth < hedaerWidth) {
-                    var ths = this.$headerMain.find('th.' + tableClass.col + '-checkbox,th.' + tableClass.col + '-radio');
+                    var col = this.getColByType('radio') || this.getColByType('checkbox');
                     // 确保选择列宽度不变
-                    ths.each(function (i, th) {
-                        $(th).css('width', 50);
-                    });
+                    col && this.$tableHeader.find('th[data-col="' + col._key + '"]').css('width', 50);
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     this.$tableHeader.css({
                         width: this.$main[0].clientWidth
@@ -1498,7 +1498,7 @@
                     col.type = col.type || 'text';
                     var $content = $('<div class="' + tableClass.cellContent + '">' + (col.title || '&nbsp;') + '</div>');
                     var $cell = $('<div class="' + ['song-clear', tableClass.cell + '-' + that.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
-                    var $th = $('<th class="' + [tableClass.col + '-' + col.type, tableClass.col + '-' + that.tableCount + '-' + col._key].join(' ') + '" data-field="' + (col.field || '') + '" data-key="col-' + col._key + '"></th>');
+                    var $th = $('<th data-col="' + col._key + '" data-key="col-' + col._key + '"></th>');
                     $cell.append($content);
                     // 隐藏
                     if (col.hidden) {
@@ -2544,8 +2544,9 @@
         Class.prototype.exportsExecl = function () {
             if (window.btoa) {
                 var $table = $(this.$tableHeader[0].outerHTML);
+                var col = this.getColByType('radio') || this.getColByType('checkbox');
                 $table.append(this.$table.children('tbody').html());
-                $table.find('.' + tableClass.col + '-radio,.' + tableClass.col + '-checkbox,.' + tableClass.col + '-operate').remove();
+                col && $table.find('[data-col="' + col._key + '"]').remove();
                 $table.find('th,td').each(function (i, td) {
                     var $td = $(td);
                     $td.text($td.text());
