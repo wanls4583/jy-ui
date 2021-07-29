@@ -89,6 +89,7 @@
             this.key = 0;
             this.width = this.option.width || (this.option.position !== 'static' && ieVersion <= 6 ? 200 : 0);
             this.height = this.option.height || 0;
+            this.showList = [];
             if (this.$elem && this.$elem.length) {
                 this.width && this.$menu.css('width', this.width);
                 this.height && this.$menu.css('height', this.height);
@@ -117,6 +118,12 @@
             this.appendItem(this.data, this.$menu);
             this.addBorder();
             this.bindEvent();
+            // 处理完毕后隐藏掉所有分组
+            this.$menu.find('.' + menuClass.ul).hide();
+            // 默认打开的组
+            this.showList.map(function (ul) {
+                $(ul).show();
+            });
         }
 
         // 重载
@@ -155,13 +162,20 @@
                     }
                     that.appendItem(item.children, $ul);
                     $ul.css('width', $ul[0].offsetWidth + 2);
-                    if (that.option.open) {
-                        $ul.show();
-                        $ul.parents('.' + menuClass.ul).show();
-                    } else {
-                        setTimeout(function () {
-                            $ul.hide();
+                    if (that.option.open || item.open) {
+                        // 默认打开的组
+                        if (that.showList.indexOf($ul[0]) == -1) {
+                            that.showList.push($ul[0]);
+                        }
+                        // 父容器
+                        $ul.parents('.' + menuClass.ul).each(function (i, ul) {
+                            if (that.showList.indexOf(ul) == -1) {
+                                that.showList.push(ul);
+                            }
                         });
+                        if (item.openType != 'right') {
+                            $item.children('.' + menuClass.title).children('.' + menuClass.icon).toggle();
+                        }
                     }
                 }
             });
@@ -172,10 +186,11 @@
             this.$menu.find('.' + menuClass.group).each(function (i, li) {
                 var $li = $(li);
                 if (!$li.hasClass(menuClass.right)) {
+                    var $prev = $li.prev();
                     if ($li.next().length) {
                         $(tpl.border).insertAfter($li);
                     }
-                    if (!$li.prev().hasClass(menuClass.border)) {
+                    if ($prev.length && !$prev.hasClass(menuClass.border)) {
                         $(tpl.border).insertBefore($li);
                     }
                 }

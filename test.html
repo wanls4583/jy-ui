@@ -819,6 +819,7 @@
         },
         {
             title: 'item2',
+            openType: 'right',
             children: [
                 { title: 'item2-1', children: [{ title: 'item2-1-1' }] },
                 { title: 'item2-2' }
@@ -827,10 +828,9 @@
         },
         {
             title: 'item3',
-            openType: 'right',
             children: [
                 { title: 'item3-1' },
-                { title: 'item3-2', children: [{ title: 'item3-2-1' }] },
+                { title: 'item3-2', open: true, children: [{ title: 'item3-2-1' }] },
                 { title: 'item3-3', openType: 'right', children: [{ title: 'item3-3-1' }] }
             ],
             id: 2
