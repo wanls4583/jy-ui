@@ -384,21 +384,12 @@
             var addedData = [];
             var index = _getIndex(option.key);
             _addRow();
+            this.hasLeftFixed && _addRow('left');
+            this.hasRightFixed && _addRow('right');
             this.setFixedArea();
-            this.renderHeaderCheckbox('', false);
-            this.renderBodyRadioCheckbox();
-            if (this.hasLeftFixed) {
-                _addRow('left');
-                this.renderHeaderCheckbox('left', false);
-                this.renderBodyRadioCheckbox('left');
-            }
-            if (this.hasRightFixed) {
-                _addRow('right');
-                this.renderHeaderCheckbox('right', false);
-                this.renderBodyRadioCheckbox('right');
-            }
             this.sortedData = this.sortedData.slice(0, index).concat(addedData).concat(this.sortedData.slice(index));
             this.renderedData = this.renderedData.concat(addedData);
+            this.checkAll(false, true);
             addedData.map(function (item) {
                 that.addedData.push(item);
             });
@@ -416,7 +407,6 @@
 
             function _addRow(fixed) {
                 var $table = that.$table;
-                var $tableHeader = that.$tableHeader;
                 var tr = null;
                 if (fixed == 'left') {
                     $table = that.$leftTable;
@@ -460,16 +450,11 @@
          */
         Class.prototype.deleteRow = function (key) {
             var that = this;
-            var col = this.getColByType('checkbox');
             var rowData = this.getRowDataByKey(key);
             _deleteRow();
             this.hasLeftFixed && _deleteRow('left');
             this.hasRightFixed && _deleteRow('right');
-            if (col) {
-                _checkAll();
-                col.fixed === 'left' && _checkAll('left');
-                col.fixed === 'right' && _checkAll('right');
-            }
+            this.checkAll(this.sortedData.length == this.checkedData.length, true);
             this.setFixedArea();
 
             function _deleteRow(fixed) {
@@ -508,82 +493,70 @@
                     }
                 }
             }
-
-            function _checkAll(fixed) {
-                var checked = that.sortedData.length === that.checkedData.length;
-                var $tableHeader = that.$tableHeader;
-                if (fixed === 'left') {
-                    $tableHeader = that.$leftTableHeader;
-                } else if (fixed === 'right') {
-                    $tableHeader = that.$rightTableHeader;
-                }
-                that.renderHeaderCheckbox(fixed, checked);
-            }
         }
 
-        // 更改行的选中状态
-        Class.prototype.checkRow = function (key, checked) {
-            var col = this.getColByType('checkbox');
-            var tr = null;
-            if (col) {
-                tr = this.getTrByKey(key, this.fixedVisible ? col.fixed : '');
-                if (checked !== undefined) {
-                    checked = Boolean(checked);
-                    for (var i = 0; i < this.checkedData; i++) {
-                        if (this.checkedData[i]._song_table_key == key) {
-                            if (!checked) {
-                                _check();
-                            }
-                            return;
-                        }
-                    }
-                    _check();
-                } else {
-                    _check();
-                }
-            }
-
-            function _check() {
-                $(tr).children('td.' + tableClass.col + '-checkbox').find('.song-form-checkbox').trigger('click');
-            }
-        }
-
-        Class.prototype.checkAll = function (checked) {
-            var col = this.getColByType('checkbox');
-            var $tableHeader = this.$tableHeader;
-            if (col) {
-                if (col.fixed) {
-                    if (this.fixedVisible) {
-                        if (col.fixed === 'left') {
-                            $tableHeader = this.$leftTableHeader;
-                        } else {
-                            $tableHeader = this.$rightTableHeader;
-                        }
-                    }
-                }
-                if (checked !== undefined) {
-                    checked = Boolean(checked);
-                    if (this.checkedData.length == this.sortedData.length && !checked ||
-                        this.checkedData.length != this.sortedData.length && checked) {
-                        _check();
-                    }
-                } else {
-                    _check();
-                }
-            }
-
-            function _check() {
-                $tableHeader.find('th.' + tableClass.col + '-checkbox').find('.song-form-checkbox').trigger('click');
-            }
-        }
-
-        // 更改行的选中状态
+        // 单选框选中
         Class.prototype.selectRow = function (key) {
-            var col = this.getColByType('raido');
-            var tr = null;
+            var col = this.getColByType('radio');
             if (col) {
-                tr = this.getTrByKey(key, this.fixedVisible ? col.fixed : '');
-                $(tr).children('td.' + tableClass.col + '-raido').find('.song-form-raido').trigger('click');
+                this.$view.find('.song-table-checked').removeClass('song-table-checked');
+                this.$view.find('.song-table-radio[data-key="' + key + '"]').addClass('song-table-checked');
+                this.selectedData = this.getRowDataByKey(key);
+            }
+        }
+
+        // 多选框选中/不选中
+        Class.prototype.checkRow = function (key, checked) {
+            var data = this.getRowDataByKey(key);
+            var col = this.getColByType('checkbox');
+            if (col) {
+                var index = -1;
+                for (var i = 0; i < this.checkedData.length; i++) {
+                    if (this.checkedData[i]._song_table_key == key) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (checked === undefined) {
+                    checked = index == -1;
+                }
+                if (checked) {
+                    this.checkedData.push(data);
+                    this.$view.find('.song-table-checkbox[data-key="' + key + '"]').addClass('song-table-checked');
+                } else {
+                    this.checkedData.splice(index, 1);
+                    this.$view.find('.song-table-checkbox[data-key="' + key + '"]').removeClass('song-table-checked');
+                }
+                this.checkAll(this.sortedData.length === this.checkedData.length, true);
+            }
+        }
+
+        // 全选/全不选
+        Class.prototype.checkAll = function (checked, justStatus) {
+            var col = this.getColByType('checkbox');
+            if (col) {
+                if (checked === undefined) {
+                    checked = this.sortedData.length !== this.checkedData.length;
+                }
+                if (checked) {
+                    if (justStatus) {
+                        this.$tableHeader.find('.song-table-checkbox').addClass('song-table-checked');
+                        this.hasLeftFixed && this.$leftTableHeader.find('.song-table-checkbox').addClass('song-table-checked');
+                        this.hasRightFixed && this.$rightTableHeader.find('.song-table-checkbox').addClass('song-table-checked');
+                    } else {
+                        this.checkedData = this.sortedData.concat([]);
+                        this.$view.find('.song-table-checkbox').addClass('song-table-checked');
+                    }
+                } else {
+                    if (justStatus) {
+                        this.$tableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
+                        this.hasLeftFixed && this.$leftTableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
+                        this.hasRightFixed && this.$rightTableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
+                    } else {
+                        this.checkedData = [];
+                        this.$view.find('.song-table-checkbox').removeClass('song-table-checked');
+                    }
+                }
             }
         }
 
@@ -1243,12 +1216,12 @@
                 this.$view.css({
                     height: h
                 });
-                h -= this.$header.height();
+                h -= this.$header[0].offsetHeight;
                 if (this.$toolbar) {
-                    h -= this.$toolbar.outerHeight();
+                    h -= this.$toolbar[0].offsetHeight;
                 }
                 if (this.$pager) {
-                    h -= this.$pager.outerHeight();
+                    h -= this.$pager[0].offsetHeight;
                 }
                 this.$main.css({
                     height: h
@@ -1259,7 +1232,7 @@
         // 设置固定表格容器的宽高
         Class.prototype.setFixedArea = function () {
             var top = this.$toolbar ? this.$toolbar[0].offsetHeight : 0;
-            var headerHeight = ieVersion <= 6 ? this.$tableHeader[0].offsetHeight : this.$tableHeader[0].clientHeight;
+            var headerHeight = ieVersion <= 6 ? this.$header[0].offsetHeight : this.$header[0].clientHeight;
             var tableWidth = this.$table[0].offsetWidth;
             // 避免重复触发回流
             var tableMainArea = {
@@ -1498,16 +1471,10 @@
             var that = this;
             var originCols = this.originCols;
             var $tableHeaderHead = this.$tableHeaderHead;
-            var $tableHeader = this.$tableHeader;
-            var $table = this.$table;
             if (fixed == 'left') {
                 $tableHeaderHead = this.$leftTableHeaderHead;
-                $tableHeader = this.$leftTableHeader;
-                $table = this.$leftTable;
             } else if (fixed == 'right') {
                 $tableHeaderHead = this.$rightTableHeaderHead;
-                $tableHeader = this.$rightTableHeader;
-                $table = this.$rightTable;
             }
             // 创建多级表头
             originCols.map(function (cols) {
@@ -1521,7 +1488,6 @@
                 this.$headerMain.insertAfter(this.$toolbar);
                 this.setColsWidth();
             }
-            this.renderHeaderCheckbox(fixed);
 
             function _renderCols(cols) {
                 var $tr = $('<tr></tr>');
@@ -1610,29 +1576,6 @@
                     that.renderTableBody(true);
                     return false;
                 });
-            }
-
-            // 同步不同表格中的单选/多选
-            function _syncCheckRadio(col, type, all, value) {
-                if (fixed && that.fixedVisible || col.fixed && !that.fixedVisible) {
-                    var _filter = type === 'radio' ? 'song_table_radio' : 'song_table_checkbox';
-                    if (fixed) {
-                        _$table = that.$table;
-                        if (all) {
-                            _$table = that.$tableHeader;
-                        }
-                    } else if (col.fixed) {
-                        _$table = col.fixed === 'left' ? that.$leftTable : that.$rightTable;
-                        if (all) {
-                            _$table = col.fixed === 'left' ? that.$leftTableHeader : that.$rightTableHeader;
-                        }
-                    }
-                    if (all) {
-                        _$table.find('input[song-filter="' + _filter + '"]').next().trigger('click');
-                    } else {
-                        _$table.find('input[song-filter="' + _filter + '"][value="' + value + '"]').next().trigger('click');
-                    }
-                }
             }
         }
 
@@ -1798,7 +1741,7 @@
             } else if (fixed == 'right') { // 渲染右固定列
                 $table = this.$rightTable;
             }
-            this.renderHeaderCheckbox(fixed, false);
+            this.checkAll(false, true);
             this.checkedData = [];
             this.selectedData = null;
             $table.empty();
@@ -1817,7 +1760,6 @@
                         _appendTr(i);
                     });
                 } else {
-                    that.renderBodyRadioCheckbox(fixed);
                     // 设置固定列行高
                     if (that.hasLeftFixed || that.hasRightFixed) {
                         if (that.hasRightFixed && fixed == 'right') {
@@ -2010,38 +1952,6 @@
             this.$pager.insertAfter(this.$headerMain);
         }
 
-        // 渲染表头多选框
-        Class.prototype.renderHeaderCheckbox = function (fixed, checked) {
-            var col = this.getColByType('checkbox');
-            if (col && (!fixed || col.fixed == fixed)) {
-                var $tableHeader = this.$tableHeader;
-                if (fixed === 'left') {
-                    $tableHeader = this.$leftTableHeader;
-                } else if (fixed === 'right') {
-                    $tableHeader = this.$rightTableHeader;
-                }
-                if (typeof checked === 'boolean') {
-                    $tableHeader.find('input[song-filter="song_table_checkbox"]').prop('checked', checked);
-                }
-                Form.render('checkbox(song_table_checkbox)', $tableHeader);
-            }
-        }
-
-        // 渲染表格体单选/多选
-        Class.prototype.renderBodyRadioCheckbox = function (fixed) {
-            var col = this.getColByType('radio') || this.getColByType('checkbox');
-            if (col && (!fixed || col.fixed == fixed)) {
-                var type = col.type;
-                var $table = this.$table;
-                if (fixed === 'left') {
-                    $table = this.$leftTable;
-                } else if (fixed === 'right') {
-                    $table = this.$rightTable;
-                }
-                Form.render(type + '(song_table_' + type + ')', $table);
-            }
-        }
-
         Class.prototype.httpGet = function (success, error) {
             var data = this.reqeust.data || {};
             data[this.reqeust.pageName || 'page'] = this.nowPage;
@@ -2191,34 +2101,20 @@
 
             function _bindRadioCheckboxEvent() {
                 // 点击单选框
-                that.$view.delegate('td.song-table-col-radio .song-table-radio', 'click', function () {
+                that.$view.delegate('td .song-table-radio', 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
-                    that.$view.find('.song-table-checked').removeClass('song-table-checked');
-                    that.$view.find('.song-table-radio[data-key="' + key + '"]').addClass('song-table-checked');
-                    that.selectedData = that.getRowDataByKey(key);
+                    that.selectRow(key);
                     that.trigger('radio', {
                         dom: this,
                         data: that.selectedData.id
                     });
                 });
                 // 点击多选框
-                that.$view.delegate('td.song-table-col-checkbox .song-table-checkbox', 'click', function () {
+                that.$view.delegate('td .song-table-checkbox', 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
-                    var data = that.getRowDataByKey(key);
-                    var checked = !$this.hasClass('song-table-checked');
-                    that.$view.find('.song-table-checkbox[data-key="' + key + '"]').toggleClass('song-table-checked');
-                    if (checked) {
-                        that.checkedData.push(data);
-                    } else {
-                        for (var i = 0; i < that.checkedData.length; i++) {
-                            if (that.checkedData[i]._song_table_key == key) {
-                                that.checkedData.splice(i, 1);
-                                break;
-                            }
-                        }
-                    }
+                    that.checkRow(key);
                     that.trigger('checkbox', {
                         dom: this,
                         data: that.checkedData.map(function (item) {
@@ -2227,16 +2123,8 @@
                     });
                 });
                 // 点击全选
-                that.$view.delegate('th.song-table-col-checkbox .song-table-checkbox', 'click', function () {
-                    var $this = $(this);
-                    var checked = !$this.hasClass('song-table-checked');
-                    if (checked) {
-                        that.checkedData = that.sortedData.concat([]);
-                        that.$view.find('.song-table-checkbox').addClass('song-table-checked');
-                    } else {
-                        that.checkedData = [];
-                        that.$view.find('.song-table-checkbox').removeClass('song-table-checked');
-                    }
+                that.$view.delegate('th .song-table-checkbox', 'click', function () {
+                    that.checkAll();
                     that.trigger('checkbox', {
                         dom: this,
                         data: that.checkedData.map(function (item) {

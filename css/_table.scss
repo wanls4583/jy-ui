@@ -104,21 +104,6 @@
         }
     }
 
-    &-col-radio,
-    &-col-checkbox {
-        .song-table-cell-content {
-            text-overflow: inherit;
-            line-height: normal;
-        }
-
-        .song-form-radio,
-        .song-form-checkbox {
-            margin-top: 5px;
-            margin-right: 0;
-        }
-
-    }
-
     // 居中对齐
     &-align-left {
 

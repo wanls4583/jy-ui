@@ -957,18 +957,6 @@ textarea {
   *zoom: 1;
 }
 
-.song-table-col-radio .song-table-cell-content, .song-table-col-checkbox .song-table-cell-content {
-  text-overflow: inherit;
-  line-height: normal;
-}
-
-.song-table-col-radio .song-form-radio,
-.song-table-col-radio .song-form-checkbox, .song-table-col-checkbox .song-form-radio,
-.song-table-col-checkbox .song-form-checkbox {
-  margin-top: 5px;
-  margin-right: 0;
-}
-
 .song-table .song-table-align-left {
   text-align: left;
 }
