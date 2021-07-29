@@ -1777,10 +1777,6 @@ textarea {
   _zoom: 1;
 }
 
-.song-menu-item .song-menu-ul {
-  display: none;
-}
-
 .song-menu-item:hover {
   background-color: #f6f6f6;
 }

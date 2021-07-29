@@ -18,10 +18,6 @@
         // 在ie7及以下浏览器中，开启haslayout后，item将不能随着父容器的伸展而伸展，除非固定父容器宽度
         _zoom: 1;
 
-        .song-menu-ul {
-            display: none;
-        }
-
         &:hover {
             background-color: $lighter-color;
         }

@@ -89,9 +89,6 @@
             this.key = 0;
             this.width = this.option.width || (this.option.position !== 'static' && ieVersion <= 6 ? 200 : 0);
             this.height = this.option.height || 0;
-            this.appendItem(this.data, this.$menu);
-            this.addBorder();
-            this.bindEvent();
             if (this.$elem && this.$elem.length) {
                 this.width && this.$menu.css('width', this.width);
                 this.height && this.$menu.css('height', this.height);
@@ -117,6 +114,9 @@
                 $docBody.append(this.$menu);
                 this.$menu.addClass(menuClass.static);
             }
+            this.appendItem(this.data, this.$menu);
+            this.addBorder();
+            this.bindEvent();
         }
 
         // 重载
@@ -144,21 +144,25 @@
                 that.key++;
                 if (item.children && item.children.length) {
                     var $ul = $(tpl.ul);
+                    $item.append($ul);
                     $item.addClass(menuClass.group);
                     if (item.openType == 'right') {
-                        $item.append($ul);
                         $item.addClass(menuClass.right);
                         $ul.addClass(menuClass.ulRight);
                         $title.append(tpl.right);
                     } else {
-                        $item.append($ul);
                         $title.append(tpl.down + tpl.up);
                     }
+                    that.appendItem(item.children, $ul);
+                    $ul.css('width', $ul[0].offsetWidth + 2);
                     if (that.option.open) {
                         $ul.show();
                         $ul.parents('.' + menuClass.ul).show();
+                    } else {
+                        setTimeout(function () {
+                            $ul.hide();
+                        });
                     }
-                    that.appendItem(item.children, $ul);
                 }
             });
         }
@@ -261,7 +265,8 @@
             this.$menu.delegate('.' + menuClass.right, 'mouseenter', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
-                $this.children('.' + menuClass.ul).show();
+                var $ul = $this.children('.' + menuClass.ul);
+                $ul.show();
                 that.trigger('open', {
                     dom: this,
                     data: that.delInnerProperty(data)
