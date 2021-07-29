@@ -1069,30 +1069,6 @@ textarea {
   background-color: #f6f6f6;
 }
 
-.song-table-exports li .song-form-checkbox, .song-table-filter li .song-form-checkbox {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin: 0;
-}
-
-.song-table-exports li .song-form-checkbox i, .song-table-filter li .song-form-checkbox i {
-  margin-top: 10px;
-}
-
-.song-table-filter li {
-  padding: 0;
-}
-
-.song-table-filter .song-form-checkbox {
-  display: block;
-  padding-left: 40px;
-  padding-right: 15px;
-}
-
-.song-table-filter .song-form-checkbox i {
-  left: 15px;
-}
-
 .song-table-pager {
   border-top: 1px solid #eeeeee;
 }
@@ -1354,8 +1330,6 @@ textarea {
   *display: inline;
   *zoom: 1;
   line-height: 22px;
-  margin-top: 10px;
-  margin-right: 15px;
   padding-left: 25px;
   cursor: pointer;
   -webkit-user-select: none;
@@ -1393,8 +1367,6 @@ textarea {
   *display: inline;
   *zoom: 1;
   line-height: 18px;
-  margin-top: 10px;
-  margin-right: 15px;
   padding-left: 25px;
   cursor: pointer;
   -webkit-user-select: none;
@@ -1429,6 +1401,11 @@ textarea {
 
 .song-table-checkbox.song-table-checked .song-checkbox-icon i {
   display: inline;
+}
+
+.song-table-col-radio .song-table-cell-content, .song-table-col-checkbox .song-table-cell-content {
+  white-space: normal;
+  text-overflow: unset;
 }
 
 .song-date {

@@ -88,9 +88,8 @@
             </div>',
             checkbox: '<div class="song-table-checkbox <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
-                <span>&nbsp;</span>\
+                <span><%-(title||"&nbsp;")%></span>\
             </div>',
-            // checkbox: '<input type="checkbox" name="song_table_checkbox" value="<%-key%>" song-filter="song_table_checkbox" <%-(checked?"checked":"")%>/>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
             tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>',
             loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
@@ -1536,6 +1535,7 @@
                     if (col.type == 'checkbox') {
                         $content.html(Common.htmlTemplate(tpl.checkbox, {
                             checked: false,
+                            title: '',
                             key: 'all'
                         }));
                     }
@@ -1847,6 +1847,7 @@
                 }
                 content = Common.htmlTemplate(tpl.checkbox, {
                     checked: checked,
+                    title: '',
                     key: key
                 });
             } else if (col.type == 'operate') { // 操作列
@@ -2460,7 +2461,11 @@
             for (var i = 0; i < this.cols.length; i++) {
                 var col = this.cols[i];
                 if (col.type == 'text') {
-                    $filter.append('<li><input type="checkbox" title="' + col.title + '" value="' + col._key + '" checked song-filter="song_table_filter"></li>');
+                    $filter.append('<li>' + Common.htmlTemplate(tpl.checkbox, {
+                        checked: true,
+                        title: col.title,
+                        key: col._key
+                    }) + '</li>');
                 }
             }
             // 在工具图标下挂载
@@ -2468,16 +2473,17 @@
             $filter.on('click', function () {
                 return false;
             });
-            Form.on('checkbox(song_table_filter)', function (e) {
-                var $input = $(e.dom);
-                var value = $input.val();
-                var checked = $input.prop('checked');
-                var col = that.getColByKey(value);
+            $filter.delegate('li', 'click', function () {
+                var $checkbox = $(this).children('.song-table-checkbox');
+                var key = $checkbox.attr('data-key');
+                var col = that.getColByKey(key);
                 var allThs = [];
                 var nowTh = null;
+                var checked = !$checkbox.hasClass('song-table-checked');
+                $checkbox.toggleClass('song-table-checked');
                 $view.find('th,td').each(function (i, td) {
                     var songBindData = that.getBindData(this);
-                    if (songBindData.col._key == value) {
+                    if (songBindData.col._key == key) {
                         checked ? $(td).show() : $(td).hide();
                         if (td.tagName.toUpperCase() == 'TH' && !songBindData.holder) {
                             songBindData.col.hidden = !checked;
@@ -2531,8 +2537,7 @@
                     }
                     return ths;
                 }
-            }, $filter[0]);
-            Form.render('checkbox(song_table_filter)', $filter);
+            });
         }
 
         // 导出
