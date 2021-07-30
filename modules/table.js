@@ -61,6 +61,9 @@
             unselect: 'song-table-unselect',
             error: 'song-table-error',
             resizeLine: 'song-table-resize-line',
+            checkbox: 'song-table-checkbox',
+            radio: 'song-table-radio',
+            checked: 'song-table-checked',
             empty: 'song-table-empty'
         }
         var tpl = {
@@ -105,7 +108,7 @@
                     trigger: table.trigger,
                     reload: table.reload.bind(table),
                     addRow: function (option) {
-                        var option = Object.assign(option);
+                        var option = Common.deepAssign(option);
                         option.key = table.getKeyById(option.id);
                         table.addRow(option);
                     },
@@ -148,7 +151,7 @@
                         table.edit(key, field);
                     },
                     setData: function (option) {
-                        var option = Object.assign(option);
+                        var option = Common.deepAssign(option);
                         option.key = table.getKeyById(option.id);
                         if (option.key === undefined) {
                             return;
@@ -369,7 +372,7 @@
 
         // 重载表格
         Class.prototype.reload = function (option) {
-            this.option = Object.assign(this.option, option || {});
+            this.option = Common.deepAssign(this.option, option || {});
             this.render();
         }
 
@@ -498,8 +501,8 @@
         Class.prototype.selectRow = function (key) {
             var col = this.getColByType('radio');
             if (col) {
-                this.$view.find('.song-table-checked').removeClass('song-table-checked');
-                this.$view.find('.song-table-radio[data-key="' + key + '"]').addClass('song-table-checked');
+                this.$view.find('.' + tableClass.checked).removeClass(tableClass.checked);
+                this.$view.find('.' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 this.selectedData = this.getRowDataByKey(key);
             }
         }
@@ -521,10 +524,10 @@
                 }
                 if (checked) {
                     this.checkedData.push(data);
-                    this.$view.find('.song-table-checkbox[data-key="' + key + '"]').addClass('song-table-checked');
+                    this.$view.find('.' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 } else {
                     this.checkedData.splice(index, 1);
-                    this.$view.find('.song-table-checkbox[data-key="' + key + '"]').removeClass('song-table-checked');
+                    this.$view.find('.' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
                 }
                 this.checkAll(this.sortedData.length === this.checkedData.length, true);
             }
@@ -539,21 +542,21 @@
                 }
                 if (checked) {
                     if (justStatus) {
-                        this.$tableHeader.find('.song-table-checkbox').addClass('song-table-checked');
-                        this.hasLeftFixed && this.$leftTableHeader.find('.song-table-checkbox').addClass('song-table-checked');
-                        this.hasRightFixed && this.$rightTableHeader.find('.song-table-checkbox').addClass('song-table-checked');
+                        this.$tableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.hasLeftFixed && this.$leftTableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.hasRightFixed && this.$rightTableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
                     } else {
                         this.checkedData = this.sortedData.concat([]);
-                        this.$view.find('.song-table-checkbox').addClass('song-table-checked');
+                        this.$view.find('.' + tableClass.checkbox).addClass(tableClass.checked);
                     }
                 } else {
                     if (justStatus) {
-                        this.$tableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
-                        this.hasLeftFixed && this.$leftTableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
-                        this.hasRightFixed && this.$rightTableHeader.find('.song-table-checkbox').removeClass('song-table-checked');
+                        this.$tableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.hasLeftFixed && this.$leftTableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.hasRightFixed && this.$rightTableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
                     } else {
                         this.checkedData = [];
-                        this.$view.find('.song-table-checkbox').removeClass('song-table-checked');
+                        this.$view.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
                     }
                 }
             }
@@ -627,6 +630,7 @@
                 value = value || '';
                 if (ifFormat) {
                     var rowData = songBindData.rowData;
+                    // 还未保存，避免污染vulue值
                     rowData = Object.assign({}, rowData);
                     rowData.value = value;
                     value = getCellHtml(value, rowData, songBindData.rowData._song_table_key, col);
@@ -999,7 +1003,7 @@
                     rowData[field] = data;
                 }
             } else {
-                data = Object.assign({}, data);
+                data = Common.deepAssign({}, data);
                 data._song_table_key = key;
                 data.id = rowData.id;
                 rowData = data;
@@ -1231,7 +1235,6 @@
         // 设置固定表格容器的宽高
         Class.prototype.setFixedArea = function () {
             var top = this.$toolbar ? this.$toolbar[0].offsetHeight : 0;
-            var headerHeight = ieVersion <= 6 ? this.$header[0].offsetHeight : this.$header[0].clientHeight;
             var tableWidth = this.$table[0].offsetWidth;
             // 避免重复触发回流
             var tableMainArea = {
@@ -1257,7 +1260,6 @@
                     this.$leftMain.css({
                         height: height
                     });
-                    this.$leftHeader.css('height', headerHeight);
                 } else {
                     this.$leftHeaderMain.hide();
                     this.fixedVisible = false;
@@ -1280,7 +1282,6 @@
                     this.$rightMain.css({
                         height: height
                     });
-                    this.$rightHeader.css('height', headerHeight);
                     this.$mend.show();
                 } else {
                     this.$mend.hide();
@@ -1608,7 +1609,8 @@
                 var start = (this.nowPage - 1) * this.limit;
                 var end = this.nowPage * this.limit;
                 this.renderedData = this.data.slice(start, end).map(function (item) {
-                    return Object.assign({}, item);
+                    // 避免污染外部数据
+                    return Common.deepAssign({}, item);
                 });
                 _render();
             } else {
@@ -1862,6 +1864,7 @@
             }
             var style = {};
             var attr = {};
+            // 避免修改函数属性和函数样式
             col = Object.assign({}, col);
             for (var k in col.style) {
                 if (typeof col.style[k] == 'function') {
@@ -2102,7 +2105,7 @@
 
             function _bindRadioCheckboxEvent() {
                 // 点击单选框
-                that.$view.delegate('td .song-table-radio', 'click', function () {
+                that.$view.delegate('td .' + tableClass.radio, 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     that.selectRow(key);
@@ -2112,7 +2115,7 @@
                     });
                 });
                 // 点击多选框
-                that.$view.delegate('td .song-table-checkbox', 'click', function () {
+                that.$view.delegate('td .' + tableClass.checkbox, 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     that.checkRow(key);
@@ -2124,7 +2127,7 @@
                     });
                 });
                 // 点击全选
-                that.$view.delegate('th .song-table-checkbox', 'click', function () {
+                that.$view.delegate('th .' + tableClass.checkbox, 'click', function () {
                     that.checkAll();
                     that.trigger('checkbox', {
                         dom: this,
@@ -2474,13 +2477,13 @@
                 return false;
             });
             $filter.delegate('li', 'click', function () {
-                var $checkbox = $(this).children('.song-table-checkbox');
+                var $checkbox = $(this).children('.' + tableClass.checkbox);
                 var key = $checkbox.attr('data-key');
                 var col = that.getColByKey(key);
                 var allThs = [];
                 var nowTh = null;
-                var checked = !$checkbox.hasClass('song-table-checked');
-                $checkbox.toggleClass('song-table-checked');
+                var checked = !$checkbox.hasClass(tableClass.checked);
+                $checkbox.toggleClass(tableClass.checked);
                 $view.find('th,td').each(function (i, td) {
                     var songBindData = that.getBindData(this);
                     if (songBindData.col._key == key) {

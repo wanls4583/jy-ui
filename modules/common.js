@@ -17,7 +17,8 @@
             nextFrame: nextFrame,
             cancelNextFrame: cancelNextFrame,
             htmlTemplate: htmlTemplate,
-            checkOverflow: checkOverflow
+            checkOverflow: checkOverflow,
+            deepAssign: deepAssign
         }
 
 
@@ -258,6 +259,24 @@
             //执行代码
             return func.apply(window, args);
         }
+
+        // 深度克隆
+        function deepAssign(targetObj, originObj) {
+            for (var key in originObj) {
+                var value = originObj[key];
+                if (typeof value === 'object') {
+                    if (value instanceof Array) {
+                        targetObj[key] = deepAssign([], value);
+                    } else {
+                        targetObj[key] = deepAssign({}, value);
+                    }
+                } else {
+                    targetObj[key] = value;
+                }
+            }
+            return targetObj;
+        }
+
         if (!Function.prototype.bind) {
             Function.prototype.bind = function (context) {
                 var self = this;
