@@ -159,6 +159,7 @@
                         table.setData(option);
                     },
                     getData: table.getData.bind(table),
+                    getDataById: table.getDataById.bind(table),
                     setArea: table.setArea.bind(table),
                     setColWidth: table.setColWidth.bind(table),
                     showLoading: table.showLoading.bind(table),
@@ -243,9 +244,7 @@
             this.tempData = {}; // 临时数据
             this.idKeyMap = {}; // 存储原始数据id到内部key的映射
             this.dataMap = {}; // 存储数据映射，可快速找到数据
-            this.editMap = { // 存储编辑中的单元格
-                list: []
-            };
+            this.editMap = {} // 存储编辑中的单元格
             this.$view.insertAfter(this.$elem);
             this.$elem.hide();
             this.initCols();
@@ -399,7 +398,7 @@
             function _getIndex(key) {
                 if (key !== undefined) {
                     for (var i = 0; i < that.sortedData.length; i++) {
-                        if (that.sortedData[i]._song_table_key == key) {
+                        if (that.sortedData[i]._song_key == key) {
                             return i;
                         }
                     }
@@ -431,7 +430,7 @@
                         if (!fixed) {
                             addedData.push(item);
                         }
-                        that.fixRowHeight(item._song_table_key, 'auto');
+                        that.fixRowHeight(item._song_key, 'auto');
                     });
                 } else {
                     data.map(function (item, i) {
@@ -440,7 +439,7 @@
                         if (!fixed) {
                             addedData.push(item);
                         }
-                        that.fixRowHeight(item._song_table_key, 'auto');
+                        that.fixRowHeight(item._song_key, 'auto');
                     });
                 }
             }
@@ -458,6 +457,7 @@
             this.hasRightFixed && _deleteRow('right');
             this.checkAll(this.sortedData.length == this.checkedData.length, true);
             this.setFixedArea();
+            this.delEditTdMap(key);
 
             function _deleteRow(fixed) {
                 var $tr = that.getTrByKey(key, fixed);
@@ -475,7 +475,7 @@
                 if (fixed) {
                     return;
                 }
-                if (that.selectedData && that.selectedData._song_table_key == key) {
+                if (that.selectedData && that.selectedData._song_key == key) {
                     that.selectedData = null;
                 }
                 that.deletedData.push(rowData);
@@ -489,7 +489,7 @@
 
             function _deleteData(data) {
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i]._song_table_key == key) {
+                    if (data[i]._song_key == key) {
                         data.splice(i, 1);
                         break;
                     }
@@ -514,7 +514,7 @@
             if (col) {
                 var index = -1;
                 for (var i = 0; i < this.checkedData.length; i++) {
-                    if (this.checkedData[i]._song_table_key == key) {
+                    if (this.checkedData[i]._song_key == key) {
                         index = i;
                         break;
                     }
@@ -579,9 +579,12 @@
                     }
                 });
             } else { // 保存所有的数据
-                this.editMap.list && this.editMap.list.map(function (td) {
-                    tds.push(td);
-                });
+                for (var key in this.editMap) {
+                    var arr = this.editMap[key];
+                    arr && arr.map(function (td) {
+                        tds.push(td);
+                    });
+                }
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
@@ -594,19 +597,11 @@
                 for (var i = 0; i < tds.length; i++) {
                     var td = tds[i];
                     _save(td);
-                    _delEditMap(td);
+                    key !== undefined && that.delEditTdMap(key, td);
                 }
+                key === undefined && that.delEditTdMap();
             }
             return result;
-
-            function _delEditMap(td) {
-                var songBindData = that.getBindData(td);
-                var key = songBindData.rowData._song_table_key;
-                var index = that.editMap[key].indexOf(td);
-                that.editMap[key].splice(index, 1);
-                index = that.editMap.list.indexOf(td);
-                that.editMap.list.splice(index, 1);
-            }
 
             /**
              * 获取编辑中的数据
@@ -633,7 +628,7 @@
                     // 还未保存，避免污染vulue值
                     rowData = Object.assign({}, rowData);
                     rowData.value = value;
-                    value = getCellHtml(value, rowData, songBindData.rowData._song_table_key, col);
+                    value = getCellHtml(value, rowData, songBindData.rowData._song_key, col);
                 }
                 return value;
             }
@@ -675,7 +670,7 @@
             // 保存编辑的数据
             function _save(td) {
                 var songBindData = that.getBindData(td);
-                var key = songBindData.rowData._song_table_key;
+                var key = songBindData.rowData._song_key;
                 var col = songBindData.col;
                 var $td = $(td);
                 var value = _getValue(td);
@@ -698,7 +693,7 @@
                 if (String(originValue) != String(value)) {
                     var pushed = true;
                     for (var i = 0; i < that.editedData.length; i++) {
-                        if (that.editedData[i]._song_table_key == key) {
+                        if (that.editedData[i]._song_key == key) {
                             pushed = false;
                             break;
                         }
@@ -733,24 +728,19 @@
                     }
                 });
             } else { // 保存所有的数据
-                this.editMap.list && this.editMap.list.map(function (td) {
-                    tds.push(td);
-                });
+                for (var key in this.editMap) {
+                    var arr = this.editMap[key];
+                    arr && arr.map(function (td) {
+                        tds.push(td);
+                    });
+                }
             }
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
                 _save(td);
-                _delEditMap(td);
+                key !== undefined && that.delEditTdMap(key, td);
             }
-
-            function _delEditMap(td) {
-                var songBindData = that.getBindData(td);
-                var key = songBindData.rowData._song_table_key;
-                var index = that.editMap[key].indexOf(td);
-                that.editMap[key].splice(index, 1);
-                index = that.editMap.list.indexOf(td);
-                that.editMap.list.splice(index, 1);
-            }
+            key === undefined && that.delEditTdMap();
 
             // 获取编辑中的数据
             function _getValue(td) {
@@ -779,7 +769,7 @@
             // 保存编辑的数据
             function _save(td) {
                 var songBindData = that.getBindData(td);
-                var key = songBindData.rowData._song_table_key;
+                var key = songBindData.rowData._song_key;
                 var col = songBindData.col;
                 var $td = $(td);
                 var fValue = _getValue(td);
@@ -832,18 +822,10 @@
             for (var i = 0; i < tds.length; i++) {
                 var td = tds[i];
                 _edit(td);
-                _setEditMap(td);
+                that.setEditTdMap(key, td);
             }
             if (!this.ellipsis) {
                 this.$main.trigger('scroll');
-            }
-
-            function _setEditMap(td) {
-                var songBindData = that.getBindData(td);
-                var key = songBindData.rowData._song_table_key;
-                that.editMap[key] = that.editMap[key] || [];
-                that.editMap[key].push(td);
-                that.editMap.list.push(td);
             }
 
             function _edit(td) {
@@ -853,7 +835,7 @@
                     var data = songBindData.colData;
                     var originTdHeight = that.ellipsis ? 41 : td.offsetHeight;
                     var rowData = songBindData.rowData;
-                    var key = songBindData.rowData._song_table_key;
+                    var key = songBindData.rowData._song_key;
                     var $cell = $(td.children[0]);
                     var editable = col.editable === true ? {} : col.editable;
                     var $edit = $('<div class="' + tableClass.editCell + '"></div>');
@@ -1004,10 +986,10 @@
                 }
             } else {
                 data = Common.deepAssign({}, data);
-                data._song_table_key = key;
+                data._song_key = key;
                 data.id = rowData.id;
                 rowData = data;
-                if (this.selectedData && this.selectedData._song_table_key == key) {
+                if (this.selectedData && this.selectedData._song_key == key) {
                     this.selectedData = data;
                 }
                 _setData(this.addedData, data);
@@ -1044,7 +1026,7 @@
 
             function _setData(dataList, data) {
                 for (var i = 0; i < dataList.length; i++) {
-                    if (dataList[i]._song_table_key == key) {
+                    if (dataList[i]._song_key == key) {
                         dataList.splice(i, 1, data);
                         break;
                     }
@@ -1062,7 +1044,7 @@
             type = type || 'render';
             switch (type) {
                 case 'render':
-                    data = this.renderedData;
+                    data = this.sortedData;
                     break;
                 case 'select':
                     data = this.selectedData;
@@ -1091,6 +1073,18 @@
             }
 
             return data;
+        }
+
+        /**
+         * 根据外部id获取数据
+         * @param {Number} id 
+         */
+        Class.prototype.getDataById = function (id) {
+            for (var i = 0; i < this.renderedData.length; i++) {
+                if (this.renderedData[i].id == id) {
+                    return this.delInnerProperty(this.renderedData[i]);
+                }
+            }
         }
 
         /**
@@ -1397,15 +1391,15 @@
             if (data) {
                 if (data.id !== undefined) {
                     this.idKeyMap[data.id] = this.idKeyMap[data.id] || [];
-                    if (this.idKeyMap[data.id].indexOf(data._song_table_key) == -1) {
-                        this.idKeyMap[data.id].push(data._song_table_key);
+                    if (this.idKeyMap[data.id].indexOf(data._song_key) == -1) {
+                        this.idKeyMap[data.id].push(data._song_key);
                     }
                 }
-                this.dataMap[data._song_table_key] = {
+                this.dataMap[data._song_key] = {
                     rowData: data
                 };
                 cols.map(function (col) {
-                    that.dataMap[data._song_table_key + '-' + col._key] = {
+                    that.dataMap[data._song_key + '-' + col._key] = {
                         colData: data[col.field],
                         rowData: data,
                         col: col
@@ -1420,6 +1414,41 @@
                         }
                     });
                 });
+            }
+        }
+
+        // 设置单元格(编辑中)映射(data-key->td)
+        Class.prototype.setEditTdMap = function (key, td) {
+            this.editMap[key] = this.editMap[key] || [];
+            if (this.editMap[key].indexOf(td) == -1) {
+                this.editMap[key].push(td);
+            }
+        }
+
+        // 删除单元格映射(data-key->td)
+        Class.prototype.delEditTdMap = function (key, td) {
+            if (key !== undefined) {
+                this.editMap[key] = this.editMap[key];
+                if (this.editMap[key]) {
+                    if (td) {
+                        var index = this.editMap[key].indexOf(td);
+                        index > -1 && this.editMap[key].splice(index, 1);
+                    } else {
+                        this.editMap[key] = undefined;
+                    }
+                }
+            } else if (td) {
+                for (var key in this.editMap) {
+                    var arr = this.editMap[key];
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i] === td) {
+                            arr.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                this.editMap = {};
             }
         }
 
@@ -1632,6 +1661,10 @@
                 that.timers.renderTimer = Common.nextFrame(function () {
                     that.idKeyMap = {};
                     that.dataMap = {};
+                    that.editMap = [];
+                    that.checkedData = [];
+                    that.selectedData = null;
+                    that.checkAll(false, true);
                     that.renderTr();
                     that.hasLeftFixed && that.renderTr('left');
                     that.hasRightFixed && that.renderTr('right');
@@ -1743,9 +1776,6 @@
             } else if (fixed == 'right') { // 渲染右固定列
                 $table = this.$rightTable;
             }
-            this.checkAll(false, true);
-            this.checkedData = [];
-            this.selectedData = null;
             $table.empty();
             _appendTr(0);
 
@@ -1797,7 +1827,7 @@
          */
         Class.prototype.createTr = function (data, fixed) {
             var cols = this.cols;
-            var key = data._song_table_key;
+            var key = data._song_key;
             if (key === undefined) {
                 if (fixed == 'left') {
                     key = this.fixeLeftIdCount++;
@@ -1808,7 +1838,7 @@
                 }
             }
             var tr = '<tr data-key="' + key + '">';
-            data._song_table_key = key;
+            data._song_key = key;
             for (var col_i = 0; col_i < cols.length; col_i++) {
                 var col = cols[col_i];
                 if (!fixed || col.fixed == fixed) {
@@ -1827,14 +1857,14 @@
          * @param {Boolean} fixed 是否为固定列
          */
         Class.prototype.createTd = function (col, data, fixed) {
-            var key = data._song_table_key;
+            var key = data._song_key;
             var td = '';
             var cell = '';
             var content = '';
             if (col.type == 'text') { //文本列
                 content = getCellHtml(data[col.field], data, key, col);
             } else if (col.type == 'radio') { // 单选列
-                var checked = this.selectedData && this.selectedData._song_table_key == key;
+                var checked = this.selectedData && this.selectedData._song_key == key;
                 content = Common.htmlTemplate(tpl.radio, {
                     checked: checked,
                     key: key
@@ -1842,7 +1872,7 @@
             } else if (col.type == 'checkbox') { // 多选列
                 var checked = false;
                 for (var i = 0; i < this.checkedData.length; i++) {
-                    if (this.checkedData[i]._song_table_key == key) {
+                    if (this.checkedData[i]._song_key == key) {
                         checked = true;
                         break;
                     }
@@ -1917,7 +1947,7 @@
             } else if (col.checkbox) { // 复选框中的数据
                 html = '';
                 col.checkbox.map(function (obj) {
-                    if (Common.indexOf(cellValue, obj.value) > -1) {
+                    if (cellValue && cellValue.length && Common.indexOf(cellValue, obj.value) > -1) {
                         html += ',' + obj.label;
                     }
                 });
@@ -2019,7 +2049,7 @@
             var obj = {};
             for (var key in data) {
                 // 去掉内部数据字段
-                if (key.slice(0, 11) != '_song_table') {
+                if (key.slice(0, 5) !== '_song') {
                     obj[key] = data[key];
                 }
             }
@@ -2201,7 +2231,7 @@
                         var $td = $(e.target).parents('td');
                         var songBindData = that.getBindData($td[0]);
                         if ($td.length && e.keyCode == 13) {
-                            that.save(songBindData.rowData._song_table_key);
+                            that.save(songBindData.rowData._song_key);
                         }
                     }
                 });
@@ -2216,7 +2246,7 @@
                         return;
                     }
                     var songBindData = that.getBindData($td[0]);
-                    var key = songBindData.rowData._song_table_key;
+                    var key = songBindData.rowData._song_key;
                     if (songBindData.editing) {
                         return;
                     }
@@ -2240,7 +2270,7 @@
                 }
                 that.$view.delegate('tbody tr', 'mousemove', function (e) {
                     var songBindData = that.getBindData(this);
-                    var key = songBindData.rowData._song_table_key;
+                    var key = songBindData.rowData._song_key;
                     Common.cancelNextFrame(that.timers.hoverInTimer);
                     that.timers.hoverInTimer = Common.nextFrame(function () {
                         _delHover(that.tempData.hoverTrs);
@@ -2586,7 +2616,7 @@
                     if (col.type == 'text') {
                         var html = data[col.field];
                         if (col.template) { // 自定义渲染函数
-                            html = col.template(data[col.field], data, data._song_table_key, col);
+                            html = col.template(data[col.field], data, data._song_key, col);
                         } else if (col.select) { // 下列列表中的数据
                             html = '';
                             col.select.map(function (obj) {
