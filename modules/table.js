@@ -579,8 +579,8 @@
                     }
                 });
             } else { // 保存所有的数据
-                for (var key in this.editMap) {
-                    var arr = this.editMap[key];
+                for (var k in this.editMap) {
+                    var arr = this.editMap[k];
                     arr && arr.map(function (td) {
                         tds.push(td);
                     });
@@ -1465,14 +1465,14 @@
                 for (var i = 0; i < defaultToolbar.length; i++) {
                     switch (defaultToolbar[i]) {
                         case 'filter':
-                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="filter" song-stop="true">' + filterIcon + '</div>');
+                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="filter">' + filterIcon + '</div>');
                             break;
                         case 'exports':
-                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="exports" song-stop="true">' + exportsIcon + '</div>');
+                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'song-icon', 'song-display-inline-block'].join(' ') + '" song-event="exports">' + exportsIcon + '</div>');
                             var $exports = $(
                                 '<ul class="' + tableClass.exports + '" style="display:none">\
-                                    <li song-stop="true" song-event="exports-excel">导出Excel文件</li>\
-                                    <li song-stop="true" song-event="exports-csv">导出Csv文件</li>\
+                                    <li song-event="exports-excel">导出Excel文件</li>\
+                                    <li song-event="exports-csv">导出Csv文件</li>\
                                 </ul>');
                             $div.append($exports);
                             $tool.append($div);
@@ -1661,7 +1661,7 @@
                 that.timers.renderTimer = Common.nextFrame(function () {
                     that.idKeyMap = {};
                     that.dataMap = {};
-                    that.editMap = [];
+                    that.editMap = {};
                     that.checkedData = [];
                     that.selectedData = null;
                     that.checkAll(false, true);
@@ -1886,7 +1886,12 @@
                 if (col.btns) {
                     for (var btn_i = 0; btn_i < col.btns.length; btn_i++) {
                         var btn = col.btns[btn_i];
-                        content += Common.htmlTemplate(tpl.btn, btn);
+                        content += Common.htmlTemplate(tpl.btn, {
+                            text: btn.text,
+                            event: btn.event,
+                            type: btn.type,
+                            stop: btn.stop
+                        });
                     }
                 } else {
                     content = col.template(data[col.field], data, key, col);
@@ -2078,53 +2083,14 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             var editTrigger = this.editTrigger || 'click'; //触发编辑的事件类型
-            $body.on('click', function (e) {
-                // 点击表格之外的区域，自动保存编辑中的数据
-                if (!that.tempData.viewClick) {
-                    that.save();
-                }
-                that.$exports && that.$exports.hide();
-                that.$filter && that.$filter.hide();
-            });
-            $body.on('mousemove', function (e) {
-                // 调整列宽中
-                // 延时执行，避免卡顿
-                Common.cancelNextFrame(that.timers.resizingTimer);
-                that.timers.resizingTimer = Common.nextFrame(function () {
-                    var resizeData = that.tempData.resizeData;
-                    if (resizeData) {
-                        var x = e.pageX - resizeData.pageX;
-                        var width = resizeData.originWidth + x;
-                        // 列宽最小为30像素
-                        if (width > 30) {
-                            that.tempData.$resizeLine.css({
-                                left: resizeData.left + width
-                            });
-                            resizeData.width = width;
-                        }
-                    }
-                }, 0);
-            });
-            $body.on('mouseup', function (e) {
-                // 调整列宽结束
-                if (that.tempData.resizeData) {
-                    var th = that.tempData.resizeData.th;
-                    var songBindData = that.getBindData(th);
-                    var col = songBindData.col;
-                    var width = that.tempData.resizeData.width;
-                    that.tempData.$resizeLine.remove();
-                    width && that.setColWidth(col, width);
-                    that.$view.removeClass(tableClass.colResize);
-                    that.tempData.resizeData = undefined;
-                    that.tempData.$resizeLine = undefined;
-                }
-            });
-            _bindScrollEvent();
             if (this.tempData.bindedEvent) {
                 return;
             }
             this.tempData.bindedEvent = true;
+
+            _bindBodyEvent();
             _bindRadioCheckboxEvent();
+            _bindScrollEvent();
             _bindClickEvent();
             _bindEditEvent();
             _bindHoverEvent();
@@ -2132,6 +2098,50 @@
             _bindOverflowEvent();
             _bindOrderByEvent();
             _bindToolbarEvent();
+
+            function _bindBodyEvent() {
+                $body.on('click', function (e) {
+                    // 点击表格体之外的区域，自动保存编辑中的数据
+                    if(!that.tempData.tableClick) {
+                        that.save();
+                    }
+                    that.$exports && that.$exports.hide();
+                    that.$filter && that.$filter.hide();
+                });
+                $body.on('mousemove', function (e) {
+                    // 调整列宽中
+                    // 延时执行，避免卡顿
+                    Common.cancelNextFrame(that.timers.resizingTimer);
+                    that.timers.resizingTimer = Common.nextFrame(function () {
+                        var resizeData = that.tempData.resizeData;
+                        if (resizeData) {
+                            var x = e.pageX - resizeData.pageX;
+                            var width = resizeData.originWidth + x;
+                            // 列宽最小为30像素
+                            if (width > 30) {
+                                that.tempData.$resizeLine.css({
+                                    left: resizeData.left + width
+                                });
+                                resizeData.width = width;
+                            }
+                        }
+                    }, 0);
+                });
+                $body.on('mouseup', function (e) {
+                    // 调整列宽结束
+                    if (that.tempData.resizeData) {
+                        var th = that.tempData.resizeData.th;
+                        var songBindData = that.getBindData(th);
+                        var col = songBindData.col;
+                        var width = that.tempData.resizeData.width;
+                        that.tempData.$resizeLine.remove();
+                        width && that.setColWidth(col, width);
+                        that.$view.removeClass(tableClass.colResize);
+                        that.tempData.resizeData = undefined;
+                        that.tempData.$resizeLine = undefined;
+                    }
+                });
+            }
 
             function _bindRadioCheckboxEvent() {
                 // 点击单选框
@@ -2172,36 +2182,37 @@
                 // 表格中的所有点击事件
                 that.$view.on('click', function (e) {
                     var $target = $(e.target);
-                    var $td = $target.parents('td')
-                    var event = $target.attr('song-event');
-                    var stop = $target.attr('song-stop');
-                    // 用于区分是否点击区域
-                    that.tempData.viewClick = true;
-                    Common.nextFrame(function () {
-                        that.tempData.viewClick = false;
-                    });
-                    if (!event) {
-                        event = $td.attr('song-event');
-                        stop = $td.attr('song-stop');
-                    }
-                    if (event) {
-                        var data = {
-                            dom: $target[0]
-                        }
-                        if ($td[0]) {
-                            var songBindData = that.getBindData($td[0]);
-                            if (songBindData) {
-                                data.dom = e.target;
-                                data.data = that.delInnerProperty(songBindData.rowData);
+                    var $td = $target.parents('td');
+                    _triggerEvent($target);
+
+                    // 向上触发自定义事件
+                    function _triggerEvent($dom) {
+                        var event = $dom.attr('song-event');
+                        var stop = $dom.attr('song-stop');
+                        if (event) {
+                            var data = {
+                                dom: $target[0]
                             }
+                            if ($td[0]) {
+                                var songBindData = that.getBindData($td[0]);
+                                if (songBindData) {
+                                    data.data = that.delInnerProperty(songBindData.rowData);
+                                }
+                            }
+                            // 触发自定义事件
+                            that.trigger(event, data);
                         }
-                        // 触发自定义事件
-                        that.filter && that.trigger(event, data);
+                        if ($dom[0] !== that.$view[0] && !stop) {
+                            _triggerEvent($dom.parent());
+                        }
                     }
-                    // 阻止冒泡
-                    if (stop) {
-                        return false;
-                    }
+                });
+                // 点击表格体时不触发阻止触发body事件
+                that.$view.delegate('tbody', 'click', function () {
+                    that.tempData.tableClick = true;
+                    Common.nextFrame(function() {
+                        that.tempData.tableClick = false;
+                    });
                 });
                 // 行点击事件
                 that.$view.delegate('tbody tr', 'click', function () {

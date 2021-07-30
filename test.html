@@ -657,13 +657,17 @@
                 }, {
                     type: 'operate',
                     title: '操作',
-                    width: 120,
+                    width: 170,
                     btns: [{
+                        text: '详情',
+                        event: 'custom-detail'
+                    },{
                         text: '删除',
                         event: 'custom-del',
                         type: 'danger',
                         stop: true
                     }],
+                    event: 'custom-op',
                     fixed: 'right',
                     rowspan: 2
                 }],
@@ -714,6 +718,12 @@
         });
         table.on('custom-del', function (obj) {
             table.deleteRow(obj.data.id);
+        });
+        table.on('custom-detail', function (obj) {
+            SongUi.Dialog.alert(JSON.stringify(obj.data));
+        });
+        table.on('custom-op', function (obj) {
+            // console.log('custom-op');
         });
         table.on('custom-checkall', function (obj) {
             table.checkAll();
