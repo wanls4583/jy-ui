@@ -999,9 +999,6 @@
                 _setData(this.sortedData, data);
             }
 
-            editFields.map(function (field) {
-                that.edit(key, field);
-            });
             this.getTrByKey(key).each(function (i, tr) {
                 _setDom(tr);
             });
@@ -1012,6 +1009,10 @@
                 _setDom(tr, 'right');
             });
             this.fixRowHeight(key);
+            this.delEditTdMap(key);
+            editFields.map(function (field) {
+                that.edit(key, field);
+            });
 
             function _setDom(tr, fixed) {
                 var $tr = $(tr);
@@ -2102,11 +2103,12 @@
             function _bindBodyEvent() {
                 $body.on('click', function (e) {
                     // 点击表格体之外的区域，自动保存编辑中的数据
-                    if(!that.tempData.tableClick) {
+                    if (!that.tempData.stopBodyEvent) {
                         that.save();
+                        that.$exports && that.$exports.hide();
+                        that.$filter && that.$filter.hide();
                     }
-                    that.$exports && that.$exports.hide();
-                    that.$filter && that.$filter.hide();
+                    that.tempData.stopBodyEvent = false;
                 });
                 $body.on('mousemove', function (e) {
                     // 调整列宽中
@@ -2209,10 +2211,7 @@
                 });
                 // 点击表格体时不触发阻止触发body事件
                 that.$view.delegate('tbody', 'click', function () {
-                    that.tempData.tableClick = true;
-                    Common.nextFrame(function() {
-                        that.tempData.tableClick = false;
-                    });
+                    that.tempData.stopBodyEvent = true;
                 });
                 // 行点击事件
                 that.$view.delegate('tbody tr', 'click', function () {
@@ -2473,11 +2472,13 @@
                         that.createFilter(e.dom);
                     }
                     that.$exports && that.$exports.hide();
+                    that.tempData.stopBodyEvent = true;
                 });
                 // 导出事件
                 that.on('exports', function (e) {
                     that.$exports.toggle();
                     that.$filter && that.$filter.hide();
+                    that.tempData.stopBodyEvent = true;
                 });
                 // 导出事件
                 that.on('exports-excel', function (e) {
