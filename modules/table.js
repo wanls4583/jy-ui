@@ -965,6 +965,7 @@
                 var col = songBindData.col;
                 var data = songBindData.colData.concat([]);
                 var height = td.clientHeight - 2;
+                var h = 0;
                 var $edit = $(td.children[0].children[0]);
                 var $checkboxs = $('<div class="' + tableClass.checkboxs + '"></div>');
                 col.checkbox.map(function (item) {
@@ -994,14 +995,8 @@
                     return false;
                 });
                 $edit.append($checkboxs);
-                var h = $checkboxs[0].clientHeight;
-                height = h > height ? h : height;
-                if (h > height) {
-                    $edit.css('height', h);
-                } else {
-                    $edit.css('height', height);
-                    $checkboxs.css('padding-top', (height - h) / 2);
-                }
+                h = $edit[0].clientHeight;
+                height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
                 // 触发checkbox事件
                 $checkboxs[0].value = data;
                 songBindData.$checkbox = $checkboxs;
