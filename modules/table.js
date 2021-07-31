@@ -872,10 +872,13 @@
             function _editInput(td) {
                 var songBindData = that.getBindData(td);
                 var data = songBindData.colData;
-                var height = td.clientHeight-2;
+                var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
                 var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
-                $input.val(data).css('height', height);
+                $input.val(data).css({
+                    'height': height,
+                    'line-height': height + 'px'
+                });
                 $input.on('input propertychange', function () {
                     // 只可输入数字
                     if (songBindData.col.editable.type == 'number') {
@@ -884,6 +887,10 @@
                             $input.val(num);
                         }
                     }
+                });
+                // 避免触发其他点击事件造成卡顿，提升ie下的性能
+                $input.on('click', function () {
+                    return false;
                 });
                 $edit.html($input);
                 songBindData.$input = $input;

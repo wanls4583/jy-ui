@@ -173,7 +173,7 @@ textarea {
   display: block;
   width: 100%;
   height: 38px;
-  *height: 36px !important;
+  *height: 36px;
   _height: 38px;
   line-height: 36px;
   padding: 0 0 0 15px;

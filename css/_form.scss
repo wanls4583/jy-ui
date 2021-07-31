@@ -124,7 +124,7 @@
     display: block;
     width: 100%;
     height: $input-height;
-    *height: $input-height - 2px !important;
+    *height: $input-height - 2px;
     _height: $input-height;
     line-height: $input-height - 2px;
     padding: 0 0 0 $pd15;
