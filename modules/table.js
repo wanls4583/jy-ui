@@ -872,9 +872,10 @@
             function _editInput(td) {
                 var songBindData = that.getBindData(td);
                 var data = songBindData.colData;
+                var height = td.clientHeight-2;
                 var $edit = $(td.children[0].children[0]);
                 var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
-                $input.val(data);
+                $input.val(data).css('height', height);
                 $input.on('input propertychange', function () {
                     // 只可输入数字
                     if (songBindData.col.editable.type == 'number') {

@@ -433,8 +433,9 @@
 
         .song-input {
             border-color: transparent;
-            *border-left: 0;
-            *border-right: 0;
+            border: 0;
+            padding: 0;
+            text-align: center;
         }
     }
 
