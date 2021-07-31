@@ -36,6 +36,7 @@
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
             checkboxs: 'song-table-checkboxs',
+            radios: 'song-table-radios',
             pager: 'song-table-pager',
             filter: 'song-table-filter',
             exports: 'song-table-exports',
@@ -63,6 +64,7 @@
             checkbox: 'song-table-checkbox',
             checkboxEdit: 'song-table-checkbox-edit',
             radio: 'song-table-radio',
+            radioEdit: 'song-table-radio-edit',
             checked: 'song-table-checked',
             input: 'song-table-input',
             select: 'song-table-select',
@@ -93,13 +95,18 @@
                 <i class="song-radio-icon-uncheck">' + radioIcon + '</i>\
                 <span>&nbsp;</span>\
             </div>',
+            radioEdit: '<div class="song-table-radio-edit <%-(checked?"song-table-checked":"")%>">\
+                <i class="song-radio-icon-checked">' + radioedIcon + '</i>\
+                <i class="song-radio-icon-uncheck">' + radioIcon + '</i>\
+                <span><%-(title||"&nbsp;")%></span>\
+            </div>',
             checkbox: '<div class="song-table-checkbox <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
-                <span><%-(title||"&nbsp;")%></span>\
+                <span>&nbsp;</span>\
             </div>',
             checkboxEdit: '<div class="song-table-checkbox-edit <%-(checked?"song-table-checked":"")%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
-                <span><%-title%></span>\
+                <span><%-(title||"&nbsp;")%></span>\
             </div>',
             select: '<div class="song-table-select song-table-select-open">\
                 <div class="song-table-select-title">\
@@ -636,6 +643,8 @@
                     value = songBindData.$select[0].value;
                 } else if (songBindData.$checkbox) {
                     value = songBindData.$checkbox[0].value
+                } else if (songBindData.$radio) {
+                    value = songBindData.$radio[0].value
                 }
                 value = value || '';
                 if (ifFormat) {
@@ -854,22 +863,25 @@
                     var $cell = $(td.children[0]);
                     var editable = col.editable === true ? {} : col.editable;
                     var $edit = $('<div class="' + tableClass.editCell + '"></div>');
+                    var height = td.clientHeight - 2;
+                    var h = 0;
                     $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
-                        var height = td.clientHeight - 2;
-                        var h = 0;
                         $edit.append(editable.edit(data, rowData, key, col));
                         $edit.find('input').trigger('focus');
-                        h = $edit[0].clientHeight;
-                        height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
                     } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                         _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
                         _editSelect(td);
+                    } else if (editable.type == 'radio') { // 单选框
+                        _editRadio(td);
                     } else if (editable.type == 'checkbox') { // 复选框编辑
                         _editCheckbox(td);
                     }
+                    h = $edit[0].clientHeight;
+                    // 垂直居中
+                    height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
                     // 触发编辑事件
                     that.trigger('edit', {
                         field: col.field,
@@ -910,7 +922,9 @@
                 $edit.html($input);
                 songBindData.$input = $input;
                 // 输入框聚焦
-                $input.trigger('focus');
+                Common.nextFrame(function () {
+                    $input.trigger('focus');
+                });
             }
 
             function _editSelect(td) {
@@ -948,7 +962,6 @@
                     $input.val(this.label);
                     $select[0].value = this.value;
                     $dl.hide();
-                    that.autoSave && that.save();
                     return false;
                 });
                 $title.on('click', function () {
@@ -964,8 +977,6 @@
                 var songBindData = that.getBindData(td);
                 var col = songBindData.col;
                 var data = songBindData.colData.concat([]);
-                var height = td.clientHeight - 2;
-                var h = 0;
                 var $edit = $(td.children[0].children[0]);
                 var $checkboxs = $('<div class="' + tableClass.checkboxs + '"></div>');
                 col.checkbox.map(function (item) {
@@ -995,11 +1006,38 @@
                     return false;
                 });
                 $edit.append($checkboxs);
-                h = $edit[0].clientHeight;
-                height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
-                // 触发checkbox事件
                 $checkboxs[0].value = data;
                 songBindData.$checkbox = $checkboxs;
+            }
+
+            function _editRadio(td) {
+                var songBindData = that.getBindData(td);
+                var col = songBindData.col;
+                var data = songBindData.colData;
+                var $edit = $(td.children[0].children[0]);
+                var $radios = $('<div class="' + tableClass.radios + '"></div>');
+                col.radio.map(function (item) {
+                    var checked = false;
+                    var $radio = null;
+                    if (data == item.value) {
+                        checked = true;
+                    }
+                    $radio = $(Common.htmlTemplate(tpl.radioEdit, {
+                        checked: checked,
+                        title: item.label
+                    }));
+                    $radio[0].value = item.value;
+                    $radios.append($radio);
+                });
+                $radios.delegate('.' + tableClass.radioEdit, 'click', function () {
+                    $radios.find('.' + tableClass.checked).removeClass(tableClass.checked);
+                    $(this).addClass(tableClass.checked);
+                    $radios[0].value = this.value;
+                    return false;
+                });
+                $edit.append($radios);
+                $radios[0].value = data;
+                songBindData.$radio = $radios;
             }
         }
 
@@ -2014,6 +2052,13 @@
                         html = obj.label;
                     }
                 });
+            } else if (col.radio) { // 下列列表中的数据
+                html = '';
+                col.radio.map(function (obj) {
+                    if (obj.value == cellValue) {
+                        html = obj.label;
+                    }
+                });
             } else if (col.checkbox) { // 复选框中的数据
                 html = '';
                 col.checkbox.map(function (obj) {
@@ -2219,6 +2264,7 @@
                         dom: this,
                         data: that.selectedData.id
                     });
+                    return false;
                 });
                 // 点击多选框
                 that.$view.delegate('td .' + tableClass.checkbox, 'click', function () {
@@ -2231,6 +2277,7 @@
                             return item.id;
                         })
                     });
+                    return false;
                 });
                 // 点击全选
                 that.$view.delegate('th .' + tableClass.checkbox, 'click', function () {
@@ -2241,6 +2288,7 @@
                             return item.id;
                         })
                     });
+                    return false;
                 });
             }
 

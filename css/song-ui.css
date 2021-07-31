@@ -1313,7 +1313,7 @@ textarea {
   color: #999;
 }
 
-.song-table-radio {
+.song-table-radio, .song-table-radio-edit {
   position: relative;
   display: inline-block;
   *display: inline;
@@ -1328,7 +1328,8 @@ textarea {
 }
 
 .song-table-radio .song-radio-icon-checked,
-.song-table-radio .song-radio-icon-uncheck {
+.song-table-radio .song-radio-icon-uncheck, .song-table-radio-edit .song-radio-icon-checked,
+.song-table-radio-edit .song-radio-icon-uncheck {
   position: absolute;
   left: 0;
   top: 0;
@@ -1337,16 +1338,16 @@ textarea {
   color: #d2d2d2;
 }
 
-.song-table-radio .song-radio-icon-checked {
+.song-table-radio .song-radio-icon-checked, .song-table-radio-edit .song-radio-icon-checked {
   display: none;
   color: #5FB878;
 }
 
-.song-table-radio.song-table-checked .song-radio-icon-checked {
+.song-table-radio.song-table-checked .song-radio-icon-checked, .song-table-radio-edit.song-table-checked .song-radio-icon-checked {
   display: block;
 }
 
-.song-table-radio.song-table-checked .song-radio-icon-uncheck {
+.song-table-radio.song-table-checked .song-radio-icon-uncheck, .song-table-radio-edit.song-table-checked .song-radio-icon-uncheck {
   display: none;
 }
 
@@ -1392,14 +1393,14 @@ textarea {
   display: inline;
 }
 
-.song-table-checkboxs {
+.song-table-radios, .song-table-checkboxs {
   *zoom: 1;
   line-height: 18px;
   padding-bottom: 10px;
   text-align: left;
 }
 
-.song-table-checkbox-edit {
+.song-table-radio-edit, .song-table-checkbox-edit {
   margin-top: 10px;
   margin-left: 10px;
 }

@@ -467,7 +467,8 @@
     }
 
     // 单选框
-    &-radio {
+    &-radio,
+    &-radio-edit {
         position: relative;
         display: inline-block;
         *display: inline;
@@ -547,6 +548,7 @@
     }
 
     // 复选框编辑容器
+    &-radios,
     &-checkboxs {
         *zoom: 1;
         line-height: 18px;
@@ -554,6 +556,7 @@
         text-align: left;
     }
 
+    &-radio-edit,
     &-checkbox-edit {
         margin-top: 10px;
         margin-left: 10px;

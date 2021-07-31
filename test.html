@@ -567,11 +567,12 @@
         var data = [];
         for (var i = 0; i < 10000; i++) {
             var sex = Math.ceil(Math.random() * 2);
+            var marriage = Math.ceil(Math.random() * 2);
             var age = Math.ceil(Math.random() * 100);
             var phone = '1' + Math.ceil(Math.random() * 100000000000);
             var like = Math.ceil(Math.random() * 3);
             var sign = '个性签名' + i;
-            data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, marriage: marriage, phone: phone, sign: sign, like: [like] });
         };
         var table = SongUi.Table.render({
             elem: '#table2',
@@ -651,6 +652,22 @@
                         return value + '岁';
                     }
                 }, {
+                    title: '婚姻',
+                    field: 'marriage',
+                    width: 150,
+                    radio: [{
+                        label: '未婚',
+                        value: 1
+                    }, {
+                        label: '已婚',
+                        value: 2
+                    }],
+                    editable: {
+                        type: 'radio',
+                        rules: [{ type: 'required' }]
+                    },
+                    rowspan: 2
+                }, {
                     title: '其他信息',
                     align: 'center',
                     colspan: 2
@@ -661,7 +678,7 @@
                     btns: [{
                         text: '详情',
                         event: 'custom-detail'
-                    },{
+                    }, {
                         text: '删除',
                         event: 'custom-del',
                         type: 'danger',
