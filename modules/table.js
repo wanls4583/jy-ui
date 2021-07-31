@@ -62,6 +62,7 @@
             error: 'song-table-error',
             resizeLine: 'song-table-resize-line',
             checkbox: 'song-table-checkbox',
+            checkboxEdit: 'song-table-checkbox-edit',
             radio: 'song-table-radio',
             checked: 'song-table-checked',
             empty: 'song-table-empty'
@@ -90,6 +91,10 @@
                 <span>&nbsp;</span>\
             </div>',
             checkbox: '<div class="song-table-checkbox <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
+                <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
+                <span><%-(title||"&nbsp;")%></span>\
+            </div>',
+            checkboxEdit: '<div class="song-table-checkbox-edit <%-(checked?"song-table-checked":"")%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
                 <span><%-(title||"&nbsp;")%></span>\
             </div>',
@@ -930,20 +935,48 @@
             function _editCheckbox(td) {
                 var songBindData = that.getBindData(td);
                 var col = songBindData.col;
-                var data = songBindData.colData;
+                var data = songBindData.colData.concat([]);
+                var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
-                var checkFilter = 'table_edit_checkbox';
-                $edit.addClass(tableClass.checkboxs);
-                col.checkbox && col.checkbox.map(function (item) {
-                    $edit.append('<input type="checkbox" song-filter="' + checkFilter + '" title="' + item.label + '" value="' + item.value + '" ' + (data && Common.indexOf(data, item.value) > -1 ? 'checked' : '') + '/>');
+                var $checkboxs = $('<div class="' + tableClass.checkboxs + '"></div>');
+                col.checkbox.map(function (item) {
+                    var checked = false;
+                    var $checkbox = null;
+                    if (Common.indexOf(data, item.value) > -1) {
+                        checked = true;
+                    }
+                    $checkbox = $(Common.htmlTemplate(tpl.checkboxEdit, {
+                        checked: checked,
+                        title: item.label
+                    }));
+                    $checkbox[0].value = item.value;
+                    $checkboxs.append($checkbox);
                 });
+                $checkboxs.delegate('.' + tableClass.checkboxEdit, 'click', function () {
+                    var $this = $(this);
+                    var value = this.value;
+                    var index = Common.indexOf($checkboxs[0].value, value);
+                    if (index > -1) {
+                        $checkboxs[0].value.splice(index, 1);
+                        $this.removeClass(tableClass.checked);
+                    } else {
+                        $checkboxs[0].value.push(value);
+                        $this.addClass(tableClass.checked);
+                    }
+                    return false;
+                });
+                $edit.append($checkboxs);
+                var h = $checkboxs[0].clientHeight;
+                height = h > height ? h : height;
+                if (h > height) {
+                    $edit.css('height', h);
+                } else {
+                    $edit.css('height', height);
+                    $checkboxs.css('padding-top', (height - h) / 2);
+                }
                 // 触发checkbox事件
-                Form.render('checkbox(' + checkFilter + ')', td);
-                Form.on('checkbox(' + checkFilter + ')', function (e) {
-                    $edit[0].value = e.data;
-                }, td);
-                $edit[0].value = data;
-                songBindData.$checkbox = $edit;
+                $checkboxs[0].value = data;
+                songBindData.$checkbox = $checkboxs;
             }
         }
 
@@ -2276,6 +2309,8 @@
                     if (songBindData.col.editable && songBindData.col.field) {
                         if (pass && songBindData.col.editable) {
                             that.edit(key, songBindData.col.field);
+                            that.tempData.stopBodyEvent = false;
+                            return false;
                         }
                     }
                 });

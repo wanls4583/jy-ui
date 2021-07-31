@@ -1263,18 +1263,6 @@ textarea {
           box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.15);
 }
 
-.song-table .song-table-editing .song-table-checkboxs {
-  line-height: 18px;
-  padding-bottom: 10px;
-  text-align: left;
-}
-
-.song-table .song-table-editing .song-table-checkboxs .song-form-checkbox {
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 0;
-}
-
 .song-table .song-table-editing .song-input {
   border-color: transparent;
   border: 0;
@@ -1369,7 +1357,7 @@ textarea {
   display: none;
 }
 
-.song-table-checkbox {
+.song-table-checkbox, .song-table-checkbox-edit {
   position: relative;
   display: inline-block;
   *display: inline;
@@ -1383,7 +1371,7 @@ textarea {
           user-select: none;
 }
 
-.song-table-checkbox .song-checkbox-icon {
+.song-table-checkbox .song-checkbox-icon, .song-table-checkbox-edit .song-checkbox-icon {
   position: absolute;
   left: 0;
   top: 0;
@@ -1398,17 +1386,29 @@ textarea {
   color: #ffffff;
 }
 
-.song-table-checkbox .song-checkbox-icon i {
+.song-table-checkbox .song-checkbox-icon i, .song-table-checkbox-edit .song-checkbox-icon i {
   display: none;
 }
 
-.song-table-checkbox.song-table-checked .song-checkbox-icon {
+.song-table-checkbox.song-table-checked .song-checkbox-icon, .song-table-checkbox-edit.song-table-checked .song-checkbox-icon {
   background-color: #5FB878;
   border-color: #5FB878;
 }
 
-.song-table-checkbox.song-table-checked .song-checkbox-icon i {
+.song-table-checkbox.song-table-checked .song-checkbox-icon i, .song-table-checkbox-edit.song-table-checked .song-checkbox-icon i {
   display: inline;
+}
+
+.song-table-checkboxs {
+  *zoom: 1;
+  line-height: 18px;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.song-table-checkbox-edit {
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .song-date {

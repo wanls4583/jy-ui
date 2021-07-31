@@ -418,19 +418,6 @@
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
         }
 
-        // 复选框编辑容器
-        .song-table-checkboxs {
-            line-height: 18px;
-            padding-bottom: $pd10;
-            text-align: left;
-
-            .song-form-checkbox {
-                margin-top: $pd10;
-                margin-left: $pd10;
-                margin-right: 0;
-            }
-        }
-
         .song-input {
             border-color: transparent;
             border: 0;
@@ -524,7 +511,8 @@
     }
 
     // 多选框
-    &-checkbox {
+    &-checkbox,
+    &-checkbox-edit {
         position: relative;
         display: inline-block;
         *display: inline;
@@ -563,5 +551,18 @@
                 }
             }
         }
+    }
+
+    // 复选框编辑容器
+    &-checkboxs {
+        *zoom: 1;
+        line-height: 18px;
+        padding-bottom: $pd10;
+        text-align: left;
+    }
+
+    &-checkbox-edit {
+        margin-top: 10px;
+        margin-left: 10px;
     }
 }
