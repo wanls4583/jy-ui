@@ -417,13 +417,6 @@
             border-color: $link-color;
             box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
         }
-
-        .song-input {
-            border-color: transparent;
-            border: 0;
-            padding: 0;
-            text-align: center;
-        }
     }
 
     & &-error {
@@ -564,5 +557,73 @@
     &-checkbox-edit {
         margin-top: 10px;
         margin-left: 10px;
+    }
+
+    // 输入框
+    &-input {
+        display: block;
+        width: 100%;
+        height: $input-height;
+        line-height: $input-height;
+        padding: 0;
+        border: 0;
+        outline: none;
+        text-align: center;
+        *vertical-align: middle;
+    }
+
+    // 选择框
+    &-select {
+        &-title {
+            position: relative;
+            padding-left: $pd15;
+
+            .song-table-input {
+                text-align: left;
+                user-select: none;
+                cursor: pointer;
+            }
+
+            i {
+                position: absolute;
+                font-family: 'iconfont';
+                right: 5px;
+                top: 50%;
+                margin-top: -6px;
+                font-size: 12px;
+                line-height: 12px;
+                font-family: 'iconfont';
+                cursor: pointer;
+            }
+        }
+
+        &-dl {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            width: 100%;
+            margin-top: 4px;
+            background-color: $white-color;
+            border: 1px solid $gray-color;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+            box-sizing: border-box;
+
+            dd {
+                line-height: 36px;
+                padding-left: $pd15;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $light-color;
+                }
+
+                &.song-table-select-active {
+                    background-color: $link-color;
+                    color: $white-color;
+                }
+            }
+        }
     }
 }

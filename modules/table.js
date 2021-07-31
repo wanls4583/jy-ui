@@ -35,7 +35,6 @@
             toolbar: 'song-table-toolbar',
             toolbarSelf: 'song-table-tool-self',
             editing: 'song-table-editing',
-            input: 'song-table-input',
             checkboxs: 'song-table-checkboxs',
             pager: 'song-table-pager',
             filter: 'song-table-filter',
@@ -65,6 +64,10 @@
             checkboxEdit: 'song-table-checkbox-edit',
             radio: 'song-table-radio',
             checked: 'song-table-checked',
+            input: 'song-table-input',
+            select: 'song-table-select',
+            selectTitle: 'song-table-select-title',
+            selectActive: 'song-table-select-active',
             empty: 'song-table-empty'
         }
         var tpl = {
@@ -96,8 +99,15 @@
             </div>',
             checkboxEdit: '<div class="song-table-checkbox-edit <%-(checked?"song-table-checked":"")%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
-                <span><%-(title||"&nbsp;")%></span>\
+                <span><%-title%></span>\
             </div>',
+            select: '<div class="song-table-select song-table-select-open">\
+                <div class="song-table-select-title">\
+                    <input type="text" class="song-table-input" placeholder="请选择" readonly><i>' + downIcon + '</i>\
+                </div>\
+                <dl class="song-table-select-dl"></dl>\
+            </div>',
+            dd: '<dd class="<%-(selected?"song-table-select-active":"")%>"><%-title%></dd>',
             btn: '<button type="button" class="song-btn song-btn-xs <%-(type?"song-btn-"+type:"")%>" song-event="<%-event%>" style="margin-right:10px" <%-(stop?\'song-stop="true"\':"")%>><%-text%></button>',
             tip: '<div class="song-table-tip"><i class="song-table-icon">' + errorIcon + '</i><span></span></div>',
             loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
@@ -883,8 +893,8 @@
                 var data = songBindData.colData;
                 var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
-                var $input = $('<input class="' + [tableClass.input, 'song-input'].join(' ') + '">');
-                $input.val(data).css({
+                var $input = $('<input class="' + [tableClass.input].join(' ') + '">');
+                height > 38 && $input.val(data).css({
                     'height': height,
                     'line-height': height + 'px'
                 });
@@ -897,10 +907,6 @@
                         }
                     }
                 });
-                // 避免触发其他点击事件造成卡顿，提升ie下的性能
-                $input.on('click', function () {
-                    return false;
-                });
                 $edit.html($input);
                 songBindData.$input = $input;
                 // 输入框聚焦
@@ -911,29 +917,47 @@
                 var songBindData = that.getBindData(td);
                 var col = songBindData.col;
                 var data = songBindData.colData;
+                var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
-                var selectFilter = 'table_edit_select';
-                var $select = $('<select song-filter="' + selectFilter + '"></select>');
-                col.select && col.select.map(function (item) {
-                    $select.append('<option value="' + item.value + '" ' + (item.value == data ? 'selected' : '') + '>' + item.label + '</option>');
+                var $select = $(tpl.select);
+                var $title = $select.children('.' + tableClass.selectTitle);
+                var $input = $title.children('input');
+                var $dl = $select.children('dl');
+                height > 38 && $input.css({
+                    'height': height,
+                    'line-height': height + 'px'
                 });
-                var $div = $('<div style="zoom:1;"></div>');
-                $edit.empty().append($div);
-                $div.append($select);
-                // 触发select事件
-                Form.render('select(' + selectFilter + ')', td);
-                Form.on('select(' + selectFilter + ')', function (e) {
-                    $select[0].value = e.data;
-                    if (that.autoSave) {
-                        that.save(key);
+                col.select.map(function (item) {
+                    var selected = false;
+                    var $dd = null;
+                    if (data == item.value) {
+                        selected = true;
+                        $input.val(item.label);
                     }
-                }, td);
+                    $dd = $(Common.htmlTemplate(tpl.dd, {
+                        selected: selected,
+                        title: item.label
+                    }));
+                    $dd[0].value = item.value;
+                    $dd[0].label = item.label;
+                    $dl.append($dd);
+                });
+                $dl.delegate('dd', 'click', function () {
+                    $dl.find('.' + tableClass.selectActive).removeClass(tableClass.selectActive);
+                    $(this).addClass(tableClass.selectActive);
+                    $input.val(this.label);
+                    $select[0].value = this.value;
+                    $dl.hide();
+                    that.autoSave && that.save();
+                    return false;
+                });
+                $title.on('click', function () {
+                    $dl.toggle();
+                    return false;
+                });
                 $select[0].value = data;
+                $edit.append($select);
                 songBindData.$select = $select;
-                // 展开下拉框
-                setTimeout(function () {
-                    $edit.find('div.song-select-title').trigger('click');
-                }, 0)
             }
 
             function _editCheckbox(td) {
@@ -1000,7 +1024,7 @@
                     var trs = this.$table.children('tbody').children('tr');
                     var heights = [];
                     trs.each(function (i, tr) {
-                        heights.push(tr.clientHeight);
+                        heights.push(tr.offsetHeight);
                     });
                     this.hasLeftFixed && this.$leftTable.children('tbody').children('tr').each(function (i, tr) {
                         height = heights[i];
@@ -2249,7 +2273,7 @@
                             // 触发自定义事件
                             that.trigger(event, data);
                         }
-                        if ($dom[0] !== that.$view[0] && !stop) {
+                        if ($dom[0] && $dom[0] !== that.$view[0] && !stop) {
                             _triggerEvent($dom.parent());
                         }
                     }
