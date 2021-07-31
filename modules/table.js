@@ -847,8 +847,12 @@
                     $cell.html($edit);
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
+                        var height = td.clientHeight - 2;
+                        var h = 0;
                         $edit.append(editable.edit(data, rowData, key, col));
                         $edit.find('input').trigger('focus');
+                        h = $edit[0].clientHeight;
+                        height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
                     } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                         _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
@@ -2298,20 +2302,20 @@
                     }
                     var songBindData = that.getBindData($td[0]);
                     var key = songBindData.rowData._song_key;
-                    if (songBindData.editing) {
-                        return;
-                    }
                     var pass = true;
-                    // 先保存真在编辑中的数据
+                    // 该单元格正在编辑中
+                    if (songBindData.editing) {
+                        that.tempData.stopBodyEvent = false;
+                        return false;
+                    }
+                    // 先保存正在编辑中的数据
                     if (that.autoSave) {
                         pass = that.save();
                     }
                     if (songBindData.col.editable && songBindData.col.field) {
-                        if (pass && songBindData.col.editable) {
-                            that.edit(key, songBindData.col.field);
-                            that.tempData.stopBodyEvent = false;
-                            return false;
-                        }
+                        pass && that.edit(key, songBindData.col.field);
+                        that.tempData.stopBodyEvent = false;
+                        return false;
                     }
                 });
             }
