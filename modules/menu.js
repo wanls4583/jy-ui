@@ -117,6 +117,7 @@
             }
             this.appendItem(this.data, this.$menu);
             this.addBorder();
+            this.setWidth();
             this.bindEvent();
             // 处理完毕后隐藏掉所有分组
             this.$menu.find('.' + menuClass.ul).hide();
@@ -161,7 +162,6 @@
                         $title.append(tpl.down + tpl.up);
                     }
                     that.appendItem(item.children, $ul);
-                    $ul.css('width', $ul[0].offsetWidth + 2);
                     if (that.option.open || item.open) {
                         // 默认打开的组
                         if (that.showList.indexOf($ul[0]) == -1) {
@@ -194,6 +194,14 @@
                         $(tpl.border).insertBefore($li);
                     }
                 }
+            });
+        }
+
+        // 设置子组的宽度(防止ie7及以下浏览器布局错误)
+        Class.prototype.setWidth = function () {
+            this.$menu.find('.' + menuClass.ul).each(function (i, ul) {
+                console.log(ul.clientWidth)
+                $(ul).css('width', ieVersion <= 6 ? ul.offsetWidth : ul.clientWidth);
             });
         }
 
