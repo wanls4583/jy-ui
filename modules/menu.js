@@ -113,6 +113,7 @@
                         }
                         return false;
                     });
+                    // 鼠标离开$elem事件
                     this.triggerEvent === 'mouseenter' && this.$elem.on('mouseleave', function () {
                         // 延迟隐藏，当在100ms内到达菜单面板时取消隐藏
                         that.hideMenuTimer = setTimeout(function () {
@@ -275,20 +276,12 @@
         // 绑定事件
         Class.prototype.bindEvent = function () {
             var that = this;
-            this.$menu.on('mousewheel', function (e) {
-                var wheelDelta = e.originalEvent.wheelDelta;
-                if (wheelDelta < 0) {
-                    wheelDelta += 20;
-                } else {
-                    wheelDelta -= 20;
-                }
-                that.$menu[0].scrollTop -= wheelDelta;
-                return false;
-            });
             if (this.triggerEvent === 'mouseenter') {
+                // 鼠标到达菜单面部事件（hover方式）
                 this.$menu.on('mouseenter', function () {
                     clearTimeout(that.hideMenuTimer);
                 });
+                // 鼠标离开菜单面部事件（hover方式）
                 this.$menu.on('mouseleave', function () {
                     // 延迟隐藏，当在100ms内到达$elem时取消隐藏
                     that.hideMenuTimer = setTimeout(function () {
@@ -296,6 +289,7 @@
                     }, 100);
                 });
             }
+            // 展开/关闭组事件
             this.$menu.delegate('.' + menuClass.group, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
@@ -310,6 +304,7 @@
                     });
                 }
             });
+            // 展开组（右侧）事件
             this.$menu.delegate('.' + menuClass.right, 'mouseenter', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
@@ -321,6 +316,7 @@
                     data: that.delInnerProperty(data)
                 });
             });
+            // 关闭组（右侧）事件
             this.$menu.delegate('.' + menuClass.right, 'mouseleave', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
@@ -333,6 +329,7 @@
                     });
                 }, 100);
             });
+            // 选中事件
             this.$menu.delegate('.' + menuClass.item, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
@@ -350,6 +347,7 @@
                 }
                 return false;
             });
+            // 鼠标到达右侧组事件
             this.$menu.delegate('.' + menuClass.ul, 'mouseenter', function () {
                 var right = $(this).parent('.' + menuClass.right)[0];
                 // 到达右侧子菜单面板时取消隐藏
