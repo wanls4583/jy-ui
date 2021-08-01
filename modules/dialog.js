@@ -407,7 +407,7 @@
                 // 关闭弹框回调
                 typeof store[layerIndex].option.end == 'function' && store[layerIndex].option.end($layer, layerIndex);
                 $layer.remove();
-            }, 300);
+            }, ieVersion >= 9 ? 300 : 0);
         }
         /**
          * 关闭所有弹窗
