@@ -9,6 +9,9 @@
         var downIcon = '&#xe74b;';
         var radioedIcon = '&#xe61c;';
         var radioIcon = '&#xe619;';
+        var ieVersion = Common.getIeVersion();
+        var docBody = window.document.body;
+        var bindedBodyEvent = false;
         var formClass = {
             switchClass: 'song-form-switch',
             switchDisabled: 'song-switch-disabled',
@@ -27,67 +30,67 @@
             selectDisabled: 'song-select-disabled',
             selectActive: 'song-select-active'
         }
-        var event = Common.getEvent();
-        var docBody = window.document.body;
-        var Form = {
-            on: event.on,
-            once: event.once,
-            trigger: event.trigger,
-            init: init,
-            render: render,
-            verify: verify,
-            getJsonFromForm: getJsonFromForm,
-            verifyRules: {
-                required: {
-                    msg: '必填项不能为空',
-                    rule: /[\S]+/
-                },
-                number: {
-                    msg: '请输入数字',
-                    rule: /^\-?\d+(\.\d*)?$/
-                },
-                int: {
-                    msg: '请输入整数',
-                    rule: /^\-?\d+$/
-                },
-                date: {
-                    msg: '请输入正确的日期',
-                    rule: /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
-                },
-                phone: {
-                    msg: '请输入正确的手机号',
-                    rule: /^1(3|4|5|6|7|8|9)\d{9}$/
-                },
-                email: {
-                    msg: '请输入正确的邮箱',
-                    rule: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
-                },
-                identify: {
-                    msg: '请输入正确的身份证',
-                    rule: /(^\d{15}$)|(^\d{17}(x|X|\d)$)/i
-                },
-                url: {
-                    rule: /^(#|(http(s?)):\/\/|\/\/)[^\s]+\.[^\s]+$/,
-                    msg: '请输入正确的链接'
-                }
+        var verifyRules = {
+            required: {
+                msg: '必填项不能为空',
+                rule: /[\S]+/
+            },
+            number: {
+                msg: '请输入数字',
+                rule: /^\-?\d+(\.\d*)?$/
+            },
+            int: {
+                msg: '请输入整数',
+                rule: /^\-?\d+$/
+            },
+            date: {
+                msg: '请输入正确的日期',
+                rule: /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
+            },
+            phone: {
+                msg: '请输入正确的手机号',
+                rule: /^1(3|4|5|6|7|8|9)\d{9}$/
+            },
+            email: {
+                msg: '请输入正确的邮箱',
+                rule: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+            },
+            identify: {
+                msg: '请输入正确的身份证',
+                rule: /(^\d{15}$)|(^\d{17}(x|X|\d)$)/i
+            },
+            url: {
+                rule: /^(#|(http(s?)):\/\/|\/\/)[^\s]+\.[^\s]+$/,
+                msg: '请输入正确的链接'
             }
+        };
+
+        function Class() {
+            var event = Common.getEvent();
+            this.on = event.on;
+            this.once = event.once;
+            this.trigger = event.trigger;
+            this.init();
         }
+
         // 初始化
-        function init() {
-            $(document.body).delegate('button[type="submit"]', 'click', function () {
+        Class.prototype.init = function () {
+            var that = this;
+            $(docBody).delegate('button[type="submit"]', 'click', function () {
                 var $form = $(this).parents('form');
                 var filter = $(this).attr('song-filter');
-                if ($form.length & Form.verify($form)) {
-                    var data = Form.getJsonFromForm($form);
+                if ($form.length & that.verify($form)) {
+                    var data = that.getJsonFromForm($form);
                     if (filter) {
-                        Form.trigger('submit(' + filter + ')', data);
+                        that.trigger('submit(' + filter + ')', data);
                     }
-                    Form.trigger('submit', data);
+                    that.trigger('submit', data);
                 }
             });
         }
+
         // 验证
-        function verify(formId) {
+        Class.prototype.verify = function (formId) {
             var $form = $(formId || 'form');
             var pass = true;
             var dangerClass = 'song-border-danger';
@@ -97,7 +100,7 @@
                     var verifyRules = $input.attr('song-verify') || '';
                     verifyRules = verifyRules.split('|');
                     for (var i = 0; i < verifyRules.length; i++) {
-                        var verifyRule = Form.verifyRules[verifyRules[i]];
+                        var verifyRule = verifyRules[verifyRules[i]];
                         if (pass && verifyRule) {
                             pass = verifyRule.verify ? verifyRule.verify($input.val()) : verifyRule.rule.test($input.val());
                             if (!pass) {
@@ -115,8 +118,8 @@
             pass && $form.find('select').each(function (i, select) {
                 var $select = $(select);
                 var verifyRule = $select.attr('song-verify');
-                if (Form.verifyRules[verifyRule]) {
-                    var pass = Form.verifyRules[verifyRule]($select.val());
+                if (verifyRules[verifyRule]) {
+                    var pass = verifyRules[verifyRule]($select.val());
                     if (!pass) {
                         select.$ui && select.$ui.find('input.song-input').addClass(dangerClass);
                     } else {
@@ -126,20 +129,30 @@
             });
             return pass
         }
+
         // 获取表单数据
-        function getJsonFromForm(formId) {
+        Class.prototype.getJsonFromForm = function (formId) {
             var $form = $(formId);
             var data = {};
             $form.find('input').each(function (i, input) {
                 var $input = $(input);
                 var name = $input.attr('name');
                 var value = $input.val();
+                var skin = $input.attr('song-skin');
                 if (input.type == 'text' || input.type == 'hidden' || input.type == 'password') {
                     name && (data[name] = value);
                 } else if (input.type == 'radio') {
-                    $input.prop('checked') && name && (data[name] = [value]);
+                    if(!data[name]) {
+                        data[name] = '';
+                        $input.prop('checked') && name && (data[name] = value);
+                    }
                 } else if (input.type == 'checkbox') {
-                    $input.prop('checked') && name && (data[name] ? data[name].push(value) : data[name] = [value]);
+                    if (skin === 'switch') {
+                        data[name] = $input.prop('checked');
+                    } else {
+                        data[name] = data[name] || [];
+                        $input.prop('checked') && name && data[name].push(value);
+                    }
                 }
             });
             $form.find('select').each(function (i, select) {
@@ -156,8 +169,9 @@
             });
             return data;
         }
+
         // 渲染页面ui
-        function render(filter, container) {
+        Class.prototype.render = function (filter, container) {
             var tagName = '';
             if (filter) {
                 var reg = /^(.+?)(?:\((.+)\))?$/;
@@ -168,31 +182,33 @@
             }
             switch (tagName) {
                 case 'switch':
-                    renderSwitch(filter, container);
+                    this.renderSwitch(filter, container);
                     break;
                 case 'radiao':
-                    renderRadio(filter, container);
+                    this.renderRadio(filter, container);
                     break;
                 case 'checkbox':
-                    renderCheckbox(filter, container);
+                    this.renderCheckbox(filter, container);
                     break;
                 case 'select':
-                    renderSelect(filter, container);
+                    this.renderSelect(filter, container);
                     break;
                 default:
-                    renderSwitch('', container);
-                    renderRadio('', container);
-                    renderCheckbox('', container);
-                    renderSelect('', container);
+                    this.renderSwitch('', container);
+                    this.renderRadio('', container);
+                    this.renderCheckbox('', container);
+                    this.renderSelect('', container);
             }
         }
         //渲染开关
-        function renderSwitch(filter, container) {
+        Class.prototype.renderSwitch = function (filter, container) {
+            var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][song-skin="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
-            var inputs = $container.find(selector);
             if ($container.is(selector)) {
                 inputs = $container;
+            } else {
+                inputs = $container.find(selector);
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
@@ -225,43 +241,46 @@
                         <span>' + text + '</span>\
                     </div>');
                 $html.insertAfter(input);
-                $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
-                _bindEvent($html);
+                that.bindSwitchEvent($html, $container);
             });
+        }
 
-            function _bindEvent($dom) {
-                container = $container[0] === docBody ? false : $container[0];
-                $dom.on('click', function () {
-                    var $this = $(this);
-                    var filter = this.$input.attr('song-filter');
-                    var checked = this.$input.prop('checked');
-                    if (this.$input.prop('disabled')) {
-                        return;
-                    }
-                    this.$input.prop('checked', !checked);
-                    $this.toggleClass(formClass.switchChecked);
-                    $this.find('span').html(checked ? 'OFF' : 'ON');
-                    // 触发switch事件
-                    filter && Form.trigger('switch(' + filter + ')', {
-                        data: $this[0].$input.prop('checked'),
-                        dom: $this[0].$input[0]
-                    }, container);
-                    Form.trigger('switch', {
-                        data: $this[0].$input.prop('checked'),
-                        dom: $this[0].$input[0]
-                    }, container);
-                });
-            }
+        Class.prototype.bindSwitchEvent = function ($dom, $container) {
+            var that = this;
+            container = $container[0] === docBody ? false : $container[0];
+            $dom.on('click', function () {
+                var $this = $(this);
+                var $input = $this.prev('input');
+                var filter = $input.attr('song-filter');
+                var checked = $input.prop('checked');
+                if ($input.prop('disabled')) {
+                    return;
+                }
+                $input.prop('checked', !checked);
+                $this.toggleClass(formClass.switchChecked);
+                $this.find('span').html(checked ? 'OFF' : 'ON');
+                // 触发switch事件
+                filter && that.trigger('switch(' + filter + ')', {
+                    data: $input.prop('checked'),
+                    dom: $input[0]
+                }, container);
+                that.trigger('switch', {
+                    data: $input.prop('checked'),
+                    dom: $input[0]
+                }, container);
+            });
         }
         // 渲染单选按钮
-        function renderRadio(filter, container) {
+        Class.prototype.renderRadio = function (filter, container) {
+            var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="radio"]' + (filter ? '[song-filter="' + filter + '"]' : '');
-            var inputs = $container.find(selector);
             if ($container.is(selector)) {
                 inputs = $container;
+            } else {
+                inputs = $container.find(selector)
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
@@ -293,51 +312,58 @@
                     </div>';
                 var $html = $(html);
                 $html.insertAfter(input);
-                $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
+                $container[0].radios = $container[0].radios || [];
+                $container[0].radios.push(input);
                 if (inputs != $container) {
-                    _bindEvent($html);
+                    that.bindRadioEvent($html, $container);
                 }
             });
-            //绑定事件
-            function _bindEvent($dom) {
-                container = $container[0] === docBody ? false : $container[0];
-                $dom.on('click', function () {
-                    var $this = $(this);
-                    var name = $this[0].$input.attr('name');
-                    var filter = this.$input.attr('song-filter');
-                    if (this.$input.prop('disabled')) {
-                        return;
-                    }
-                    // 同组的radio取消选中
-                    $container.find('div.' + formClass.radio).each(function (i, radio) {
-                        var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
-                            $_this.removeClass(formClass.radioChecked);
-                        }
-                    });
-                    $this.addClass(formClass.radioChecked);
-                    this.$input.prop('checked', true);
-                    // 触发radio事件
-                    filter && Form.trigger('radio(' + filter + ')', {
-                        data: this.$input.val(),
-                        dom: this.$input[0]
-                    }, container);
-                    Form.trigger('radio', {
-                        data: this.$input.val(),
-                        dom: this.$input[0]
-                    }, container);
-                });
-            }
         }
+
+        // 绑定单选框事件
+        Class.prototype.bindRadioEvent = function ($dom, $container) {
+            var that = this;
+            container = $container[0] === docBody ? false : $container[0];
+            $dom.on('click', function () {
+                var $this = $(this);
+                var $input = $this.prev('input');
+                var name = $input.attr('name');
+                var filter = $input.attr('song-filter');
+                if ($input.prop('disabled')) {
+                    return;
+                }
+                // 同组的radio取消选中
+                $container[0].radios.map(function (radio) {
+                    var $radio = $(radio);
+                    if ($radio.attr('name') == name && $radio.attr('song-filter') == filter) {
+                        radio.$ui.removeClass(formClass.radioChecked);
+                    }
+                });
+                $this.addClass(formClass.radioChecked);
+                $input.prop('checked', true);
+                // 触发radio事件
+                filter && that.trigger('radio(' + filter + ')', {
+                    data: $input.val(),
+                    dom: $input[0]
+                }, container);
+                that.trigger('radio', {
+                    data: $input.val(),
+                    dom: $input[0]
+                }, container);
+            });
+        }
+
         // 渲染复选框
-        function renderCheckbox(filter, container) {
+        Class.prototype.renderCheckbox = function (filter, container) {
+            var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
-            var inputs = $container.find(selector);
             if ($container.is(selector)) {
                 inputs = $container;
+            } else {
+                inputs = $container.find(selector);
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
@@ -367,53 +393,60 @@
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>');
                 $html.insertAfter(input);
-                $html[0].$input = $input;
                 input.$ui = $html;
                 $input.hide();
+                $container[0].checkboxs = $container[0].checkboxs || [];
+                $container[0].checkboxs.push(input);
                 if (inputs != $container) {
-                    _bindEvent($html);
+                    that.bindCheckboxEvent($html, $container);
                 }
             });
-
-            function _bindEvent($dom) {
-                container = $container[0] === docBody ? false : $container[0];
-                $dom.on('click', function () {
-                    var $this = $(this);
-                    var name = this.$input.attr('name');
-                    var filter = this.$input.attr('song-filter');
-                    var checked = this.$input.prop('checked');
-                    var data = [];
-                    if (this.$input.prop('disabled')) {
-                        return;
-                    }
-                    $this.toggleClass(formClass.checkboxCheckd);
-                    this.$input.prop('checked', !checked);
-                    // 获取同组的选中数据
-                    $container.find('div.' + formClass.checkboxCheckd).each(function (i, radio) {
-                        var $_this = $(this);
-                        if ($_this[0].$input.attr('name') == name && $_this[0].$input.attr('song-filter') == filter) {
-                            data.push($_this[0].$input.val());
-                        }
-                    });
-                    // 触发checkbox事件
-                    filter && Form.trigger('checkbox(' + filter + ')', {
-                        data: data,
-                        dom: this.$input[0]
-                    }, container);
-                    Form.trigger('checkbox', {
-                        data: data,
-                        dom: this.$input[0]
-                    }, container);
-                });
-            }
         }
+
+        // 绑定多选框事件
+        Class.prototype.bindCheckboxEvent = function ($dom, $container) {
+            var that = this;
+            container = $container[0] === docBody ? false : $container[0];
+            $dom.on('click', function () {
+                var $this = $(this);
+                var $input = $this.prev('input');
+                var name = $input.attr('name');
+                var filter = $input.attr('song-filter');
+                var checked = $input.prop('checked');
+                var data = [];
+                if ($input.prop('disabled')) {
+                    return;
+                }
+                $this.toggleClass(formClass.checkboxCheckd);
+                $input.prop('checked', !checked);
+                // 获取同组的选中数据
+                $container[0].checkboxs.map(function (checkbox) {
+                    var $checkbox = $(checkbox);
+                    if ($checkbox.attr('name') == name && $checkbox.attr('song-filter') == filter) {
+                        data.push($checkbox.val());
+                    }
+                });
+                // 触发checkbox事件
+                filter && that.trigger('checkbox(' + filter + ')', {
+                    data: data,
+                    dom: $input[0]
+                }, container);
+                that.trigger('checkbox', {
+                    data: data,
+                    dom: $input[0]
+                }, container);
+            });
+        }
+
         // 渲染下拉选择框
-        function renderSelect(filter, container) {
+        Class.prototype.renderSelect = function (filter, container) {
+            var that = this;
             var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[song-filter="' + filter + '"]' : '');
-            var selects = $container.find(selector);
             if ($container.is(selector)) {
                 selects = $container;
+            } else {
+                selects = $container.find(selector);
             }
             selects.each(function (i, select) {
                 var $select = $(select);
@@ -457,95 +490,120 @@
                 dlHtml += '</dl>';
                 $html.append(dlHtml);
                 $html.insertAfter($select);
-                $html[0].$select = $select;
                 select.$ui = $html;
+                $container[0].selects = $container[0].selects || [];
+                $container[0].selects.push(select);
+                docBody.selects = docBody.selects || [];
+                docBody.selects.push(select);
                 $select.hide();
-                _bindEvent($html);
+                that.bindSelectEvent($html, $container);
             });
-            // 绑定事件
-            function _bindEvent($dom) {
-                container = $container[0] === docBody ? false : $container[0];
-                var search = $dom[0].$select.attr('song-search') === undefined ? false : true;
-                var $title = $dom.children('div.' + formClass.selectTitle);
-                var $cont = $dom.children('dl.' + formClass.selectBody);
-                var $input = $title.children('input.song-input');
-                // 打开，收起事件
-                $title.on('click', function () {
-                    if ($dom[0].$select.prop('disabled')) {
-                        return;
-                    }
-                    if ($cont.is(':visible')) {
-                        $title.trigger('blur');
-                    } else {
-                        // 其他选择框都收起
-                        $container.find('dl.' + formClass.selectBody).hide();
+        }
+
+        // 绑定下拉框事件
+        Class.prototype.bindSelectEvent = function ($dom, $container) {
+            var that = this;
+            container = $container[0] === docBody ? false : $container[0];
+            var $select = $dom.prev('select');
+            var search = $select.attr('song-search') === undefined ? false : true;
+            var $title = $dom.children('div.' + formClass.selectTitle);
+            var $cont = $dom.children('dl.' + formClass.selectBody);
+            var $input = $title.children('input.song-input');
+            // 打开，收起事件
+            $title.on('click', function () {
+                if ($select.prop('disabled')) {
+                    return;
+                }
+                if ($cont.is(':visible')) {
+                    $title.trigger('blur');
+                } else {
+                    // 其他选择框都收起
+                    $container[0].selects.map(function (select) {
+                        var $ul = $(select).next('.' + formClass.select);
+                        $ul.find('dl.' + formClass.selectBody).hide();
                         // 解决ie7及以下定位bugfix
-                        $container.find('div.' + formClass.selectOpen).removeClass(formClass.selectOpen);
-                        $dom.addClass(formClass.selectOpen);
-                        $cont.children('dd').show();
-                        $cont.show();
-                    }
-                    return false;
-                });
-                // 失去焦点，收起
-                $title.on('blur', function () {
-                    var $dd = $cont.find('dd.' + formClass.selectActive);
-                    // 输入框显示已选中的项
-                    $input.val($dd.attr('data-value') && $dd.text() || '');
-                    $cont.hide();
-                    $dom.removeClass(formClass.selectOpen);
-                    setTimeout(function () {
-                        $input.blur()
-                    }, 50);
-                });
-                // 选中事件
-                $cont.find('dd').on('click', function () {
-                    var $this = $(this);
-                    var value = $this.attr('data-value');
-                    var filter = $dom[0].$select.attr('song-filter') || '';
-                    $cont.find('dd.' + formClass.selectActive).removeClass(formClass.selectActive);
-                    $this.addClass(formClass.selectActive);
-                    // 输入框显示已选中的项
-                    $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
-                    $dom[0].$select.val(value);
-                    $cont.hide();
-                    // 触发select事件
-                    filter && Form.trigger('select(' + filter + ')', {
-                        data: value,
-                        dom: $dom[0].$select[0]
-                    }, container);
-                    Form.trigger('select', {
-                        data: value,
-                        dom: $dom[0].$select[0]
-                    }, container);
-                });
-                // 可搜索
-                if (search) {
-                    $input.on('input propertychange', function () {
-                        var title = $(this).val();
-                        $cont.children('dd').each(function (i, dd) {
-                            var $dd = $(dd);
-                            if ($dd.text().indexOf(title) == -1) {
-                                $dd.hide();
-                            } else {
-                                $dd.show();
-                            }
-                        });
+                        // $ul.removeClass(formClass.selectOpen);
                     });
+                    // $dom.addClass(formClass.selectOpen);
+                    $cont.children('dd').show();
+                    $cont.show();
                 }
-                // 点击页面收起下拉框
-                if (!renderSelect.bindedBodyEvent) {
-                    $(document.body).on('click', function (e) {
-                        $container.find('div.' + formClass.select + ':visible').find('div.' + formClass.selectTitle).trigger('blur');
+                return false;
+            });
+            // 失去焦点，收起
+            $title.on('blur', function () {
+                var $dd = $cont.find('dd.' + formClass.selectActive);
+                // 输入框显示已选中的项
+                $input.val($dd.attr('data-value') && $dd.text() || '');
+                $cont.hide();
+                $dom.removeClass(formClass.selectOpen);
+                setTimeout(function () {
+                    $input.blur()
+                }, 50);
+            });
+            // 选中事件
+            $cont.find('dd').on('click', function () {
+                var $this = $(this);
+                var value = $this.attr('data-value');
+                var filter = $select.attr('song-filter') || '';
+                $cont.find('dd.' + formClass.selectActive).removeClass(formClass.selectActive);
+                $this.addClass(formClass.selectActive);
+                // 输入框显示已选中的项
+                $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
+                $select.val(value);
+                $cont.hide();
+                // 触发select事件
+                filter && that.trigger('select(' + filter + ')', {
+                    data: value,
+                    dom: $select[0]
+                }, container);
+                that.trigger('select', {
+                    data: value,
+                    dom: $select[0]
+                }, container);
+            });
+            // 可搜索
+            if (search) {
+                $input.on('input propertychange', function () {
+                    var title = $(this).val();
+                    $cont.children('dd').each(function (i, dd) {
+                        var $dd = $(dd);
+                        if ($dd.text().indexOf(title) == -1) {
+                            $dd.hide();
+                        } else {
+                            $dd.show();
+                        }
                     });
-                    renderSelect.bindedBodyEvent = true;
-                }
+                });
+            }
+            // 点击页面收起下拉框
+            if (!bindedBodyEvent) {
+                $(docBody).on('click', function (e) {
+                    docBody.selects && docBody.selects.map(function (select) {
+                        var $ui = $(select).next('.' + formClass.select);
+                        if ($ui.is(':visible')) {
+                            $ui.find('div.' + formClass.selectTitle).trigger('blur');
+                        }
+                    });
+                });
+                bindedBodyEvent = true;
             }
         }
 
-        // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
+        var instance = new Class();
+        var Form = {
+            on: instance.on,
+            once: instance.once,
+            trigger: instance.trigger,
+            verifyRules: verifyRules,
+            render: instance.render.bind(instance),
+            verify: instance.verify,
+            getJsonFromForm: instance.getJsonFromForm
+        }
+
         $(function () {
-            Form.init();
+            // 必须放在ready里面去执行，ie6-ie8浏览器刷新执行完js后有时会重新选择input刷新前的选中状态
+            instance.init();
         });
 
         return Form;
