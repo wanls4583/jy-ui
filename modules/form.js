@@ -265,11 +265,11 @@
                 filter && that.trigger('switch(' + filter + ')', {
                     data: $input.prop('checked'),
                     dom: $input[0]
-                }, container);
+                });
                 that.trigger('switch', {
                     data: $input.prop('checked'),
                     dom: $input[0]
-                }, container);
+                });
             });
         }
         // 渲染单选按钮
@@ -347,11 +347,11 @@
                 filter && that.trigger('radio(' + filter + ')', {
                     data: $input.val(),
                     dom: $input[0]
-                }, container);
+                });
                 that.trigger('radio', {
                     data: $input.val(),
                     dom: $input[0]
-                }, container);
+                });
             });
         }
 
@@ -430,11 +430,11 @@
                 filter && that.trigger('checkbox(' + filter + ')', {
                     data: data,
                     dom: $input[0]
-                }, container);
+                });
                 that.trigger('checkbox', {
                     data: data,
                     dom: $input[0]
-                }, container);
+                });
             });
         }
 
@@ -556,11 +556,11 @@
                 filter && that.trigger('select(' + filter + ')', {
                     data: value,
                     dom: $select[0]
-                }, container);
+                });
                 that.trigger('select', {
                     data: value,
                     dom: $select[0]
-                }, container);
+                });
             });
             // 可搜索
             if (search) {
