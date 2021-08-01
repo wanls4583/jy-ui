@@ -117,8 +117,8 @@
             }
             this.appendItem(this.data, this.$menu);
             this.addBorder();
-            this.setWidth();
             this.bindEvent();
+            ieVersion <= 7 && this.setWidth();
             // 处理完毕后隐藏掉所有分组
             this.$menu.find('.' + menuClass.ul).hide();
             // 默认打开的组
@@ -170,7 +170,9 @@
                         // 父容器
                         $ul.parents('.' + menuClass.ul).each(function (i, ul) {
                             if (that.showList.indexOf(ul) == -1) {
+                                var $title = $(ul).prev('.' + menuClass.title);
                                 that.showList.push(ul);
+                                $title.children('.' + menuClass.icon).toggle();
                             }
                         });
                         if (item.openType != 'right') {
@@ -200,7 +202,6 @@
         // 设置子组的宽度(防止ie7及以下浏览器布局错误)
         Class.prototype.setWidth = function () {
             this.$menu.find('.' + menuClass.ul).each(function (i, ul) {
-                console.log(ul.clientWidth)
                 $(ul).css('width', ieVersion <= 6 ? ul.offsetWidth : ul.clientWidth);
             });
         }
