@@ -548,7 +548,6 @@
     }
 
     // 复选框编辑容器
-    &-radios,
     &-checkboxs {
         *zoom: 1;
         line-height: 18px;
@@ -556,10 +555,21 @@
         text-align: left;
     }
 
-    &-radio-edit,
+    &-radios {
+        *zoom: 1;
+        line-height: 22px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+
     &-checkbox-edit {
         margin-top: 10px;
         margin-left: 10px;
+    }
+
+    &-radio-edit {
+        margin-top: 8px;
+        margin-left: 8px;
     }
 
     // 输入框

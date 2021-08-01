@@ -102,7 +102,7 @@
             </div>',
             checkbox: '<div class="song-table-checkbox <%-(checked?"song-table-checked":"")%>" data-key="<%-key%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
-                <span>&nbsp;</span>\
+                <span><%-(title||"&nbsp;")%></span>\
             </div>',
             checkboxEdit: '<div class="song-table-checkbox-edit <%-(checked?"song-table-checked":"")%>">\
                 <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
@@ -523,8 +523,8 @@
         Class.prototype.selectRow = function (key) {
             var col = this.getColByType('radio');
             if (col) {
-                this.$view.find('.' + tableClass.checked).removeClass(tableClass.checked);
-                this.$view.find('.' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                this.$view.find('td .' + tableClass.checked).removeClass(tableClass.checked);
+                this.$view.find('td .' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 this.selectedData = this.getRowDataByKey(key);
             }
         }
@@ -546,10 +546,10 @@
                 }
                 if (checked) {
                     this.checkedData.push(data);
-                    this.$view.find('.' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                    this.$view.find('td .' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 } else {
                     this.checkedData.splice(index, 1);
-                    this.$view.find('.' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
+                    this.$view.find('td .' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
                 }
                 this.checkAll(this.sortedData.length === this.checkedData.length, true);
             }
@@ -906,7 +906,8 @@
                 var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
                 var $input = $('<input class="' + [tableClass.input].join(' ') + '">');
-                height > 38 && $input.val(data).css({
+                $input.val(data);
+                height > 38 && $input.css({
                     'height': height,
                     'line-height': height + 'px'
                 });

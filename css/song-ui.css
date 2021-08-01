@@ -1393,16 +1393,28 @@ textarea {
   display: inline;
 }
 
-.song-table-radios, .song-table-checkboxs {
+.song-table-checkboxs {
   *zoom: 1;
   line-height: 18px;
   padding-bottom: 10px;
   text-align: left;
 }
 
-.song-table-radio-edit, .song-table-checkbox-edit {
+.song-table-radios {
+  *zoom: 1;
+  line-height: 22px;
+  padding-bottom: 8px;
+  text-align: left;
+}
+
+.song-table-checkbox-edit {
   margin-top: 10px;
   margin-left: 10px;
+}
+
+.song-table-radio-edit {
+  margin-top: 8px;
+  margin-left: 8px;
 }
 
 .song-table-input {
