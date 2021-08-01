@@ -98,17 +98,30 @@
                     this.$menu.addClass(menuClass.static);
                 } else {
                     this.$menu.hide();
-                    $docBody.append(this.$menu);
-                    this.$elem.on('click', function () {
+                    this.triggerEvent = this.option.trigger || 'click';
+                    this.triggerEvent = this.triggerEvent === 'hover' ? 'mouseenter' : this.triggerEvent;
+                    this.$elem.on(this.triggerEvent, function () {
                         that.setPosition();
-                        that.$menu.toggle();
+                        if (that.triggerEvent === 'mouseenter') {
+                            clearTimeout(that.hideMenuTimer);
+                            that.$menu.show();
+                        } else {
+                            that.$menu.toggle();
+                        }
                         if (that.$menu[0].clientWidth < that.$elem[0].clientWidth) {
                             that.$menu.css('width', that.$elem[0].clientWidth);
                         }
                         return false;
                     });
+                    this.triggerEvent === 'mouseenter' && this.$elem.on('mouseleave', function () {
+                        // 延迟隐藏，当在100ms内到达菜单面板时取消隐藏
+                        that.hideMenuTimer = setTimeout(function () {
+                            that.$menu.hide();
+                        }, 100);
+                    });
+                    $docBody.append(this.$menu);
                     $docBody.on('click', function () {
-                        that.$menu.hide();
+                        that.option.position !== 'static' && that.$menu.hide();
                     });
                 }
             } else {
@@ -118,7 +131,7 @@
             this.appendItem(this.data, this.$menu);
             this.addBorder();
             this.bindEvent();
-            ieVersion <= 7 && this.setWidth();
+            ieVersion <= 7 && this.setUlWidth();
             // 处理完毕后隐藏掉所有分组
             this.$menu.find('.' + menuClass.ul).hide();
             // 默认打开的组
@@ -200,7 +213,7 @@
         }
 
         // 设置子组的宽度(防止ie7及以下浏览器布局错误)
-        Class.prototype.setWidth = function () {
+        Class.prototype.setUlWidth = function () {
             this.$menu.find('.' + menuClass.ul).each(function (i, ul) {
                 $(ul).css('width', ieVersion <= 6 ? ul.offsetWidth : ul.clientWidth);
             });
@@ -272,6 +285,17 @@
                 that.$menu[0].scrollTop -= wheelDelta;
                 return false;
             });
+            if (this.triggerEvent === 'mouseenter') {
+                this.$menu.on('mouseenter', function () {
+                    clearTimeout(that.hideMenuTimer);
+                });
+                this.$menu.on('mouseleave', function () {
+                    // 延迟隐藏，当在100ms内到达$elem时取消隐藏
+                    that.hideMenuTimer = setTimeout(function () {
+                        that.$menu.hide();
+                    }, 100);
+                });
+            }
             this.$menu.delegate('.' + menuClass.group, 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
@@ -290,6 +314,7 @@
                 var $this = $(this);
                 var data = that.getBindData(this);
                 var $ul = $this.children('.' + menuClass.ul);
+                clearTimeout(this.hideItemTimer);
                 $ul.show();
                 that.trigger('open', {
                     dom: this,
@@ -299,11 +324,14 @@
             this.$menu.delegate('.' + menuClass.right, 'mouseleave', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
-                $this.children('.' + menuClass.ul).hide();
-                that.trigger('close', {
-                    dom: this,
-                    data: that.delInnerProperty(data)
-                });
+                // 延迟隐藏，当在100ms内到达右侧子菜单面板时取消隐藏
+                this.hideItemTimer = setTimeout(function () {
+                    $this.children('.' + menuClass.ul).hide();
+                    that.trigger('close', {
+                        dom: this,
+                        data: that.delInnerProperty(data)
+                    });
+                }, 100);
             });
             this.$menu.delegate('.' + menuClass.item, 'click', function () {
                 var $this = $(this);
@@ -318,8 +346,14 @@
                         dom: this,
                         data: that.delInnerProperty(data)
                     });
+                    that.option.position !== 'static' && that.$menu.hide();
                 }
                 return false;
+            });
+            this.$menu.delegate('.' + menuClass.ul, 'mouseenter', function () {
+                var right = $(this).parent('.' + menuClass.right)[0];
+                // 到达右侧子菜单面板时取消隐藏
+                right && clearTimeout(right.hideItemTimer);
             });
         }
 
