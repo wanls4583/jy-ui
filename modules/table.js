@@ -1380,7 +1380,9 @@
                     this.$rightMain.css({
                         height: height
                     });
-                    this.$mend.css('height', this.$header[0].offsetHeight).show();
+                    this.$mend.show();
+                    // ie6及以下浏览器，父容器为定义高度时，100%高度无效
+                    ieVersion <= 6 && this.$mend.css('height', this.$header[0].offsetHeight);
                 } else {
                     this.$mend.hide();
                     this.$rightHeaderMain.hide();
