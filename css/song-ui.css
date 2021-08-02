@@ -1845,12 +1845,15 @@ textarea {
   position: relative;
 }
 
+.song-menu-ie-hack .song-menu-item, .song-menu-ie-hack .song-menu-item-title, .song-menu-ie-hack .song-menu-ul {
+  *zoom: 1;
+}
+
 .song-menu-item {
   position: relative;
   padding-left: 15px;
   color: #666666;
   cursor: pointer;
-  *zoom: 1;
 }
 
 .song-menu-item:hover {
@@ -1888,10 +1891,6 @@ textarea {
   background-color: #f6f6f6;
 }
 
-.song-menu-ul {
-  *zoom: 1;
-}
-
 .song-menu-ul-right {
   position: absolute;
   top: -6px;
@@ -1917,7 +1916,6 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  *zoom: 1;
 }
 
 .song-menu-item-title .song-menu-icon {

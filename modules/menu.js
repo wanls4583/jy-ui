@@ -27,7 +27,8 @@
             rightWrap: 'song-menu-right-content',
             border: 'song-menu-border',
             checked: 'song-menu-checked',
-            icon: 'song-menu-icon'
+            icon: 'song-menu-icon',
+            ieHack: 'song-menu-ie-hack'
         }
 
         var ieVersion = Common.getIeVersion();
@@ -87,7 +88,7 @@
             this.idKeyMap = {};
             this.dataMap = {};
             this.key = 0;
-            this.width = this.option.width || (this.option.position !== 'static' && ieVersion <= 6 ? 200 : 0);
+            this.width = this.option.width;
             this.height = this.option.height || 0;
             this.showList = [];
             if (this.$elem && this.$elem.length) {
@@ -108,8 +109,8 @@
                         } else {
                             that.$menu.toggle();
                         }
-                        if (that.$menu[0].clientWidth < that.$elem[0].clientWidth) {
-                            that.$menu.css('width', that.$elem[0].clientWidth);
+                        if (that.$menu[0].offsetWidth < that.$elem[0].offsetWidth) {
+                            that.$menu.css('width', that.$elem[0].offsetWidth);
                         }
                         return false;
                     });
@@ -132,7 +133,10 @@
             this.appendItem(this.data, this.$menu);
             this.addBorder();
             this.bindEvent();
-            ieVersion <= 7 && this.setUlWidth();
+            if (ieVersion <= 7) {
+                this.setUlWidth();
+                this.$menu.addClass(menuClass.ieHack);
+            }
             // 处理完毕后隐藏掉所有分组
             this.$menu.find('.' + menuClass.ul).hide();
             // 默认打开的组
@@ -215,8 +219,9 @@
 
         // 设置子组的宽度(防止ie7及以下浏览器布局错误)
         Class.prototype.setUlWidth = function () {
+            this.$menu.css('width', this.$menu[0].offsetWidth);
             this.$menu.find('.' + menuClass.ul).each(function (i, ul) {
-                $(ul).css('width', ieVersion <= 6 ? ul.offsetWidth : ul.clientWidth);
+                $(ul).css('width', ul.offsetWidth);
             });
         }
 

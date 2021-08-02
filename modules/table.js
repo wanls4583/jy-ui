@@ -1380,7 +1380,7 @@
                     this.$rightMain.css({
                         height: height
                     });
-                    this.$mend.show();
+                    this.$mend.css('height', this.$header[0].offsetHeight).show();
                 } else {
                     this.$mend.hide();
                     this.$rightHeaderMain.hide();

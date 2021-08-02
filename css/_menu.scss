@@ -10,13 +10,23 @@
         position: relative;
     }
 
+    &-ie-hack {
+        .song-menu {
+
+            &-item,
+            &-item-title,
+            &-ul {
+                *zoom: 1;
+            }
+        }
+
+    }
+
     &-item {
         position: relative;
         padding-left: $pd15;
         color: #666666;
         cursor: pointer;
-        // 在ie7及以下浏览器中，开启haslayout后，item将不能随着父容器的伸展而伸展，除非固定父容器宽度
-        *zoom: 1;
 
         &:hover {
             background-color: $lighter-color;
@@ -58,8 +68,6 @@
     }
 
     &-ul {
-        *zoom: 1;
-
         &-right {
             position: absolute;
             top: -6px;
@@ -86,7 +94,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        *zoom: 1;
+        // *zoom: 1;
 
         .song-menu-icon {
             display: none;
