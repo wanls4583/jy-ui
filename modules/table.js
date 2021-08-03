@@ -523,8 +523,8 @@
         Class.prototype.selectRow = function (key) {
             var col = this.getColByType('radio');
             if (col) {
-                this.$view.find('td .' + tableClass.checked).removeClass(tableClass.checked);
-                this.$view.find('td .' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                this.$view.find('td div.' + tableClass.checked).removeClass(tableClass.checked);
+                this.$view.find('td div.' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 this.selectedData = this.getRowDataByKey(key);
             }
         }
@@ -546,10 +546,10 @@
                 }
                 if (checked) {
                     this.checkedData.push(data);
-                    this.$view.find('td .' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                    this.$view.find('td div.' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
                 } else {
                     this.checkedData.splice(index, 1);
-                    this.$view.find('td .' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
+                    this.$view.find('td div.' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
                 }
                 this.checkAll(this.sortedData.length === this.checkedData.length, true);
             }
@@ -564,21 +564,21 @@
                 }
                 if (checked) {
                     if (justStatus) {
-                        this.$tableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.hasLeftFixed && this.$leftTableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.hasRightFixed && this.$rightTableHeader.find('.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.$tableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.hasLeftFixed && this.$leftTableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.hasRightFixed && this.$rightTableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                     } else {
                         this.checkedData = this.sortedData.concat([]);
-                        this.$view.find('.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.$view.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                     }
                 } else {
                     if (justStatus) {
-                        this.$tableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.hasLeftFixed && this.$leftTableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.hasRightFixed && this.$rightTableHeader.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$tableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.hasLeftFixed && this.$leftTableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.hasRightFixed && this.$rightTableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
                     } else {
                         this.checkedData = [];
-                        this.$view.find('.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$view.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
                     }
                 }
             }
@@ -958,7 +958,7 @@
                     $dl.append($dd);
                 });
                 $dl.delegate('dd', 'click', function () {
-                    $dl.find('.' + tableClass.selectActive).removeClass(tableClass.selectActive);
+                    $dl.find('dd.' + tableClass.selectActive).removeClass(tableClass.selectActive);
                     $(this).addClass(tableClass.selectActive);
                     $input.val(this.label);
                     $select[0].value = this.value;
@@ -1031,7 +1031,7 @@
                     $radios.append($radio);
                 });
                 $radios.delegate('.' + tableClass.radioEdit, 'click', function () {
-                    $radios.find('.' + tableClass.checked).removeClass(tableClass.checked);
+                    $radios.find('div.' + tableClass.checked).removeClass(tableClass.checked);
                     $(this).addClass(tableClass.checked);
                     $radios[0].value = this.value;
                     return false;
@@ -2636,7 +2636,7 @@
                 return false;
             });
             $filter.delegate('li', 'click', function () {
-                var $checkbox = $(this).children('.' + tableClass.checkbox);
+                var $checkbox = $(this).children('div.' + tableClass.checkbox);
                 var key = $checkbox.attr('data-key');
                 var col = that.getColByKey(key);
                 var allThs = [];
