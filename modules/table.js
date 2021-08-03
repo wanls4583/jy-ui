@@ -4,7 +4,7 @@
  * @Description: 
  */
 !(function () {
-    function factory($, Common, Form, Pager) {
+    function factory($, Common, Pager) {
         var $body = $(window.document.body);
         var filterIcon = '&#xe61d;';
         var exportsIcon = '&#xe618;';
@@ -120,7 +120,40 @@
             loading: '<div class="song-table-loading"><i class="song-table-icon">' + loadingIcon + '</i></div>'
         }
         // 常用正则验证
-        var ruleMap = Form.verifyRules;
+        var ruleMap = {
+            required: {
+                msg: '必填项不能为空',
+                rule: /[\S]+/
+            },
+            number: {
+                msg: '请输入数字',
+                rule: /^\-?\d+(\.\d*)?$/
+            },
+            int: {
+                msg: '请输入整数',
+                rule: /^\-?\d+$/
+            },
+            date: {
+                msg: '请输入正确的日期',
+                rule: /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
+            },
+            phone: {
+                msg: '请输入正确的手机号',
+                rule: /^1(3|4|5|6|7|8|9)\d{9}$/
+            },
+            email: {
+                msg: '请输入正确的邮箱',
+                rule: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+            },
+            identify: {
+                msg: '请输入正确的身份证',
+                rule: /(^\d{15}$)|(^\d{17}(x|X|\d)$)/i
+            },
+            url: {
+                rule: /^(#|(http(s?)):\/\/|\/\/)[^\s]+\.[^\s]+$/,
+                msg: '请输入正确的链接'
+            }
+        };
         var Table = {
             render: function (option) {
                 var table = new Class(option);
@@ -2822,11 +2855,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['./jquery', './common', './form', './pager'], function ($, Common, Form) {
-            return factory($, Common, Form, Pager);
+        define("table", ['./jquery', './common', './pager'], function ($, Common) {
+            return factory($, Common, Pager);
         });
     } else {
         window.SongUi = window.SongUi || {};
-        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Form, window.SongUi.Pager);
+        window.SongUi.Table = factory(window.$, window.SongUi.Common, window.SongUi.Pager);
     }
 })(window)
