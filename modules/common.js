@@ -262,19 +262,25 @@
 
         // 深度克隆
         function deepAssign(targetObj, originObj) {
-            for (var key in originObj) {
-                var value = originObj[key];
-                if (typeof value === 'object') {
-                    if (value instanceof Array) {
-                        targetObj[key] = deepAssign([], value);
+            var assigned = [];
+            return _assign(targetObj, originObj);
+
+            function _assign(targetObj, originObj) {
+                for (var key in originObj) {
+                    var value = originObj[key];
+                    if (typeof value === 'object' && assigned.indexOf(value) == -1) {
+                        assigned.push(value);
+                        if (value instanceof Array) {
+                            targetObj[key] = _assign([], value);
+                        } else {
+                            targetObj[key] = _assign({}, value);
+                        }
                     } else {
-                        targetObj[key] = deepAssign({}, value);
+                        targetObj[key] = value;
                     }
-                } else {
-                    targetObj[key] = value;
                 }
+                return targetObj;
             }
-            return targetObj;
         }
 
         if (!Function.prototype.bind) {

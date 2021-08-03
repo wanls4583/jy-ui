@@ -1,0 +1,114 @@
+.song-tree {
+    &-item {
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    &-item-title {
+        position: relative;
+        padding: 3px 0 3px 25px;
+        user-select: none;
+    }
+
+    &-ul {
+        display: none;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    &-ie-hack {
+
+        .song-tree-item,
+        .song-tree-item-title,
+        .song-tree {
+            *zoom: 1;
+        }
+    }
+
+    &-h-line {
+        position: absolute;
+        top: 12px;
+        left: -16px;
+        width: 16px;
+        height: 0;
+        border-top: 1px dashed $gray-color;
+    }
+
+    &-v-line {
+        position: absolute;
+        top: 0;
+        left: 9px;
+        height: 100%;
+        border-left: 1px dashed $gray-color;
+    }
+
+    &-click-icon,
+    &-child-icon {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 16px;
+        height: 16px;
+        border: 1px solid $gray-color;
+        border-radius: 2px;
+        text-align: center;
+        line-height: 16px;
+        font-family: 'iconfont';
+        font-size: 12px;
+        color: $gray-color;
+        cursor: pointer;
+    }
+
+    &-child-icon {
+        margin-top: 1px;
+        font-size: 16px;
+        border: 0;
+        color: $color-999;
+    }
+
+    &-text {
+        cursor: pointer;
+    }
+
+    // 多选框
+    &-checkbox {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        line-height: 18px;
+        padding-left: 20px;
+        cursor: pointer;
+        user-select: none;
+
+        .song-checkbox-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border: 1px solid $gray-color;
+            border-radius: 2px;
+            text-align: center;
+            line-height: 16px;
+            font-family: 'iconfont';
+            font-size: 14px;
+            color: $white-color;
+
+            i {
+                display: none;
+            }
+        }
+
+        &.song-tree-checked {
+            .song-checkbox-icon {
+                background-color: $link-color;
+                border-color: $link-color;
+
+                i {
+                    display: inline;
+                }
+            }
+        }
+    }
+}

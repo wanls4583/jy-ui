@@ -395,6 +395,12 @@
         </div>
     </fieldset>
     <fieldset class="song-field">
+        <legend>树形结构</legend>
+        <div class="song-field-box">
+            <div id="tree1"></div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">
             <hr>
@@ -425,6 +431,7 @@
 <script src="./modules/table.js"></script>
 <script src="./modules/date.js"></script>
 <script src="./modules/menu.js"></script>
+<script src="./modules/tree.js"></script>
 <script>
     window.JSON = window.JSON || {
         stringify: function (d) { return String(d) }
@@ -880,6 +887,27 @@
         trigger: 'hover',
         data: [{
             title: 'item1'
+        },
+        {
+            title: 'item2'
+        },
+        {
+            title: 'item3'
+        }]
+    });
+    SongUi.Tree.render({
+        elem: '#tree1',
+        showCheckbox: true,
+        data: [{
+            title: 'item1',
+            children:[{
+                title: 'item1-1'
+            },{
+                title: 'item1-2',
+                children: [{
+                    title: 'item1-2-1'
+                }]
+            }]
         },
         {
             title: 'item2'
