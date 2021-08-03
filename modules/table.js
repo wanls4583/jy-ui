@@ -2787,12 +2787,6 @@
                 var $table = $(this.$tableHeader[0].outerHTML);
                 var wind = window.open('', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
                 var style = '<style>\
-                .song-table-col-radio,\
-                .song-table-col-radio,\
-                .song-table-col-checkbox,\
-                .song-table-col-operate{\
-                    display:none;\
-                }\
                 table{\
                     width:100%;\
                     border-collapse:collapse;\
@@ -2806,6 +2800,15 @@
                     text-align:left;\
                 }</style>';
                 $table.append(this.$table.children('tbody').html());
+                this.cols.map(function (item) {
+                    if (item.type !== 'text') {
+                        $table.find('th[data-col="' + item._key + '"],td[data-col="' + item._key + '"]').remove();
+                    }
+                });
+                $table.find('th,td').each(function (i, td) {
+                    var $td = $(td);
+                    $td.text($td.text());
+                });
                 wind.document.write('<head>' + style + '</head><body>' + $table[0].outerHTML + '</body>');
                 wind.document.close();
                 wind.print();
