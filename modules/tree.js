@@ -4,13 +4,13 @@
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var $docBody = $(docBody);
-        var docIcon = '&#xe707;';
+        var docIcon = '&#xe6fd;';
         var plusIcon = '&#xe736;';
         var minusIcon = '&#xe62d;';
         var checkedIcon = '&#xe737;';
         var tpl = {
             tree: '<div class="song-tree"></div>',
-            ul: '<div class="song-tree-ul"><i class="song-tree-v-line"></div>',
+            ul: '<div class="song-tree-ul"><i class="song-tree-v-line"></i></div>',
             item: '<div class="song-tree-item" data-key="<%-key%>"><%if(!isRoot){%><i class="song-tree-h-line"></i><%}%></div>',
             title: '<div class="song-tree-item-title">\
                 <%if(isChild){%>\
@@ -30,8 +30,10 @@
             checked: 'song-tree-checked',
             item: 'song-tree-item',
             ul: 'song-tree-ul',
+            vLine: 'song-tree-v-line',
             title: 'song-tree-item-title',
-            clickIcon: 'song-tree-click-icon'
+            clickIcon: 'song-tree-click-icon',
+            ieHack: 'song-tree-ie-hack'
         }
 
         var SongTree = {
@@ -74,6 +76,7 @@
                 $item.children('.' + treeClass.title).children('.' + treeClass.clickIcon).toggle();
                 $item.children('.' + treeClass.ul).show();
             });
+            ieVersion <= 7 && this.$tree.addClass(treeClass.ieHack);
         }
 
         // 生成菜单树
@@ -104,7 +107,7 @@
                     item.children.map(function (_item) {
                         _item._song_parent = item;
                     });
-                    if (that.option.open || item.open) {
+                    if (that.option.spread || item.spread) {
                         // 默认打开的组
                         that.showList.push($item[0]);
                         $item.parents('.' + treeClass.item).each(function (i, dom) {
@@ -179,8 +182,18 @@
             });
             this.$tree.delegate('.' + treeClass.title, 'click', function () {
                 var $title = $(this);
-                $title.children('.' + treeClass.clickIcon).toggle();
-                $title.next('.' + treeClass.ul).toggle();
+                var $ul = $title.next('.' + treeClass.ul);
+                if ($ul.length) {
+                    $title.children('.' + treeClass.clickIcon).toggle();
+                    $ul.toggle();
+                    if (ieVersion <= 6) {
+                        $ul.children('.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
+                        $ul.parents('.' + treeClass.ul).each(function (i, ul) {
+                            $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                        });
+                    }
+                }
+                return false;
             });
         }
 

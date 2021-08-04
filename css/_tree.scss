@@ -18,9 +18,8 @@
 
     &-ie-hack {
 
-        .song-tree-item,
         .song-tree-item-title,
-        .song-tree {
+        .song-tree-ul {
             *zoom: 1;
         }
     }
@@ -37,7 +36,7 @@
     &-v-line {
         position: absolute;
         top: 0;
-        left: 9px;
+        left: 7px;
         height: 100%;
         border-left: 1px dashed $gray-color;
     }
@@ -45,14 +44,14 @@
     &-click-icon,
     &-child-icon {
         position: absolute;
-        top: 3px;
+        top: 5px;
         left: 0;
-        width: 16px;
-        height: 16px;
+        width: 12px;
+        height: 12px;
         border: 1px solid $gray-color;
         border-radius: 2px;
         text-align: center;
-        line-height: 16px;
+        line-height: 12px;
         font-family: 'iconfont';
         font-size: 12px;
         color: $gray-color;
@@ -60,8 +59,11 @@
     }
 
     &-child-icon {
-        margin-top: 1px;
+        top: 4px;
+        width: 16px;
+        height: 16px;
         font-size: 16px;
+        line-height: 16px;
         border: 0;
         color: $color-999;
     }
@@ -78,6 +80,7 @@
         *zoom: 1;
         line-height: 18px;
         padding-left: 20px;
+        background-color: $white-color;
         cursor: pointer;
         user-select: none;
 
@@ -87,6 +90,8 @@
             top: 0;
             width: 16px;
             height: 16px;
+            _width: 18px;
+            _height: 18px;
             border: 1px solid $gray-color;
             border-radius: 2px;
             text-align: center;

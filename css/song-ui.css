@@ -1960,9 +1960,8 @@ textarea {
   padding-left: 25px;
 }
 
-.song-tree-ie-hack .song-tree-item,
 .song-tree-ie-hack .song-tree-item-title,
-.song-tree-ie-hack .song-tree {
+.song-tree-ie-hack .song-tree-ul {
   *zoom: 1;
 }
 
@@ -1978,21 +1977,21 @@ textarea {
 .song-tree-v-line {
   position: absolute;
   top: 0;
-  left: 9px;
+  left: 7px;
   height: 100%;
   border-left: 1px dashed #d2d2d2;
 }
 
 .song-tree-click-icon, .song-tree-child-icon {
   position: absolute;
-  top: 3px;
+  top: 5px;
   left: 0;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border: 1px solid #d2d2d2;
   border-radius: 2px;
   text-align: center;
-  line-height: 16px;
+  line-height: 12px;
   font-family: 'iconfont';
   font-size: 12px;
   color: #d2d2d2;
@@ -2000,8 +1999,11 @@ textarea {
 }
 
 .song-tree-child-icon {
-  margin-top: 1px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
   font-size: 16px;
+  line-height: 16px;
   border: 0;
   color: #999999;
 }
@@ -2017,6 +2019,7 @@ textarea {
   *zoom: 1;
   line-height: 18px;
   padding-left: 20px;
+  background-color: #ffffff;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -2030,6 +2033,8 @@ textarea {
   top: 0;
   width: 16px;
   height: 16px;
+  _width: 18px;
+  _height: 18px;
   border: 1px solid #d2d2d2;
   border-radius: 2px;
   text-align: center;
@@ -2055,9 +2060,9 @@ textarea {
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_rs5cqec86d.eot?t=1627984178012");
+  src: url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.eot?t=1628042888095");
   /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_rs5cqec86d.eot?t=1627984178012#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_rs5cqec86d.woff2?t=1627984178012") format("woff2"), url("//at.alicdn.com/t/font_2505561_rs5cqec86d.woff?t=1627984178012") format("woff"), url("//at.alicdn.com/t/font_2505561_rs5cqec86d.ttf?t=1627984178012") format("truetype");
+  src: url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.eot?t=1628042888095#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.woff2?t=1628042888095") format("woff2"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.woff?t=1628042888095") format("woff"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.ttf?t=1628042888095") format("truetype");
 }
 
 .song-icon {
