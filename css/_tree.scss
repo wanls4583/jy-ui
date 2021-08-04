@@ -125,6 +125,7 @@
             .song-checkbox-icon {
                 color: $disabled-color;
                 border-color: $light-color;
+                cursor: not-allowed;
             }
         }
 

@@ -273,16 +273,12 @@
                 var $title = $(this).parent('.' + treeClass.title);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
-                // 禁用状态
-                if (data._song_disabled) {
-                    return false;
-                }
                 if (data.children && data.children.length) {
                     !that.onlyIconSwitch && that.toggle(key);
                 } else {
                     $title.find('.' + treeClass.checkbox).trigger('click');
                 }
-                if (data.href) {
+                if (data.href && !data._song_disabled) {
                     window.open(data.href);
                 }
                 // 触发节点点击事件

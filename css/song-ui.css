@@ -2069,6 +2069,7 @@ textarea {
 .song-tree-disabled .song-tree-checkbox .song-checkbox-icon {
   color: #c2c2c2;
   border-color: #eeeeee;
+  cursor: not-allowed;
 }
 
 .song-tree-disabled .song-tree-checked .song-checkbox-icon {
