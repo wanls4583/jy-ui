@@ -1994,7 +1994,7 @@ textarea {
   line-height: 12px;
   font-family: 'iconfont';
   font-size: 12px;
-  color: #d2d2d2;
+  color: #666666;
   cursor: pointer;
 }
 
@@ -2005,7 +2005,7 @@ textarea {
   font-size: 16px;
   line-height: 16px;
   border: 0;
-  color: #999999;
+  color: #666666;
 }
 
 .song-tree-text {
@@ -2060,9 +2060,9 @@ textarea {
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */
-  src: url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.eot?t=1628042888095");
+  src: url("//at.alicdn.com/t/font_2505561_rde9bepbs6s.eot?t=1628044858335");
   /* IE9 */
-  src: url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.eot?t=1628042888095#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.woff2?t=1628042888095") format("woff2"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.woff?t=1628042888095") format("woff"), url("//at.alicdn.com/t/font_2505561_qssqlqa7ht.ttf?t=1628042888095") format("truetype");
+  src: url("//at.alicdn.com/t/font_2505561_rde9bepbs6s.eot?t=1628044858335#iefix") format("embedded-opentype"), url("//at.alicdn.com/t/font_2505561_rde9bepbs6s.woff2?t=1628044858335") format("woff2"), url("//at.alicdn.com/t/font_2505561_rde9bepbs6s.woff?t=1628044858335") format("woff"), url("//at.alicdn.com/t/font_2505561_rde9bepbs6s.ttf?t=1628044858335") format("truetype");
 }
 
 .song-icon {

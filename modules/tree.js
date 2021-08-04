@@ -5,7 +5,7 @@
         var docElement = window.document.documentElement;
         var $docBody = $(docBody);
         var docIcon = '&#xe6fd;';
-        var plusIcon = '&#xe736;';
+        var plusIcon = '&#xe95e;';
         var minusIcon = '&#xe62d;';
         var checkedIcon = '&#xe737;';
         var tpl = {
