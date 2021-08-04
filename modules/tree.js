@@ -323,6 +323,9 @@
         Class.prototype.getChecked = function () {
             var list = this.data.concat([]);
             var result = [];
+            if (!this.showCheckbox) {
+                return [];
+            }
             while (list.length) {
                 var item = list.shift();
                 if (item._song_checked && (!item.children || !item.children.length)) {
