@@ -179,7 +179,7 @@
                     <div class="song-input-block">
                         <input type="checkbox" name="c1" title="广州" value="广州" checked>
                         <input type="checkbox" name="c1" title="深圳" value="深圳">
-                        <input type="checkbox" name="c1" title="北京" value="北京" disabled>
+                        <input type="checkbox" name="c1" title="北京" value="北京" checked disabled>
                     </div>
                 </div>
                 <div class="song-form-item">
@@ -853,7 +853,7 @@
         },
         {
             title: 'item2',
-            openType: 'right',
+            spreadType: 'right',
             children: [
                 { title: 'item2-1', children: [{ title: 'item2-1-1' }] },
                 { title: 'item2-2' }
@@ -864,8 +864,8 @@
             title: 'item3',
             children: [
                 { title: 'item3-1' },
-                { title: 'item3-2', open: true, children: [{ title: 'item3-2-1' }] },
-                { title: 'item3-3', openType: 'right', children: [{ title: 'item3-3-1' }] }
+                { title: 'item3-2', spread: true, children: [{ title: 'item3-2-1' }] },
+                { title: 'item3-3', spreadType: 'right', children: [{ title: 'item3-3-1' }] }
             ],
             id: 2
         }]
@@ -874,8 +874,8 @@
         // console.log('click');
         // console.log(obj);
     });
-    menu.on('open', function (obj) {
-        // console.log('open');
+    menu.on('spread', function (obj) {
+        // console.log('spread');
         // console.log(obj);
     });
     menu.on('close', function (obj) {
@@ -895,26 +895,54 @@
             title: 'item3'
         }]
     });
-    SongUi.Tree.render({
+    var tree = SongUi.Tree.render({
         elem: '#tree1',
+        style: 'arrow',
         showCheckbox: true,
+        onlyIconSwitch: false,
         data: [{
             title: 'item1',
-            children:[{
+            id: '1',
+            children: [{
+                id: '1-1',
                 title: 'item1-1'
-            },{
+            }, {
+                id: '1-2',
                 title: 'item1-2',
+                disabled: true,
+                spread: true,
                 children: [{
+                    id: '1-2-1',
                     title: 'item1-2-1'
                 }]
             }]
         },
         {
-            title: 'item2'
+            id: '2',
+            title: 'item2',
+            disabled: true,
+            checked: true
         },
         {
+            id: '3',
             title: 'item3'
         }]
+    });
+    tree.on('click', function (obj) {
+        console.log('click');
+        console.log(obj);
+    });
+    tree.on('checkbox', function (obj) {
+        console.log('checkbox');
+        console.log(obj);
+    });
+    tree.on('spread', function (obj) {
+        console.log('spread');
+        console.log(obj);
+    });
+    tree.on('close', function (obj) {
+        console.log('close');
+        console.log(obj);
     });
 </script>
 

@@ -58,7 +58,8 @@
         cursor: pointer;
     }
 
-    &-child-icon {
+    &-child-icon,
+    &-arrow {
         top: 4px;
         width: 16px;
         height: 16px;
@@ -113,6 +114,23 @@
                 i {
                     display: inline;
                 }
+            }
+        }
+    }
+
+    &-disabled {
+        color: $disabled-color;
+
+        .song-tree-checkbox {
+            .song-checkbox-icon {
+                color: $disabled-color;
+                border-color: $light-color;
+            }
+        }
+
+        .song-tree-checked {
+            .song-checkbox-icon {
+                background-color: $light-color;
             }
         }
     }

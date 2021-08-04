@@ -762,7 +762,7 @@
                     that.trigger('save', {
                         field: col.field,
                         data: value,
-                        rowData: that.delInnerProperty(songBindData.rowData)
+                        rowData: Common.delInnerProperty(songBindData.rowData)
                     });
                 }
                 that.fixRowHeight(key, 'auto');
@@ -919,7 +919,7 @@
                     that.trigger('edit', {
                         field: col.field,
                         data: data,
-                        rowData: that.delInnerProperty(songBindData.rowData)
+                        rowData: Common.delInnerProperty(songBindData.rowData)
                     });
                     $(td).addClass(tableClass.editing);
                     songBindData.editing = true;
@@ -1202,10 +1202,10 @@
             if (data) {
                 if (data instanceof Array) {
                     data = data.map(function (item) {
-                        return that.delInnerProperty(item);
+                        return Common.delInnerProperty(item);
                     });
                 } else {
-                    data = this.delInnerProperty(data);
+                    data = Common.delInnerProperty(data);
                 }
             }
 
@@ -1219,7 +1219,7 @@
         Class.prototype.getDataById = function (id) {
             for (var i = 0; i < this.renderedData.length; i++) {
                 if (this.renderedData[i].id == id) {
-                    return this.delInnerProperty(this.renderedData[i]);
+                    return Common.delInnerProperty(this.renderedData[i]);
                 }
             }
         }
@@ -2195,18 +2195,6 @@
             }, 1500);
         }
 
-        // 删除内部使用属性
-        Class.prototype.delInnerProperty = function (data) {
-            var obj = {};
-            for (var key in data) {
-                // 去掉内部数据字段
-                if (key.slice(0, 5) !== '_song') {
-                    obj[key] = data[key];
-                }
-            }
-            return obj;
-        }
-
         // 通过id获取key
         Class.prototype.getKeyById = function (id) {
             var key = this.idKeyMap[id];
@@ -2346,7 +2334,7 @@
                             if ($td[0]) {
                                 var songBindData = that.getBindData($td[0]);
                                 if (songBindData) {
-                                    data.data = that.delInnerProperty(songBindData.rowData);
+                                    data.data = Common.delInnerProperty(songBindData.rowData);
                                 }
                             }
                             // 触发自定义事件
@@ -2367,7 +2355,7 @@
                     // 触发行点击事件
                     that.trigger('row', {
                         dom: this,
-                        data: that.delInnerProperty(songBindData.rowData)
+                        data: Common.delInnerProperty(songBindData.rowData)
                     });
                 });
                 // 列点击事件
@@ -2377,7 +2365,7 @@
                     that.trigger('col', {
                         dom: this,
                         data: songBindData.colData,
-                        rowData: that.delInnerProperty(songBindData.rowData)
+                        rowData: Common.delInnerProperty(songBindData.rowData)
                     });
                 })
             }

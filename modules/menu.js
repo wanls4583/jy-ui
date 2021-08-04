@@ -43,7 +43,7 @@
                     on: menu.on,
                     once: menu.once,
                     trigger: menu.trigger,
-                    open: function (id) {
+                    spread: function (id) {
                         var key = menu.getKeyById(id);
                         if (key === undefined) {
                             return;
@@ -147,7 +147,7 @@
 
         // 重载
         Class.prototype.reload = function (option) {
-            option = Object.assign({}, option || {});
+            this.option = Object.assign({}, option || {});
             this.$menu.remove();
             this.render();
         }
@@ -172,7 +172,7 @@
                     var $ul = $(tpl.ul);
                     $item.append($ul);
                     $item.addClass(menuClass.group);
-                    if (item.openType == 'right') {
+                    if (item.spreadType == 'right') {
                         $item.addClass(menuClass.right);
                         $ul.addClass(menuClass.ulRight);
                         $title.append(tpl.right);
@@ -180,7 +180,7 @@
                         $title.append(tpl.down + tpl.up);
                     }
                     that.appendItem(item.children, $ul);
-                    if (that.option.open || item.open) {
+                    if (that.option.spread || item.spread) {
                         // 默认打开的组
                         if (that.showList.indexOf($ul[0]) == -1) {
                             that.showList.push($ul[0]);
@@ -193,7 +193,7 @@
                                 $title.children('.' + menuClass.icon).toggle();
                             }
                         });
-                        if (item.openType != 'right') {
+                        if (item.spreadType != 'right') {
                             $item.children('.' + menuClass.title).children('.' + menuClass.icon).toggle();
                         }
                     }
@@ -243,11 +243,11 @@
         }
 
         // 打开/关闭菜单项
-        Class.prototype.toggle = function (key, open) {
+        Class.prototype.toggle = function (key, spread) {
             var $li = this.$menu.find('.' + menuClass.group + '[data-key="' + key + '"]');
             var $ul = $li.children('.' + menuClass.ul);
             $ul = $ul.length ? $ul : $li.children('div.' + menuClass.rightWrap);
-            if (open && !$ul.is(':visible') || !open && $ul.is(':visible')) {
+            if (spread && !$ul.is(':visible') || !spread && $ul.is(':visible')) {
                 if ($ul.hasClass(menuClass.rightWrap)) {
                     $li.trigger('mouseenter');
                 } else {
@@ -265,19 +265,7 @@
         Class.prototype.getBindData = function (dom) {
             return this.dataMap[$(dom).attr('data-key')];
         }
-
-        // 删除内部使用属性
-        Class.prototype.delInnerProperty = function (data) {
-            var obj = {};
-            for (var key in data) {
-                // 去掉内部数据字段
-                if (key.slice(0, 5) != '_song') {
-                    obj[key] = data[key];
-                }
-            }
-            return obj;
-        }
-
+        
         // 绑定事件
         Class.prototype.bindEvent = function () {
             var that = this;
@@ -303,9 +291,9 @@
                     var $icon = $this.children('.' + menuClass.title).children('.' + menuClass.icon);
                     $ul.toggle();
                     $icon.toggle();
-                    that.trigger($ul.is(':visible') ? 'open' : 'close', {
+                    that.trigger($ul.is(':visible') ? 'spread' : 'close', {
                         dom: this,
-                        data: that.delInnerProperty(data)
+                        data: Common.delInnerProperty(data)
                     });
                 }
             });
@@ -316,9 +304,9 @@
                 var $ul = $this.children('.' + menuClass.ul);
                 clearTimeout(this.hideItemTimer);
                 $ul.show();
-                that.trigger('open', {
+                that.trigger('spread', {
                     dom: this,
-                    data: that.delInnerProperty(data)
+                    data: Common.delInnerProperty(data)
                 });
             });
             // 关闭组（右侧）事件
@@ -330,7 +318,7 @@
                     $this.children('.' + menuClass.ul).hide();
                     that.trigger('close', {
                         dom: this,
-                        data: that.delInnerProperty(data)
+                        data: Common.delInnerProperty(data)
                     });
                 }, 100);
             });
@@ -346,7 +334,7 @@
                     }
                     that.trigger('click', {
                         dom: this,
-                        data: that.delInnerProperty(data)
+                        data: Common.delInnerProperty(data)
                     });
                     that.option.position !== 'static' && that.$menu.hide();
                 }

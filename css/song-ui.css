@@ -300,15 +300,6 @@ textarea {
   display: none;
 }
 
-.song-form-checkbox.song-checkbox-disabled {
-  color: #c2c2c2;
-  cursor: not-allowed;
-}
-
-.song-form-checkbox.song-checkbox-disabled i {
-  border-color: #eeeeee;
-}
-
 .song-form-checkbox.song-checkbox-checked .song-checkbox-icon {
   background-color: #5FB878;
   border-color: #5FB878;
@@ -316,6 +307,20 @@ textarea {
 
 .song-form-checkbox.song-checkbox-checked .song-checkbox-icon i {
   display: inline;
+}
+
+.song-form-checkbox.song-checkbox-disabled {
+  color: #c2c2c2;
+  cursor: not-allowed;
+}
+
+.song-form-checkbox.song-checkbox-disabled .song-checkbox-icon {
+  color: #c2c2c2;
+  border-color: #eeeeee;
+}
+
+.song-form-checkbox.song-checkbox-disabled.song-checkbox-checked .song-checkbox-icon {
+  background-color: #eeeeee;
 }
 
 .song-form-radio {
@@ -1998,7 +2003,7 @@ textarea {
   cursor: pointer;
 }
 
-.song-tree-child-icon {
+.song-tree-child-icon, .song-tree-arrow {
   top: 4px;
   width: 16px;
   height: 16px;
@@ -2055,6 +2060,19 @@ textarea {
 
 .song-tree-checkbox.song-tree-checked .song-checkbox-icon i {
   display: inline;
+}
+
+.song-tree-disabled {
+  color: #c2c2c2;
+}
+
+.song-tree-disabled .song-tree-checkbox .song-checkbox-icon {
+  color: #c2c2c2;
+  border-color: #eeeeee;
+}
+
+.song-tree-disabled .song-tree-checked .song-checkbox-icon {
+  background-color: #eeeeee;
 }
 
 @font-face {

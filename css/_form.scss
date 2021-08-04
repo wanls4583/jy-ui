@@ -248,15 +248,6 @@
         }
     }
 
-    &.song-checkbox-disabled {
-        color: $disabled-color;
-        cursor: not-allowed;
-
-        i {
-            border-color: $light-color;
-        }
-    }
-
     &.song-checkbox-checked {
         .song-checkbox-icon {
             background-color: $link-color;
@@ -264,6 +255,22 @@
 
             i {
                 display: inline;
+            }
+        }
+    }
+
+    &.song-checkbox-disabled {
+        color: $disabled-color;
+        cursor: not-allowed;
+
+        .song-checkbox-icon {
+            color: $disabled-color;
+            border-color: $light-color;
+        }
+
+        &.song-checkbox-checked {
+            .song-checkbox-icon {
+                background-color: $light-color;
             }
         }
     }

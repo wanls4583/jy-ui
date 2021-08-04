@@ -18,7 +18,8 @@
             cancelNextFrame: cancelNextFrame,
             htmlTemplate: htmlTemplate,
             checkOverflow: checkOverflow,
-            deepAssign: deepAssign
+            deepAssign: deepAssign,
+            delInnerProperty: delInnerProperty
         }
 
 
@@ -276,6 +277,33 @@
                             targetObj[key] = _assign({}, value);
                         }
                     } else {
+                        targetObj[key] = value;
+                    }
+                }
+                return targetObj;
+            }
+        }
+
+        function delInnerProperty(originObj) {
+            var assigned = [];
+            var targetObj = originObj instanceof Array ? [] : {};
+            return _assign(targetObj, originObj);
+
+            function _assign(targetObj, originObj) {
+                for (var key in originObj) {
+                    var value = originObj[key];
+                    var isInnerProp = key.slice(0, 5) == '_song'
+                    if (typeof value === 'object' && assigned.indexOf(value) == -1) {
+                        if (isInnerProp) {
+                            continue;
+                        }
+                        assigned.push(value);
+                        if (value instanceof Array) {
+                            targetObj[key] = _assign([], value);
+                        } else {
+                            targetObj[key] = _assign({}, value);
+                        }
+                    } else if (!isInnerProp) {
                         targetObj[key] = value;
                     }
                 }
