@@ -192,6 +192,8 @@
                             $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
                         });
                     }
+                } else {
+                    $title.find('.' + treeClass.checkbox).trigger('click');
                 }
                 return false;
             });
