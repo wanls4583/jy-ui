@@ -7,17 +7,24 @@
         var leftIcon = '&#xe612;';
         var rightIcon = '&#xe61a;';
         var checkedIcon = '&#xe737;';
+        var searchIcon = '&#xe642;';
         var tpl = {
             transfer: '<div class="song-transfer"></div>',
             left: '<div class="song-transfer-left">\
                 <div class="song-transfer-title">\
                     <div class="song-transfer-checkbox"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
                 </div>\
+                <div class="song-transfer-search">\
+                    <div class="song-transfer-search-container"><i>' + searchIcon + '</i><input class="song-transfer-search-input" placeholder="关键词搜索" /></div>\
+                </div>\
                 <div class="song-transfer-left-body"><div class="song-transfer-empty">无数据</div></div>\
             </div>',
             right: '<div class="song-transfer-right">\
                 <div class="song-transfer-title">\
                     <div class="song-transfer-checkbox"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
+                </div>\
+                <div class="song-transfer-search">\
+                    <div class="song-transfer-search-container"><i>' + searchIcon + '</i><input class="song-transfer-search-input" placeholder="关键词搜索" /></div>\
                 </div>\
                 <div class="song-transfer-right-body"><div class="song-transfer-empty">无数据</div></div>\
             </div>',
