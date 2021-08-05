@@ -2013,6 +2013,10 @@ textarea {
   color: #666666;
 }
 
+.song-tree-child-icon {
+  color: #999999;
+}
+
 .song-tree-text {
   cursor: pointer;
 }
@@ -2073,6 +2077,142 @@ textarea {
 }
 
 .song-tree-disabled .song-tree-checked .song-checkbox-icon {
+  background-color: #eeeeee;
+}
+
+.song-transfer-left, .song-transfer-right {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+  vertical-align: top;
+}
+
+.song-transfer-center {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  width: 80px;
+  vertical-align: top;
+}
+
+.song-transfer-btns {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  margin-top: -40px;
+}
+
+.song-transfer-empty {
+  display: none;
+  color: #999999;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.song-transfer-item {
+  position: relative;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.song-transfer-title {
+  border-bottom: 1px solid #eeeeee;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.song-transfer-btn {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin: 5px 0;
+  width: 50px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 2px;
+  border: 1px solid #eeeeee;
+  background-color: #f6f6f6;
+  font-family: 'iconfont';
+  color: #c2c2c2;
+  text-align: center;
+  cursor: not-allowed;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-transfer-btn-active {
+  border-color: #5FB878;
+  background-color: #5FB878;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.song-transfer-btn-active:hover {
+  opacity: 0.8;
+}
+
+.song-transfer-checkbox {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  line-height: 18px;
+  padding-left: 25px;
+  background-color: #ffffff;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-transfer-checkbox .song-checkbox-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  _width: 18px;
+  _height: 18px;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 16px;
+  font-family: 'iconfont';
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.song-transfer-checkbox .song-checkbox-icon i {
+  display: none;
+}
+
+.song-transfer-checked .song-checkbox-icon {
+  background-color: #5FB878;
+  border-color: #5FB878;
+}
+
+.song-transfer-checked .song-checkbox-icon i {
+  display: inline;
+}
+
+.song-transfer-disabled {
+  color: #c2c2c2;
+}
+
+.song-transfer-disabled .song-transfer-checkbox .song-checkbox-icon {
+  color: #c2c2c2;
+  border-color: #eeeeee;
+  cursor: not-allowed;
+}
+
+.song-transfer-disabled .song-transfer-checked .song-checkbox-icon {
   background-color: #eeeeee;
 }
 

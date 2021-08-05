@@ -248,7 +248,7 @@
                     }
                 });
                 // 触发多选框事件
-                that.trigger('checkbox', {
+                that.trigger('change', {
                     data: Common.delInnerProperty(data),
                     checked: data._song_checked || false,
                     dom: this

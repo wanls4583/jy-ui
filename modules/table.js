@@ -232,7 +232,7 @@
             this.on = event.on;
             this.once = event.once;
             this.trigger = event.trigger;
-            this.option = option;
+            this.option = Common.deepAssign({}, option);
             this.render();
         }
 
@@ -362,8 +362,17 @@
             // 用来渲染数据的列数组
             this.cols = [];
             this.cols = _getDataCol(cols, 0, 1000);
+            this.initCols.hasTyped = false;
             this.cols.map(function (col) {
                 col.fixed = undefined;
+                // 确保只有一个选中类型有效
+                if(col.type == 'radio' || col.type == 'checkbox') {
+                    if(that.initCols.hasTyped) {
+                        col.type = 'text';
+                        col.hidden = true;
+                    }
+                    that.initCols.hasTyped = true;
+                }
             });
             for (var i = 0; i < fixedLeftCount; i++) {
                 this.cols[i].fixed = 'left';
@@ -1176,7 +1185,6 @@
          * @param {String} type 
          */
         Class.prototype.getData = function (type) {
-            var that = this;
             var data = null;
             type = type || 'render';
             switch (type) {
@@ -2284,7 +2292,7 @@
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     that.selectRow(key);
-                    that.trigger('radio', {
+                    that.trigger('change', {
                         dom: this,
                         data: that.selectedData.id
                     });
@@ -2295,7 +2303,7 @@
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     that.checkRow(key);
-                    that.trigger('checkbox', {
+                    that.trigger('change', {
                         dom: this,
                         data: that.checkedData.map(function (item) {
                             return item.id;

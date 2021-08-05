@@ -1,0 +1,141 @@
+.song-transfer {
+
+    &-left,
+    &-right {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        border: 1px solid $light-color;
+        border-radius: 2px;
+        vertical-align: top;
+    }
+
+    &-center {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        width: 80px;
+        vertical-align: top;
+    }
+
+    &-btns {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        margin-top: -40px;
+    }
+
+    &-empty {
+        display: none;
+        color: $color-999;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    &-item {
+        position: relative;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    &-title {
+        border-bottom: 1px solid $light-color;
+        padding: 10px;
+        margin-bottom: 5px;
+    }
+
+    &-btn {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        margin: 5px 0;
+        width: 50px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 2px;
+        border: 1px solid $light-color;
+        background-color: $lighter-color;
+        font-family: 'iconfont';
+        color: $disabled-color;
+        text-align: center;
+        cursor: not-allowed;
+        user-select: none;
+    }
+
+    &-btn-active {
+        border-color: $link-color;
+        background-color: $link-color;
+        color: #ffffff;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    // 多选框
+    &-checkbox {
+        position: relative;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        line-height: 18px;
+        padding-left: 25px;
+        background-color: $white-color;
+        cursor: pointer;
+        user-select: none;
+
+        .song-checkbox-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            _width: 18px;
+            _height: 18px;
+            border: 1px solid $gray-color;
+            border-radius: 2px;
+            text-align: center;
+            line-height: 16px;
+            font-family: 'iconfont';
+            font-size: 14px;
+            color: $white-color;
+
+            i {
+                display: none;
+            }
+        }
+
+    }
+
+    &-checked {
+        .song-checkbox-icon {
+            background-color: $link-color;
+            border-color: $link-color;
+
+            i {
+                display: inline;
+            }
+        }
+    }
+
+    &-disabled {
+        color: $disabled-color;
+
+        .song-transfer-checkbox {
+            .song-checkbox-icon {
+                color: $disabled-color;
+                border-color: $light-color;
+                cursor: not-allowed;
+            }
+        }
+
+        .song-transfer-checked {
+            .song-checkbox-icon {
+                background-color: $light-color;
+            }
+        }
+    }
+}

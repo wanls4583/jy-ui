@@ -395,9 +395,15 @@
         </div>
     </fieldset>
     <fieldset class="song-field">
-        <legend>树形结构</legend>
+        <legend>树形组件</legend>
         <div class="song-field-box">
             <div id="tree1"></div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
+        <legend>穿梭框</legend>
+        <div class="song-field-box">
+            <div id="tansfer1" style="width:500px;"></div>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -432,6 +438,7 @@
 <script src="./modules/date.js"></script>
 <script src="./modules/menu.js"></script>
 <script src="./modules/tree.js"></script>
+<script src="./modules/transfer.js"></script>
 <script>
     window.JSON = window.JSON || {
         stringify: function (d) { return String(d) }
@@ -564,7 +571,7 @@
                 }]
             }]
         });
-        table.on('selected', function () {
+        table.on('change', function () {
             SongUi.Dialog.alert(JSON.stringify(table.getData('select')));
         });
         return table;
@@ -897,7 +904,7 @@
     });
     var tree = SongUi.Tree.render({
         elem: '#tree1',
-        style: 'arrow',
+        style: 'line',
         showCheckbox: true,
         onlyIconSwitch: false,
         data: [{
@@ -932,7 +939,7 @@
         // console.log('click');
         // console.log(obj);
     });
-    tree.on('checkbox', function (obj) {
+    tree.on('change', function (obj) {
         // console.log('checkbox');
         // console.log(obj);
     });
@@ -941,6 +948,35 @@
         // console.log(obj);
     });
     tree.on('close', function (obj) {
+        // console.log('close');
+        // console.log(obj);
+    });
+    var transfer = SongUi.Transfer.render({
+        elem: '#tansfer1',
+        stretch: true,
+        leftTitle: '标题1',
+        rightTitle: '标题2',
+        data: [{
+            id: 1,
+            title: 'item1',
+            checked: true
+        }, {
+            id: 2,
+            title: 'item2',
+            disabled: true
+        }, {
+            id: 3,
+            title: 'item3'
+        }, {
+            id: 4,
+            title: 'item4'
+        }],
+        value: [{
+            id: 5,
+            title: 'item5'
+        }]
+    });
+    transfer.on('change', function(obj) {
         // console.log('close');
         // console.log(obj);
     });
