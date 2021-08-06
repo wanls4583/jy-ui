@@ -84,11 +84,21 @@
         }
 
         Class.prototype.render = function () {
+            var searchMethod = null;
             // 自定义配置-begin
             this.stretch = this.option.stretch || false;
-            this.search = this.option.search || false;
             this.width = this.option.width || 200;
             this.height = this.option.height || 320;
+            this.search = this.option.search || false;
+            searchMethod = typeof this.option.searchMethod === 'function' ? this.option.searchMethod : function (text, item) {
+                return item.title.indexOf(text) > -1
+            }
+            this.searchMethod = function (text, item) {
+                var obj = Object.assign({}, item);
+                obj.children = undefined;
+                obj = Common.deepAssign({}, obj);
+                return searchMethod(text, obj);
+            }
             // 自定义配置-end
             this.$elem = $(this.option.elem);
             this.$elem = this.$elem.length ? this.$elem : $docBody;
@@ -239,7 +249,7 @@
                     // 左侧搜索框有内容，需要过滤
                     checkedData.map(function (item) {
                         item._song_checked = false;
-                        if (that.leftSearchText && item.title.indexOf(that.leftSearchText) == -1) {
+                        if (that.leftSearchText && !that.searchMethod(that.leftSearchText, item)) {
                             item._song_hidden = true;
                         } else {
                             item._song_hidden = false;
@@ -276,7 +286,7 @@
                     checkedData.map(function (item) {
                         item._song_checked = false;
                         // 右侧搜索框有内容，需要过滤
-                        if (that.rightSearchText && item.title.indexOf(that.rightSearchText) == -1) {
+                        if (that.rightSearchText && !that.searchMethod(that.rightSearchText, item)) {
                             item._song_hidden = true;
                         } else {
                             item._song_hidden = false;
@@ -308,7 +318,7 @@
                 clearTimeout(that.bindEvent.inputTimer);
                 that.bindEvent.inputTimer = setTimeout(function () {
                     that.leftData.map(function (item) {
-                        if (that.leftSearchText && item.title.indexOf(that.leftSearchText) == -1) {
+                        if (that.leftSearchText && !that.searchMethod(that.leftSearchText, item)) {
                             item._song_hidden = true;
                         } else {
                             item._song_hidden = false;
@@ -329,7 +339,7 @@
                 clearTimeout(that.bindEvent.inputTimer);
                 that.bindEvent.inputTimer = setTimeout(function () {
                     that.leftData.map(function (item) {
-                        if (that.rightSearchText && item.title.indexOf(that.rightSearchText) == -1) {
+                        if (that.rightSearchText && !that.searchMethod(that.rightSearchText, item)) {
                             item._song_hidden = true;
                         } else {
                             item._song_hidden = false;

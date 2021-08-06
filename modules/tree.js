@@ -87,6 +87,7 @@
         }
 
         Class.prototype.render = function () {
+            var searchMethod = null;
             // 自定义配置-begin
             this.width = this.option.width || 'auto';
             this.height = this.option.height || 'atuo';
@@ -100,8 +101,14 @@
             this.onlyIconSwitch = this.option.onlyIconSwitch;
             // 是否开启搜索
             this.searchVisible = this.option.search;
-            this.searchMethod = typeof this.option.searchMethod === 'function' ? this.option.searchMethod : function (text, item) {
+            searchMethod = typeof this.option.searchMethod === 'function' ? this.option.searchMethod : function (text, item) {
                 return item.title.indexOf(text) > -1
+            }
+            this.searchMethod = function (text, item) {
+                var obj = Object.assign({}, item);
+                obj.children = undefined;
+                obj = Common.deepAssign({}, obj);
+                return searchMethod(text, obj);
             }
             // 自定义配置-end
             this.$elem = $(this.option.elem);
@@ -368,11 +375,8 @@
             var list = this.data.concat([]);
             while (list.length) {
                 var item = list.shift();
-                var obj = Object.assign({}, item);
-                obj.children = undefined;
-                obj = Common.deepAssign({}, obj);
                 // 搜索
-                if (this.searchMethod(text, obj) && showList.indexOf(item._song_key) == -1) {
+                if (this.searchMethod(text, item) && showList.indexOf(item._song_key) == -1) {
                     var _item = item._song_parent;
                     showList.push(item._song_key);
                     // 前代节点都要选中
