@@ -1,17 +1,19 @@
 !(function (window) {
     function factory($, Common) {
         var ieVersion = Common.getIeVersion();
-        var docBody = window.document.body;
-        var docElement = window.document.documentElement;
-        var $docBody = $(docBody);
         var docIcon = '&#xe6fd;';
         var plusIcon = '&#xe95e;';
         var minusIcon = '&#xe62d;';
         var rightIcon = '&#xe734;';
         var downIcon = '&#xe74b;';
         var checkedIcon = '&#xe737;';
+        var searchIcon = '&#xe642;';
         var tpl = {
-            tree: '<div class="song-tree"></div>',
+            tree: '<div class="song-tree">\
+                <div class="song-tree-search">\
+                    <div class="song-tree-search-container"><i>' + searchIcon + '</i><input class="song-tree-search-input" placeholder="关键词搜索" /></div>\
+                </div>\
+            </div>',
             ul: '<div class="song-tree-ul"><%if(style=="line"){%><i class="song-tree-v-line"></i><%}%></div>',
             item: '<div class="song-tree-item" data-key="<%-key%>"><%if(!isRoot&&style=="line"){%><i class="song-tree-h-line"></i><%}%></div>',
             title: '<div class="song-tree-item-title" data-key="<%-key%>">\
@@ -25,18 +27,20 @@
                 <div class="song-tree-checkbox" data-key="<%-key%>"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span>&nbsp;</span></div>\
                 <%}%>\
                 <span class="song-tree-text"><%-title%></span>\
-            </div>'
+            </div>',
+            search: ''
         }
         var treeClass = {
             checkbox: 'song-tree-checkbox',
             checked: 'song-tree-checked',
             disabled: 'song-tree-disabled',
-            item: 'song-tree-item',
+            search: 'song-tree-search',
             ul: 'song-tree-ul',
             vLine: 'song-tree-v-line',
+            item: 'song-tree-item',
             title: 'song-tree-item-title',
-            text: 'song-tree-text',
             clickIcon: 'song-tree-click-icon',
+            text: 'song-tree-text',
             ieHack: 'song-tree-ie-hack'
         }
 
@@ -83,15 +87,9 @@
         }
 
         Class.prototype.render = function () {
-            this.$elem = $(this.option.elem);
-            this.data = Common.deepAssign([], this.option.data);
-            this.$tree = $(tpl.tree);
-            this.idKeyMap = {};
-            this.dataMap = {};
-            this.key = 0;
-            this.showList = [];
-            this.width = this.option.width;
-            this.height = this.option.height || 0;
+            // 自定义配置-begin
+            this.width = this.option.width || 'auto';
+            this.height = this.option.height || 'atuo';
             // 是否显示多选框
             this.showCheckbox = this.option.showCheckbox;
             // 是否默认都展开
@@ -100,16 +98,37 @@
             this.style = this.option.style;
             // 是否只允许icon来控制展开/收起
             this.onlyIconSwitch = this.option.onlyIconSwitch;
+            // 是否开启搜索
+            this.searchVisible = this.option.search;
+            this.searchMethod = typeof this.option.searchMethod === 'function' ? this.option.searchMethod : function (text, item) {
+                return item.title.indexOf(text) > -1
+            }
+            // 自定义配置-end
+            this.$elem = $(this.option.elem);
+            this.data = Common.deepAssign([], this.option.data);
+            this.$tree = $(tpl.tree);
+            this.$search = this.$tree.children('div.' + treeClass.search);
+            this.idKeyMap = {};
+            this.dataMap = {};
+            this.key = 0;
+            this.showList = [];
             if (['arrow', 'line'].indexOf(this.style) == -1) {
                 this.style = 'line';
             }
+            if (this.searchVisible) {
+                this.$search.show();
+            }
+            this.$tree.css({
+                'width': this.width,
+                'height': this.height
+            })
             this.appendItem(this.data, this.$tree);
             this.$elem.append(this.$tree);
             this.bindEvent();
             this.showList.map(function (item) {
                 var $item = $(item);
-                $item.children('.' + treeClass.title).children('.' + treeClass.clickIcon).toggle();
-                $item.children('.' + treeClass.ul).show();
+                $item.children('div.' + treeClass.title).children('div.' + treeClass.clickIcon).toggle();
+                $item.children('div.' + treeClass.ul).show();
             });
             ieVersion <= 7 && this.$tree.addClass(treeClass.ieHack);
         }
@@ -185,69 +204,11 @@
                 var $this = $(this);
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
-                var checked = !data._song_checked;
-                var $title = $this.parent('.' + treeClass.title);
-                var $item = $title.parent('.' + treeClass.item);
-                // 禁用状态
+                // 已禁用
                 if (data._song_disabled) {
-                    return false;
+                    return;
                 }
-                if (checked) {
-                    data._song_checked = true;
-                    $title.addClass(treeClass.checked);
-                } else {
-                    data._song_checked = false;
-                    $title.removeClass(treeClass.checked);
-                }
-                // 上游的项
-                var items = $item.parents('.' + treeClass.item);
-                for (var i = 0; i < items.length; i++) {
-                    var $_item = items.eq(i);
-                    var _data = that.dataMap[$_item.attr('data-key')];
-                    if (checked) {
-                        // 往上寻找需要选中的项
-                        if (!_data._song_checked) {
-                            _data._song_checked = true;
-                            $_item.children('.' + treeClass.title).addClass(treeClass.checked);
-                        } else {
-                            break;
-                        }
-                    } else {
-                        var _checked = false;
-                        // 往上寻找需要取消选中的项
-                        for (var n = 0; n < _data.children.length; n++) {
-                            var item = _data.children[n];
-                            if (item._song_checked) {
-                                _checked = true;
-                                break;
-                            }
-                        }
-                        if (_checked) {
-                            break;
-                        } else {
-                            _data._song_checked = _checked;
-                            $_item.children('.' + treeClass.title).removeClass(treeClass.checked);
-                        }
-                    }
-                }
-                // 下游的项
-                items = $item.find('.' + treeClass.item);
-                items.each(function (i, item) {
-                    var $_item = $(item);
-                    var $title = $_item.children('.' + treeClass.title);
-                    var _data = that.dataMap[$_item.attr('data-key')];
-                    // 禁用的项
-                    if (_data._song_disabled) {
-                        return;
-                    }
-                    _data._song_checked = checked;
-                    // 全部选中/取消选中下游的项
-                    if (checked) {
-                        $title.addClass(treeClass.checked);
-                    } else {
-                        $title.removeClass(treeClass.checked);
-                    }
-                });
+                that.checkItem(key);
                 // 触发多选框事件
                 that.trigger('change', {
                     data: Common.delInnerProperty(data),
@@ -277,7 +238,7 @@
                 if (data.children && data.children.length) {
                     !that.onlyIconSwitch && that.toggle(key);
                 } else {
-                    $title.find('.' + treeClass.checkbox).trigger('click');
+                    $title.children('div.' + treeClass.checkbox).trigger('click');
                 }
                 if (data.href && !data._song_disabled) {
                     window.open(data.href);
@@ -288,6 +249,25 @@
                     dom: this
                 });
                 return false;
+            });
+            // 搜索事件
+            this.$search.find('input').on('input propertychange', function () {
+                that.search(this.value);
+            });
+        }
+
+        // 刷新选中状态UI
+        Class.prototype.refreshCheckbox = function () {
+            var that = this;
+            this.$tree.find('div.' + treeClass.title).each(function (i, dom) {
+                var $title = $(dom);
+                var key = $title.attr('data-key');
+                var data = that.dataMap[key];
+                if (data._song_checked) {
+                    $title.addClass(treeClass.checked);
+                } else {
+                    $title.removeClass(treeClass.checked);
+                }
             });
         }
 
@@ -301,14 +281,126 @@
                     return;
                 }
             }
-            $title.children('.' + treeClass.clickIcon).toggle();
+            $title.children('div.' + treeClass.clickIcon).toggle();
             $ul.toggle();
             if (ieVersion <= 6) {
-                $ul.children('.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
-                $ul.parents('.' + treeClass.ul).each(function (i, ul) {
+                $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
+                $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
                     $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
                 });
             }
+        }
+
+        // 选中/取消选中
+        Class.prototype.checkItem = function (key, checked) {
+            var data = this.dataMap[key];
+            data._song_checked = Boolean(data._song_checked);
+            if (checked === undefined) {
+                checked = !data._song_checked;
+            }
+            checked = Boolean(checked);
+            if (data._song_checked === checked) {
+                return;
+            }
+            data._song_checked = checked;
+            var children = data.children || [];;
+            var data = data._song_parent;
+            children = children.concat([]);
+            // 处理上游
+            while (data) {
+                if (checked && !data._song_checked) {
+                    data._song_checked = true;
+                } else if (!checked && data._song_checked) {
+                    data._song_checked = false;
+                    for (var i = 0; i < data.children.length; i++) {
+                        if (data.children[i]._song_checked) {
+                            data._song_checked = true;
+                            break;
+                        }
+                    }
+                }
+                data = data._song_parent;
+            }
+            // 处理下游
+            while (children.length) {
+                var item = children.shift();
+                if (!item._song_disabled && !item._song_hidden) {
+                    item._song_checked = checked;
+                    item.children && item.children.map(function (_item) {
+                        children.push(_item);
+                    });
+                }
+            }
+            this.refreshCheckbox();
+        }
+
+        // 验证多选框选中状态
+        Class.prototype.validateCheck = function () {
+            var data = this.data;
+            data.map(function (item) {
+                _validate(item);
+            });
+
+            function _validate(data) {
+                var checked = data._song_checked;
+                if (data._song_hidden) {
+                    checked = false;
+                } else {
+                    if (data.children && !data._song_hidden) {
+                        checked = false;
+                        for (var i = 0; i < data.children.length; i++) {
+                            if (_validate(data.children[i])) {
+                                checked = true;
+                                break;
+                            }
+                        }
+                    }
+                    data._song_checked = checked;
+                }
+                return checked;
+            }
+        }
+
+        // 搜索
+        Class.prototype.search = function (text) {
+            var that = this;
+            var showList = [];
+            var list = this.data.concat([]);
+            while (list.length) {
+                var item = list.shift();
+                var obj = Object.assign({}, item);
+                obj.children = undefined;
+                obj = Common.deepAssign({}, obj);
+                // 搜索
+                if (this.searchMethod(text, obj) && showList.indexOf(item._song_key) == -1) {
+                    var _item = item._song_parent;
+                    showList.push(item._song_key);
+                    // 前代节点都要选中
+                    while (_item) {
+                        if (showList.indexOf(_item._song_key) == -1) {
+                            showList.push(_item._song_key);
+                        }
+                        _item = _item._song_parent;
+                    }
+                }
+                item.children && item.children.map(function (_item) {
+                    list.push(_item);
+                });
+            }
+            this.$tree.find('div.' + treeClass.item).each(function (i, item) {
+                var $item = $(item)
+                var key = $item.attr('data-key');
+                var data = that.dataMap[key];
+                if (Common.indexOf(showList, key) > -1) {
+                    $item.show();
+                    data._song_hidden = false;
+                } else {
+                    $item.hide();
+                    data._song_hidden = true;
+                }
+            });
+            this.validateCheck();
+            this.refreshCheckbox();
         }
 
         // 通过id获取key
@@ -325,7 +417,7 @@
             }
             while (list.length) {
                 var item = list.shift();
-                if (item._song_checked && (!item.children || !item.children.length)) {
+                if (item._song_checked && !item._song_hidden && (!item.children || !item.children.length)) {
                     result.push(Common.delInnerProperty(item));
                 }
                 item.children && item.children.map(function (_item) {

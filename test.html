@@ -397,7 +397,7 @@
     <fieldset class="song-field">
         <legend>树形组件</legend>
         <div class="song-field-box">
-            <div id="tree1"></div>
+            <div id="tree1" style="width:200px;"></div>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -907,6 +907,7 @@
         style: 'line',
         showCheckbox: true,
         onlyIconSwitch: false,
+        search: true,
         data: [{
             title: 'item1',
             id: '1',
@@ -916,7 +917,7 @@
             }, {
                 id: '1-2',
                 title: 'item1-2',
-                disabled: true,
+                // disabled: true,
                 spread: true,
                 children: [{
                     id: '1-2-1',

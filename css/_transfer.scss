@@ -24,24 +24,11 @@
         vertical-align: top;
     }
 
-    &-btns {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        margin-top: -40px;
-    }
-
     &-empty {
         display: none;
         color: $color-999;
         text-align: center;
         margin-top: 30px;
-    }
-
-    &-item {
-        position: relative;
-        padding: 5px 10px;
-        cursor: pointer;
     }
 
     &-title {
@@ -78,6 +65,19 @@
             border: 1px solid $light-color;
             border-radius: 2px;
         }
+    }
+
+    &-item {
+        position: relative;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    &-btns {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        margin-top: -40px;
     }
 
     &-btn {

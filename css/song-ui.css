@@ -1945,6 +1945,36 @@ textarea {
   font-style: normal;
 }
 
+.song-tree-search {
+  display: none;
+  padding: 10px 0;
+}
+
+.song-tree-search i {
+  position: absolute;
+  font-family: 'iconfont';
+  font-size: 16px;
+  top: 7px;
+  left: 6px;
+}
+
+.song-tree-search input {
+  width: 100%;
+  height: 100%;
+  line-height: 30px;
+  padding: 0;
+  border: 0;
+  outline: none;
+}
+
+.song-tree-search-container {
+  position: relative;
+  height: 30px;
+  padding-left: 28px;
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+}
+
 .song-tree-item {
   position: relative;
   margin-bottom: 5px;
@@ -2102,24 +2132,11 @@ textarea {
   vertical-align: top;
 }
 
-.song-transfer-btns {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  margin-top: -40px;
-}
-
 .song-transfer-empty {
   display: none;
   color: #999999;
   text-align: center;
   margin-top: 30px;
-}
-
-.song-transfer-item {
-  position: relative;
-  padding: 5px 10px;
-  cursor: pointer;
 }
 
 .song-transfer-title {
@@ -2156,6 +2173,19 @@ textarea {
   padding-left: 28px;
   border: 1px solid #eeeeee;
   border-radius: 2px;
+}
+
+.song-transfer-item {
+  position: relative;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.song-transfer-btns {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  margin-top: -40px;
 }
 
 .song-transfer-btn {

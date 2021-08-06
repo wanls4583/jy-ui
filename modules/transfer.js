@@ -1,8 +1,6 @@
 !(function (window) {
     function factory($, Common) {
-        var ieVersion = Common.getIeVersion();
         var docBody = window.document.body;
-        var docElement = window.document.documentElement;
         var $docBody = $(docBody);
         var leftIcon = '&#xe612;';
         var rightIcon = '&#xe61a;';
