@@ -232,7 +232,7 @@
             this.on = event.on;
             this.once = event.once;
             this.trigger = event.trigger;
-            this.option = Common.deepAssign({}, option);
+            this.option = Object.assign({}, option);
             this.render();
         }
 
@@ -435,7 +435,7 @@
 
         // 重载表格
         Class.prototype.reload = function (option) {
-            this.option = Common.deepAssign(this.option, option || {});
+            this.option = Object.assign(this.option, option || {});
             this.render();
         }
 

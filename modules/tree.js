@@ -105,14 +105,14 @@
                 return item.title.indexOf(text) > -1
             }
             this.searchMethod = function (text, item) {
-                var obj = Object.assign({}, item);
+                var obj = Common.deepAssign({}, item);
                 obj.children = undefined;
                 obj = Common.deepAssign({}, obj);
                 return searchMethod(text, obj);
             }
             // 自定义配置-end
             this.$elem = $(this.option.elem);
-            this.data = Common.deepAssign([], this.option.data);
+            this.data = Object.assign([], this.option.data);
             this.$tree = $(tpl.tree);
             this.$search = this.$tree.children('div.' + treeClass.search);
             this.idKeyMap = {};

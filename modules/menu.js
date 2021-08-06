@@ -70,7 +70,7 @@
             }
         }
 
-        // 页码类
+        // 菜单类
         function Class(option) {
             var event = Common.getEvent();
             this.on = event.on;

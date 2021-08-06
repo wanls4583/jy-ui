@@ -94,7 +94,7 @@
                 return item.title.indexOf(text) > -1
             }
             this.searchMethod = function (text, item) {
-                var obj = Object.assign({}, item);
+                var obj = Common.deepAssign({}, item);
                 obj.children = undefined;
                 obj = Common.deepAssign({}, obj);
                 return searchMethod(text, obj);
@@ -102,8 +102,8 @@
             // 自定义配置-end
             this.$elem = $(this.option.elem);
             this.$elem = this.$elem.length ? this.$elem : $docBody;
-            this.leftData = Common.deepAssign([], this.option.data);
-            this.rightData = Common.deepAssign([], this.option.value);
+            this.leftData = Object.assign([], this.option.data);
+            this.rightData = Object.assign([], this.option.value);
             this.$transfer = $(tpl.transfer);
             this.$left = $(Common.htmlTemplate(tpl.left, {
                 title: this.option.leftTitle || '列表1'
@@ -431,7 +431,7 @@
         Class.prototype.getTransfered = function (data) {
             var result = [];
             this.rightData.map(function (item) {
-                result.push(Common.deepAssign({}, item));
+                result.push(Common.delInnerProperty({}, item));
             });
             return result;
         }
