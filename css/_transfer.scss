@@ -159,15 +159,13 @@
     &-disabled {
         color: $disabled-color;
 
-        .song-transfer-checkbox {
-            .song-checkbox-icon {
-                color: $disabled-color;
-                border-color: $light-color;
-                cursor: not-allowed;
-            }
+        .song-checkbox-icon {
+            color: $disabled-color;
+            border-color: $light-color;
+            cursor: not-allowed;
         }
 
-        .song-transfer-checked {
+        &.song-transfer-checked {
             .song-checkbox-icon {
                 background-color: $light-color;
             }

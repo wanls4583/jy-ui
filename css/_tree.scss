@@ -68,7 +68,7 @@
         border: 0;
         color: $color-666;
     }
-    
+
     &-child-icon {
         color: $color-999;
     }
@@ -110,14 +110,15 @@
             }
         }
 
-        &.song-tree-checked {
-            .song-checkbox-icon {
-                background-color: $link-color;
-                border-color: $link-color;
+    }
 
-                i {
-                    display: inline;
-                }
+    &-checked {
+        .song-checkbox-icon {
+            background-color: $link-color;
+            border-color: $link-color;
+
+            i {
+                display: inline;
             }
         }
     }
@@ -125,15 +126,13 @@
     &-disabled {
         color: $disabled-color;
 
-        .song-tree-checkbox {
-            .song-checkbox-icon {
-                color: $disabled-color;
-                border-color: $light-color;
-                cursor: not-allowed;
-            }
+        .song-checkbox-icon {
+            color: $disabled-color;
+            border-color: $light-color;
+            cursor: not-allowed;
         }
 
-        .song-tree-checked {
+        &.song-tree-checked {
             .song-checkbox-icon {
                 background-color: $light-color;
             }

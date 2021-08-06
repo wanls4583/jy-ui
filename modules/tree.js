@@ -149,7 +149,7 @@
                 item._song_checked = item._song_checked || item.checked;
                 item._song_disabled = item._song_disabled || item.disabled;
                 if (item._song_checked && that.showCheckbox) {
-                    $title.children('.' + treeClass.checkbox).addClass(treeClass.checked);
+                    $title.addClass(treeClass.checked);
                 }
                 if (item._song_disabled) {
                     $title.addClass(treeClass.disabled);
@@ -186,17 +186,18 @@
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
                 var checked = !data._song_checked;
-                var $item = $this.parent('.' + treeClass.title).parent('.' + treeClass.item);
+                var $title = $this.parent('.' + treeClass.title);
+                var $item = $title.parent('.' + treeClass.item);
                 // 禁用状态
                 if (data._song_disabled) {
                     return false;
                 }
                 if (checked) {
                     data._song_checked = true;
-                    $this.addClass(treeClass.checked);
+                    $title.addClass(treeClass.checked);
                 } else {
                     data._song_checked = false;
-                    $this.removeClass(treeClass.checked);
+                    $title.removeClass(treeClass.checked);
                 }
                 // 上游的项
                 var items = $item.parents('.' + treeClass.item);
@@ -207,7 +208,7 @@
                         // 往上寻找需要选中的项
                         if (!_data._song_checked) {
                             _data._song_checked = true;
-                            $_item.children('.' + treeClass.title).find('.' + treeClass.checkbox).addClass(treeClass.checked);
+                            $_item.children('.' + treeClass.title).addClass(treeClass.checked);
                         } else {
                             break;
                         }
@@ -225,7 +226,7 @@
                             break;
                         } else {
                             _data._song_checked = _checked;
-                            $_item.children('.' + treeClass.title).find('.' + treeClass.checkbox).removeClass(treeClass.checked);
+                            $_item.children('.' + treeClass.title).removeClass(treeClass.checked);
                         }
                     }
                 }
@@ -233,7 +234,7 @@
                 items = $item.find('.' + treeClass.item);
                 items.each(function (i, item) {
                     var $_item = $(item);
-                    var $checkbox = $_item.children('.' + treeClass.title).find('.' + treeClass.checkbox);
+                    var $title = $_item.children('.' + treeClass.title);
                     var _data = that.dataMap[$_item.attr('data-key')];
                     // 禁用的项
                     if (_data._song_disabled) {
@@ -242,9 +243,9 @@
                     _data._song_checked = checked;
                     // 全部选中/取消选中下游的项
                     if (checked) {
-                        $checkbox.addClass(treeClass.checked);
+                        $title.addClass(treeClass.checked);
                     } else {
-                        $checkbox.removeClass(treeClass.checked);
+                        $title.removeClass(treeClass.checked);
                     }
                 });
                 // 触发多选框事件

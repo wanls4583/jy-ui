@@ -2057,12 +2057,12 @@ textarea {
   display: none;
 }
 
-.song-tree-checkbox.song-tree-checked .song-checkbox-icon {
+.song-tree-checked .song-checkbox-icon {
   background-color: #5FB878;
   border-color: #5FB878;
 }
 
-.song-tree-checkbox.song-tree-checked .song-checkbox-icon i {
+.song-tree-checked .song-checkbox-icon i {
   display: inline;
 }
 
@@ -2070,13 +2070,13 @@ textarea {
   color: #c2c2c2;
 }
 
-.song-tree-disabled .song-tree-checkbox .song-checkbox-icon {
+.song-tree-disabled .song-checkbox-icon {
   color: #c2c2c2;
   border-color: #eeeeee;
   cursor: not-allowed;
 }
 
-.song-tree-disabled .song-tree-checked .song-checkbox-icon {
+.song-tree-disabled.song-tree-checked .song-checkbox-icon {
   background-color: #eeeeee;
 }
 
@@ -2240,13 +2240,13 @@ textarea {
   color: #c2c2c2;
 }
 
-.song-transfer-disabled .song-transfer-checkbox .song-checkbox-icon {
+.song-transfer-disabled .song-checkbox-icon {
   color: #c2c2c2;
   border-color: #eeeeee;
   cursor: not-allowed;
 }
 
-.song-transfer-disabled .song-transfer-checked .song-checkbox-icon {
+.song-transfer-disabled.song-transfer-checked .song-checkbox-icon {
   background-color: #eeeeee;
 }
 
