@@ -41,6 +41,8 @@
             title: 'song-tree-item-title',
             clickIcon: 'song-tree-click-icon',
             text: 'song-tree-text',
+            downAnimation: 'song-tree-animation-down',
+            upAnimation: 'song-tree-animation-up',
             ieHack: 'song-tree-ie-hack'
         }
 
@@ -280,20 +282,66 @@
 
         // 展开/关闭
         Class.prototype.toggle = function (key, spread) {
+            var that = this;
             var $title = this.$tree.find('.' + treeClass.title + '[data-key="' + key + '"]');
             var $ul = $title.next('.' + treeClass.ul);
             var visible = $ul.is(':visible');
+            var height = 0;
+            var countHeigh = 0;
+            if (!$ul.length) {
+                return;
+            }
             if (spread !== undefined) {
                 if (visible && spread || !visible && !spread) {
                     return;
                 }
             }
+            $ul.show();
             $title.children('div.' + treeClass.clickIcon).toggle();
-            $ul.toggle();
-            if (ieVersion <= 6) {
+            height = $ul[0].clientHeight;
+            window.cancelAnimationFrame && window.cancelAnimationFrame(this.animationTimer);
+            if (visible) {
+                countHeigh = height;
+                if (window.requestAnimationFrame) {
+                    _hideAnimation();
+                } else {
+                    $ul.hide();
+                }
+            } else {
+                if (window.requestAnimationFrame) {
+                    _showAnimation();
+                }
+            }
+            if (!ieVersion && ieVersion <= 6) {
                 $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
                 $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
                     $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                });
+            }
+
+            // 收起动画效果
+            function _hideAnimation() {
+                that.animationTimer = requestAnimationFrame(function () {
+                    countHeigh -= height / 10;
+                    if (countHeigh > 0) {
+                        $ul.css('height', countHeigh);
+                        _hideAnimation();
+                    } else {
+                        $ul.css('height', 'auto').hide();
+                    }
+                });
+            }
+
+            // 展开动画效果
+            function _showAnimation() {
+                that.animationTimer = requestAnimationFrame(function () {
+                    countHeigh += height / 10;
+                    if (countHeigh < height) {
+                        $ul.css('height', countHeigh);
+                        _showAnimation();
+                    } else {
+                        $ul.css('height', 'auto');
+                    }
                 });
             }
         }

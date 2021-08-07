@@ -2141,6 +2141,7 @@ textarea {
   display: none;
   position: relative;
   padding-left: 25px;
+  overflow: hidden;
 }
 
 .song-tree-ie-hack .song-tree-item-title,
