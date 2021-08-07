@@ -286,8 +286,6 @@
             var $title = this.$tree.find('.' + treeClass.title + '[data-key="' + key + '"]');
             var $ul = $title.next('.' + treeClass.ul);
             var visible = $ul.is(':visible');
-            var height = 0;
-            var countHeigh = 0;
             if (!$ul.length) {
                 return;
             }
@@ -298,18 +296,15 @@
             }
             $ul.show();
             $title.children('div.' + treeClass.clickIcon).toggle();
-            height = $ul[0].clientHeight;
-            window.cancelAnimationFrame && window.cancelAnimationFrame(this.animationTimer);
             if (visible) {
-                countHeigh = height;
                 if (window.requestAnimationFrame) {
-                    _hideAnimation();
+                    _hideAnimation($ul);
                 } else {
                     $ul.hide();
                 }
             } else {
                 if (window.requestAnimationFrame) {
-                    _showAnimation();
+                    _showAnimation($ul);
                 }
             }
             if (!ieVersion && ieVersion <= 6) {
@@ -320,29 +315,49 @@
             }
 
             // 收起动画效果
-            function _hideAnimation() {
-                that.animationTimer = requestAnimationFrame(function () {
-                    countHeigh -= height / 10;
-                    if (countHeigh > 0) {
-                        $ul.css('height', countHeigh);
-                        _hideAnimation();
-                    } else {
-                        $ul.css('height', 'auto').hide();
-                    }
-                });
+            function _hideAnimation($ul) {
+                var height = $ul[0].clientHeight;
+                var countHeigh = height;
+                var step = height / 10;
+                cancelAnimationFrame(that.animationTimer);
+                _animation();
+
+                function _animation() {
+                    that.animationTimer = requestAnimationFrame(function () {
+                        countHeigh -= step;
+                        if (countHeigh > 0) {
+                            $ul.css('height', countHeigh);
+                            _animation();
+                        } else {
+                            $ul.css({
+                                'height': 'auto'
+                            }).hide();
+                        }
+                    });
+                }
             }
 
             // 展开动画效果
-            function _showAnimation() {
-                that.animationTimer = requestAnimationFrame(function () {
-                    countHeigh += height / 10;
-                    if (countHeigh < height) {
-                        $ul.css('height', countHeigh);
-                        _showAnimation();
-                    } else {
-                        $ul.css('height', 'auto');
-                    }
-                });
+            function _showAnimation($ul) {
+                var height = $ul[0].clientHeight;
+                var countHeigh = 0;
+                var step = height / 10;
+                cancelAnimationFrame(that.animationTimer);
+                _animation();
+
+                function _animation() {
+                    that.animationTimer = requestAnimationFrame(function () {
+                        countHeigh += step;
+                        if (countHeigh < height) {
+                            $ul.css('height', countHeigh);
+                            _animation();
+                        } else {
+                            $ul.css({
+                                'height': 'auto'
+                            })
+                        }
+                    });
+                }
             }
         }
 

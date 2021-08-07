@@ -292,8 +292,20 @@
                 if (!$this.hasClass(menuClass.right)) {
                     var $ul = $this.children('.' + menuClass.ul);
                     var $icon = $this.children('.' + menuClass.title).children('.' + menuClass.icon);
-                    $ul.toggle();
+                    var visible = $ul.is(':visible');
                     $icon.toggle();
+                    if (visible) {
+                        if (window.requestAnimationFrame) {
+                            _hideAnimation($ul);
+                        } else {
+                            $ul.hide();
+                        }
+                    } else {
+                        $ul.show();
+                        if (window.requestAnimationFrame) {
+                            _showAnimation($ul);
+                        }
+                    }
                     that.trigger($ul.is(':visible') ? 'spread' : 'close', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -349,7 +361,7 @@
                 // 到达右侧子菜单面板时取消隐藏
                 right && clearTimeout(right.hideItemTimer);
             });
-
+            // hover事件
             this.$menu.delegate('.' + menuClass.item, 'mouseenter', function () {
                 var $this = $(this);
                 clearTimeout(this.hoverTimer);
@@ -357,13 +369,61 @@
                     $this.addClass(menuClass.hover);
                 }
             });
-
+            // hover事件
             this.$menu.delegate('.' + menuClass.item, 'mouseleave', function () {
                 var $this = $(this);
                 this.hoverTimer = setTimeout(function () {
                     $this.removeClass(menuClass.hover);
                 }, $this.hasClass(menuClass.right) ? 100 : 0);
             });
+
+            // 收起动画效果
+            function _hideAnimation($ul) {
+                var height = $ul[0].clientHeight;
+                var countHeigh = height;
+                var step = height / 10;
+                $ul.css('overflow', 'hidden');
+                _animation();
+
+                function _animation() {
+                    that.animationTimer = requestAnimationFrame(function () {
+                        countHeigh -= step;
+                        if (countHeigh > 0) {
+                            $ul.css('height', countHeigh);
+                            _animation();
+                        } else {
+                            $ul.css({
+                                'height': 'auto',
+                                'overflow': 'visible'
+                            }).hide();
+                        }
+                    });
+                }
+            }
+
+            // 展开动画效果
+            function _showAnimation($ul) {
+                var height = $ul[0].clientHeight;
+                var countHeigh = 0;
+                var step = height / 10;
+                $ul.css('overflow', 'hidden');
+                _animation();
+
+                function _animation() {
+                    that.animationTimer = requestAnimationFrame(function () {
+                        countHeigh += step;
+                        if (countHeigh < height) {
+                            $ul.css('height', countHeigh);
+                            _animation();
+                        } else {
+                            $ul.css({
+                                'height': 'auto',
+                                'overflow': 'visible'
+                            })
+                        }
+                    });
+                }
+            }
         }
 
         return SongMenu;
