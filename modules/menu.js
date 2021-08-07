@@ -24,12 +24,15 @@
             group: 'song-menu-group',
             static: 'song-menu-static',
             right: 'song-menu-right',
-            rightWrap: 'song-menu-right-content',
             border: 'song-menu-border',
             checked: 'song-menu-checked',
             icon: 'song-menu-icon',
+            hover: 'song-menu-hover',
             ieHack: 'song-menu-ie-hack'
         }
+
+        var hoverRightAnimation = 'song-menu-animation-hover-right';
+        var hoverDownAnimation = 'song-menu-animation-hover-down';
 
         var ieVersion = Common.getIeVersion();
         var docBody = window.document.body;
@@ -105,7 +108,7 @@
                         that.setPosition();
                         if (that.triggerEvent === 'mouseenter') {
                             clearTimeout(that.hideMenuTimer);
-                            that.$menu.show();
+                            that.$menu.show().addClass(hoverDownAnimation);
                         } else {
                             that.$menu.toggle();
                         }
@@ -118,7 +121,7 @@
                     this.triggerEvent === 'mouseenter' && this.$elem.on('mouseleave', function () {
                         // 延迟隐藏，当在100ms内到达菜单面板时取消隐藏
                         that.hideMenuTimer = setTimeout(function () {
-                            that.$menu.hide();
+                            that.$menu.hide().removeClass(hoverDownAnimation);
                         }, 100);
                     });
                     $docBody.append(this.$menu);
@@ -130,7 +133,7 @@
                 $docBody.append(this.$menu);
                 this.$menu.addClass(menuClass.static);
             }
-            this.appendItem(this.data, this.$menu);
+            this.appendItem(this.data, this.$menu, 1);
             this.addBorder();
             this.bindEvent();
             if (ieVersion <= 7) {
@@ -153,7 +156,7 @@
         }
 
         // 生成菜单树
-        Class.prototype.appendItem = function (data, $parent) {
+        Class.prototype.appendItem = function (data, $parent, level) {
             var that = this;
             data.map(function (item) {
                 var $item = $(tpl.item);
@@ -162,6 +165,7 @@
                 item._song_key = that.key;
                 $item.attr('data-key', that.key);
                 $title.html(typeof that.option.template === 'function' ? that.option.template(item) : item.title);
+                $title.css('padding-left', level * 15 + 'px');
                 $parent.append($item);
                 if (item.id !== undefined) {
                     that.idKeyMap[item.id] = that.key;
@@ -179,7 +183,7 @@
                     } else {
                         $title.append(tpl.down + tpl.up);
                     }
-                    that.appendItem(item.children, $ul);
+                    that.appendItem(item.children, $ul, level + 1);
                     if (that.option.spread || item.spread) {
                         // 默认打开的组
                         if (that.showList.indexOf($ul[0]) == -1) {
@@ -246,9 +250,8 @@
         Class.prototype.toggle = function (key, spread) {
             var $li = this.$menu.find('.' + menuClass.group + '[data-key="' + key + '"]');
             var $ul = $li.children('.' + menuClass.ul);
-            $ul = $ul.length ? $ul : $li.children('div.' + menuClass.rightWrap);
             if (spread && !$ul.is(':visible') || !spread && $ul.is(':visible')) {
-                if ($ul.hasClass(menuClass.rightWrap)) {
+                if ($ul.hasClass(menuClass.ulRight)) {
                     $li.trigger('mouseenter');
                 } else {
                     $li.trigger('click');
@@ -265,7 +268,7 @@
         Class.prototype.getBindData = function (dom) {
             return this.dataMap[$(dom).attr('data-key')];
         }
-        
+
         // 绑定事件
         Class.prototype.bindEvent = function () {
             var that = this;
@@ -303,7 +306,7 @@
                 var data = that.getBindData(this);
                 var $ul = $this.children('.' + menuClass.ul);
                 clearTimeout(this.hideItemTimer);
-                $ul.show();
+                $ul.show().addClass(hoverRightAnimation);
                 that.trigger('spread', {
                     dom: this,
                     data: Common.delInnerProperty(data)
@@ -315,7 +318,7 @@
                 var data = that.getBindData(this);
                 // 延迟隐藏，当在100ms内到达右侧子菜单面板时取消隐藏
                 this.hideItemTimer = setTimeout(function () {
-                    $this.children('.' + menuClass.ul).hide();
+                    $this.children('.' + menuClass.ul).hide().removeClass(hoverRightAnimation);
                     that.trigger('close', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -345,6 +348,21 @@
                 var right = $(this).parent('.' + menuClass.right)[0];
                 // 到达右侧子菜单面板时取消隐藏
                 right && clearTimeout(right.hideItemTimer);
+            });
+
+            this.$menu.delegate('.' + menuClass.item, 'mouseenter', function () {
+                var $this = $(this);
+                clearTimeout(this.hoverTimer);
+                if (!$this.hasClass(menuClass.group) || $this.hasClass(menuClass.right)) {
+                    $this.addClass(menuClass.hover);
+                }
+            });
+
+            this.$menu.delegate('.' + menuClass.item, 'mouseleave', function () {
+                var $this = $(this);
+                this.hoverTimer = setTimeout(function () {
+                    $this.removeClass(menuClass.hover);
+                }, $this.hasClass(menuClass.right) ? 100 : 0);
             });
         }
 

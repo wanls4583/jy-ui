@@ -81,7 +81,7 @@
                 $layer.addClass(animation);
                 setTimeout(function () {
                     $layer.removeClass(animation);
-                }, 300);
+                }, ieVersion >= 9 ? 300 : 0);
             }
             if (option.full) {
                 $title.find('i.song-op-minus').show();

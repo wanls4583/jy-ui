@@ -1939,13 +1939,8 @@ textarea {
 
 .song-menu-item {
   position: relative;
-  padding-left: 15px;
   color: #666666;
   cursor: pointer;
-}
-
-.song-menu-item:hover {
-  background-color: #f6f6f6;
 }
 
 .song-menu-checked {
@@ -1969,14 +1964,6 @@ textarea {
 
 .song-menu-group:after {
   display: none;
-}
-
-.song-menu-group:hover {
-  background-color: transparent;
-}
-
-.song-menu-right:hover {
-  background-color: #f6f6f6;
 }
 
 .song-menu-ul-right {
@@ -2026,6 +2013,84 @@ textarea {
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
+}
+
+.song-menu-hover {
+  background-color: #f6f6f6;
+}
+
+.song-menu-animation-hover-right {
+  -webkit-animation-name: song-layer-keyframes-hover-right;
+          animation-name: song-layer-keyframes-hover-right;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+.song-menu-animation-hover-down {
+  -webkit-animation-name: song-layer-keyframes-hover-down;
+          animation-name: song-layer-keyframes-hover-down;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes song-layer-keyframes-hover-right {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-10px);
+            transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes song-layer-keyframes-hover-right {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-10px);
+            transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@-webkit-keyframes song-layer-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes song-layer-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
 }
 
 .song-tree-search {
