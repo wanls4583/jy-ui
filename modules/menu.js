@@ -110,7 +110,7 @@
                             that.$menu.toggle();
                         }
                         if (that.$menu[0].offsetWidth < that.$elem[0].offsetWidth) {
-                            that.$menu.css('width', that.$elem[0].offsetWidth);
+                            that.$menu.css('width', that.$elem[0].offsetWidth - (ieVersion <= 6 ? 0 : 2));
                         }
                         return false;
                     });

@@ -620,8 +620,8 @@ textarea {
 }
 
 .song-layer-animation-stretch {
-  -webkit-animation-name: song-stretch;
-          animation-name: song-stretch;
+  -webkit-animation-name: song-layer-keyframes-stretch;
+          animation-name: song-layer-keyframes-stretch;
   -webkit-animation-duration: 0.2s;
           animation-duration: 0.2s;
   -webkit-animation-timing-function: ease-out;
@@ -631,8 +631,8 @@ textarea {
 }
 
 .song-layer-animation-fade-out {
-  -webkit-animation-name: song-fade-out;
-          animation-name: song-fade-out;
+  -webkit-animation-name: song-layer-keyframes-fade-out;
+          animation-name: song-layer-keyframes-fade-out;
   -webkit-animation-duration: 0.2s;
           animation-duration: 0.2s;
   -webkit-animation-timing-function: ease-out;
@@ -642,14 +642,75 @@ textarea {
 }
 
 .song-layer-animation-fade-in {
-  -webkit-animation-name: song-fade-in;
-          animation-name: song-fade-in;
+  -webkit-animation-name: song-layer-keyframes-fade-in;
+          animation-name: song-layer-keyframes-fade-in;
   -webkit-animation-duration: 0.2s;
           animation-duration: 0.2s;
   -webkit-animation-timing-function: ease-out;
           animation-timing-function: ease-out;
   -webkit-animation-fill-mode: forwards;
           animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes song-layer-keyframes-stretch {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes song-layer-keyframes-stretch {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@-webkit-keyframes song-layer-keyframes-fade-out {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+}
+
+@keyframes song-layer-keyframes-fade-out {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+}
+
+@keyframes song-layer-keyframes-fade-out {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
 }
 
 .song-pager {
@@ -1302,8 +1363,8 @@ textarea {
   top: 50%;
   left: 50%;
   line-height: 36px;
-  -webkit-animation-name: song-rotate;
-          animation-name: song-rotate;
+  -webkit-animation-name: song-table-keyframes-rotate;
+          animation-name: song-table-keyframes-rotate;
   -webkit-animation-duration: 1s;
           animation-duration: 1s;
   -webkit-animation-timing-function: linear;
@@ -1489,6 +1550,28 @@ textarea {
 .song-table-select-dl dd.song-table-select-active {
   background-color: #5FB878;
   color: #ffffff;
+}
+
+@-webkit-keyframes song-table-keyframes-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes song-table-keyframes-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 
 .song-date {
@@ -2566,88 +2649,5 @@ hr {
 
 .song-border-danger {
   border: 1px solid #FF5722;
-}
-
-@-webkit-keyframes song-rotate {
-  0% {
-    -webkit-transform: rotate(0);
-            transform: rotate(0);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
-}
-
-@keyframes song-rotate {
-  0% {
-    -webkit-transform: rotate(0);
-            transform: rotate(0);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
-}
-
-@-webkit-keyframes song-stretch {
-  0% {
-    -webkit-transform: scale(0);
-            transform: scale(0);
-  }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-}
-
-@keyframes song-stretch {
-  0% {
-    -webkit-transform: scale(0);
-            transform: scale(0);
-  }
-  100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-}
-
-@-webkit-keyframes song-fade-out {
-  0% {
-    opacity: 0;
-    -webkit-transform: scale(0);
-            transform: scale(0);
-  }
-  100% {
-    opacity: 1;
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
-  }
-}
-
-@keyframes song-fade-out {
-  0% {
-    opacity: 0;
-    -webkit-transform: scale(0);
-            transform: scale(0);
-  }
-  100% {
-    opacity: 1;
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
-  }
-}
-
-@keyframes song-fade-out {
-  0% {
-    opacity: 1;
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
-  }
 }
 /*# sourceMappingURL=song-ui.css.map */
