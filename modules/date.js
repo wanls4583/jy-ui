@@ -126,7 +126,8 @@
             showYearMonth: 'song-date-show-year-month',
             showDate: 'song-date-show-date',
             showTime: 'song-date-show-time',
-            disabled: 'song-date-btn-disabled'
+            disabled: 'song-date-btn-disabled',
+            downAnimation: 'song-date-animation-hover-down'
         }
 
         var ieVersion = Common.getIeVersion();
@@ -165,6 +166,7 @@
                 } else {
                     this.$elem.on(this.trigger, function () {
                         _render();
+                        that.data.$date.addClass(dateClass.downAnimation);
                     });
                     $(docBody).on('click', function () {
                         that.cancel();
