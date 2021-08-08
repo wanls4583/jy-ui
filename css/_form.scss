@@ -128,7 +128,7 @@
     _height: $input-height;
     line-height: $input-height - 2px;
     padding: 0 0 0 $pd15;
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
     border-radius: 2px;
     outline: none;
     // ie6默认是border-box，ie7默认是content-box，ie6、ie7都不支持box-siziong
@@ -152,7 +152,7 @@
     *padding: 0 !important;
     _padding: 6px 10px;
     resize: vertical;
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
     border-radius: 2px;
     outline: none;
     box-sizing: border-box;
@@ -191,12 +191,12 @@
 
     // ie6多类选择器是或的关系，不是与的关系，song-disabled这种类名容易被其他样式覆盖
     &.song-switch-disabled {
-        border-color: $light-color;
+        border-color: $disabled-border-color;
         color: $disabled-color;
         cursor: not-allowed;
 
         i {
-            background-color: $light-color;
+            background-color: $disabled-background-color;
         }
     }
 
@@ -204,7 +204,7 @@
         padding-left: 5px;
         padding-right: 25px;
         background-color: $link-color;
-        border-color: $light-color;
+        border-color: $link-color;
         color: $white-color;
         text-align: left;
 
@@ -265,12 +265,12 @@
 
         .song-checkbox-icon {
             color: $disabled-color;
-            border-color: $light-color;
+            border-color: $disabled-border-color;
         }
 
         &.song-checkbox-checked {
             .song-checkbox-icon {
-                background-color: $light-color;
+                background-color: $disabled-background-color;
             }
         }
     }
@@ -310,7 +310,7 @@
 
         .song-radio-icon-checked,
         .song-radio-icon-uncheck {
-            color: $light-color;
+            color: $disabled-color;
         }
     }
 
@@ -383,7 +383,7 @@
             cursor: pointer;
 
             &:hover {
-                background-color: $light-color;
+                background-color: $hover-background-color
             }
 
             &.song-select-active {
@@ -397,7 +397,7 @@
 // 字段集区块
 .song-field {
     padding: 0;
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
 
     &.song-field-title {
         border-style: none;

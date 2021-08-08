@@ -95,7 +95,7 @@ hr {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-bottom: 1px solid $light-color;
+    border-bottom: 1px solid $border-color;
     // ie7及以下使用color可以更改hr颜色
 }
 
@@ -172,7 +172,7 @@ hr {
 
 // border颜色
 .song-border {
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
 
     &-blue {
         border-color: $blue-color;

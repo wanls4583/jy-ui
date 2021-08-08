@@ -1,6 +1,6 @@
 .song-date {
     position: absolute;
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
     background-color: $white-color;
     font-size: 14px;
@@ -21,7 +21,7 @@
         padding: $pd10;
         line-height: 30px;
         text-align: center;
-        border-bottom: 1px solid $light-color;
+        border-bottom: 1px solid $border-color;
         overflow: hidden;
         *zoom: 1;
         user-select: none;
@@ -98,7 +98,7 @@
             cursor: pointer;
 
             &:hover {
-                background-color: $light-color;
+                background-color: $hover-background-color;
             }
         }
 
@@ -126,7 +126,7 @@
         position: relative;
         line-height: 24px;
         padding: $pd10;
-        border-top: 1px solid $light-color;
+        border-top: 1px solid $border-color;
         font-size: 12px;
         user-select: none;
 
@@ -149,7 +149,7 @@
         padding: 0 $pd10;
         margin-left: -1px;
         _margin-left: 0;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         font-size: 12px;
         vertical-align: middle;
         cursor: pointer;
@@ -194,7 +194,7 @@
             _height: 180px;
             overflow: hidden;
             *overflow-y: auto;
-            border: 1px solid $light-color;
+            border: 1px solid $border-color;
 
             &:hover {
                 overflow-y: auto;
@@ -229,7 +229,7 @@
             cursor: pointer;
 
             &:hover {
-                background-color: $light-color;
+                background-color: $hover-background-color;
             }
         }
     }
@@ -343,7 +343,7 @@
         position: absolute;
         width: 274px * 2 + 1px;
         _width: 274px * 2 + 2px;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
         background-color: $white-color;
         font-size: 0;
@@ -357,7 +357,7 @@
             }
 
             &:first-child {
-                border-right: 1px solid $light-color;
+                border-right: 1px solid $border-color;
             }
         }
     }

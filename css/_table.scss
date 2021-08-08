@@ -22,7 +22,7 @@
         // position: relative;
         line-height: 28px;
         padding: 0;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         font-size: 14px;
 
         .song-table-radio,
@@ -80,7 +80,7 @@
             width: 24px;
             line-height: $input-height;
             background-color: $white-color;
-            border-left: 1px solid $light-color;
+            border-left: 1px solid $border-color;
             font-family: 'iconfont';
             font-size: 16px;
             text-align: center;
@@ -148,7 +148,7 @@
     &-view {
         position: relative;
         width: 100%;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         background-color: $white-color;
     }
 
@@ -186,7 +186,7 @@
         _height: 30px;
         padding: $pd10 $pd15;
         padding-right: 130px;
-        border-bottom: 1px solid $light-color;
+        border-bottom: 1px solid $border-color;
         background-color: $white-color;
     }
 
@@ -233,7 +233,7 @@
 
     &-pager {
         // text-align: center;
-        border-top: 1px solid $light-color;
+        border-top: 1px solid $border-color;
 
         .song-pager {
             display: inline-block;
@@ -267,7 +267,7 @@
         padding: 9px $pd15;
         margin-right: 13px;
         background-color: $white-color;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
 
         &-close {
@@ -294,7 +294,7 @@
         left: 0;
         top: 0;
         z-index: 1;
-        border-right: 1px solid $light-color;
+        border-right: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
 
         th:last-child,
@@ -308,7 +308,7 @@
         top: 0;
         right: 0;
         z-index: 1;
-        border-left: 1px solid $light-color;
+        border-left: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
 
         .song-table-mend {
@@ -323,7 +323,7 @@
 
     &-fixed-main {
         position: relative;
-        border-bottom: 1px solid $light-color;
+        border-bottom: 1px solid $border-color;
         overflow: hidden;
         transform: translate3d(0, 0, 0);
     }
@@ -361,7 +361,7 @@
     &-resize-line {
         position: absolute;
         z-index: 999999;
-        border-left: 1px solid $light-color;
+        border-left: 1px solid $border-color;
     }
 
     // 排序
@@ -433,7 +433,7 @@
         padding: 10px 20px;
         font-size: 12px;
         background-color: $white-color;
-        border: 1px solid $light-color;
+        border: 1px solid $border-color;
         border-radius: 2px;
         box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
     }
@@ -629,7 +629,7 @@
                 cursor: pointer;
 
                 &:hover {
-                    background-color: $light-color;
+                    background-color: $hover-background-color;
                 }
 
                 &.song-table-select-active {

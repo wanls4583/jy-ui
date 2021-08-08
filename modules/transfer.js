@@ -48,6 +48,7 @@
             checkbox: 'song-transfer-checkbox',
             checked: 'song-transfer-checked',
             disabled: 'song-transfer-disabled',
+            checkedDisabled: 'song-tree-checked-disabled',
             empty: 'song-transfer-empty'
         }
 
@@ -180,11 +181,15 @@
                 item._song_hidden = false;
                 item._song_checked = item._song_checked || item.checked && !item.disabled;
                 item._song_disabled = item._song_disabled || item.disabled;
-                if (item._song_checked) {
-                    $item.addClass(transferClass.checked);
-                }
-                if (item._song_disabled) {
-                    $item.addClass(transferClass.disabled);
+                if (item._song_checked && item._song_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
+                    $item.addClass(transferClass.checkedDisabled);
+                } else {
+                    if (item._song_checked) {
+                        $item.addClass(transferClass.checked);
+                    }
+                    if (item._song_disabled) {
+                        $item.addClass(transferClass.disabled);
+                    }
                 }
             });
         }

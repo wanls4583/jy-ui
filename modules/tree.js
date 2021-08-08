@@ -34,6 +34,7 @@
             checkbox: 'song-tree-checkbox',
             checked: 'song-tree-checked',
             disabled: 'song-tree-disabled',
+            checkedDisabled: 'song-tree-checked-disabled',
             search: 'song-tree-search',
             ul: 'song-tree-ul',
             vLine: 'song-tree-v-line',
@@ -136,8 +137,19 @@
             this.bindEvent();
             this.showList.map(function (item) {
                 var $item = $(item);
-                $item.children('div.' + treeClass.title).children('div.' + treeClass.clickIcon).toggle();
-                $item.children('div.' + treeClass.ul).show();
+                var $title = $item.children('div.' + treeClass.title);
+                var $ul = $item.children('.' + treeClass.ul);
+                $title.children('div.' + treeClass.clickIcon).toggle();
+                $ul.show();
+                if (ieVersion <= 6) {
+                    setTimeout(function () {
+                        $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
+                        $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
+                            $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                            console.log(ul.offsetHeight);
+                        });
+                    });
+                }
             });
             ieVersion <= 7 && this.$tree.addClass(treeClass.ieHack);
         }
@@ -176,11 +188,15 @@
                 $parent.append($item);
                 item._song_checked = item._song_checked || item.checked;
                 item._song_disabled = item._song_disabled || item.disabled;
-                if (item._song_checked && that.showCheckbox) {
-                    $title.addClass(treeClass.checked);
-                }
-                if (item._song_disabled) {
-                    $title.addClass(treeClass.disabled);
+                if (item._song_checked && that.showCheckbox && item._song_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
+                    $title.addClass(treeClass.checkedDisabled);
+                } else {
+                    if (item._song_disabled) {
+                        $title.addClass(treeClass.disabled);
+                    }
+                    if (item._song_checked && that.showCheckbox) {
+                        $title.addClass(treeClass.checked);
+                    }
                 }
                 if (item.children && item.children.length) {
                     var $ul = $(Common.htmlTemplate(tpl.ul, {
@@ -272,6 +288,9 @@
                 var $title = $(dom);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
+                if (data._song_disabled) {
+                    return;
+                }
                 if (data._song_checked) {
                     $title.addClass(treeClass.checked);
                 } else {
@@ -307,10 +326,12 @@
                     _showAnimation($ul);
                 }
             }
-            if (!ieVersion && ieVersion <= 6) {
-                $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
-                $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
-                    $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+            if (!visible && ieVersion <= 6) {
+                setTimeout(function () {
+                    $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
+                    $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
+                        $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                    });
                 });
             }
 

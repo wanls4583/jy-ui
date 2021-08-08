@@ -1,7 +1,7 @@
 .song-menu {
     position: absolute;
     padding: 5px 0;
-    border: 1px solid $light-color;
+    border: 1px solid $border-color;
     border-radius: 2px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
     background-color: #fff;
@@ -58,7 +58,7 @@
             left: 100%;
             margin-left: 10px;
             padding: 5px 0;
-            border: 1px solid $light-color;
+            border: 1px solid $border-color;
             border-radius: 2px;
             box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
             background-color: #fff;
@@ -68,7 +68,7 @@
 
     &-border {
         margin: 5px 0;
-        border-top: 1px solid $light-color;
+        border-top: 1px solid $border-color;
     }
 
     &-item-title {
