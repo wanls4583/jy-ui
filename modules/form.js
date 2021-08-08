@@ -529,9 +529,9 @@
                         var $ul = $(select).next('.' + formClass.select);
                         $ul.find('dl.' + formClass.selectBody).hide();
                         // 解决ie7及以下定位bugfix
-                        // $ul.removeClass(formClass.selectOpen);
+                        $ul.removeClass(formClass.selectOpen);
                     });
-                    // $dom.addClass(formClass.selectOpen);
+                    $dom.addClass(formClass.selectOpen);
                     $cont.children('dd').show();
                     $cont.show();
                 }
