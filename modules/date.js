@@ -487,7 +487,7 @@
 
         // 渲染年月选择器
         Class.prototype.renderMonth = function () {
-            this.data.format = this.option.format || 'yyyy-MM';
+            this.data.format = this.option.format || (this.data.type === 'yearmonth' ? 'yyyy-MM' : 'MM');
             if (typeof this.data.value === 'string' && this.data.value) {
                 this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
