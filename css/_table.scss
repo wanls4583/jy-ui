@@ -639,6 +639,13 @@
             }
         }
     }
+
+    &-animation-hover-down {
+        animation-name: song-table-keyframes-hover-down;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
 }
 
 @keyframes song-table-keyframes-rotate {
@@ -648,5 +655,17 @@
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes song-table-keyframes-hover-down {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

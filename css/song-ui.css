@@ -1600,6 +1600,17 @@ textarea {
   color: #ffffff;
 }
 
+.song-table-animation-hover-down {
+  -webkit-animation-name: song-table-keyframes-hover-down;
+          animation-name: song-table-keyframes-hover-down;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
 @-webkit-keyframes song-table-keyframes-rotate {
   0% {
     -webkit-transform: rotate(0);
@@ -1619,6 +1630,32 @@ textarea {
   100% {
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes song-table-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes song-table-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
   }
 }
 

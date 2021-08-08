@@ -70,7 +70,8 @@
             select: 'song-table-select',
             selectTitle: 'song-table-select-title',
             selectActive: 'song-table-select-active',
-            empty: 'song-table-empty'
+            empty: 'song-table-empty',
+            downAnimation: 'song-table-animation-hover-down'
         }
         var tpl = {
             table: '<table class="song-table"></table>',
@@ -366,8 +367,8 @@
             this.cols.map(function (col) {
                 col.fixed = undefined;
                 // 确保只有一个选中类型有效
-                if(col.type == 'radio' || col.type == 'checkbox') {
-                    if(that.initCols.hasTyped) {
+                if (col.type == 'radio' || col.type == 'checkbox') {
+                    if (that.initCols.hasTyped) {
                         col.type = 'text';
                         col.hidden = true;
                     }
@@ -2614,8 +2615,14 @@
                 that.on('filter', function (e) {
                     if (that.$filter) {
                         that.$filter.toggle();
+                        if (that.$filter.is(':visible')) {
+                            that.$filter.addClass(tableClass.downAnimation);
+                        } else {
+                            that.$filter.removeClass(tableClass.downAnimation);
+                        }
                     } else {
                         that.createFilter(e.dom);
+                        that.$filter.addClass(tableClass.downAnimation);
                     }
                     that.$exports && that.$exports.hide();
                     that.tempData.stopBodyEvent = true;
@@ -2625,6 +2632,11 @@
                     that.$exports.toggle();
                     that.$filter && that.$filter.hide();
                     that.tempData.stopBodyEvent = true;
+                    if (that.$exports.is(':visible')) {
+                        that.$exports.addClass(tableClass.downAnimation);
+                    } else {
+                        that.$exports.removeClass(tableClass.downAnimation);
+                    }
                 });
                 // 导出事件
                 that.on('exports-excel', function (e) {
