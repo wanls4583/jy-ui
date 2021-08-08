@@ -267,10 +267,19 @@
             color: $disabled-color;
             border-color: $disabled-border-color;
         }
+    }
 
-        &.song-checkbox-checked {
-            .song-checkbox-icon {
-                background-color: $disabled-background-color;
+    &.song-checkbox-checked-disabled {
+        color: $disabled-color;
+        cursor: not-allowed;
+
+        .song-checkbox-icon {
+            color: $disabled-color;
+            border-color: $disabled-border-color;
+            background-color: $disabled-background-color;
+
+            i {
+                display: inline;
             }
         }
     }

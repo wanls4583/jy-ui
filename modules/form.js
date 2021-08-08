@@ -22,6 +22,7 @@
             checkbox: 'song-form-checkbox',
             checkboxDisabled: 'song-checkbox-disabled',
             checkboxCheckd: 'song-checkbox-checked',
+            checkboxCheckedDisabled: 'song-checkbox-checked-disabled',
             select: 'song-form-select',
             selectOpen: 'song-form-select-open',
             selectTitle: 'song-select-title',
@@ -369,18 +370,24 @@
                 var $input = $(input);
                 var ignore = $input.attr('song-ignore') === undefined ? false : true;
                 var classNames = [formClass.checkbox];
+                var disabled = $input.prop('disabled');
+                var checked = $input.prop('checked')
                 // 忽略标签
                 if (ignore) {
                     input.$ui && input.$ui.remove();
                     return;
                 }
-                // 已禁用
-                if ($input.prop('disabled')) {
-                    classNames.push(formClass.checkboxDisabled);
-                }
-                // 已选中
-                if ($input.prop('checked')) {
-                    classNames.push(formClass.checkboxCheckd);
+                if(checked && disabled) {
+                    classNames.push(formClass.checkboxCheckedDisabled);
+                } else {
+                    // 已禁用
+                    if (disabled) {
+                        classNames.push(formClass.checkboxDisabled);
+                    }
+                    // 已选中
+                    if (checked) {
+                        classNames.push(formClass.checkboxCheckd);
+                    }
                 }
                 // 已经渲染过
                 if (input.$ui) {
