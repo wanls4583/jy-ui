@@ -11,6 +11,7 @@
         var radioIcon = '&#xe619;';
         var ieVersion = Common.getIeVersion();
         var docBody = window.document.body;
+        var docElement = window.document.documentElement;
         var bindedBodyEvent = false;
         var formClass = {
             switchClass: 'song-form-switch',
@@ -29,7 +30,8 @@
             selectBody: 'song-select-dl',
             selectHolder: 'song-color-holder',
             selectDisabled: 'song-select-disabled',
-            selectActive: 'song-select-active'
+            selectActive: 'song-select-active',
+            selectAnimation: 'song-form-animation-hover-down'
         }
         var verifyRules = {
             required: {
@@ -143,7 +145,7 @@
                 if (input.type == 'text' || input.type == 'hidden' || input.type == 'password') {
                     name && (data[name] = value);
                 } else if (input.type == 'radio') {
-                    if(!data[name]) {
+                    if (!data[name]) {
                         data[name] = '';
                         $input.prop('checked') && name && (data[name] = value);
                     }
@@ -377,7 +379,7 @@
                     input.$ui && input.$ui.remove();
                     return;
                 }
-                if(checked && disabled) {
+                if (checked && disabled) {
                     classNames.push(formClass.checkboxCheckedDisabled);
                 } else {
                     // 已禁用
@@ -527,13 +529,21 @@
                     // 其他选择框都收起
                     $container[0].selects.map(function (select) {
                         var $ul = $(select).next('.' + formClass.select);
-                        $ul.find('dl.' + formClass.selectBody).hide();
+                        $ul.find('dl.' + formClass.selectBody).hide().removeClass(formClass.selectAnimation);
                         // 解决ie7及以下定位bugfix
                         $ul.removeClass(formClass.selectOpen);
                     });
                     $dom.addClass(formClass.selectOpen);
-                    $cont.children('dd').show();
-                    $cont.show();
+                    $cont.show().addClass(formClass.selectAnimation);
+                    var rect = $title[0].getBoundingClientRect();
+                    var winHeight = docElement.clientHeight || docBody.clientHeight;
+                    var height = $cont[0].offsetHeight;
+                    // 使下拉框在可视范围内
+                    if (rect.bottom + 5 + height > winHeight && rect.top - 5 - height > 0) {
+                        $cont.css('top', -height - 10);
+                    } else {
+                        $cont.css('top', '100%');
+                    }
                 }
                 return false;
             });
@@ -542,7 +552,7 @@
                 var $dd = $cont.find('dd.' + formClass.selectActive);
                 // 输入框显示已选中的项
                 $input.val($dd.attr('data-value') && $dd.text() || '');
-                $cont.hide();
+                $cont.hide().removeClass(formClass.selectAnimation);
                 $dom.removeClass(formClass.selectOpen);
                 setTimeout(function () {
                     $input.blur()

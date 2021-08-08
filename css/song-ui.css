@@ -424,7 +424,7 @@ textarea {
   left: 0;
   z-index: 1;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 5px;
   background-color: #ffffff;
   border: 1px solid #d2d2d2;
   border-radius: 2px;
@@ -468,6 +468,43 @@ textarea {
 
 .song-field .song-field-box {
   padding: 15px;
+}
+
+.song-form-animation-hover-down {
+  -webkit-animation-name: song-form-keyframes-hover-down;
+          animation-name: song-form-keyframes-hover-down;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes song-form-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes song-form-keyframes-hover-down {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
 }
 
 .song-layer-shadow {
@@ -1952,6 +1989,10 @@ textarea {
   position: relative;
   color: #666666;
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .song-menu-checked {
@@ -2055,8 +2096,8 @@ textarea {
 @-webkit-keyframes song-layer-keyframes-hover-right {
   0% {
     opacity: 0;
-    -webkit-transform: translateX(-10px);
-            transform: translateX(-10px);
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
   }
   100% {
     opacity: 1;
@@ -2068,8 +2109,8 @@ textarea {
 @keyframes song-layer-keyframes-hover-right {
   0% {
     opacity: 0;
-    -webkit-transform: translateX(-10px);
-            transform: translateX(-10px);
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
   }
   100% {
     opacity: 1;
@@ -2081,8 +2122,8 @@ textarea {
 @-webkit-keyframes song-layer-keyframes-hover-down {
   0% {
     opacity: 0;
-    -webkit-transform: translateY(-10px);
-            transform: translateY(-10px);
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
   }
   100% {
     opacity: 1;
@@ -2094,8 +2135,8 @@ textarea {
 @keyframes song-layer-keyframes-hover-down {
   0% {
     opacity: 0;
-    -webkit-transform: translateY(-10px);
-            transform: translateY(-10px);
+    -webkit-transform: translateY(20px);
+            transform: translateY(20px);
   }
   100% {
     opacity: 1;

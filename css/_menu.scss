@@ -26,6 +26,7 @@
         position: relative;
         color: #666666;
         cursor: pointer;
+        user-select: none;
     }
 
     &-checked {
@@ -122,7 +123,7 @@
 @keyframes song-layer-keyframes-hover-right {
     0% {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateX(-20px);
     }
 
     100% {
@@ -134,7 +135,7 @@
 @keyframes song-layer-keyframes-hover-down {
     0% {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(20px);
     }
 
     100% {
