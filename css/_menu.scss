@@ -106,21 +106,21 @@
     }
 
     &-animation-hover-right {
-        animation-name: song-layer-keyframes-hover-right;
+        animation-name: song-menu-keyframes-hover-right;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 
     &-animation-hover-down {
-        animation-name: song-layer-keyframes-hover-down;
+        animation-name: song-menu-keyframes-hover-down;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 }
 
-@keyframes song-layer-keyframes-hover-right {
+@keyframes song-menu-keyframes-hover-right {
     0% {
         opacity: 0;
         transform: translateX(-20px);
@@ -132,7 +132,7 @@
     }
 }
 
-@keyframes song-layer-keyframes-hover-down {
+@keyframes song-menu-keyframes-hover-down {
     0% {
         opacity: 0;
         transform: translateY(20px);

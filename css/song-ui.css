@@ -2109,8 +2109,8 @@ textarea {
 }
 
 .song-menu-animation-hover-right {
-  -webkit-animation-name: song-layer-keyframes-hover-right;
-          animation-name: song-layer-keyframes-hover-right;
+  -webkit-animation-name: song-menu-keyframes-hover-right;
+          animation-name: song-menu-keyframes-hover-right;
   -webkit-animation-duration: 0.2s;
           animation-duration: 0.2s;
   -webkit-animation-timing-function: ease-out;
@@ -2120,8 +2120,8 @@ textarea {
 }
 
 .song-menu-animation-hover-down {
-  -webkit-animation-name: song-layer-keyframes-hover-down;
-          animation-name: song-layer-keyframes-hover-down;
+  -webkit-animation-name: song-menu-keyframes-hover-down;
+          animation-name: song-menu-keyframes-hover-down;
   -webkit-animation-duration: 0.2s;
           animation-duration: 0.2s;
   -webkit-animation-timing-function: ease-out;
@@ -2130,7 +2130,7 @@ textarea {
           animation-fill-mode: forwards;
 }
 
-@-webkit-keyframes song-layer-keyframes-hover-right {
+@-webkit-keyframes song-menu-keyframes-hover-right {
   0% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
@@ -2143,7 +2143,7 @@ textarea {
   }
 }
 
-@keyframes song-layer-keyframes-hover-right {
+@keyframes song-menu-keyframes-hover-right {
   0% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
@@ -2156,7 +2156,7 @@ textarea {
   }
 }
 
-@-webkit-keyframes song-layer-keyframes-hover-down {
+@-webkit-keyframes song-menu-keyframes-hover-down {
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
@@ -2169,7 +2169,7 @@ textarea {
   }
 }
 
-@keyframes song-layer-keyframes-hover-down {
+@keyframes song-menu-keyframes-hover-down {
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
