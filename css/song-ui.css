@@ -2056,7 +2056,7 @@ textarea {
 }
 
 .song-menu-ie-hack .song-menu-item, .song-menu-ie-hack .song-menu-item-title, .song-menu-ie-hack .song-menu-ul {
-  *zoom: 1;
+  _zoom: 1;
 }
 
 .song-menu-item {

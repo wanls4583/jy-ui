@@ -4,11 +4,11 @@
         var upIcon = '&#xe757;';
         var rightIcon = '&#xe734;';
         var tpl = {
-            menu: '<div class="song-menu"></div>',
-            ul: '<div class="song-menu-ul"></div>',
-            item: '<div class="song-menu-item">\
+            menu: '<ul class="song-menu"></ul>',
+            ul: '<ul class="song-menu-ul"></ul>',
+            item: '<li class="song-menu-item">\
                 <div class="song-menu-item-title"></div>\
-            </div>',
+            </li>',
             right: '<i class="song-menu-icon song-menu-right-icon">' + rightIcon + '</i>',
             down: '<i class="song-menu-icon song-menu-down-icon">' + downIcon + '</i>',
             up: '<i class="song-menu-icon song-menu-up-icon">' + upIcon + '</i>',
