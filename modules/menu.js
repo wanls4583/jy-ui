@@ -5,8 +5,8 @@
         var rightIcon = '&#xe734;';
         var tpl = {
             menu: '<ul class="song-menu"></ul>',
-            ul: '<ul class="song-menu-ul"></ul>',
-            item: '<li class="song-menu-item">\
+            ul: '<ul></ul>',
+            item: '<li>\
                 <div class="song-menu-item-title"></div>\
             </li>',
             right: '<i class="song-menu-icon song-menu-right-icon">' + rightIcon + '</i>',
@@ -17,13 +17,11 @@
 
         var menuClass = {
             menu: 'song-menu',
-            ul: 'song-menu-ul',
             ulRight: 'song-menu-ul-right',
-            item: 'song-menu-item',
             title: 'song-menu-item-title',
-            group: 'song-menu-group',
+            group: 'song-menu-item-group',
             static: 'song-menu-static',
-            right: 'song-menu-right',
+            right: 'song-menu-item-right',
             border: 'song-menu-border',
             checked: 'song-menu-checked',
             icon: 'song-menu-icon',
@@ -141,7 +139,7 @@
                 this.$menu.addClass(menuClass.ieHack);
             }
             // 处理完毕后隐藏掉所有分组
-            this.$menu.find('.' + menuClass.ul).hide();
+            this.$menu.find('ul').hide();
             // 默认打开的组
             this.showList.map(function (ul) {
                 $(ul).show();
@@ -190,7 +188,7 @@
                             that.showList.push($ul[0]);
                         }
                         // 父容器
-                        $ul.parents('.' + menuClass.ul).each(function (i, ul) {
+                        $ul.parents('ul').each(function (i, ul) {
                             if (that.showList.indexOf(ul) == -1) {
                                 var $title = $(ul).prev('.' + menuClass.title);
                                 that.showList.push(ul);
@@ -224,7 +222,7 @@
         // 设置子组的宽度(防止ie7及以下浏览器布局错误)
         Class.prototype.setUlWidth = function () {
             this.$menu.css('width', this.$menu[0].offsetWidth);
-            this.$menu.find('.' + menuClass.ul).each(function (i, ul) {
+            this.$menu.find('ul').each(function (i, ul) {
                 $(ul).css('width', ul.offsetWidth);
             });
         }
@@ -249,7 +247,7 @@
         // 打开/关闭菜单项
         Class.prototype.toggle = function (key, spread) {
             var $li = this.$menu.find('.' + menuClass.group + '[data-key="' + key + '"]');
-            var $ul = $li.children('.' + menuClass.ul);
+            var $ul = $li.children('ul');
             if (spread && !$ul.is(':visible') || !spread && $ul.is(':visible')) {
                 if ($ul.hasClass(menuClass.ulRight)) {
                     $li.trigger('mouseenter');
@@ -290,7 +288,7 @@
                 var $this = $(this);
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.right)) {
-                    var $ul = $this.children('.' + menuClass.ul);
+                    var $ul = $this.children('ul');
                     var $icon = $this.children('.' + menuClass.title).children('.' + menuClass.icon);
                     var visible = $ul.is(':visible');
                     $icon.toggle();
@@ -316,7 +314,7 @@
             this.$menu.delegate('.' + menuClass.right, 'mouseenter', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
-                var $ul = $this.children('.' + menuClass.ul);
+                var $ul = $this.children('ul');
                 clearTimeout(this.hideItemTimer);
                 $ul.show().addClass(hoverRightAnimation);
                 that.trigger('spread', {
@@ -330,7 +328,7 @@
                 var data = that.getBindData(this);
                 // 延迟隐藏，当在100ms内到达右侧子菜单面板时取消隐藏
                 this.hideItemTimer = setTimeout(function () {
-                    $this.children('.' + menuClass.ul).hide().removeClass(hoverRightAnimation);
+                    $this.children('ul').hide().removeClass(hoverRightAnimation);
                     that.trigger('close', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -338,14 +336,14 @@
                 }, 100);
             });
             // 选中事件
-            this.$menu.delegate('.' + menuClass.item, 'click', function () {
+            this.$menu.delegate('li', 'click', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
                 if (!$this.hasClass(menuClass.group)) {
                     if (that.option.check) {
                         that.$menu.find('.' + menuClass.checked).removeClass(menuClass.checked);
                         $this.addClass(menuClass.checked);
-                        $this.parents('.' + menuClass.item).addClass(menuClass.checked);
+                        $this.parents('li').addClass(menuClass.checked);
                     }
                     that.trigger('click', {
                         dom: this,
@@ -356,13 +354,13 @@
                 return false;
             });
             // 鼠标到达右侧组事件
-            this.$menu.delegate('.' + menuClass.ul, 'mouseenter', function () {
+            this.$menu.delegate('ul', 'mouseenter', function () {
                 var right = $(this).parent('.' + menuClass.right)[0];
                 // 到达右侧子菜单面板时取消隐藏
                 right && clearTimeout(right.hideItemTimer);
             });
             // hover事件
-            this.$menu.delegate('.' + menuClass.item, 'mouseenter', function () {
+            this.$menu.delegate('li', 'mouseenter', function () {
                 var $this = $(this);
                 clearTimeout(this.hoverTimer);
                 if (!$this.hasClass(menuClass.group) || $this.hasClass(menuClass.right)) {
@@ -370,7 +368,7 @@
                 }
             });
             // hover事件
-            this.$menu.delegate('.' + menuClass.item, 'mouseleave', function () {
+            this.$menu.delegate('li', 'mouseleave', function () {
                 var $this = $(this);
                 this.hoverTimer = setTimeout(function () {
                     $this.removeClass(menuClass.hover);

@@ -2055,11 +2055,12 @@ textarea {
   position: relative;
 }
 
-.song-menu-ie-hack .song-menu-item, .song-menu-ie-hack .song-menu-item-title, .song-menu-ie-hack .song-menu-ul {
+.song-menu-ie-hack li,
+.song-menu-ie-hack .song-menu-item-title {
   _zoom: 1;
 }
 
-.song-menu-item {
+.song-menu li {
   position: relative;
   color: #666666;
   cursor: pointer;
@@ -2069,12 +2070,12 @@ textarea {
           user-select: none;
 }
 
-.song-menu-checked {
+.song-menu li.song-menu-checked {
   color: #5FB878;
   background-color: #f6f6f6;
 }
 
-.song-menu-checked:after {
+.song-menu li.song-menu-checked:after {
   content: "";
   position: absolute;
   top: 0;
@@ -2084,12 +2085,37 @@ textarea {
   background-color: #5FB878;
 }
 
-.song-menu-group {
+.song-menu li.song-menu-item-group {
   background-color: transparent;
 }
 
-.song-menu-group:after {
+.song-menu li.song-menu-item-group:after {
   display: none;
+}
+
+.song-menu li .song-menu-item-title {
+  position: relative;
+  line-height: 36px;
+  padding-right: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-menu li .song-menu-item-title .song-menu-icon {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-menu li .song-menu-item-title .song-menu-down-icon,
+.song-menu li .song-menu-item-title .song-menu-right-icon {
+  display: block;
 }
 
 .song-menu-ul-right {
@@ -2108,31 +2134,6 @@ textarea {
 .song-menu-border {
   margin: 5px 0;
   border-top: 1px solid #eeeeee;
-}
-
-.song-menu-item-title {
-  position: relative;
-  line-height: 36px;
-  padding-right: 36px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.song-menu-item-title .song-menu-icon {
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 10px;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-
-.song-menu-item-title .song-menu-down-icon,
-.song-menu-item-title .song-menu-right-icon {
-  display: block;
 }
 
 .song-menu-icon {

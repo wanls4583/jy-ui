@@ -11,86 +11,83 @@
     }
 
     &-ie-hack {
-        .song-menu {
 
-            &-item,
-            &-item-title,
-            &-ul {
-                _zoom: 1;
-            }
+        li,
+        .song-menu-item-title {
+            _zoom: 1
         }
     }
 
-    &-item {
+    li {
         position: relative;
         color: #666666;
         cursor: pointer;
         user-select: none;
-    }
 
-    &-checked {
-        color: $link-color;
-        background-color: $lighter-color;
+        &.song-menu-checked {
+            color: $link-color;
+            background-color: $lighter-color;
 
-        &:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 3px;
-            height: 36px;
-            background-color: $link-color;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 3px;
+                height: 36px;
+                background-color: $link-color;
+            }
+        }
+
+        &.song-menu-item-group {
+            background-color: transparent;
+
+            &:after {
+                display: none;
+            }
+        }
+
+        .song-menu-item-title {
+            position: relative;
+            line-height: 36px;
+            padding-right: 36px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .song-menu-icon {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 10px;
+                user-select: none;
+            }
+
+            .song-menu-down-icon,
+            .song-menu-right-icon {
+                display: block;
+            }
         }
     }
 
-    &-group {
-        background-color: transparent;
 
-        &:after {
-            display: none;
-        }
-    }
 
-    &-ul {
-        &-right {
-            position: absolute;
-            top: -6px;
-            left: 100%;
-            margin-left: 10px;
-            padding: 5px 0;
-            border: 1px solid $border-color;
-            border-radius: 2px;
-            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
-            background-color: #fff;
-        }
+    &-ul-right {
+        position: absolute;
+        top: -6px;
+        left: 100%;
+        margin-left: 10px;
+        padding: 5px 0;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+        background-color: #fff;
     }
 
 
     &-border {
         margin: 5px 0;
         border-top: 1px solid $border-color;
-    }
-
-    &-item-title {
-        position: relative;
-        line-height: 36px;
-        padding-right: 36px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        .song-menu-icon {
-            display: none;
-            position: absolute;
-            top: 0;
-            right: 10px;
-            user-select: none;
-        }
-
-        .song-menu-down-icon,
-        .song-menu-right-icon {
-            display: block;
-        }
     }
 
     &-icon {
