@@ -2055,9 +2055,14 @@ textarea {
   position: relative;
 }
 
+.song-menu-static .song-menu-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .song-menu-ie-hack li,
 .song-menu-ie-hack .song-menu-item-title {
-  _zoom: 1;
+  *zoom: 1;
 }
 
 .song-menu li {
@@ -2098,11 +2103,14 @@ textarea {
   line-height: 36px;
   padding-right: 36px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.song-menu li .song-menu-item-title .song-menu-icon {
+.song-menu li.song-menu-hover {
+  color: #5FB878;
+  background-color: #f6f6f6;
+}
+
+.song-menu-down-icon, .song-menu-up-icon, .song-menu-right-icon {
   display: none;
   position: absolute;
   top: 0;
@@ -2113,8 +2121,7 @@ textarea {
           user-select: none;
 }
 
-.song-menu li .song-menu-item-title .song-menu-down-icon,
-.song-menu li .song-menu-item-title .song-menu-right-icon {
+.song-menu-right-icon, .song-menu-down-icon {
   display: block;
 }
 
@@ -2132,7 +2139,11 @@ textarea {
 }
 
 .song-menu-border {
+  *zoom: 1;
+  height: 0;
+  line-height: 0;
   margin: 5px 0;
+  font-size: 0;
   border-top: 1px solid #eeeeee;
 }
 
@@ -2140,10 +2151,6 @@ textarea {
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
-}
-
-.song-menu-hover {
-  background-color: #f6f6f6;
 }
 
 .song-menu-animation-hover-right {

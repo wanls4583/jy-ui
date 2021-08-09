@@ -8,13 +8,18 @@
 
     &-static {
         position: relative;
+
+        .song-menu-item-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 
     &-ie-hack {
 
         li,
         .song-menu-item-title {
-            _zoom: 1
+            *zoom: 1
         }
     }
 
@@ -52,25 +57,28 @@
             line-height: 36px;
             padding-right: 36px;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        }
 
-            .song-menu-icon {
-                display: none;
-                position: absolute;
-                top: 0;
-                right: 10px;
-                user-select: none;
-            }
-
-            .song-menu-down-icon,
-            .song-menu-right-icon {
-                display: block;
-            }
+        &.song-menu-hover {
+            color: $link-color;
+            background-color: $lighter-color;
         }
     }
 
+    &-down-icon,
+    &-up-icon,
+    &-right-icon {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 10px;
+        user-select: none;
+    }
 
+    &-right-icon,
+    &-down-icon {
+        display: block;
+    }
 
     &-ul-right {
         position: absolute;
@@ -86,7 +94,11 @@
 
 
     &-border {
+        *zoom: 1;
+        height: 0;
+        line-height: 0;
         margin: 5px 0;
+        font-size: 0;
         border-top: 1px solid $border-color;
     }
 
@@ -94,10 +106,6 @@
         font-family: "iconfont" !important;
         font-size: 16px;
         font-style: normal;
-    }
-
-    &-hover {
-        background-color: $lighter-color;
     }
 
     &-animation-hover-right {
