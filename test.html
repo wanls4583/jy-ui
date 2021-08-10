@@ -439,6 +439,15 @@
         </div>
     </fieldset>
     <fieldset class="song-field">
+        <legend>导航条</legend>
+        <div class="song-field-box">
+            <div style="padding:20px 0;">普通导航条</div>
+            <div id="nav1"></div>
+            <div style="padding:20px 0;">垂直导航条</div>
+            <div id="nav2" style="width:200px;"></div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
         <legend>树形组件</legend>
         <div class="song-field-box">
             <div id="tree1" style="width:200px;"></div>
@@ -481,6 +490,7 @@
 <script src="./modules/table.js"></script>
 <script src="./modules/date.js"></script>
 <script src="./modules/menu.js"></script>
+<script src="./modules/nav.js"></script>
 <script src="./modules/tree.js"></script>
 <script src="./modules/transfer.js"></script>
 <script>
@@ -937,13 +947,58 @@
         elem: '#menu2',
         trigger: 'hover',
         data: [{
-            title: 'item1'
+            title: '菜单1'
         },
         {
-            title: 'item2'
+            title: '菜单2'
         },
         {
-            title: 'item3'
+            title: '菜单3'
+        }]
+    });
+    SongUi.Nav.render({
+        elem: '#nav1',
+        data: [{
+            title: '导航菜单1'
+        },
+        {
+            title: '导航菜单2'
+        },
+        {
+            title: '导航菜单3',
+            children: [{
+                title: '菜单3-1'
+            }, {
+                title: '菜单3-2',
+                children: [{
+                    title: '菜单3-2-1'
+                }, {
+                    title: '菜单3-2-2'
+                }]
+            }]
+        }]
+    });
+    SongUi.Nav.render({
+        elem: '#nav2',
+        mode: 'vertical',
+        data: [{
+            title: '导航菜单1',
+            children: [{
+                title: '导航菜单1-1'
+            }, {
+                title: '导航菜单1-2',
+                children: [{
+                    title: '导航菜单1-2-1'
+                }, {
+                    title: '导航菜单1-2-2'
+                }]
+            }]
+        },
+        {
+            title: '导航菜单2'
+        },
+        {
+            title: '导航菜单3'
         }]
     });
     var tree = SongUi.Tree.render({

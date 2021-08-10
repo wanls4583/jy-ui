@@ -1,0 +1,173 @@
+.song-nav {
+    height: 60px;
+    background-color: #545c64;
+    border-radius: 2px;
+    *zoom: 1;
+
+    // ie8不支持::的模式
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    ul {
+        background-color: #545c64;
+    }
+
+    li {
+        position: relative;
+        float: left;
+        line-height: 60px;
+        color: #ffffff;
+        cursor: pointer;
+
+        .song-nav-hover {
+            background-color: #434a50;
+        }
+
+        .song-nav-checked {
+            background-color: #434a50;
+
+            &:after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background-color: $link-color;
+            }
+        }
+    }
+
+    a {
+        display: block;
+        padding: 0 20px;
+        color: #ffffff;
+        white-space: nowrap;
+    }
+
+    &-vertical {
+        height: auto;
+        padding: 5px 0;
+
+        li {
+            line-height: 50px;
+            float: none;
+
+            .song-nav-checked {
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    right: 0;
+                    width: 4px;
+                    height: 100%;
+                    background-color: $link-color;
+                }
+            }
+        }
+
+        a {
+            padding-right: 34px;
+        }
+
+        .song-nav-icon {
+            right: 10px;
+        }
+    }
+
+    &-hover-right,
+    &-hover-down {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1;
+        margin-top: 5px;
+        padding: 5px 0;
+        background-color: #ffffff;
+        border-radius: 2px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+
+        li {
+            line-height: 36px;
+            float: none;
+        }
+    }
+
+    &-hover-right {
+        top: 0;
+        left: 100%;
+        margin-top: -5px;
+        margin-left: 5px;
+    }
+
+    &-ie-hack {
+
+        li {
+            *zoom: 1
+        }
+    }
+
+    &-icon {
+        font-family: "iconfont" !important;
+        font-size: 14px;
+        font-style: normal;
+        right: 4px;
+    }
+
+    &-down-icon,
+    &-up-icon,
+    &-right-icon {
+        display: none;
+        position: absolute;
+        top: 0;
+        user-select: none;
+    }
+
+    &-right-icon,
+    &-down-icon {
+        display: block;
+    }
+
+    &-animation-hover-right {
+        animation-name: song-menu-keyframes-hover-right;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+
+    &-animation-hover-down {
+        animation-name: song-menu-keyframes-hover-down;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+}
+
+@keyframes song-menu-keyframes-hover-right {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes song-menu-keyframes-hover-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
