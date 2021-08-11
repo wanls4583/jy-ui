@@ -392,7 +392,7 @@
             <div id="menu1" style="width:200px"></div>
             <div style="padding:20px 0;">下拉菜单</div>
             <button class="song-btn" id="menu2">下拉菜单<i class="song-icon" style="font-size:14px;">&#xe74b;</i></button>
-            <div style="padding:20px 0;">静态菜单</div>
+            <!-- <div style="padding:20px 0;">静态菜单</div>
             <ul class="song-menu song-menu-static" song-menu-check="true" style="width:200px;">
                 <li>
                     <div class="song-menu-item-title">菜单1</div>
@@ -435,7 +435,7 @@
                 <li>
                     <div class="song-menu-item-title">菜单3</div>
                 </li>
-            </ul>
+            </ul> -->
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -489,8 +489,7 @@
 <script src="./modules/dialog.js"></script>
 <script src="./modules/table.js"></script>
 <script src="./modules/date.js"></script>
-<script src="./modules/menu.js"></script>
-<script src="./modules/nav.js"></script>
+<script src="./modules/menu-nav.js"></script>
 <script src="./modules/tree.js"></script>
 <script src="./modules/transfer.js"></script>
 <script>
@@ -897,7 +896,7 @@
         type: 'time',
         range: true
     });
-    var menu = SongUi.Menu.render({
+    var menu = SongUi.MenuNav.render({
         position: 'static',
         elem: '#menu1',
         check: true,
@@ -943,8 +942,9 @@
         // console.log('close');
         // console.log(obj);
     });
-    SongUi.Menu.render({
+    SongUi.MenuNav.render({
         elem: '#menu2',
+        position: 'absolute',
         trigger: 'hover',
         data: [{
             title: '菜单1'
@@ -956,8 +956,10 @@
             title: '菜单3'
         }]
     });
-    SongUi.Nav.render({
+    SongUi.MenuNav.render({
         elem: '#nav1',
+        type: 'nav',
+        mode: 'horizontal',
         data: [{
             title: '导航菜单1'
         },
@@ -978,9 +980,9 @@
             }]
         }]
     });
-    SongUi.Nav.render({
+    SongUi.MenuNav.render({
         elem: '#nav2',
-        mode: 'vertical',
+        type: 'nav',
         data: [{
             title: '导航菜单1',
             children: [{

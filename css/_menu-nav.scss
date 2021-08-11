@@ -1,0 +1,249 @@
+.song-menu {
+    $bgColor: #ffffff;
+    $hoverBgColor: $hover-background-color;
+    $textColor: #666666;
+
+    position: relative;
+    height: auto;
+    padding: 5px 0;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    background-color: $bgColor;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+    *zoom: 1;
+
+    // ie8不支持::的模式
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    ul {
+        background-color: $bgColor;
+    }
+
+    li {
+        position: relative;
+        line-height: 36px;
+        color: $textColor;
+        cursor: pointer;
+        user-select: none;
+
+        .song-menu-hover {
+            background-color: $hoverBgColor;
+        }
+
+        .song-menu-checked {
+            color: $link-color;
+            background-color: $hoverBgColor;
+
+            &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background-color: $link-color;
+            }
+        }
+
+        .song-menu-checked-parent {
+            color: $link-color;
+        }
+    }
+
+    a {
+        display: block;
+        padding-right: 34px;
+        color: $textColor;
+        white-space: nowrap;
+    }
+
+    &-absolute {
+        position: absolute;
+    }
+
+    &-border {
+        *zoom: 1;
+        height: 0;
+        line-height: 0;
+        margin: 5px 0;
+        font-size: 0;
+        border-top: 1px solid $border-color;
+    }
+
+    &-hover-right,
+    &-hover-down {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1;
+        margin-top: 5px;
+        padding: 5px 0;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+    }
+
+    &-hover-right {
+        top: 0;
+        left: 100%;
+        margin-top: -5px;
+        margin-left: 5px;
+    }
+
+    &-ie-hack {
+
+        li {
+            *zoom: 1
+        }
+    }
+
+    &-icon {
+        font-family: "iconfont" !important;
+        font-size: 14px;
+        font-style: normal;
+        right: 10px;
+    }
+
+    &-down-icon,
+    &-up-icon,
+    &-right-icon {
+        display: none;
+        position: absolute;
+        top: 0;
+        user-select: none;
+    }
+
+    &-right-icon,
+    &-down-icon {
+        display: block;
+    }
+
+    &-animation-hover-right {
+        animation-name: song-menu-keyframes-hover-right;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+
+    &-animation-hover-down {
+        animation-name: song-menu-keyframes-hover-down;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
+}
+
+
+.song-menu-nav {
+    $bgColor: #545c64;
+    $hoverBgColor: #434a50;
+    $textColor: #ffffff;
+
+    border: 0;
+    background-color: $bgColor;
+    box-shadow: none;
+
+    ul {
+        background-color: $bgColor;
+    }
+
+    li {
+        line-height: 50px;
+        color: $textColor;
+
+        .song-menu-hover {
+            background-color: $hoverBgColor;
+        }
+
+        .song-menu-checked {
+            color: $textColor;
+            background-color: $hoverBgColor;
+        }
+
+        .song-menu-checked-parent {
+            color: $textColor;
+            background-color: $bgColor;
+        }
+    }
+
+    a {
+        color: $textColor;
+    }
+
+    .song-menu-hover-right,
+    .song-menu-hover-down {
+        border: 0;
+        box-shadow: none;
+    }
+
+    &-horizontal {
+        height: 60px;
+        padding: 0;
+
+        li {
+            float: left;
+            line-height: 60px;
+
+            .song-menu-checked {
+                &:after {
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 4px;
+                    background-color: $link-color;
+                }
+            }
+
+            .song-menu-checked-parent {
+                background-color: $hoverBgColor;
+            }
+        }
+
+        a {
+            padding: 0 20px;
+        }
+
+        .song-menu-icon {
+            right: 4px;
+        }
+
+        .song-menu-hover-right,
+        .song-menu-hover-down {
+            li {
+                float: none;
+                line-height: 36px;
+            }
+        }
+    }
+}
+
+@keyframes song-menu-keyframes-hover-right {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes song-menu-keyframes-hover-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
