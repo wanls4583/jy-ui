@@ -137,9 +137,9 @@
         // 挂载菜单
         Class.prototype.mountMenu = function () {
             var that = this;
-            if (this.position == 'static') { //静态菜单
+            if (this.position == 'static') { //普通菜单
                 !this.mounted && this.$elem.length && this.$elem.append(this.$menu);
-            } else if (this.$elem && this.$elem.length) { //动态菜单
+            } else if (this.$elem && this.$elem.length) { //需要手动触发的菜单
                 this.$menu.hide().addClass(menuClass.absolute);
                 this.triggerEvent = this.option.trigger || 'click';
                 this.triggerEvent = this.triggerEvent === 'hover' ? 'mouseenter' : this.triggerEvent;
@@ -165,7 +165,7 @@
                 });
                 !this.mounted && $docBody.append(this.$menu);
                 $docBody.on('click', function () {
-                    that.position !== 'static' && that.$menu.hide();
+                    that.position === 'absolute' && that.$menu.hide();
                 });
             } else {
                 !this.mounted && $docBody.append(this.$menu);
