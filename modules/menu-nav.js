@@ -22,7 +22,6 @@
             hoverDown: 'song-menu-hover-down',
             spread: 'song-menu-item-spread',
             title: 'song-menu-item-title',
-            group: 'song-menu-item-group',
             absolute: 'song-menu-absolute',
             border: 'song-menu-border',
             checked: 'song-menu-checked',
@@ -103,13 +102,16 @@
                 }
                 this.$menu.find('ul').hide();
                 // 设置右侧图标和显示默认打开的组
-                this.$menu.find('li.' + menuClass.group).each(function (i, li) {
+                this.$menu.find('li').each(function (i, li) {
                     var $li = $(li);
                     var $title = $li.children('a');
                     var $ul = $li.children('ul');
                     var $downIcon = $title.children('.' + menuClass.downIcon);
                     var $upIcon = $title.children('.' + menuClass.upIcon);
                     var $rightIcon = $title.children('.' + menuClass.rightIcon);
+                    if (!$ul.length) {
+                        return;
+                    }
                     if ($ul.hasClass(menuClass.hoverRight)) {
                         if (!$rightIcon.length) {
                             $title.append(tpl.rightIcon);
@@ -203,7 +205,6 @@
                 if (item.children && item.children.length) {
                     var $ul = $(tpl.ul);
                     $item.append($ul);
-                    $item.addClass(menuClass.group);
                     if (that.type === 'nav' && that.mode == 'horizontal') { //横向导航条
                         if (level <= 1) {
                             item.spreadType = 'hover-down';
@@ -239,10 +240,10 @@
 
         // 给group添加分割线
         Class.prototype.addBorder = function () {
-            this.$menu.find('.' + menuClass.group).each(function (i, li) {
+            this.$menu.find('li').each(function (i, li) {
                 var $li = $(li);
                 var $ul = $li.children('ul');
-                if (!$ul.hasClass(menuClass.hoverRight)) {
+                if ($ul.length && !$ul.hasClass(menuClass.hoverRight)) {
                     var $prev = $li.prev();
                     if ($li.next().length) {
                         $(tpl.border).insertAfter($li);
@@ -305,9 +306,10 @@
 
         // 打开/关闭菜单项
         Class.prototype.toggle = function (key, spread) {
-            var $li = this.$menu.find('.' + menuClass.group + '[data-key="' + key + '"]');
+            var $li = this.$menu.find('li' + '[data-key="' + key + '"]');
             var $ul = $li.children('ul');
-            if (spread && !$ul.is(':visible') || !spread && $ul.is(':visible')) {
+            var visible = $ul.is(':visible');
+            if ($ul.length && (spread && !visible || !spread && visible)) {
                 if ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown)) {
                     $li.trigger('mouseenter');
                 } else {
@@ -342,12 +344,12 @@
                 });
             }
             // 展开/关闭组事件
-            this.$menu.delegate('.' + menuClass.group, 'click', function () {
+            this.$menu.delegate('li', 'click', function () {
                 var $this = $(this);
                 var $title = $this.children('a');
                 var data = that.getBindData(this);
                 var $ul = $this.children('ul');
-                if (!$ul.hasClass(menuClass.hoverRight) && !$ul.hasClass(menuClass.hoverDown)) {
+                if ($ul.length && !$ul.hasClass(menuClass.hoverRight) && !$ul.hasClass(menuClass.hoverDown)) {
                     var visible = $ul.is(':visible');
                     if (visible) {
                         $title.children('.' + menuClass.downIcon).show();
@@ -378,11 +380,11 @@
                 }
             });
             // 展开hover组事件
-            this.$menu.delegate('.' + menuClass.group, 'mouseenter', function () {
+            this.$menu.delegate('li', 'mouseenter', function () {
                 var $this = $(this);
                 var data = that.getBindData(this);
                 var $ul = $this.children('ul');
-                if ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown)) {
+                if ($ul.length && ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown))) {
                     clearTimeout(this.hideItemTimer);
                     $this.addClass(menuClass.spread);
                     $ul.show().addClass($ul.hasClass(menuClass.hoverRight) ? hoverRightAnimation : hoverDownAnimation);
@@ -400,11 +402,11 @@
                 }
             });
             // 关闭hover组事件
-            this.$menu.delegate('.' + menuClass.group, 'mouseleave', function () {
+            this.$menu.delegate('li', 'mouseleave', function () {
                 var $this = $(this);
                 var $ul = $this.children('ul');
                 var data = that.getBindData(this);
-                if ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown)) {
+                if ($ul.length && ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown))) {
                     // 延迟隐藏，当在100ms内到达右侧子菜单面板时取消隐藏
                     this.hideItemTimer = setTimeout(function () {
                         $ul.hide().removeClass(hoverRightAnimation).removeClass(hoverDownAnimation);
