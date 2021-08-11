@@ -63,15 +63,17 @@
             this.type = this.option.type === 'nav' ? 'nav' : 'menu';
             this.mode = this.option.mode === 'horizontal' ? 'horizontal' : 'vertical';
             this.position = this.option.position === 'absolute' ? 'absolute' : 'static';
+            this.check = this.option.check === undefined ? true : Boolean(this.option.check);
             this.showList = [];
             this.width && this.$menu.css('width', this.width);
             this.height && this.$menu.css('height', this.height);
+            this.mounted = !this.$menu.hasClass(menuClass.structure);
+            this.type === 'menu' ? this.mountMenu() : this.mountNav();
             if (this.type === 'nav') {
                 this.$menu.addClass(menuClass.nav);
                 this.$menu.addClass(this.mode === 'vertical' ? menuClass.vertical : menuClass.horizontal);
             }
-            if (this.$menu.hasClass(menuClass.structure)) {
-                this.type === 'menu' ? this.mountMenu() : this.mountNav();
+            if (!this.mounted) {
                 this.appendItem(this.data, this.$menu, 1);
                 this.setTitleLeftPadding();
                 this.type === 'menu' && this.addBorder();
@@ -135,9 +137,9 @@
         // 挂载菜单
         Class.prototype.mountMenu = function () {
             var that = this;
-            if (this.position == 'static') {
-                this.$elem.length && this.$elem.append(this.$menu);
-            } else if (this.$elem && this.$elem.length) {
+            if (this.position == 'static') { //静态菜单
+                !this.mounted && this.$elem.length && this.$elem.append(this.$menu);
+            } else if (this.$elem && this.$elem.length) { //动态菜单
                 this.$menu.hide().addClass(menuClass.absolute);
                 this.triggerEvent = this.option.trigger || 'click';
                 this.triggerEvent = this.triggerEvent === 'hover' ? 'mouseenter' : this.triggerEvent;
@@ -161,18 +163,18 @@
                         that.$menu.hide().removeClass(hoverDownAnimation);
                     }, 100);
                 });
-                $docBody.append(this.$menu);
+                !this.mounted && $docBody.append(this.$menu);
                 $docBody.on('click', function () {
                     that.position !== 'static' && that.$menu.hide();
                 });
             } else {
-                $docBody.append(this.$menu);
+                !this.mounted && $docBody.append(this.$menu);
             }
         }
 
         // 挂载导航条
         Class.prototype.mountNav = function () {
-            this.$elem.length && this.$elem.append(this.$menu);
+            !this.mounted && this.$elem.length && this.$elem.append(this.$menu);
         }
 
         // 重载
@@ -258,7 +260,7 @@
 
         // 设置标题左侧内边距
         Class.prototype.setTitleLeftPadding = function () {
-            if (this.mode === 'horizontal') {
+            if (this.type === 'nav' && this.mode === 'horizontal') {
                 return;
             }
             _setPadding(this.$menu, 1);
@@ -332,7 +334,7 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             // 元素触发方式
-            if (this.type === 'menu' && this.position === 'absolute') {
+            if (this.type === 'menu' && this.position === 'absolute' && this.triggerEvent === 'mouseenter') {
                 this.$menu.on('mouseenter', function () {
                     clearTimeout(that.hideMenuTimer);
                 });
@@ -435,20 +437,22 @@
                 var $ul = $this.children('ul');
                 var data = that.getBindData(this);
                 if (!$ul.length) {
-                    var $title = $this.children('a');
-                    that.$menu.find('a.' + menuClass.checked).removeClass(menuClass.checked);
-                    that.$menu.find('a.' + menuClass.checkedParent).removeClass(menuClass.checkedParent);
-                    if (that.type === 'nav' && that.mode === 'horizontal' && $this.parent()[0] != that.$menu[0]) {
-                        var $parentLi = $this.parents('li');
-                        $parentLi = $($parentLi[$parentLi.length - 1]);
-                        $parentLi.children('a').addClass(menuClass.checked).removeClass(menuClass.checkedParent);
-                        $title.addClass(menuClass.checkedParent);
-                    } else {
-                        $title.addClass(menuClass.checked);
+                    if (that.check) {
+                        var $title = $this.children('a');
+                        that.$menu.find('a.' + menuClass.checked).removeClass(menuClass.checked);
+                        that.$menu.find('a.' + menuClass.checkedParent).removeClass(menuClass.checkedParent);
+                        if (that.type === 'nav' && that.mode === 'horizontal' && $this.parent()[0] != that.$menu[0]) {
+                            var $parentLi = $this.parents('li');
+                            $parentLi = $($parentLi[$parentLi.length - 1]);
+                            $parentLi.children('a').addClass(menuClass.checked).removeClass(menuClass.checkedParent);
+                            $title.addClass(menuClass.checkedParent);
+                        } else {
+                            $title.addClass(menuClass.checked);
+                        }
+                        $this.parents('li').each(function (i, li) {
+                            $(li).children('a').addClass(menuClass.checkedParent);
+                        });
                     }
-                    $this.parents('li').each(function (i, li) {
-                        $(li).children('a').addClass(menuClass.checkedParent);
-                    });
                     that.trigger('click', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -563,13 +567,19 @@
                 // 如果不是内部生成的，则绑定相关事件
                 if (!$menu.hasClass(menuClass.structure)) {
                     var type = $menu.hasClass(menuClass.nav) ? 'nav' : 'menu';
-                    var mode = $menu.hasClass(menuClass.vertical) ? 'vertical' : 'horizontal';
+                    var mode = $menu.hasClass(menuClass.horizontal) ? 'horizontal' : 'vertical';
                     var position = $menu.hasClass(menuClass.absolute) ? 'absolute' : 'static';
+                    var check = $menu.attr('song-menu-check');
+                    var elem = $menu.attr('song-menu-elem');
+                    var trigger = $menu.attr('song-menu-trigger');
                     SongMenuNav.render({
+                        elem: elem,
                         $menu: $menu,
                         type: type,
                         position: position,
-                        mode: mode
+                        mode: mode,
+                        check: check,
+                        trigger: trigger
                     });
                 }
             });
