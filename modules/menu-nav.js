@@ -20,7 +20,7 @@
             structure: 'song-menu-structure',
             hoverRight: 'song-menu-hover-right',
             hoverDown: 'song-menu-hover-down',
-            open: 'song-menu-item-open',
+            spread: 'song-menu-item-spread',
             title: 'song-menu-item-title',
             group: 'song-menu-item-group',
             absolute: 'song-menu-absolute',
@@ -89,7 +89,7 @@
                     var $li = $ul.parent('li');
                     var $title = $li.children('a');
                     $ul.show();
-                    $li.addClass(menuClass.open);
+                    $li.addClass(menuClass.spread);
                     if (!$ul.hasClass(menuClass.hoverRight)) {
                         $title.children('.' + menuClass.upIcon).show();
                         $title.children('.' + menuClass.downIcon).hide();
@@ -123,7 +123,7 @@
                             $upIcon = $(tpl.upIcon);
                             $title.append($upIcon);
                         }
-                        if ($li.hasClass(menuClass.open)) {
+                        if ($li.hasClass(menuClass.spread)) {
                             $ul.show();
                             $downIcon.hide();
                             $upIcon.show();
@@ -204,25 +204,21 @@
                     var $ul = $(tpl.ul);
                     $item.append($ul);
                     $item.addClass(menuClass.group);
-                    if (that.type === 'nav') { //导航条
-                        if (that.mode == 'horizontal') {
-                            if (level <= 1) {
-                                $ul.addClass(menuClass.hoverDown);
-                                $title.append(tpl.downIcon + tpl.upIcon);
-                            } else {
-                                $ul.addClass(menuClass.hoverRight);
-                                $title.append(tpl.rightIcon);
-                            }
+                    if (that.type === 'nav' && that.mode == 'horizontal') { //横向导航条
+                        if (level <= 1) {
+                            item.spreadType = 'hover-down';
                         } else {
-                            $title.append(tpl.downIcon + tpl.upIcon);
+                            item.spreadType = 'hover-right';
                         }
-                    } else { //菜单
-                        if (item.spreadType == 'right') {
-                            $ul.addClass(menuClass.hoverRight);
-                            $title.append(tpl.rightIcon);
-                        } else {
-                            $title.append(tpl.downIcon + tpl.upIcon);
-                        }
+                    }
+                    if (item.spreadType == 'hover-right') { //右侧弹出
+                        $ul.addClass(menuClass.hoverRight);
+                        $title.append(tpl.rightIcon);
+                    } else if (item.spreadType == 'hover-down') { //下方弹出
+                        $ul.addClass(menuClass.hoverDown);
+                        $title.append(tpl.downIcon + tpl.upIcon);
+                    } else {
+                        $title.append(tpl.downIcon + tpl.upIcon);
                     }
                     that.appendItem(item.children, $ul, level + 1);
                     if (that.option.spread || item.spread) {
@@ -267,7 +263,7 @@
 
             function _setPadding($li, level) {
                 var $ul = $li.children('ul');
-                var isRight = $ul.hasClass(menuClass.hoverRight);
+                var isPanel = $ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown);
                 $li.children('li').each(function (i, li) {
                     var $title = $(li).children('a');
                     $title.css('padding-left', level * 20 + 'px');
@@ -275,7 +271,7 @@
                 });
                 $ul.children('li').each(function (i, li) {
                     var $title = $(li).children('a');;
-                    level = isRight ? 1 : level;
+                    level = isPanel ? 1 : level;
                     $title.css('padding-left', level * 15 + 'px');
                     _setPadding($(li), level + 1);
                 });
@@ -361,7 +357,7 @@
                         } else {
                             $ul.hide();
                         }
-                        $ul.parent('li').removeClass(menuClass.open);
+                        $ul.parent('li').removeClass(menuClass.spread);
                     } else {
                         $title.children('.' + menuClass.upIcon).show();
                         $title.children('.' + menuClass.downIcon).hide();
@@ -369,7 +365,7 @@
                         if (window.requestAnimationFrame) {
                             _showAnimation($ul);
                         }
-                        $ul.parent('li').addClass(menuClass.open);
+                        $ul.parent('li').addClass(menuClass.spread);
                     }
                     that.trigger($ul.is(':visible') ? 'spread' : 'close', {
                         dom: this,
@@ -388,7 +384,7 @@
                 var $ul = $this.children('ul');
                 if ($ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown)) {
                     clearTimeout(this.hideItemTimer);
-                    $this.addClass(menuClass.open);
+                    $this.addClass(menuClass.spread);
                     $ul.show().addClass($ul.hasClass(menuClass.hoverRight) ? hoverRightAnimation : hoverDownAnimation);
                     if ($ul.hasClass(menuClass.hoverDown) && $ul[0].offsetWidth < this.offsetWidth) {
                         $ul.css('width', this.offsetWidth);
@@ -412,7 +408,7 @@
                     // 延迟隐藏，当在100ms内到达右侧子菜单面板时取消隐藏
                     this.hideItemTimer = setTimeout(function () {
                         $ul.hide().removeClass(hoverRightAnimation).removeClass(hoverDownAnimation);
-                        $this.removeClass(menuClass.open);
+                        $this.removeClass(menuClass.spread);
                         that.trigger('close', {
                             dom: this,
                             data: Common.delInnerProperty(data)

@@ -2096,6 +2096,15 @@ textarea {
   color: #5FB878;
 }
 
+.song-menu li.song-menu-border {
+  *zoom: 1;
+  height: 0;
+  line-height: 0;
+  margin: 5px 0;
+  font-size: 0;
+  border-top: 1px solid #eeeeee;
+}
+
 .song-menu a {
   display: block;
   padding-right: 34px;
@@ -2105,15 +2114,6 @@ textarea {
 
 .song-menu-absolute {
   position: absolute;
-}
-
-.song-menu-border {
-  *zoom: 1;
-  height: 0;
-  line-height: 0;
-  margin: 5px 0;
-  font-size: 0;
-  border-top: 1px solid #eeeeee;
 }
 
 .song-menu-hover-right, .song-menu-hover-down {

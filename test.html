@@ -441,10 +441,42 @@
     <fieldset class="song-field">
         <legend>导航条</legend>
         <div class="song-field-box">
-            <div style="padding:20px 0;">普通导航条</div>
+            <div style="padding:20px 0;">水平导航条</div>
             <div id="nav1"></div>
             <div style="padding:20px 0;">垂直导航条</div>
             <div id="nav2" style="width:200px;"></div>
+            <div style="padding:20px 0;">静态水平导航条</div>
+            <ul class="song-menu song-menu-nav song-menu-nav-horizontal">
+                <li><a>导航菜单1</a></li>
+                <li><a>导航菜单2</a></li>
+                <li class="song-menu-item-group"><a>导航菜单3</a>
+                    <ul class="song-menu-hover-down">
+                        <li><a>菜单3-1</a></li>
+                        <li class="song-menu-item-group"><a>菜单3-2</a>
+                            <ul class="song-menu-hover-right">
+                                <li><a>菜单3-2-1</a></li>
+                                <li><a>菜单3-2-2</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <div style="padding:20px 0;">静态垂直导航条</div>
+            <ul class="song-menu song-menu-nav" style="width:200px;">
+                <li><a>导航菜单1</a></li>
+                <li><a>导航菜单2</a></li>
+                <li class="song-menu-item-group song-menu-item-spread"><a>导航菜单3</a>
+                    <ul>
+                        <li><a>菜单3-1</a></li>
+                        <li class="song-menu-item-group"><a>菜单3-2</a>
+                            <ul>
+                                <li><a>菜单3-2-1</a></li>
+                                <li><a>菜单3-2-2</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </fieldset>
     <fieldset class="song-field">
@@ -913,7 +945,7 @@
         },
         {
             title: 'item2',
-            spreadType: 'right',
+            spreadType: 'hover-right',
             children: [
                 { title: 'item2-1', children: [{ title: 'item2-1-1' }] },
                 { title: 'item2-2' }
@@ -925,7 +957,7 @@
             children: [
                 { title: 'item3-1' },
                 { title: 'item3-2', spread: true, children: [{ title: 'item3-2-1' }] },
-                { title: 'item3-3', spreadType: 'right', children: [{ title: 'item3-3-1' }] }
+                { title: 'item3-3', children: [{ title: 'item3-3-1' }] }
             ],
             id: 2
         }]
@@ -989,6 +1021,7 @@
                 title: '导航菜单1-1'
             }, {
                 title: '导航菜单1-2',
+                spread: true,
                 children: [{
                     title: '导航菜单1-2-1'
                 }, {

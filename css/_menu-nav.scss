@@ -52,6 +52,15 @@
         .song-menu-checked-parent {
             color: $link-color;
         }
+
+        &.song-menu-border {
+            *zoom: 1;
+            height: 0;
+            line-height: 0;
+            margin: 5px 0;
+            font-size: 0;
+            border-top: 1px solid $border-color;
+        }
     }
 
     a {
@@ -63,15 +72,6 @@
 
     &-absolute {
         position: absolute;
-    }
-
-    &-border {
-        *zoom: 1;
-        height: 0;
-        line-height: 0;
-        margin: 5px 0;
-        font-size: 0;
-        border-top: 1px solid $border-color;
     }
 
     &-hover-right,
