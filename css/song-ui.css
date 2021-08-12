@@ -2197,11 +2197,11 @@ textarea {
 
 .song-menu-nav li {
   line-height: 50px;
-  color: #cccccc;
+  color: #d2d2d2;
 }
 
 .song-menu-nav a {
-  color: #cccccc;
+  color: #d2d2d2;
 }
 
 .song-menu-nav .song-menu-hover {
@@ -2219,7 +2219,7 @@ textarea {
 }
 
 .song-menu-nav .song-menu-checked-parent {
-  color: #cccccc;
+  color: #d2d2d2;
 }
 
 .song-menu-nav .song-menu-hover-right,

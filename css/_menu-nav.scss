@@ -146,7 +146,7 @@
     $bgColor: #545c64;
     $hoverBgColor: #545c64;
     $checkedBgColor: $success-color;
-    $textColor: #cccccc;
+    $textColor: $gray-color;
     $activeColor: #ffffff;
     $barColor: $link-color;
 
@@ -185,6 +185,7 @@
         color: $textColor;
     }
 
+    // 纵向导航条的右侧菜单
     .song-menu-hover-right,
     .song-menu-hover-down {
         border: 0;
@@ -227,6 +228,7 @@
             right: 4px;
         }
 
+        // 水平导航条的下拉菜单
         .song-menu-hover-right,
         .song-menu-hover-down {
             background-color: #ffffff;
