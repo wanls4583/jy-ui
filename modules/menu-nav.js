@@ -29,6 +29,7 @@
             downIcon: 'song-menu-down-icon',
             upIcon: 'song-menu-up-icon',
             hover: 'song-menu-hover',
+            child: 'song-menu-child',
             ieHack: 'song-menu-ie-hack'
         }
         var hoverRightAnimation = 'song-menu-animation-hover-right';

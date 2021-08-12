@@ -2186,13 +2186,13 @@ textarea {
 
 .song-menu-nav {
   border: 0;
-  background-color: #545c64;
+  background-color: #393D49;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 
 .song-menu-nav ul {
-  background-color: #545c64;
+  background-color: #393D49;
 }
 
 .song-menu-nav li {
@@ -2206,7 +2206,7 @@ textarea {
 
 .song-menu-nav .song-menu-hover {
   color: #ffffff;
-  background-color: #545c64;
+  background-color: #393D49;
 }
 
 .song-menu-nav .song-menu-checked {

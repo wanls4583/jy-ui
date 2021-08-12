@@ -143,12 +143,16 @@
 
 
 .song-menu-nav {
-    $bgColor: #545c64;
-    $hoverBgColor: #545c64;
+    $bgColor: #393D49;
+    $hoverBgColor: #393D49;
     $checkedBgColor: $success-color;
     $textColor: $gray-color;
     $activeColor: #ffffff;
     $barColor: $link-color;
+    $hChildBgColor: #ffffff;
+    $hChildhoverBgColor: $hover-background-color;
+    $hChildTextColor: #666666;
+    $hChildActiveColor: #666666;
 
     border: 0;
     background-color: $bgColor;
@@ -231,7 +235,7 @@
         // 水平导航条的下拉菜单
         .song-menu-hover-right,
         .song-menu-hover-down {
-            background-color: #ffffff;
+            background-color: $hChildBgColor;
             border: 1px solid $border-color;
             box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
 
@@ -240,18 +244,18 @@
                 float: none;
 
                 .song-menu-hover {
-                    color: #666666;
-                    background-color: $hover-background-color;
+                    color: $hChildActiveColor;
+                    background-color: $hChildhoverBgColor;
                 }
 
                 .song-menu-checked-parent {
-                    color: #666666;
+                    color: $hChildActiveColor;
                 }
             }
 
             a {
                 padding-right: 35px;
-                color: #666666;
+                color: $hChildTextColor;
             }
 
             .song-menu-icon {
