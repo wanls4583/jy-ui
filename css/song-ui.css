@@ -2074,28 +2074,6 @@ textarea {
           user-select: none;
 }
 
-.song-menu li .song-menu-hover {
-  background-color: #f6f6f6;
-}
-
-.song-menu li .song-menu-checked {
-  color: #5FB878;
-  background-color: #f6f6f6;
-}
-
-.song-menu li .song-menu-checked:after {
-  content: "";
-  position: absolute;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background-color: #5FB878;
-}
-
-.song-menu li .song-menu-checked-parent {
-  color: #5FB878;
-}
-
 .song-menu li.song-menu-border {
   *zoom: 1;
   height: 0;
@@ -2110,6 +2088,28 @@ textarea {
   padding-right: 35px;
   color: #666666;
   white-space: nowrap;
+}
+
+.song-menu .song-menu-hover {
+  background-color: #f6f6f6;
+}
+
+.song-menu .song-menu-checked {
+  color: #5FB878;
+  background-color: #f6f6f6;
+}
+
+.song-menu .song-menu-checked:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #5FB878;
+}
+
+.song-menu .song-menu-checked-parent {
+  color: #5FB878;
 }
 
 .song-menu-absolute {
@@ -2197,29 +2197,29 @@ textarea {
 
 .song-menu-nav li {
   line-height: 50px;
-  color: #ffffff;
-}
-
-.song-menu-nav li .song-menu-hover {
-  color: #ffd04b;
-  background-color: #434a50;
-}
-
-.song-menu-nav li .song-menu-checked {
-  color: #ffd04b;
-  background-color: #545c64;
-}
-
-.song-menu-nav li .song-menu-checked:after {
-  display: none;
-}
-
-.song-menu-nav li .song-menu-checked-parent {
-  color: #ffffff;
+  color: #cccccc;
 }
 
 .song-menu-nav a {
+  color: #cccccc;
+}
+
+.song-menu-nav .song-menu-hover {
   color: #ffffff;
+  background-color: #545c64;
+}
+
+.song-menu-nav .song-menu-checked {
+  color: #ffffff;
+  background-color: #009688;
+}
+
+.song-menu-nav .song-menu-checked:after {
+  display: none;
+}
+
+.song-menu-nav .song-menu-checked-parent {
+  color: #cccccc;
 }
 
 .song-menu-nav .song-menu-hover-right,
@@ -2239,7 +2239,15 @@ textarea {
   line-height: 60px;
 }
 
-.song-menu-nav-horizontal li .song-menu-checked:after {
+.song-menu-nav-horizontal a {
+  padding: 0 20px;
+}
+
+.song-menu-nav-horizontal .song-menu-checked {
+  background-color: transparent;
+}
+
+.song-menu-nav-horizontal .song-menu-checked:after {
   display: block;
   content: "";
   position: absolute;
@@ -2247,25 +2255,51 @@ textarea {
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: #ffd04b;
+  background-color: #5FB878;
 }
 
-.song-menu-nav-horizontal li .song-menu-checked-parent {
-  color: #ffd04b;
-}
-
-.song-menu-nav-horizontal a {
-  padding: 0 20px;
+.song-menu-nav-horizontal .song-menu-checked-parent {
+  color: #ffffff;
 }
 
 .song-menu-nav-horizontal .song-menu-icon {
   right: 4px;
 }
 
+.song-menu-nav-horizontal .song-menu-hover-right,
+.song-menu-nav-horizontal .song-menu-hover-down {
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+          box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+}
+
 .song-menu-nav-horizontal .song-menu-hover-right li,
 .song-menu-nav-horizontal .song-menu-hover-down li {
-  float: none;
   line-height: 36px;
+  float: none;
+}
+
+.song-menu-nav-horizontal .song-menu-hover-right li .song-menu-hover,
+.song-menu-nav-horizontal .song-menu-hover-down li .song-menu-hover {
+  color: #666666;
+  background-color: #f6f6f6;
+}
+
+.song-menu-nav-horizontal .song-menu-hover-right li .song-menu-checked-parent,
+.song-menu-nav-horizontal .song-menu-hover-down li .song-menu-checked-parent {
+  color: #666666;
+}
+
+.song-menu-nav-horizontal .song-menu-hover-right a,
+.song-menu-nav-horizontal .song-menu-hover-down a {
+  padding-right: 35px;
+  color: #666666;
+}
+
+.song-menu-nav-horizontal .song-menu-hover-right .song-menu-icon,
+.song-menu-nav-horizontal .song-menu-hover-down .song-menu-icon {
+  right: 15px;
 }
 
 @-webkit-keyframes song-menu-keyframes-hover-right {

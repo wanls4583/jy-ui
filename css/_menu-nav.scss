@@ -34,28 +34,6 @@
         cursor: pointer;
         user-select: none;
 
-        .song-menu-hover {
-            background-color: $hoverBgColor;
-        }
-
-        .song-menu-checked {
-            color: $activeColor;
-            background-color: $checkedBgColor;
-
-            &:after {
-                content: "";
-                position: absolute;
-                right: 0;
-                width: 4px;
-                height: 100%;
-                background-color: $barColor;
-            }
-        }
-
-        .song-menu-checked-parent {
-            color: $activeColor;
-        }
-
         &.song-menu-border {
             *zoom: 1;
             height: 0;
@@ -71,6 +49,28 @@
         padding-right: 35px;
         color: $textColor;
         white-space: nowrap;
+    }
+
+    & &-hover {
+        background-color: $hoverBgColor;
+    }
+
+    & &-checked {
+        color: $activeColor;
+        background-color: $checkedBgColor;
+
+        &:after {
+            content: "";
+            position: absolute;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background-color: $barColor;
+        }
+    }
+
+    & &-checked-parent {
+        color: $activeColor;
     }
 
     &-absolute {
@@ -144,11 +144,11 @@
 
 .song-menu-nav {
     $bgColor: #545c64;
-    $hoverBgColor: #434a50;
-    $checkedBgColor: #545c64;
-    $textColor: #ffffff;
-    $activeColor: #ffd04b;
-    $barColor: #ffd04b;
+    $hoverBgColor: #545c64;
+    $checkedBgColor: $success-color;
+    $textColor: #cccccc;
+    $activeColor: #ffffff;
+    $barColor: $link-color;
 
     border: 0;
     background-color: $bgColor;
@@ -161,27 +161,27 @@
     li {
         line-height: 50px;
         color: $textColor;
-
-        .song-menu-hover {
-            color: $activeColor;
-            background-color: $hoverBgColor;
-        }
-
-        .song-menu-checked {
-            color: $activeColor;
-            background-color: $checkedBgColor;
-
-            &:after {
-                display: none;
-            }
-        }
-
-        .song-menu-checked-parent {
-            color: $textColor;
-        }
     }
 
     a {
+        color: $textColor;
+    }
+
+    .song-menu-hover {
+        color: $activeColor;
+        background-color: $hoverBgColor;
+    }
+
+    .song-menu-checked {
+        color: $activeColor;
+        background-color: $checkedBgColor;
+
+        &:after {
+            display: none;
+        }
+    }
+
+    .song-menu-checked-parent {
         color: $textColor;
     }
 
@@ -198,27 +198,29 @@
         li {
             float: left;
             line-height: 60px;
-
-            .song-menu-checked {
-                &:after {
-                    display: block;
-                    content: "";
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 4px;
-                    background-color: $barColor;
-                }
-            }
-
-            .song-menu-checked-parent {
-                color: $activeColor;
-            }
         }
 
         a {
             padding: 0 20px;
+        }
+
+        .song-menu-checked {
+            background-color: transparent;
+
+            &:after {
+                display: block;
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background-color: $barColor;
+            }
+        }
+
+        .song-menu-checked-parent {
+            color: $activeColor;
         }
 
         .song-menu-icon {
@@ -227,9 +229,31 @@
 
         .song-menu-hover-right,
         .song-menu-hover-down {
+            background-color: #ffffff;
+            border: 1px solid $border-color;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+
             li {
-                float: none;
                 line-height: 36px;
+                float: none;
+
+                .song-menu-hover {
+                    color: #666666;
+                    background-color: $hover-background-color;
+                }
+
+                .song-menu-checked-parent {
+                    color: #666666;
+                }
+            }
+
+            a {
+                padding-right: 35px;
+                color: #666666;
+            }
+
+            .song-menu-icon {
+                right: 15px;
             }
         }
     }
