@@ -570,7 +570,7 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define('dialog', ['./jquery', './common'], function ($, Common) {
+        define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {

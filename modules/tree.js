@@ -517,7 +517,7 @@
         return SongTree;
     }
     if ("function" == typeof define && define.amd) {
-        define('tree', ['./jquery', './common'], function ($, Common) {
+        define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {

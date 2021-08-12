@@ -485,7 +485,7 @@
 
 
     if ("function" == typeof define && define.amd) {
-        define("common", ['./jquery'], function ($) {
+        define(['./jquery'], function ($) {
             return factory($);
         });
     } else {

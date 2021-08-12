@@ -2863,7 +2863,7 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define("table", ['./jquery', './common', './pager'], function ($, Common) {
+        define(['./jquery', './common', './pager'], function ($, Common, Pager) {
             return factory($, Common, Pager);
         });
     } else {

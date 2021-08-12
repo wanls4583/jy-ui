@@ -514,212 +514,107 @@
         </div>
     </fieldset>
 </body>
-<script src="./modules/jquery.js"></script>
-<script src="./modules/common.js"></script>
-<script src="./modules/form.js"></script>
-<script src="./modules/pager.js"></script>
-<script src="./modules/dialog.js"></script>
-<script src="./modules/table.js"></script>
-<script src="./modules/date.js"></script>
-<script src="./modules/menu-nav.js"></script>
-<script src="./modules/tree.js"></script>
-<script src="./modules/transfer.js"></script>
+<script src="./require.js"></script>
 <script>
     window.JSON = window.JSON || {
         stringify: function (d) { return String(d) }
     }
-    $(function () {
-        SongUi.Form.render();
-    })
-    function openAlert(icon) {
-        SongUi.Dialog.alert('点击确认更改图标', {
-            icon: icon,
-            yes: function ($layer, index) {
-                SongUi.Dialog.close(index);
-                switch (icon) {
-                    case 'success':
-                        openAlert('error'); break;
-                    case 'error':
-                        openAlert('warn'); break;
-                    case 'warn':
-                        openAlert('question'); break;
-                    case 'question': break;
-                    default:
-                        openAlert('success'); break;
-                }
-            }
-        });
-    }
-    function openMsg() {
-        SongUi.Dialog.msg('信息');
-    }
-    function openConfirm() {
-        SongUi.Dialog.confirm('确认框', {
-            yes: function ($layer, index) {
-                SongUi.Dialog.close(index);
-            }
-        });
-    }
-    function openDialog() {
-        SongUi.Dialog.open({
-            title: '自定义框',
-            icon: 'success',
-            content: '<div>自定义内容<br>自定义内容</div>',
-            btn: ['按钮1', '按钮2', '按钮3'],
-            full: true,
-            shadow: false,
-            yes: function ($layer, index) {
-                SongUi.Dialog.close(index);
-            },
-            cancel: function ($layer, index) {
-                SongUi.Dialog.close(index);
-            },
-            btn2: function ($layer, index) {
-                SongUi.Dialog.close(index);
-            }
-        });
-    }
-    window.table1 = renderTable1();
-    window.table2 = renderTable2();
-    // 单选表格
-    function renderTable1() {
-        var data = [];
-        for (var i = 0; i < 1000; i++) {
-            var sex = Math.ceil(Math.random() * 2);
-            var age = Math.ceil(Math.random() * 100);
-            var phone = '1' + Math.ceil(Math.random() * 100000000000);
-            var like = Math.ceil(Math.random() * 3);
-            var sign = '个性签名' + i;
-            data.push({ id: i, user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
-        };
-        var table = SongUi.Table.render({
-            elem: '#table1',
-            width: 1000,
-            height: 500,
-            data: data,
-            limit: 10,
-            defaultToolbar: true,
-            stretch: true,
-            toolbar: '<button class="song-btn song-btn-sm" song-event="selected">获取选择的项</button>',
-            cols: [{
-                type: 'radio'
-            }, {
-                title: '用户',
-                field: 'user'
-            }, {
-                title: '手机号',
-                field: 'phone',
-                width: 100,
-                attr: { //设置单元属性
-                    title: function (value, obj, id, col) {
-                        return value;
+    require(['./modules/form.js'], function (Form) {
+        $(function () {
+            Form.render();
+        })
+    });
+    require(['./modules/dialog.js'], function (Dialog) {
+        window.openAlert = function (icon) {
+            Dialog.alert('点击确认更改图标', {
+                icon: icon,
+                yes: function ($layer, index) {
+                    Dialog.close(index);
+                    switch (icon) {
+                        case 'success':
+                            openAlert('error'); break;
+                        case 'error':
+                            openAlert('warn'); break;
+                        case 'warn':
+                            openAlert('question'); break;
+                        case 'question': break;
+                        default:
+                            openAlert('success'); break;
                     }
                 }
-            }, {
-                title: '性别',
-                field: 'sex',
-                width: 50,
-                select: [{
-                    label: '男',
-                    value: 1
-                }, {
-                    label: '女',
-                    value: 2
-                }],
-                style: { //设置单元格样式
-                    color: function (value, obj, id, col) {
-                        if (value == 2) {
-                            return 'red';
-                        }
-                    }
+            });
+        }
+        window.openMsg = function () {
+            Dialog.msg('信息');
+        }
+        window.openConfirm = function () {
+            Dialog.confirm('确认框', {
+                yes: function ($layer, index) {
+                    Dialog.close(index);
                 }
-            }, {
-                title: '年龄',
-                field: 'age',
-                width: 50
-            }, {
-                title: '签名',
-                field: 'sign',
-                width: 80
-            }, {
-                title: '爱好',
-                field: 'like',
-                checkbox: [{
-                    label: '听歌',
-                    value: 1
-                }, {
-                    label: '游泳',
-                    value: 2
-                }, {
-                    label: '看小说',
-                    value: 3
-                }]
-            }]
-        });
-        table.on('change', function () {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('select')));
-        });
-        return table;
-    }
-    // 可编辑表格
-    function renderTable2() {
-        var data = [];
-        for (var i = 0; i < 10000; i++) {
-            var sex = Math.ceil(Math.random() * 2);
-            var marriage = Math.ceil(Math.random() * 2);
-            var age = Math.ceil(Math.random() * 100);
-            var phone = '1' + Math.ceil(Math.random() * 100000000000);
-            var like = Math.ceil(Math.random() * 3);
-            var sign = '个性签名' + i;
-            data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, marriage: marriage, phone: phone, sign: sign, like: [like] });
-        };
-        var table = SongUi.Table.render({
-            elem: '#table2',
-            width: 1000,
-            height: 500,
-            data: data,
-            limit: 20,
-            ellipsis: false,
-            defaultToolbar: true,
-            toolbar: '<button class="song-btn song-btn-sm" song-event="custom-add">添加行</button>\
-            <button class="song-btn song-btn-sm" song-event="custom-checkall">全选/全不选</button>\
-            <button class="song-btn song-btn-sm" song-event="custom-checked">获取选中的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="custom-getadd">获取添加的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="custom-getdel">获取删除的数据</button>\
-            <button class="song-btn song-btn-sm" song-event="custom-getedit">获取修改过的数据</button>',
-            cols: [
-                [{
-                    type: 'checkbox',
-                    fixed: 'left',
-                    rowspan: 2
+            });
+        }
+        window.openDialog = function () {
+            Dialog.open({
+                title: '自定义框',
+                icon: 'success',
+                content: '<div>自定义内容<br>自定义内容</div>',
+                btn: ['按钮1', '按钮2', '按钮3'],
+                full: true,
+                shadow: false,
+                yes: function ($layer, index) {
+                    Dialog.close(index);
+                },
+                cancel: function ($layer, index) {
+                    Dialog.close(index);
+                },
+                btn2: function ($layer, index) {
+                    Dialog.close(index);
+                }
+            });
+        }
+    });
+    require(['./modules/table.js', './modules/dialog.js'], function (Table, Dialog) {
+        window.table1 = renderTable1();
+        window.table2 = renderTable2();
+        // 单选表格
+        function renderTable1() {
+            var data = [];
+            for (var i = 0; i < 1000; i++) {
+                var sex = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                data.push({ id: i, user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            };
+            var table = Table.render({
+                elem: '#table1',
+                width: 1000,
+                height: 500,
+                data: data,
+                limit: 10,
+                defaultToolbar: true,
+                stretch: true,
+                toolbar: '<button class="song-btn song-btn-sm" song-event="selected">获取选择的项</button>',
+                cols: [{
+                    type: 'radio'
                 }, {
                     title: '用户',
-                    field: 'user',
-                    width: 90,
-                    event: 'custom-name',
-                    fixed: 'left',
-                    rowspan: 2
+                    field: 'user'
                 }, {
                     title: '手机号',
                     field: 'phone',
-                    width: 150,
-                    editable: {
-                        type: 'number',
-                        rules: [{ type: 'number' }]
-                    },
-                    fixed: 'left',
-                    sortAble: true,
-                    rowspan: 2
-                }, {
-                    title: '城市',
-                    field: 'city',
                     width: 100,
-                    editable: true,
-                    rowspan: 2
+                    attr: { //设置单元属性
+                        title: function (value, obj, id, col) {
+                            return value;
+                        }
+                    }
                 }, {
                     title: '性别',
                     field: 'sex',
-                    width: 60,
+                    width: 50,
                     select: [{
                         label: '男',
                         value: 1
@@ -727,77 +622,24 @@
                         label: '女',
                         value: 2
                     }],
-                    editable: {
-                        type: 'select',
-                        rules: [{ type: 'required' }]
-                    },
-                    rowspan: 2
+                    style: { //设置单元格样式
+                        color: function (value, obj, id, col) {
+                            if (value == 2) {
+                                return 'red';
+                            }
+                        }
+                    }
                 }, {
                     title: '年龄',
                     field: 'age',
-                    width: 80,
-                    editable: {
-                        edit: function (value, data, id, col) {
-                            return '<input class="song-table-input song-display-inline-block" style="width:50px;" value="' + value + '" /><span>岁</span>';
-                        },
-                        save: function ($edit) {
-                            return $edit.find('input').val();
-                        },
-                        rules: [{ type: 'number' }]
-                    },
-                    sortAble: true,
-                    rowspan: 2,
-                    template: function (value) {
-                        return value + '岁';
-                    }
+                    width: 50
                 }, {
-                    title: '婚姻',
-                    field: 'marriage',
-                    width: 150,
-                    radio: [{
-                        label: '未婚',
-                        value: 1
-                    }, {
-                        label: '已婚',
-                        value: 2
-                    }],
-                    editable: {
-                        type: 'radio',
-                        rules: [{ type: 'required' }]
-                    },
-                    rowspan: 2
-                }, {
-                    title: '其他信息',
-                    align: 'center',
-                    colspan: 2
-                }, {
-                    type: 'operate',
-                    title: '操作',
-                    width: 170,
-                    btns: [{
-                        text: '详情',
-                        event: 'custom-detail'
-                    }, {
-                        text: '删除',
-                        event: 'custom-del',
-                        type: 'danger',
-                        stop: true
-                    }],
-                    event: 'custom-op',
-                    fixed: 'right',
-                    rowspan: 2
-                }],
-                [{
                     title: '签名',
                     field: 'sign',
-                    width: 200,
-                    align: 'center',
-                    editable: true
+                    width: 80
                 }, {
                     title: '爱好',
                     field: 'like',
-                    width: 250,
-                    align: 'center',
                     checkbox: [{
                         label: '听歌',
                         value: 1
@@ -807,314 +649,479 @@
                     }, {
                         label: '看小说',
                         value: 3
-                    }],
-                    editable: {
-                        type: 'checkbox',
-                        rules: [{ type: 'required' }]
-                    }
+                    }]
                 }]
-            ]
-        });
-        table.on('save', function (obj) {
-            // console.log(obj);
-        });
-        table.on('edit', function (obj) {
-            // console.log(obj);
-        });
-        table.on('custom-add', function (obj) {
-            var sex = Math.ceil(Math.random() * 2);
-            var age = Math.ceil(Math.random() * 100);
-            var phone = '1' + Math.ceil(Math.random() * 100000000000);
-            var like = Math.ceil(Math.random() * 3);
-            var sign = '个性签名' + i;
-            table.addRow({
-                id: 1,
-                data: { id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
             });
+            table.on('change', function () {
+                Dialog.alert(JSON.stringify(table.getData('select')));
+            });
+            return table;
+        }
+        // 可编辑表格
+        function renderTable2() {
+            var data = [];
+            for (var i = 0; i < 10000; i++) {
+                var sex = Math.ceil(Math.random() * 2);
+                var marriage = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, marriage: marriage, phone: phone, sign: sign, like: [like] });
+            };
+            var table = Table.render({
+                elem: '#table2',
+                width: 1000,
+                height: 500,
+                data: data,
+                limit: 20,
+                ellipsis: false,
+                defaultToolbar: true,
+                toolbar: '<button class="song-btn song-btn-sm" song-event="custom-add">添加行</button>\
+                <button class="song-btn song-btn-sm" song-event="custom-checkall">全选/全不选</button>\
+                <button class="song-btn song-btn-sm" song-event="custom-checked">获取选中的数据</button>\
+                <button class="song-btn song-btn-sm" song-event="custom-getadd">获取添加的数据</button>\
+                <button class="song-btn song-btn-sm" song-event="custom-getdel">获取删除的数据</button>\
+                <button class="song-btn song-btn-sm" song-event="custom-getedit">获取修改过的数据</button>',
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left',
+                        rowspan: 2
+                    }, {
+                        title: '用户',
+                        field: 'user',
+                        width: 90,
+                        event: 'custom-name',
+                        fixed: 'left',
+                        rowspan: 2
+                    }, {
+                        title: '手机号',
+                        field: 'phone',
+                        width: 150,
+                        editable: {
+                            type: 'number',
+                            rules: [{ type: 'number' }]
+                        },
+                        fixed: 'left',
+                        sortAble: true,
+                        rowspan: 2
+                    }, {
+                        title: '城市',
+                        field: 'city',
+                        width: 100,
+                        editable: true,
+                        rowspan: 2
+                    }, {
+                        title: '性别',
+                        field: 'sex',
+                        width: 60,
+                        select: [{
+                            label: '男',
+                            value: 1
+                        }, {
+                            label: '女',
+                            value: 2
+                        }],
+                        editable: {
+                            type: 'select',
+                            rules: [{ type: 'required' }]
+                        },
+                        rowspan: 2
+                    }, {
+                        title: '年龄',
+                        field: 'age',
+                        width: 80,
+                        editable: {
+                            edit: function (value, data, id, col) {
+                                return '<input class="song-table-input song-display-inline-block" style="width:50px;" value="' + value + '" /><span>岁</span>';
+                            },
+                            save: function ($edit) {
+                                return $edit.find('input').val();
+                            },
+                            rules: [{ type: 'number' }]
+                        },
+                        sortAble: true,
+                        rowspan: 2,
+                        template: function (value) {
+                            return value + '岁';
+                        }
+                    }, {
+                        title: '婚姻',
+                        field: 'marriage',
+                        width: 150,
+                        radio: [{
+                            label: '未婚',
+                            value: 1
+                        }, {
+                            label: '已婚',
+                            value: 2
+                        }],
+                        editable: {
+                            type: 'radio',
+                            rules: [{ type: 'required' }]
+                        },
+                        rowspan: 2
+                    }, {
+                        title: '其他信息',
+                        align: 'center',
+                        colspan: 2
+                    }, {
+                        type: 'operate',
+                        title: '操作',
+                        width: 170,
+                        btns: [{
+                            text: '详情',
+                            event: 'custom-detail'
+                        }, {
+                            text: '删除',
+                            event: 'custom-del',
+                            type: 'danger',
+                            stop: true
+                        }],
+                        event: 'custom-op',
+                        fixed: 'right',
+                        rowspan: 2
+                    }],
+                    [{
+                        title: '签名',
+                        field: 'sign',
+                        width: 200,
+                        align: 'center',
+                        editable: true
+                    }, {
+                        title: '爱好',
+                        field: 'like',
+                        width: 250,
+                        align: 'center',
+                        checkbox: [{
+                            label: '听歌',
+                            value: 1
+                        }, {
+                            label: '游泳',
+                            value: 2
+                        }, {
+                            label: '看小说',
+                            value: 3
+                        }],
+                        editable: {
+                            type: 'checkbox',
+                            rules: [{ type: 'required' }]
+                        }
+                    }]
+                ]
+            });
+            table.on('save', function (obj) {
+                // console.log(obj);
+            });
+            table.on('edit', function (obj) {
+                // console.log(obj);
+            });
+            table.on('custom-add', function (obj) {
+                var sex = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                table.addRow({
+                    id: 1,
+                    data: { id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
+                });
+            });
+            table.on('custom-del', function (obj) {
+                table.deleteRow(obj.data.id);
+            });
+            table.on('custom-detail', function (obj) {
+                Dialog.alert(JSON.stringify(obj.data));
+            });
+            table.on('custom-op', function (obj) {
+                // console.log('custom-op');
+            });
+            table.on('custom-checkall', function (obj) {
+                table.checkAll();
+            });
+            table.on('custom-checked', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('check')));
+            });
+            table.on('custom-getadd', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('add')));
+            });
+            table.on('custom-getdel', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('delelte')));
+            });
+            table.on('custom-getedit', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('edit')));
+            });
+            table.on('custom-name', function (obj) {
+                Dialog.alert(obj.data.user);
+            });
+            return table;
+        }
+    });
+    require(['./modules/pager.js'], function (Pager) {
+        Pager.render({
+            elem: '#test_page',
+            count: 100,
+            first: '首页',
+            last: '尾页',
+            prev: '上一页',
+            next: '下一页'
         });
-        table.on('custom-del', function (obj) {
-            table.deleteRow(obj.data.id);
+    });
+    require(['./modules/date.js'], function (Date) {
+        Date.render({
+            elem: '#datetime',
+            type: 'datetime'
         });
-        table.on('custom-detail', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(obj.data));
+        Date.render({
+            elem: '#date',
+            type: 'date'
         });
-        table.on('custom-op', function (obj) {
-            // console.log('custom-op');
+        Date.render({
+            elem: '#yearmonth',
+            type: 'yearmonth'
         });
-        table.on('custom-checkall', function (obj) {
-            table.checkAll();
+        Date.render({
+            elem: '#year',
+            type: 'year'
         });
-        table.on('custom-checked', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('check')));
+        Date.render({
+            elem: '#month',
+            type: 'month'
         });
-        table.on('custom-getadd', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('add')));
+        Date.render({
+            elem: '#time',
+            type: 'time'
         });
-        table.on('custom-getdel', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('delelte')));
+        Date.render({
+            elem: '#datetime1,#datetime2',
+            type: 'datetime',
+            range: true
         });
-        table.on('custom-getedit', function (obj) {
-            SongUi.Dialog.alert(JSON.stringify(table.getData('edit')));
+        Date.render({
+            elem: '#date1,#date2',
+            type: 'date',
+            range: true
         });
-        table.on('custom-name', function (obj) {
-            SongUi.Dialog.alert(obj.data.user);
+        Date.render({
+            elem: '#yearmonth1,#yearmonth2',
+            type: 'yearmonth',
+            range: true
         });
-        return table;
-    }
-    SongUi.Pager.render({
-        elem: '#test_page',
-        count: 100,
-        first: '首页',
-        last: '尾页',
-        prev: '上一页',
-        next: '下一页'
+        Date.render({
+            elem: '#month1,#month2',
+            type: 'month',
+            range: true
+        });
+        Date.render({
+            elem: '#year1,#year2',
+            type: 'year',
+            range: true
+        });
+        Date.render({
+            elem: '#time1,#time2',
+            type: 'time',
+            range: true
+        });
+        Date.render({
+            elem: '#time3',
+            type: 'time',
+            range: true
+        });
     });
-    SongUi.Date.render({
-        elem: '#datetime',
-        type: 'datetime'
-    });
-    SongUi.Date.render({
-        elem: '#date',
-        type: 'date'
-    });
-    SongUi.Date.render({
-        elem: '#yearmonth',
-        type: 'yearmonth'
-    });
-    SongUi.Date.render({
-        elem: '#year',
-        type: 'year'
-    });
-    SongUi.Date.render({
-        elem: '#month',
-        type: 'month'
-    });
-    SongUi.Date.render({
-        elem: '#time',
-        type: 'time'
-    });
-    SongUi.Date.render({
-        elem: '#datetime1,#datetime2',
-        type: 'datetime',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#date1,#date2',
-        type: 'date',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#yearmonth1,#yearmonth2',
-        type: 'yearmonth',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#month1,#month2',
-        type: 'month',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#year1,#year2',
-        type: 'year',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#time1,#time2',
-        type: 'time',
-        range: true
-    });
-    SongUi.Date.render({
-        elem: '#time3',
-        type: 'time',
-        range: true
-    });
-    var menu = SongUi.MenuNav.render({
-        position: 'static',
-        elem: '#menu1',
-        check: true,
-        template: function (item) {
-            if (item.title == '菜单1') {
-                return '<span style="color:red">' + '★' + '</span>' + item.title;
-            } else {
-                return item.title;
-            }
-        },
-        data: [{
-            title: '菜单1',
-            id: 0
-        },
-        {
-            title: '菜单2',
-            spreadType: 'hover-right',
-            children: [
-                { title: '菜单2-1', children: [{ title: '菜单2-1-1' }] },
-                { title: '菜单2-2' }
-            ],
-            id: 1
-        },
-        {
-            title: '菜单3',
-            children: [
-                { title: '菜单3-1' },
-                { title: '菜单3-2', spread: true, children: [{ title: '菜单3-2-1' }] },
-                { title: '菜单3-3', children: [{ title: '菜单3-3-1' }] }
-            ],
-            id: 2
-        }]
-    });
-    menu.on('click', function (obj) {
-        // console.log('click');
-        // console.log(obj);
-    });
-    menu.on('spread', function (obj) {
-        // console.log('spread');
-        // console.log(obj);
-    });
-    menu.on('close', function (obj) {
-        // console.log('close');
-        // console.log(obj);
-    });
-    SongUi.MenuNav.render({
-        elem: '#menu2',
-        position: 'absolute',
-        trigger: 'hover',
-        data: [{
-            title: '菜单1'
-        },
-        {
-            title: '菜单2'
-        },
-        {
-            title: '菜单3'
-        }]
-    });
-    SongUi.MenuNav.render({
-        elem: '#nav1',
-        type: 'nav',
-        mode: 'horizontal',
-        data: [{
-            title: '导航菜单1'
-        },
-        {
-            title: '导航菜单2'
-        },
-        {
-            title: '导航菜单3',
-            children: [{
-                title: '菜单3-1'
-            }, {
-                title: '菜单3-2',
+    require(['./modules/menu-nav.js'], function (MenuNav) {
+        var menu = MenuNav.render({
+            position: 'static',
+            elem: '#menu1',
+            check: true,
+            template: function (item) {
+                if (item.title == '菜单1') {
+                    return '<span style="color:red">' + '★' + '</span>' + item.title;
+                } else {
+                    return item.title;
+                }
+            },
+            data: [{
+                title: '菜单1',
+                id: 0
+            },
+            {
+                title: '菜单2',
+                spreadType: 'hover-right',
+                children: [
+                    { title: '菜单2-1', children: [{ title: '菜单2-1-1' }] },
+                    { title: '菜单2-2' }
+                ],
+                id: 1
+            },
+            {
+                title: '菜单3',
+                children: [
+                    { title: '菜单3-1' },
+                    { title: '菜单3-2', spread: true, children: [{ title: '菜单3-2-1' }] },
+                    { title: '菜单3-3', children: [{ title: '菜单3-3-1' }] }
+                ],
+                id: 2
+            }]
+        });
+        menu.on('click', function (obj) {
+            // console.log('click');
+            // console.log(obj);
+        });
+        menu.on('spread', function (obj) {
+            // console.log('spread');
+            // console.log(obj);
+        });
+        menu.on('close', function (obj) {
+            // console.log('close');
+            // console.log(obj);
+        });
+        MenuNav.render({
+            elem: '#menu2',
+            position: 'absolute',
+            trigger: 'hover',
+            data: [{
+                title: '菜单1'
+            },
+            {
+                title: '菜单2'
+            },
+            {
+                title: '菜单3'
+            }]
+        });
+        MenuNav.render({
+            elem: '#nav1',
+            type: 'nav',
+            mode: 'horizontal',
+            data: [{
+                title: '导航菜单1'
+            },
+            {
+                title: '导航菜单2'
+            },
+            {
+                title: '导航菜单3',
                 children: [{
-                    title: '菜单3-2-1'
+                    title: '菜单3-1'
                 }, {
-                    title: '菜单3-2-2'
+                    title: '菜单3-2',
+                    children: [{
+                        title: '菜单3-2-1'
+                    }, {
+                        title: '菜单3-2-2'
+                    }]
                 }]
             }]
-        }]
-    });
-    SongUi.MenuNav.render({
-        elem: '#nav2',
-        type: 'nav',
-        data: [{
-            title: '导航菜单1',
-            children: [{
-                title: '导航菜单1-1'
-            }, {
-                title: '导航菜单1-2',
-                spread: true,
+        });
+        MenuNav.render({
+            elem: '#nav2',
+            type: 'nav',
+            data: [{
+                title: '导航菜单1',
                 children: [{
-                    title: '导航菜单1-2-1'
+                    title: '导航菜单1-1'
                 }, {
-                    title: '导航菜单1-2-2'
+                    title: '导航菜单1-2',
+                    spread: true,
+                    children: [{
+                        title: '导航菜单1-2-1'
+                    }, {
+                        title: '导航菜单1-2-2'
+                    }]
                 }]
+            },
+            {
+                title: '导航菜单2'
+            },
+            {
+                title: '导航菜单3'
             }]
-        },
-        {
-            title: '导航菜单2'
-        },
-        {
-            title: '导航菜单3'
-        }]
+        });
     });
-    var tree = SongUi.Tree.render({
-        elem: '#tree1',
-        style: 'line',
-        showCheckbox: true,
-        onlyIconSwitch: false,
-        search: true,
-        data: [{
-            title: 'item1',
-            id: '1',
-            children: [{
-                id: '1-1',
-                title: 'item1-1'
-            }, {
-                id: '1-2',
-                title: 'item1-2',
-                // disabled: true,
-                spread: true,
+    require(['./modules/tree.js'], function (Tree) {
+        var tree = Tree.render({
+            elem: '#tree1',
+            style: 'line',
+            showCheckbox: true,
+            onlyIconSwitch: false,
+            search: true,
+            data: [{
+                title: 'item1',
+                id: '1',
                 children: [{
-                    id: '1-2-1',
-                    title: 'item1-2-1'
+                    id: '1-1',
+                    title: 'item1-1'
+                }, {
+                    id: '1-2',
+                    title: 'item1-2',
+                    // disabled: true,
+                    spread: true,
+                    children: [{
+                        id: '1-2-1',
+                        title: 'item1-2-1'
+                    }]
                 }]
+            },
+            {
+                id: '2',
+                title: 'item2',
+                disabled: true,
+                checked: true
+            },
+            {
+                id: '3',
+                title: 'item3'
             }]
-        },
-        {
-            id: '2',
-            title: 'item2',
-            disabled: true,
-            checked: true
-        },
-        {
-            id: '3',
-            title: 'item3'
-        }]
+        });
+        tree.on('click', function (obj) {
+            // console.log('click');
+            // console.log(obj);
+        });
+        tree.on('change', function (obj) {
+            // console.log('checkbox');
+            // console.log(obj);
+        });
+        tree.on('spread', function (obj) {
+            // console.log('spread');
+            // console.log(obj);
+        });
+        tree.on('close', function (obj) {
+            // console.log('close');
+            // console.log(obj);
+        });
     });
-    tree.on('click', function (obj) {
-        // console.log('click');
-        // console.log(obj);
-    });
-    tree.on('change', function (obj) {
-        // console.log('checkbox');
-        // console.log(obj);
-    });
-    tree.on('spread', function (obj) {
-        // console.log('spread');
-        // console.log(obj);
-    });
-    tree.on('close', function (obj) {
-        // console.log('close');
-        // console.log(obj);
-    });
-    var transfer = SongUi.Transfer.render({
-        elem: '#tansfer1',
-        search: true,
-        stretch: true,
-        leftTitle: '标题1',
-        rightTitle: '标题2',
-        data: [{
-            id: 1,
-            title: 'item1',
-            checked: true
-        }, {
-            id: 2,
-            title: 'item2',
-            disabled: true
-        }, {
-            id: 3,
-            title: 'item3'
-        }, {
-            id: 4,
-            title: 'item4'
-        }],
-        value: [{
-            id: 5,
-            title: 'item5'
-        }]
-    });
-    transfer.on('change', function (obj) {
-        // console.log('close');
-        // console.log(obj);
+    require(['./modules/transfer.js'], function (Transfer) {
+        var transfer = Transfer.render({
+            elem: '#tansfer1',
+            search: true,
+            stretch: true,
+            leftTitle: '标题1',
+            rightTitle: '标题2',
+            data: [{
+                id: 1,
+                title: 'item1',
+                checked: true
+            }, {
+                id: 2,
+                title: 'item2',
+                disabled: true
+            }, {
+                id: 3,
+                title: 'item3'
+            }, {
+                id: 4,
+                title: 'item4'
+            }],
+            value: [{
+                id: 5,
+                title: 'item5'
+            }]
+        });
+        transfer.on('change', function (obj) {
+            // console.log('close');
+            // console.log(obj);
+        });
     });
 </script>
 
