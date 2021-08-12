@@ -441,7 +441,7 @@ textarea {
 }
 
 .song-form-select .song-select-dl dd:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-form-select .song-select-dl dd.song-select-active {
@@ -1592,7 +1592,7 @@ textarea {
 }
 
 .song-table-select-dl dd:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-table-select-dl dd.song-table-select-active {
@@ -1768,7 +1768,7 @@ textarea {
 }
 
 .song-date-date td:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-date-date .song-date-prev-month,
@@ -1900,7 +1900,7 @@ textarea {
 }
 
 .song-date-year li:hover, .song-date-month li:hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-date-month li {
@@ -2075,18 +2075,18 @@ textarea {
 }
 
 .song-menu li .song-menu-hover {
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-menu li .song-menu-checked {
   color: #5FB878;
-  background-color: #eeeeee;
+  background-color: #f6f6f6;
 }
 
 .song-menu li .song-menu-checked:after {
   content: "";
   position: absolute;
-  left: 0;
+  right: 0;
   width: 4px;
   height: 100%;
   background-color: #5FB878;
@@ -2201,17 +2201,21 @@ textarea {
 }
 
 .song-menu-nav li .song-menu-hover {
+  color: #ffd04b;
   background-color: #434a50;
 }
 
 .song-menu-nav li .song-menu-checked {
-  color: #ffffff;
-  background-color: #434a50;
+  color: #ffd04b;
+  background-color: #545c64;
+}
+
+.song-menu-nav li .song-menu-checked:after {
+  display: none;
 }
 
 .song-menu-nav li .song-menu-checked-parent {
   color: #ffffff;
-  background-color: #545c64;
 }
 
 .song-menu-nav a {
@@ -2236,17 +2240,18 @@ textarea {
 }
 
 .song-menu-nav-horizontal li .song-menu-checked:after {
+  display: block;
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: #5FB878;
+  background-color: #ffd04b;
 }
 
 .song-menu-nav-horizontal li .song-menu-checked-parent {
-  background-color: #434a50;
+  color: #ffd04b;
 }
 
 .song-menu-nav-horizontal a {

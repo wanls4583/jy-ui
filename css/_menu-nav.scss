@@ -1,7 +1,10 @@
 .song-menu {
     $bgColor: #ffffff;
     $hoverBgColor: $hover-background-color;
+    $checkedBgColor: $hover-background-color;
     $textColor: #666666;
+    $activeColor: $link-color;
+    $barColor: $link-color;
 
     position: relative;
     height: auto;
@@ -36,21 +39,21 @@
         }
 
         .song-menu-checked {
-            color: $link-color;
-            background-color: $hoverBgColor;
+            color: $activeColor;
+            background-color: $checkedBgColor;
 
             &:after {
                 content: "";
                 position: absolute;
-                left: 0;
+                right: 0;
                 width: 4px;
                 height: 100%;
-                background-color: $link-color;
+                background-color: $barColor;
             }
         }
 
         .song-menu-checked-parent {
-            color: $link-color;
+            color: $activeColor;
         }
 
         &.song-menu-border {
@@ -142,7 +145,10 @@
 .song-menu-nav {
     $bgColor: #545c64;
     $hoverBgColor: #434a50;
+    $checkedBgColor: #545c64;
     $textColor: #ffffff;
+    $activeColor: #ffd04b;
+    $barColor: #ffd04b;
 
     border: 0;
     background-color: $bgColor;
@@ -157,17 +163,21 @@
         color: $textColor;
 
         .song-menu-hover {
+            color: $activeColor;
             background-color: $hoverBgColor;
         }
 
         .song-menu-checked {
-            color: $textColor;
-            background-color: $hoverBgColor;
+            color: $activeColor;
+            background-color: $checkedBgColor;
+
+            &:after {
+                display: none;
+            }
         }
 
         .song-menu-checked-parent {
             color: $textColor;
-            background-color: $bgColor;
         }
     }
 
@@ -191,18 +201,19 @@
 
             .song-menu-checked {
                 &:after {
+                    display: block;
                     content: "";
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     width: 100%;
                     height: 4px;
-                    background-color: $link-color;
+                    background-color: $barColor;
                 }
             }
 
             .song-menu-checked-parent {
-                background-color: $hoverBgColor;
+                color: $activeColor;
             }
         }
 
