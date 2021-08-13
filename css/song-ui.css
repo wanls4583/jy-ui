@@ -2711,6 +2711,87 @@ textarea {
   display: inline;
 }
 
+.song-tab-header {
+  position: relative;
+  height: 40px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.song-tab-header-scroll {
+  border-bottom: 1px solid #eeeeee;
+  font-size: 0;
+  white-space: nowrap;
+}
+
+.song-tab-title {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  min-width: 65px;
+  height: 38px;
+  _height: 39px;
+  line-height: 38px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #ffffff;
+  border-bottom: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-tab-title-active {
+  border-color: #eeeeee;
+}
+
+.song-tab-title-active:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 0;
+  border-bottom: 1px solid #ffffff;
+}
+
+.song-tab-item {
+  display: none;
+  padding: 20px 0;
+}
+
+.song-tab-item-active {
+  display: block;
+}
+
+.song-tab-prev, .song-tab-next {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-family: 'iconfont';
+  width: 40px;
+  height: 39px;
+  line-height: 39px;
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 1px solid #eeeeee;
+  background-color: #ffffff;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.song-tab-next {
+  left: auto;
+  right: 0;
+}
+
 @font-face {
   font-family: 'iconfont';
   /* Project id 2505561 */

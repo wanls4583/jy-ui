@@ -492,6 +492,31 @@
         </div>
     </fieldset>
     <fieldset class="song-field">
+        <legend>标签页</legend>
+        <div class="song-field-box">
+            <div class="song-tab" style="width:400px;">
+                <div class="song-tab-header">
+                    <div class="song-tab-header-scroll">
+                        <div class="song-tab-title song-tab-title-active" name="tab1">标签1</div>
+                        <div class="song-tab-title" name="tab2">标签2</div>
+                        <div class="song-tab-title" name="tab3">标签3</div>
+                        <div class="song-tab-title" name="tab4">标签4</div>
+                        <div class="song-tab-title" name="tab5">标签5</div>
+                        <div class="song-tab-title" name="tab6">标签6</div>
+                        <div class="song-tab-title" name="tab7">标签7</div>
+                        <div class="song-tab-title" name="tab8">标签8</div>
+                        <div class="song-tab-title" name="tab9">标签9</div>
+                    </div>
+                </div>
+                <div class="song-tab-content">
+                    <div class="song-tab-item song-tab-item-active" target="tab1">内容1</div>
+                    <div class="song-tab-item" target="tab2">内容2</div>
+                    <div class="song-tab-item" target="tab3">内容3</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="song-field">
         <legend>辅助线</legend>
         <div class="song-field-box">
             <hr>
@@ -1122,6 +1147,9 @@
             // console.log('close');
             // console.log(obj);
         });
+    });
+    require(['./modules/tab.js'], function (Form) {
+
     });
 </script>
 
