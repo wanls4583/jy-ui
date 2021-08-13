@@ -2713,15 +2713,23 @@ textarea {
 
 .song-tab-header {
   position: relative;
-  height: 40px;
-  overflow: hidden;
   background-color: #ffffff;
+  overflow: hidden;
 }
 
 .song-tab-header-scroll {
-  border-bottom: 1px solid #eeeeee;
+  position: relative;
+  overflow: hidden;
+  height: 41px;
+}
+
+.song-tab-titles {
+  height: 40px;
   font-size: 0;
   white-space: nowrap;
+  -webkit-transition: left 0.2s;
+  transition: left 0.2s;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .song-tab-title {
@@ -2730,13 +2738,11 @@ textarea {
   *display: inline;
   *zoom: 1;
   min-width: 65px;
-  height: 38px;
-  _height: 39px;
   line-height: 38px;
   font-size: 14px;
   text-align: center;
-  border: 1px solid #ffffff;
-  border-bottom: 0;
+  background-color: #ffffff;
+  border: 1px solid transparent;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -2746,16 +2752,7 @@ textarea {
 
 .song-tab-title-active {
   border-color: #eeeeee;
-}
-
-.song-tab-title-active:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 100%;
-  height: 0;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
 }
 
 .song-tab-item {
@@ -2767,6 +2764,16 @@ textarea {
   display: block;
 }
 
+.song-tab-scroll .song-tab-header {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.song-tab-scroll .song-tab-titles {
+  position: absolute;
+  left: 0;
+}
+
 .song-tab-prev, .song-tab-next {
   position: absolute;
   top: 0;
@@ -2774,12 +2781,11 @@ textarea {
   z-index: 1;
   font-family: 'iconfont';
   width: 40px;
-  height: 39px;
-  line-height: 39px;
+  height: 40px;
+  line-height: 40px;
   font-size: 14px;
   text-align: center;
   border-bottom: 1px solid #eeeeee;
-  background-color: #ffffff;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -2790,6 +2796,16 @@ textarea {
 .song-tab-next {
   left: auto;
   right: 0;
+}
+
+.song-tab-line .song-tab-title {
+  border: 0;
+}
+
+.song-tab-line .song-tab-title-active {
+  line-height: 35px;
+  color: #5FB878;
+  border-bottom: 3px solid #5FB878;
 }
 
 @font-face {

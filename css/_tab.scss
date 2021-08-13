@@ -1,15 +1,23 @@
 .song-tab {
     &-header {
         position: relative;
-        height: 40px;
-        overflow: hidden;
         background-color: #ffffff;
+        overflow: hidden;
 
-        &-scroll {
-            border-bottom: 1px solid $border-color;
-            font-size: 0;
-            white-space: nowrap;
-        }
+    }
+
+    &-header-scroll {
+        position: relative;
+        overflow: hidden;
+        height: 41px;
+    }
+
+    &-titles {
+        height: 40px;
+        font-size: 0;
+        white-space: nowrap;
+        transition: left 0.2s;
+        border-bottom: 1px solid $border-color;
     }
 
 
@@ -19,28 +27,17 @@
         *display: inline;
         *zoom: 1;
         min-width: 65px;
-        height: 38px;
-        _height: 39px;
         line-height: 38px;
         font-size: 14px;
         text-align: center;
-        border: 1px solid #ffffff;
-        border-bottom: 0;
+        background-color: #ffffff;
+        border: 1px solid transparent;
         cursor: pointer;
         user-select: none;
 
         &-active {
             border-color: $border-color;
-
-            &:after {
-                content: "";
-                position: absolute;
-                left: 0;
-                bottom: -1px;
-                width: 100%;
-                height: 0;
-                border-bottom: 1px solid #ffffff;
-            }
+            border-bottom: 2px solid #ffffff;
         }
     }
 
@@ -53,6 +50,18 @@
         }
     }
 
+    &-scroll {
+        .song-tab-header {
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        .song-tab-titles {
+            position: absolute;
+            left: 0;
+        }
+    }
+
     &-prev,
     &-next {
         position: absolute;
@@ -61,12 +70,11 @@
         z-index: 1;
         font-family: 'iconfont';
         width: 40px;
-        height: 39px;
-        line-height: 39px;
+        height: 40px;
+        line-height: 40px;
         font-size: 14px;
         text-align: center;
         border-bottom: 1px solid $border-color;
-        background-color: #ffffff;
         cursor: pointer;
         user-select: none;
     }
@@ -74,5 +82,16 @@
     &-next {
         left: auto;
         right: 0;
+    }
+}
+
+.song-tab-line {
+    .song-tab-title {
+        border: 0;
+    }
+    .song-tab-title-active {
+        line-height: 35px;
+        color: $link-color;
+        border-bottom: 3px solid $link-color;
     }
 }
