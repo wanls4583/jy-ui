@@ -372,10 +372,10 @@
                     that.initCols.hasTyped = true;
                 }
             });
-            if (this.cols[0].fixed === 'left') {
+            if (this.multilevelCols[0][0].fixed === 'left') {
                 this.hasLeftFixed = true;
             }
-            if (this.cols[this.cols.length - 1].fixed === 'right') {
+            if (this.multilevelCols[0][this.multilevelCols[0].length - 1].fixed === 'right') {
                 this.hasRightFixed = true;
             }
             this.setColMap();
@@ -613,7 +613,7 @@
                         this.$rightTableHeader && this.$rightTableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                     } else {
                         this.checkedData = this.sortedData.concat([]);
-                        this.$main.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.$headerMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                         this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                         this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
                     }
@@ -624,9 +624,9 @@
                         this.$rightTableHeader && this.$rightTableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
                     } else {
                         this.checkedData = [];
-                        this.$main.find('table div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$leftHeaderMain && this.$leftHeaderMain.find('table div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$rightHeaderMain && this.$rightHeaderMain.find('table div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$headerMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
                     }
                 }
             }
