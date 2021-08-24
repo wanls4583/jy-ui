@@ -71,8 +71,8 @@
         var customRules = {
             'max-250': {
                 msg: '最多输入250个字符',
-                verify: function(str) {
-                    if(str && str.length > 250) {
+                verify: function (str) {
+                    if (str && str.length > 250) {
                         return false;
                     }
                     return true;
@@ -105,7 +105,7 @@
         }
 
         Class.prototype.addRule = function (rules) {
-            if(typeof rules === 'object') {
+            if (typeof rules === 'object') {
                 Object(customRules, rules);
             }
         }
@@ -133,13 +133,13 @@
                                 });
                                 msg = verifyRule.msg;
                                 if (tagName == 'select') {
-                                    input.$ui && input.$ui.find('input.jy-input').addClass(dangerClass);
+                                    input.next('.' + formClass.select) && input.next('.' + formClass.select).find('input.jy-input').addClass(dangerClass);
                                 } else {
                                     $input.addClass(dangerClass);
                                 }
                             } else {
                                 if (tagName == 'select') {
-                                    input.$ui && input.$ui.find('input.jy-input').removeClass(dangerClass);
+                                    input.next('.' + formClass.select) && input.next('.' + formClass.select).find('input.jy-input').removeClass(dangerClass);
                                 } else {
                                     $input.removeClass(dangerClass);
                                 }
@@ -193,7 +193,7 @@
         }
 
         // 渲染页面ui
-        Class.prototype.render = function (filter, container) {
+        Class.prototype.render = function (filter, container, refresh) {
             var tagName = '';
             if (filter) {
                 var reg = /^(.+?)(?:\((.+)\))?$/;
@@ -204,26 +204,26 @@
             }
             switch (tagName) {
                 case 'switch':
-                    this.renderSwitch(filter, container);
+                    this.renderSwitch(filter, container, refresh);
                     break;
                 case 'radiao':
-                    this.renderRadio(filter, container);
+                    this.renderRadio(filter, container, refresh);
                     break;
                 case 'checkbox':
-                    this.renderCheckbox(filter, container);
+                    this.renderCheckbox(filter, container, refresh);
                     break;
                 case 'select':
-                    this.renderSelect(filter, container);
+                    this.renderSelect(filter, container, refresh);
                     break;
                 default:
-                    this.renderSwitch('', container);
-                    this.renderRadio('', container);
-                    this.renderCheckbox('', container);
-                    this.renderSelect('', container);
+                    this.renderSwitch('', container, refresh);
+                    this.renderRadio('', container, refresh);
+                    this.renderCheckbox('', container, refresh);
+                    this.renderSelect('', container, refresh);
             }
         }
         //渲染开关
-        Class.prototype.renderSwitch = function (filter, container) {
+        Class.prototype.renderSwitch = function (filter, container, refresh) {
             var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][jy-skin="switch"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
@@ -237,9 +237,10 @@
                 var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.switchClass];
                 var text = 'OFF';
+                var $ui = $input.next('.' + formClass.switchClass);
                 // 忽略标签
                 if (ignore) {
-                    input.$ui && input.$ui.remove();
+                    $ui.remove();
                     return;
                 }
                 // 已禁用
@@ -252,10 +253,14 @@
                     text = 'ON';
                 }
                 // 已经渲染过
-                if (input.$ui) {
-                    input.$ui.attr('class', classNames.join(' '));
-                    input.$ui.children('span').html(text);
-                    return;
+                if ($ui.length) {
+                    if (refresh) {
+                        $ui.remove();
+                    } else {
+                        $ui.attr('class', classNames.join(' '));
+                        $ui.children('span').html(text);
+                        return;
+                    }
                 }
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
@@ -263,7 +268,6 @@
                         <span>' + text + '</span>\
                     </div>');
                 $html.insertAfter(input);
-                input.$ui = $html;
                 $input.hide();
                 that.bindSwitchEvent($html, $container);
             });
@@ -295,7 +299,7 @@
             });
         }
         // 渲染单选按钮
-        Class.prototype.renderRadio = function (filter, container) {
+        Class.prototype.renderRadio = function (filter, container, refresh) {
             var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="radio"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
@@ -308,9 +312,10 @@
                 var $input = $(input);
                 var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.radio];
+                var $ui = $input.next('.' + formClass.radio);
                 // 忽略标签
                 if (ignore) {
-                    input.$ui && input.$ui.remove();
+                    $ui.remove();
                     return;
                 }
                 // 已禁用
@@ -322,9 +327,13 @@
                     classNames.push(formClass.radioChecked);
                 }
                 // 已经渲染过
-                if (input.$ui) {
-                    input.$ui.attr('class', classNames.join(' '));
-                    return;
+                if ($ui.length) {
+                    if (refresh) {
+                        $ui.remove();
+                    } else {
+                        $ui.attr('class', classNames.join(' '));
+                        return;
+                    }
                 }
                 var html =
                     '<div class="' + classNames.join(' ') + '">\
@@ -334,7 +343,6 @@
                     </div>';
                 var $html = $(html);
                 $html.insertAfter(input);
-                input.$ui = $html;
                 $input.hide();
                 $container[0].radios = $container[0].radios || [];
                 $container[0].radios.push(input);
@@ -360,7 +368,7 @@
                 $container[0].radios.map(function (radio) {
                     var $radio = $(radio);
                     if ($radio.attr('name') == name && $radio.attr('jy-filter') == filter) {
-                        radio.$ui.removeClass(formClass.radioChecked);
+                        radio.next('.' + formClass.radio).removeClass(formClass.radioChecked);
                     }
                 });
                 $this.addClass(formClass.radioChecked);
@@ -378,7 +386,7 @@
         }
 
         // 渲染复选框
-        Class.prototype.renderCheckbox = function (filter, container) {
+        Class.prototype.renderCheckbox = function (filter, container, refresh) {
             var that = this;
             var $container = $(container || docBody);
             var selector = 'input[type="checkbox"][jy-skin!="switch"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
@@ -392,10 +400,11 @@
                 var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.checkbox];
                 var disabled = $input.prop('disabled');
-                var checked = $input.prop('checked')
+                var checked = $input.prop('checked');
+                var $ui = $input.next('.' + formClass.checkbox);
                 // 忽略标签
                 if (ignore) {
-                    input.$ui && input.$ui.remove();
+                    $ui.remove();
                     return;
                 }
                 if (checked && disabled) {
@@ -411,8 +420,12 @@
                     }
                 }
                 // 已经渲染过
-                if (input.$ui) {
-                    input.$ui.attr('class', classNames.join(' '));
+                if ($ui.length) {
+                    if (refresh) {
+                        $ui.remove();
+                    } else {
+                        $ui.attr('class', classNames.join(' '));
+                    }
                     return;
                 }
                 var $html = $(
@@ -421,7 +434,6 @@
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>');
                 $html.insertAfter(input);
-                input.$ui = $html;
                 $input.hide();
                 $container[0].checkboxs = $container[0].checkboxs || [];
                 $container[0].checkboxs.push(input);
@@ -467,7 +479,7 @@
         }
 
         // 渲染下拉选择框
-        Class.prototype.renderSelect = function (filter, container) {
+        Class.prototype.renderSelect = function (filter, container, refresh) {
             var that = this;
             var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[jy-filter="' + filter + '"]' : '');
@@ -482,8 +494,9 @@
                 var search = $select.attr('jy-search') === undefined ? false : true;
                 var placeholder = $select.attr('placeholder') || '请选择';
                 var classNames = [formClass.select];
+                var $ui = $input.next('.' + formClass.select);
                 // 删除已经渲染过的ui
-                select.$ui && select.$ui.remove();
+                $ui.remove();
                 // 忽略标签
                 if (ignore) {
                     return;
@@ -506,9 +519,9 @@
                     var text = $opt.text();
                     var value = $opt.val() || '';
                     var classNames = [];
-                    if (!text) {
+                    if (!value) {
                         classNames.push(formClass.selectHolder);
-                        if(text) {
+                        if (text) {
                             placeholder = text;
                             $input.attr('placeholder', placeholder);
                         }
@@ -523,7 +536,6 @@
                 dlHtml += '</dl>';
                 $html.append(dlHtml);
                 $html.insertAfter($select);
-                select.$ui = $html;
                 $container[0].selects = $container[0].selects || [];
                 $container[0].selects.push(select);
                 docBody.selects = docBody.selects || [];
