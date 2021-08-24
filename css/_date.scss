@@ -1,5 +1,6 @@
-.song-date {
+.jy-date {
     position: absolute;
+    z-index: 999999;
     border: 1px solid $border-color;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
     background-color: $white-color;
@@ -55,7 +56,7 @@
             right: $pd10;
         }
 
-        .song-icon {
+        .jy-icon {
             padding: 0 5px;
             cursor: pointer;
 
@@ -102,8 +103,8 @@
             }
         }
 
-        .song-date-prev-month,
-        .song-date-next-month {
+        .jy-date-prev-month,
+        .jy-date-next-month {
             color: $gray-color;
 
             &:hover {
@@ -161,6 +162,10 @@
         &-disabled {
             color: $gray-color;
             cursor: not-allowed;
+
+            &:hover {
+                color: $gray-color;
+            }
         }
     }
 
@@ -207,7 +212,7 @@
             cursor: pointer;
         }
 
-        .song-date-time-minute {
+        .jy-date-time-minute {
             border-left: 0;
             border-right: 0;
         }
@@ -261,7 +266,7 @@
     }
 
     &-show-year {
-        .song-date {
+        .jy-date {
             &-year {
                 display: block;
             }
@@ -277,7 +282,7 @@
     }
 
     &-show-year-month {
-        .song-date {
+        .jy-date {
             &-month {
                 display: block;
             }
@@ -293,7 +298,7 @@
     }
 
     &-show-month {
-        .song-date {
+        .jy-date {
             &-month {
                 display: block;
             }
@@ -307,7 +312,7 @@
     }
 
     &-show-date {
-        .song-date {
+        .jy-date {
             &-date {
                 display: block;
             }
@@ -326,7 +331,7 @@
     }
 
     &-show-time {
-        .song-date {
+        .jy-date {
             &-time {
                 display: block;
             }
@@ -341,6 +346,7 @@
 
     &-range {
         position: absolute;
+        z-index: 999999;
         width: 274px * 2 + 1px;
         _width: 274px * 2 + 2px;
         border: 1px solid $border-color;
@@ -348,11 +354,11 @@
         background-color: $white-color;
         font-size: 0;
 
-        .song-date {
+        .jy-date {
             box-shadow: none;
             border: 0;
 
-            .song-date-footer {
+            .jy-date-footer {
                 display: none;
             }
 
@@ -362,10 +368,16 @@
         }
     }
 
+    &-range-content {
+        position: relative;
+        z-index: 0;
+    }
+
     &-tip {
         position: absolute;
         top: 50%;
         left: 50%;
+        z-index: 1;
         line-height: 24px;
         padding: 10px 20px;
         font-size: 12px;
@@ -377,7 +389,7 @@
     }
 
     &-animation-hover-down {
-        animation-name: song-date-keyframes-hover-down;
+        animation-name: jy-date-keyframes-hover-down;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
@@ -385,7 +397,7 @@
 }
 
 
-@keyframes song-date-keyframes-hover-down {
+@keyframes jy-date-keyframes-hover-down {
     0% {
         opacity: 0;
         transform: translateY(-20px);

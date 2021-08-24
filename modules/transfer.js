@@ -7,52 +7,52 @@
         var checkedIcon = '&#xe737;';
         var searchIcon = '&#xe642;';
         var tpl = {
-            transfer: '<div class="song-transfer"></div>',
-            left: '<div class="song-transfer-left">\
-                <div class="song-transfer-title">\
-                    <div class="song-transfer-checkbox"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
+            transfer: '<div class="jy-transfer"></div>',
+            left: '<div class="jy-transfer-left">\
+                <div class="jy-transfer-title">\
+                    <div class="jy-transfer-checkbox"><span class="jy-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
                 </div>\
-                <div class="song-transfer-search">\
-                    <div class="song-transfer-search-container"><i>' + searchIcon + '</i><input class="song-transfer-search-input" placeholder="关键词搜索" /></div>\
+                <div class="jy-transfer-search">\
+                    <div class="jy-transfer-search-container"><i>' + searchIcon + '</i><input class="jy-transfer-search-input" placeholder="关键词搜索" /></div>\
                 </div>\
-                <div class="song-transfer-left-body"><div class="song-transfer-empty">无数据</div></div>\
+                <div class="jy-transfer-left-body"><div class="jy-transfer-empty">无数据</div></div>\
             </div>',
-            right: '<div class="song-transfer-right">\
-                <div class="song-transfer-title">\
-                    <div class="song-transfer-checkbox"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
+            right: '<div class="jy-transfer-right">\
+                <div class="jy-transfer-title">\
+                    <div class="jy-transfer-checkbox"><span class="jy-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
                 </div>\
-                <div class="song-transfer-search">\
-                    <div class="song-transfer-search-container"><i>' + searchIcon + '</i><input class="song-transfer-search-input" placeholder="关键词搜索" /></div>\
+                <div class="jy-transfer-search">\
+                    <div class="jy-transfer-search-container"><i>' + searchIcon + '</i><input class="jy-transfer-search-input" placeholder="关键词搜索" /></div>\
                 </div>\
-                <div class="song-transfer-right-body"><div class="song-transfer-empty">无数据</div></div>\
+                <div class="jy-transfer-right-body"><div class="jy-transfer-empty">无数据</div></div>\
             </div>',
-            center: '<div class="song-transfer-center"><div class="song-transfer-btns"></div></div>',
-            item: '<div class="song-transfer-item" data-key="<%-key%>">\
-                <div class="song-transfer-checkbox" data-key="<%-key%>"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
+            center: '<div class="jy-transfer-center"><div class="jy-transfer-btns"></div></div>',
+            item: '<div class="jy-transfer-item" data-key="<%-key%>">\
+                <div class="jy-transfer-checkbox" data-key="<%-key%>"><span class="jy-checkbox-icon"><i>' + checkedIcon + '</i></span><span><%-(title||"&nbsp;")%></span></div>\
             </div>',
-            leftBtn: '<div class="song-transfer-btn">' + leftIcon + '</div>',
-            rightBtn: '<div class="song-transfer-btn">' + rightIcon + '</div>'
+            leftBtn: '<div class="jy-transfer-btn">' + leftIcon + '</div>',
+            rightBtn: '<div class="jy-transfer-btn">' + rightIcon + '</div>'
         }
         var transferClass = {
-            transfer: 'song-transfer',
-            left: 'song-transfer-left',
-            right: 'song-transfer-right',
-            leftBody: 'song-transfer-left-body',
-            rightBody: 'song-transfer-right-body',
-            item: 'song-transfer-item',
-            title: 'song-transfer-title',
-            search: 'song-transfer-search',
-            btns: 'song-transfer-btns',
-            btn: 'song-transfer-btn',
-            activeBtn: 'song-transfer-btn-active',
-            checkbox: 'song-transfer-checkbox',
-            checked: 'song-transfer-checked',
-            disabled: 'song-transfer-disabled',
-            checkedDisabled: 'song-tree-checked-disabled',
-            empty: 'song-transfer-empty'
+            transfer: 'jy-transfer',
+            left: 'jy-transfer-left',
+            right: 'jy-transfer-right',
+            leftBody: 'jy-transfer-left-body',
+            rightBody: 'jy-transfer-right-body',
+            item: 'jy-transfer-item',
+            title: 'jy-transfer-title',
+            search: 'jy-transfer-search',
+            btns: 'jy-transfer-btns',
+            btn: 'jy-transfer-btn',
+            activeBtn: 'jy-transfer-btn-active',
+            checkbox: 'jy-transfer-checkbox',
+            checked: 'jy-transfer-checked',
+            disabled: 'jy-transfer-disabled',
+            checkedDisabled: 'jy-tree-checked-disabled',
+            empty: 'jy-transfer-empty'
         }
 
-        var SongTransfer = {
+        var JyTransfer = {
             render: function (option) {
                 var transfer = new Class(option);
                 return {
@@ -168,26 +168,26 @@
         Class.prototype.appendItem = function (data, $parent) {
             var that = this;
             data.map(function (item) {
-                item._song_key = item._song_key || that.key++;
+                item._jy_key = item._jy_key || that.key++;
                 var $item = $(Common.htmlTemplate(tpl.item, {
                     title: item.title,
-                    key: item._song_key
+                    key: item._jy_key
                 }));
                 if (item.id !== undefined) {
-                    that.idKeyMap[item.id] = item._song_key;
+                    that.idKeyMap[item.id] = item._jy_key;
                 }
-                that.dataMap[item._song_key] = item;
+                that.dataMap[item._jy_key] = item;
                 $parent.append($item);
-                item._song_hidden = false;
-                item._song_checked = item._song_checked || item.checked && !item.disabled;
-                item._song_disabled = item._song_disabled || item.disabled;
-                if (item._song_checked && item._song_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
+                item._jy_hidden = false;
+                item._jy_checked = item._jy_checked || item.checked && !item.disabled;
+                item._jy_disabled = item._jy_disabled || item.disabled;
+                if (item._jy_checked && item._jy_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
                     $item.addClass(transferClass.checkedDisabled);
                 } else {
-                    if (item._song_checked) {
+                    if (item._jy_checked) {
                         $item.addClass(transferClass.checked);
                     }
-                    if (item._song_disabled) {
+                    if (item._jy_disabled) {
                         $item.addClass(transferClass.disabled);
                     }
                 }
@@ -201,16 +201,16 @@
                 var $this = $(this);
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
-                var checked = !data._song_checked;
+                var checked = !data._jy_checked;
                 // 禁用状态
-                if (data._song_disabled) {
+                if (data._jy_disabled) {
                     return false;
                 }
                 if (checked) {
-                    data._song_checked = true;
+                    data._jy_checked = true;
                     $this.addClass(transferClass.checked);
                 } else {
-                    data._song_checked = false;
+                    data._jy_checked = false;
                     $this.removeClass(transferClass.checked);
                 }
                 that.setAllChecked();
@@ -230,14 +230,14 @@
                 checked = that.getChecked(dataList).length != dataList.length;
                 checked ? $this.addClass(transferClass.checked) : $this.removeClass(transferClass.checked);
                 dataList.map(function (item) {
-                    if (!item._song_disabled) {
-                        item._song_checked = checked;
+                    if (!item._jy_disabled) {
+                        item._jy_checked = checked;
                     }
                 });
                 $tansferBody.children('.' + transferClass.item).each(function (i, item) {
                     var $item = $(item);
                     var _data = that.dataMap[$item.attr('data-key')];
-                    if (!_data._song_disabled && !_data._song_hidden) {
+                    if (!_data._jy_disabled && !_data._jy_hidden) {
                         checked ? $item.addClass(transferClass.checked) : $item.removeClass(transferClass.checked);
                     }
                 });
@@ -249,15 +249,15 @@
                 if (checkedData.length) {
                     that.leftData = that.leftData.concat(checkedData);
                     that.rightData = that.rightData.filter(function (item) {
-                        return !item._song_checked
+                        return !item._jy_checked
                     });
                     // 左侧搜索框有内容，需要过滤
                     checkedData.map(function (item) {
-                        item._song_checked = false;
+                        item._jy_checked = false;
                         if (that.leftSearchText && !that.searchMethod(that.leftSearchText, item)) {
-                            item._song_hidden = true;
+                            item._jy_hidden = true;
                         } else {
-                            item._song_hidden = false;
+                            item._jy_hidden = false;
                         }
                     });
                     that.$rightBody.children('.' + transferClass.checked).each(function (i, item) {
@@ -265,7 +265,7 @@
                         var data = that.dataMap[$item.attr('data-key')];
                         $item.removeClass(transferClass.checked);
                         that.$leftBody.append($item);
-                        data._song_hidden && $item.hide();
+                        data._jy_hidden && $item.hide();
                     });
                     $(this).removeClass(transferClass.activeBtn);
                     that.$leftTitle.removeClass(transferClass.checked);
@@ -286,15 +286,15 @@
                 if (checkedData.length) {
                     that.rightData = that.rightData.concat(checkedData);
                     that.leftData = that.leftData.filter(function (item) {
-                        return !item._song_checked
+                        return !item._jy_checked
                     });
                     checkedData.map(function (item) {
-                        item._song_checked = false;
+                        item._jy_checked = false;
                         // 右侧搜索框有内容，需要过滤
                         if (that.rightSearchText && !that.searchMethod(that.rightSearchText, item)) {
-                            item._song_hidden = true;
+                            item._jy_hidden = true;
                         } else {
-                            item._song_hidden = false;
+                            item._jy_hidden = false;
                         }
                     });
                     that.$leftBody.children('.' + transferClass.checked).each(function (i, item) {
@@ -302,7 +302,7 @@
                         var data = that.dataMap[$item.attr('data-key')];
                         $item.removeClass(transferClass.checked);
                         that.$rightBody.append($item);
-                        data._song_hidden && $item.hide();
+                        data._jy_hidden && $item.hide();
                     });
                     $(this).removeClass(transferClass.activeBtn);
                     that.$leftTitle.removeClass(transferClass.checked);
@@ -324,15 +324,15 @@
                 that.bindEvent.inputTimer = setTimeout(function () {
                     that.leftData.map(function (item) {
                         if (that.leftSearchText && !that.searchMethod(that.leftSearchText, item)) {
-                            item._song_hidden = true;
+                            item._jy_hidden = true;
                         } else {
-                            item._song_hidden = false;
+                            item._jy_hidden = false;
                         }
                     });
                     that.$leftBody.children('.' + transferClass.item).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
-                        data._song_hidden ? $item.hide() : $item.show();
+                        data._jy_hidden ? $item.hide() : $item.show();
                     });
                     that.setAllChecked();
                     that.setBtnActive();
@@ -345,15 +345,15 @@
                 that.bindEvent.inputTimer = setTimeout(function () {
                     that.leftData.map(function (item) {
                         if (that.rightSearchText && !that.searchMethod(that.rightSearchText, item)) {
-                            item._song_hidden = true;
+                            item._jy_hidden = true;
                         } else {
-                            item._song_hidden = false;
+                            item._jy_hidden = false;
                         }
                     });
                     that.$rightBody.children('.' + transferClass.item).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
-                        data._song_hidden ? $item.hide() : $item.show();
+                        data._jy_hidden ? $item.hide() : $item.show();
                     });
                     that.setAllChecked();
                     that.setBtnActive();
@@ -419,7 +419,7 @@
         // 获取选中的数据
         Class.prototype.getChecked = function (data) {
             var result = data.filter(function (item) {
-                return item._song_checked && !item._song_hidden;
+                return item._jy_checked && !item._jy_hidden;
             });
             return result;
         }
@@ -427,7 +427,7 @@
         // 获取可用的数据
         Class.prototype.getEnable = function (data) {
             var result = data.filter(function (item) {
-                return !item._song_disabled && !item._song_hidden;
+                return !item._jy_disabled && !item._jy_hidden;
             });
             return result;
         }
@@ -441,14 +441,14 @@
             return result;
         }
 
-        return SongTransfer;
+        return JyTransfer;
     }
     if ("function" == typeof define && define.amd) {
         define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Transfer = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Transfer = factory(window.$, window.JyUi.Common);
     }
 })(window)

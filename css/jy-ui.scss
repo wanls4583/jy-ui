@@ -22,7 +22,7 @@
         url('./font/iconfont.ttf') format('truetype');
 }
 
-.song-icon {
+.jy-icon {
     font-family: "iconfont" !important;
     font-size: 16px;
     font-style: normal;
@@ -31,7 +31,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.song-display {
+.jy-display {
     &-block {
         display: block;
     }
@@ -51,12 +51,12 @@
 }
 
 // 栅格
-.song-row {
+.jy-row {
     font-size: 0;
 
     // ie7默认content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
     @for $i from 1 through 12 {
-        .song-col-#{$i} {
+        .jy-col-#{$i} {
             width: $i/12*100%;
             display: inline-block;
             *display: inline;
@@ -65,16 +65,17 @@
         }
 
         // 列偏移
-        .song-col-offset-#{$i} {
+        .jy-col-offset-#{$i} {
             margin-left: $i/12*100%;
         }
     }
 }
 
 // 清除浮动
-.song-clear {
+.jy-clear {
     // ie6只能用zoom来清除内部浮动，ie7可以用oveflow或者zoom来清除
     *zoom: 1;
+    clear: both;
 
     // ie8不支持::的模式
     &:before,
@@ -85,7 +86,7 @@
     }
 }
 
-.song-nowrap {
+.jy-nowrap {
     white-space: nowrap;
 }
 
@@ -101,7 +102,7 @@ hr {
 }
 
 // 字体颜色
-.song-color {
+.jy-color {
 
     &-text {
         color: $color-666;
@@ -145,7 +146,7 @@ hr {
 }
 
 // 背景颜色
-.song-bgcolor {
+.jy-bgcolor {
     &-blue {
         background-color: $blue-color;
     }
@@ -172,7 +173,7 @@ hr {
 }
 
 // border颜色
-.song-border {
+.jy-border {
     border: 1px solid $border-color;
 
     &-blue {
@@ -194,4 +195,25 @@ hr {
     &-danger {
         border: 1px solid $danger-color;
     }
+}
+
+.jy-content {
+    position: relative;
+    height: 100%;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid $border-color;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 10px;
 }

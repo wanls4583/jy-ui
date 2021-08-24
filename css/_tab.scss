@@ -1,4 +1,4 @@
-.song-tab {
+.jy-tab {
     &-header {
         position: relative;
         background-color: #ffffff;
@@ -51,12 +51,12 @@
     }
 
     &-scroll {
-        .song-tab-header {
+        .jy-tab-header {
             padding-left: 40px;
             padding-right: 40px;
         }
 
-        .song-tab-titles {
+        .jy-tab-titles {
             position: absolute;
             left: 0;
         }
@@ -85,11 +85,11 @@
     }
 }
 
-.song-tab-line {
-    .song-tab-title {
+.jy-tab-line {
+    .jy-tab-title {
         border: 0;
     }
-    .song-tab-title-active {
+    .jy-tab-title-active {
         line-height: 35px;
         color: $link-color;
         border-bottom: 3px solid $link-color;

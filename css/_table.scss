@@ -1,4 +1,4 @@
-.song-table {
+.jy-table {
     position: relative;
     // ie7及以下table-layout:fixed将使table宽度伸展为100%
     // table-layout: fixed;
@@ -25,8 +25,8 @@
         border: 1px solid $border-color;
         font-size: 14px;
 
-        .song-table-radio,
-        .song-table-checkbox {
+        .jy-table-radio,
+        .jy-table-checkbox {
             display: block;
         }
     }
@@ -41,7 +41,7 @@
                 border-top: 0;
 
                 // ie7及以下浏览器中，设置了position（编辑中的td将设置position）的td边框布局将发生改变
-                &.song-table-editing {
+                &.jy-table-editing {
                     *border-bottom: 0;
                 }
             }
@@ -71,26 +71,6 @@
         // ie7及以下需要触发hasLayout，否则子元素定位的top将不准确
         *zoom: 1;
 
-        // 文本溢出详情弹框
-        .song-table-detail-icon {
-            position: absolute;
-            top: -1px;
-            right: 0;
-            height: 40px;
-            width: 24px;
-            line-height: $input-height;
-            background-color: $white-color;
-            border-left: 1px solid $border-color;
-            font-family: 'iconfont';
-            font-size: 16px;
-            text-align: center;
-            cursor: pointer;
-
-            &:hover {
-                background-color: $lighter-color;
-            }
-        }
-
         // 单元格内容
         &-content {
             padding: 5px $pd15;
@@ -112,10 +92,10 @@
     // 居中对齐
     &-align-left {
 
-        .song-table & {
+        .jy-table & {
             text-align: left;
 
-            .song-table-cell {
+            .jy-table-cell {
                 margin-right: auto;
             }
         }
@@ -124,10 +104,10 @@
     // 居中对齐
     &-align-center {
 
-        .song-table & {
+        .jy-table & {
             text-align: center;
 
-            .song-table-cell {
+            .jy-table-cell {
                 margin: auto;
             }
         }
@@ -136,10 +116,10 @@
     // 居中对齐
     &-align-right {
 
-        .song-table & {
+        .jy-table & {
             text-align: right;
 
-            .song-table-cell {
+            .jy-table-cell {
                 margin-left: auto;
             }
         }
@@ -235,20 +215,20 @@
         // text-align: center;
         border-top: 1px solid $border-color;
 
-        .song-pager {
+        .jy-pager {
             display: inline-block;
             *display: inline;
             *zoom: 1;
             padding: $pd10 0;
 
-            .song-pager-num,
-            .song-pager-dot,
-            .song-pager-prev,
-            .song-pager-next {
+            .jy-pager-num,
+            .jy-pager-dot,
+            .jy-pager-prev,
+            .jy-pager-next {
                 border: none;
             }
 
-            .song-pager-dot {
+            .jy-pager-dot {
                 padding: 0;
             }
         }
@@ -262,13 +242,33 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        z-index: 1;
+        z-index: 999999;
         line-height: 22px;
         padding: 9px $pd15;
         margin-right: 13px;
         background-color: $white-color;
         border: 1px solid $border-color;
         box-shadow: 1px 1px 20px rgba(0, 0, 0, .15);
+
+        &-icon {
+            position: absolute;
+            top: 0;
+            right: -1px;
+            height: 36px;
+            _height: 38px;
+            width: 24px;
+            line-height: $input-height - 2px;
+            background-color: $white-color;
+            border: 1px solid $border-color;
+            font-family: 'iconfont';
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $lighter-color;
+            }
+        }
 
         &-close {
             position: absolute;
@@ -290,29 +290,45 @@
     }
 
     &-header-main-l {
+        display: none;
         position: absolute;
         left: 0;
         top: 0;
         z-index: 1;
         border-right: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+        overflow: hidden;
 
         th:last-child,
         td:last-child {
             border-right: 0;
         }
+
+        .jy-table-main {
+            overflow: hidden;
+        }
     }
 
     &-header-main-r {
+        display: none;
         position: absolute;
         top: 0;
         right: 0;
         z-index: 1;
         border-left: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
+        overflow: hidden;
 
-        .song-table-mend {
-            margin-right: -17px;
+        .jy-table-header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: auto;
+        }
+        .jy-table-main {
+            position: absolute;
+            right: 0;
+            overflow: hidden;
         }
     }
 
@@ -329,9 +345,11 @@
     }
 
     &-mend {
+        display: none;
         position: absolute;
         right: 0;
         top: 0;
+        z-index: 2;
         width: 18px;
         height: 100%;
         background-color: $lighter-color;
@@ -380,8 +398,8 @@
             margin-top: 6px;
             cursor: pointer;
 
-            &.song-table-sort-hover,
-            &.song-table-sort-confirm {
+            &.jy-table-sort-hover,
+            &.jy-table-sort-confirm {
                 border-bottom-color: $color-666;
             }
         }
@@ -393,8 +411,8 @@
             margin-top: 2px;
             cursor: pointer;
 
-            &.song-table-sort-hover,
-            &.song-table-sort-confirm {
+            &.jy-table-sort-hover,
+            &.jy-table-sort-confirm {
                 border-top-color: $color-666;
             }
         }
@@ -410,7 +428,7 @@
         // *border-right: 0;
         background-color: $white-color;
 
-        .song-table-cell {
+        .jy-table-cell {
             z-index: 1;
             overflow: visible;
             white-space: normal;
@@ -420,7 +438,7 @@
     }
 
     & &-error {
-        .song-table-cell {
+        .jy-table-cell {
             border-color: $danger-color;
         }
     }
@@ -454,12 +472,12 @@
         top: 50%;
         left: 50%;
         line-height: 36px;
-        animation-name: song-table-keyframes-rotate;
+        animation-name: jy-table-keyframes-rotate;
         animation-duration: 1s;
         animation-timing-function: linear;
         animation-iteration-count: infinite;
 
-        .song-table-icon {
+        .jy-table-icon {
             margin-right: 0;
             font-size: 36px;
             color: #999;
@@ -478,8 +496,8 @@
         cursor: pointer;
         user-select: none;
 
-        .song-radio-icon-checked,
-        .song-radio-icon-uncheck {
+        .jy-radio-icon-checked,
+        .jy-radio-icon-uncheck {
             position: absolute;
             left: 0;
             top: 0;
@@ -488,17 +506,17 @@
             color: $gray-color;
         }
 
-        .song-radio-icon-checked {
+        .jy-radio-icon-checked {
             display: none;
             color: $link-color;
         }
 
-        &.song-table-checked {
-            .song-radio-icon-checked {
+        &.jy-table-checked {
+            .jy-radio-icon-checked {
                 display: block;
             }
 
-            .song-radio-icon-uncheck {
+            .jy-radio-icon-uncheck {
                 display: none;
             }
         }
@@ -516,7 +534,7 @@
         cursor: pointer;
         user-select: none;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             position: absolute;
             left: 0;
             top: 0;
@@ -535,8 +553,8 @@
             }
         }
 
-        &.song-table-checked {
-            .song-checkbox-icon {
+        &.jy-table-checked {
+            .jy-checkbox-icon {
                 background-color: $link-color;
                 border-color: $link-color;
 
@@ -591,7 +609,7 @@
             position: relative;
             padding-left: $pd15;
 
-            .song-table-input {
+            .jy-table-input {
                 text-align: left;
                 user-select: none;
                 cursor: pointer;
@@ -632,7 +650,7 @@
                     background-color: $hover-background-color;
                 }
 
-                &.song-table-select-active {
+                &.jy-table-select-active {
                     background-color: $link-color;
                     color: $white-color;
                 }
@@ -641,14 +659,14 @@
     }
 
     &-animation-hover-down {
-        animation-name: song-table-keyframes-hover-down;
+        animation-name: jy-table-keyframes-hover-down;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 }
 
-@keyframes song-table-keyframes-rotate {
+@keyframes jy-table-keyframes-rotate {
     0% {
         transform: rotate(0);
     }
@@ -658,7 +676,7 @@
     }
 }
 
-@keyframes song-table-keyframes-hover-down {
+@keyframes jy-table-keyframes-hover-down {
     0% {
         opacity: 0;
         transform: translateY(20px);

@@ -1,5 +1,5 @@
 /*
- * @Author: lisong
+ * @Author: lijy
  * @Date: 2021-05-11 18:10:32
  * @Description: 
  */
@@ -197,13 +197,13 @@
                 return true;
             }
             var $dom = $(dom);
-            var ieVersong = getIeVersion();
+            var ieVerjy = getIeVersion();
             var $temp = $dom.clone().appendTo(window.document.body).css({
                 overflow: 'visible',
                 visiblity: 'hidden',
                 width: 'auto',
-                height: ieVersong <= 6 ? $dom[0].offsetHeight : $dom.height()
-            }).addClass('song-display-inline-block');
+                height: ieVerjy <= 6 ? $dom[0].offsetHeight : $dom.height()
+            }).addClass('jy-display-inline-block');
             var overflow = $temp[0].scrollWidth > $dom[0].scrollWidth;
             $temp.remove();
             return overflow;
@@ -262,19 +262,23 @@
         }
 
         // 深度克隆
-        function deepAssign(targetObj, originObj) {
+        function deepAssign(targetObj, originObj, excludeKeys) {
             var assigned = [];
-            return _assign(targetObj, originObj);
+            return _assign(targetObj, originObj, excludeKeys);
 
-            function _assign(targetObj, originObj) {
+            function _assign(targetObj, originObj, excludeKeys) {
+                excludeKeys = excludeKeys || [];
                 for (var key in originObj) {
                     var value = originObj[key];
-                    if (typeof value === 'object' && assigned.indexOf(value) == -1) {
+                    if (excludeKeys.indexOf(key) > -1) {
+                        continue;
+                    }
+                    if (typeof value === 'object' && value !== null && assigned.indexOf(value) == -1) {
                         assigned.push(value);
                         if (value instanceof Array) {
-                            targetObj[key] = _assign([], value);
+                            targetObj[key] = _assign(targetObj[key] || [], value);
                         } else {
-                            targetObj[key] = _assign({}, value);
+                            targetObj[key] = _assign(targetObj[key] || {}, value);
                         }
                     } else {
                         targetObj[key] = value;
@@ -292,8 +296,8 @@
             function _assign(targetObj, originObj) {
                 for (var key in originObj) {
                     var value = originObj[key];
-                    var isInnerProp = key.slice(0, 5) == '_song'
-                    if (typeof value === 'object' && assigned.indexOf(value) == -1) {
+                    var isInnerProp = key.slice(0, 3) == '_jy'
+                    if (typeof value === 'object' && value !== null && assigned.indexOf(value) == -1) {
                         if (isInnerProp) {
                             continue;
                         }
@@ -489,7 +493,7 @@
             return factory($);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Common = factory(window.$);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Common = factory(window.$);
     }
 })(window)

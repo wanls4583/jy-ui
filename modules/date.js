@@ -1,50 +1,50 @@
 !(function (window) {
     function factory($, Common) {
         var tpl = {
-            date: '<div class="song-date">\
-                <div class="song-date-main">\
-                    <div class="song-date-header">\
-                        <div class="song-date-header-left">\
-                            <i class="song-icon song-date-prev-year-btn">&#xe612;</i>\
-                            <i class="song-icon song-date-prev-month-btn">&#xe733;</i>\
+            date: '<div class="jy-date">\
+                <div class="jy-date-main">\
+                    <div class="jy-date-header">\
+                        <div class="jy-date-header-left">\
+                            <i class="jy-icon jy-date-prev-year-btn">&#xe612;</i>\
+                            <i class="jy-icon jy-date-prev-month-btn">&#xe733;</i>\
                         </div>\
-                        <div class="song-date-header-center">\
-                            <div class="song-date-header-year"></div>\
-                            <div class="song-date-header-month"></div>\
-                            <div class="song-date-header-year-range"></div>\
-                            <div class="song-date-header-time-label">选择时间</div>\
-                            <div class="song-date-header-month-label">选择月份</div>\
+                        <div class="jy-date-header-center">\
+                            <div class="jy-date-header-year"></div>\
+                            <div class="jy-date-header-month"></div>\
+                            <div class="jy-date-header-year-range"></div>\
+                            <div class="jy-date-header-time-label">选择时间</div>\
+                            <div class="jy-date-header-month-label">选择月份</div>\
                         </div>\
-                        <div class="song-date-header-right">\
-                            <i class="song-icon song-date-next-month-btn">&#xe734;</i>\
-                            <i class="song-icon song-date-next-year-btn">&#xe61a;</i>\
+                        <div class="jy-date-header-right">\
+                            <i class="jy-icon jy-date-next-month-btn">&#xe734;</i>\
+                            <i class="jy-icon jy-date-next-year-btn">&#xe61a;</i>\
                         </div>\
                     </div>\
-                    <div class="song-date-content">\
+                    <div class="jy-date-content">\
                     </div>\
                 </div>\
-                <div class="song-date-footer">\
-                    <div class="song-date-footer-left">\
-                        <span class="song-date-result"></span>\
+                <div class="jy-date-footer">\
+                    <div class="jy-date-footer-left">\
+                        <span class="jy-date-result"></span>\
                     </div>\
-                    <div class="song-date-footer-right">\
-                        <span class="song-date-btn song-date-empty">清空</span><span class="song-date-btn song-date-now">现在</span><span class="song-date-btn song-date-confirm">确定</span>\
+                    <div class="jy-date-footer-right">\
+                        <span class="jy-date-btn jy-date-empty">清空</span><span class="jy-date-btn jy-date-now">现在</span><span class="jy-date-btn jy-date-confirm">确定</span>\
                     </div>\
                 </div>\
             </div>',
-            dateRange: '<div class="song-date-range">\
-                <div class="song-date-range-content">\
+            dateRange: '<div class="jy-date-range">\
+                <div class="jy-date-range-content">\
                 </div>\
-                <div class="song-date-range-footer">\
-                    <div class="song-date-range-footer-left">\
-                        <span class="song-date-range-result"></span>\
+                <div class="jy-date-range-footer">\
+                    <div class="jy-date-range-footer-left">\
+                        <span class="jy-date-range-result"></span>\
                     </div>\
-                    <div class="song-date-range-footer-right">\
-                        <span class="song-date-btn song-date-range-empty">清空</span><span class="song-date-btn song-date-range-confirm">确定</span>\
+                    <div class="jy-date-range-footer-right">\
+                        <span class="jy-date-btn jy-date-range-empty">清空</span><span class="jy-date-btn jy-date-range-confirm">确定</span>\
                     </div>\
                 </div>\
             </div>',
-            dateTable: '<table class="song-date-date">\
+            dateTable: '<table class="jy-date-date">\
                 <thead>\
                     <tr>\
                         <th>日</th>\
@@ -59,7 +59,7 @@
                 <tbody>\
                 </tbody>\
             </table>',
-            time: '<div class="song-date-time">\
+            time: '<div class="jy-date-time">\
                 <ul>\
                     <li>时</li>\
                     <li>分</li>\
@@ -67,67 +67,67 @@
                 </ul>\
                 <ul>\
                     <li>\
-                        <ol class="song-date-time-hour">\
+                        <ol class="jy-date-time-hour">\
                         </ol>\
                     </li>\
                     <li>\
-                        <ol class="song-date-time-minute">\
+                        <ol class="jy-date-time-minute">\
                         </ol>\
                     </li>\
                     <li>\
-                        <ol class="song-date-time-second">\
+                        <ol class="jy-date-time-second">\
                         </ol>\
                     </li>\
                 </ul>\
             </div>',
-            year: '<div class="song-date-year"><ul></ul></div>',
-            month: '<div class="song-date-month"><ul></ul></div>',
-            childBtn: '<span class="song-date-btn song-date-child"></span>',
-            rangeChildBtn: '<span class="song-date-btn song-date-range-child"></span>',
-            tip: '<span class="song-date-tip"></span>'
+            year: '<div class="jy-date-year"><ul></ul></div>',
+            month: '<div class="jy-date-month"><ul></ul></div>',
+            childBtn: '<span class="jy-date-btn jy-date-child"></span>',
+            rangeChildBtn: '<span class="jy-date-btn jy-date-range-child"></span>',
+            tip: '<span class="jy-date-tip"></span>'
         }
 
         var dateClass = {
-            date: 'song-date',
-            dateRange: 'song-date-range',
-            static: 'song-date-static',
-            header: 'song-date-header',
-            headerLeft: 'song-date-header-left',
-            headerCenter: 'song-date-header-center',
-            headerRight: 'song-date-header-right',
-            content: 'song-date-content',
-            rangeContent: 'song-date-range-content',
-            year: 'song-date-header-year',
-            yearRange: 'song-date-header-year-range',
-            month: 'song-date-header-month',
-            hour: 'song-date-time-hour',
-            minute: 'song-date-time-minute',
-            second: 'song-date-time-second',
-            preMonth: 'song-date-prev-month',
-            preMonthBtn: 'song-date-prev-month-btn',
-            preYearBtn: 'song-date-prev-year-btn',
-            nextMonth: 'song-date-next-month',
-            nextMonthBtn: 'song-date-next-month-btn',
-            nextYearBtn: 'song-date-next-year-btn',
-            result: 'song-date-result',
-            rangeResult: 'song-date-range-result',
-            footer: 'song-date-footer',
-            rangeFooter: 'song-date-range-footer',
-            empty: 'song-date-empty',
-            rangeEmpty: 'song-date-range-empty',
-            now: 'song-date-now',
-            confirm: 'song-date-confirm',
-            rangeConfirm: 'song-date-range-confirm',
-            child: 'song-date-child',
-            rangeChild: 'song-date-range-child',
-            active: 'song-date-active',
-            showYear: 'song-date-show-year',
-            showMonth: 'song-date-show-month',
-            showYearMonth: 'song-date-show-year-month',
-            showDate: 'song-date-show-date',
-            showTime: 'song-date-show-time',
-            disabled: 'song-date-btn-disabled',
-            downAnimation: 'song-date-animation-hover-down'
+            date: 'jy-date',
+            dateRange: 'jy-date-range',
+            static: 'jy-date-static',
+            header: 'jy-date-header',
+            headerLeft: 'jy-date-header-left',
+            headerCenter: 'jy-date-header-center',
+            headerRight: 'jy-date-header-right',
+            content: 'jy-date-content',
+            rangeContent: 'jy-date-range-content',
+            year: 'jy-date-header-year',
+            yearRange: 'jy-date-header-year-range',
+            month: 'jy-date-header-month',
+            hour: 'jy-date-time-hour',
+            minute: 'jy-date-time-minute',
+            second: 'jy-date-time-second',
+            preMonth: 'jy-date-prev-month',
+            preMonthBtn: 'jy-date-prev-month-btn',
+            preYearBtn: 'jy-date-prev-year-btn',
+            nextMonth: 'jy-date-next-month',
+            nextMonthBtn: 'jy-date-next-month-btn',
+            nextYearBtn: 'jy-date-next-year-btn',
+            result: 'jy-date-result',
+            rangeResult: 'jy-date-range-result',
+            footer: 'jy-date-footer',
+            rangeFooter: 'jy-date-range-footer',
+            empty: 'jy-date-empty',
+            rangeEmpty: 'jy-date-range-empty',
+            now: 'jy-date-now',
+            confirm: 'jy-date-confirm',
+            rangeConfirm: 'jy-date-range-confirm',
+            child: 'jy-date-child',
+            rangeChild: 'jy-date-range-child',
+            active: 'jy-date-active',
+            showYear: 'jy-date-show-year',
+            showMonth: 'jy-date-show-month',
+            showYearMonth: 'jy-date-show-year-month',
+            showDate: 'jy-date-show-date',
+            showTime: 'jy-date-show-time',
+            disabled: 'jy-date-btn-disabled',
+            downAnimation: 'jy-date-animation-hover-down'
         }
 
         var ieVersion = Common.getIeVersion();
@@ -137,7 +137,7 @@
         var $docBody = $(docBody);
         var months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
-        var SongDate = {
+        var JyDate = {
             render: function (option) {
                 var date = new Class(option);
                 return {
@@ -964,14 +964,14 @@
             }, 1500);
         }
 
-        return SongDate;
+        return JyDate;
     }
     if ("function" == typeof define && define.amd) {
         define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Date = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Date = factory(window.$, window.JyUi.Common);
     }
 })(window)

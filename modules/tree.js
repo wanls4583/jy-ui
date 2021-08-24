@@ -9,45 +9,45 @@
         var checkedIcon = '&#xe737;';
         var searchIcon = '&#xe642;';
         var tpl = {
-            tree: '<div class="song-tree">\
-                <div class="song-tree-search">\
-                    <div class="song-tree-search-container"><i>' + searchIcon + '</i><input class="song-tree-search-input" placeholder="关键词搜索" /></div>\
+            tree: '<div class="jy-tree">\
+                <div class="jy-tree-search">\
+                    <div class="jy-tree-search-container"><i>' + searchIcon + '</i><input class="jy-tree-search-input" placeholder="关键词搜索" /></div>\
                 </div>\
             </div>',
-            ul: '<div class="song-tree-ul"><%if(style=="line"){%><i class="song-tree-v-line"></i><%}%></div>',
-            item: '<div class="song-tree-item" data-key="<%-key%>"><%if(!isRoot&&style=="line"){%><i class="song-tree-h-line"></i><%}%></div>',
-            title: '<div class="song-tree-item-title" data-key="<%-key%>">\
+            ul: '<div class="jy-tree-ul"><%if(style=="line"){%><i class="jy-tree-v-line"></i><%}%></div>',
+            item: '<div class="jy-tree-item" data-key="<%-key%>"><%if(!isRoot&&style=="line"){%><i class="jy-tree-h-line"></i><%}%></div>',
+            title: '<div class="jy-tree-item-title" data-key="<%-key%>">\
                 <%if(isChild){%>\
-                <div class="song-tree-child-icon">' + docIcon + '</div>\
+                <div class="jy-tree-child-icon">' + docIcon + '</div>\
                 <%}else{%>\
-                <div class="song-tree-click-icon <%-style=="arrow"?"song-tree-arrow":""%>"><%-style=="line"?"' + plusIcon + '":"' + rightIcon + '"%></div>\
-                <div class="song-tree-click-icon <%-style=="arrow"?"song-tree-arrow":""%>" style="display:none;"><%-style=="line"?"' + minusIcon + '":"' + downIcon + '"%></div>\
+                <div class="jy-tree-click-icon <%-style=="arrow"?"jy-tree-arrow":""%>"><%-style=="line"?"' + plusIcon + '":"' + rightIcon + '"%></div>\
+                <div class="jy-tree-click-icon <%-style=="arrow"?"jy-tree-arrow":""%>" style="display:none;"><%-style=="line"?"' + minusIcon + '":"' + downIcon + '"%></div>\
                 <%}%>\
                 <%if(showCheckbox){%>\
-                <div class="song-tree-checkbox" data-key="<%-key%>"><span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span><span>&nbsp;</span></div>\
+                <div class="jy-tree-checkbox" data-key="<%-key%>"><span class="jy-checkbox-icon"><i>' + checkedIcon + '</i></span><span>&nbsp;</span></div>\
                 <%}%>\
-                <span class="song-tree-text"><%-title%></span>\
+                <span class="jy-tree-text"><%-title%></span>\
             </div>',
             search: ''
         }
         var treeClass = {
-            checkbox: 'song-tree-checkbox',
-            checked: 'song-tree-checked',
-            disabled: 'song-tree-disabled',
-            checkedDisabled: 'song-tree-checked-disabled',
-            search: 'song-tree-search',
-            ul: 'song-tree-ul',
-            vLine: 'song-tree-v-line',
-            item: 'song-tree-item',
-            title: 'song-tree-item-title',
-            clickIcon: 'song-tree-click-icon',
-            text: 'song-tree-text',
-            downAnimation: 'song-tree-animation-down',
-            upAnimation: 'song-tree-animation-up',
-            ieHack: 'song-tree-ie-hack'
+            checkbox: 'jy-tree-checkbox',
+            checked: 'jy-tree-checked',
+            disabled: 'jy-tree-disabled',
+            checkedDisabled: 'jy-tree-checked-disabled',
+            search: 'jy-tree-search',
+            ul: 'jy-tree-ul',
+            vLine: 'jy-tree-v-line',
+            item: 'jy-tree-item',
+            title: 'jy-tree-item-title',
+            clickIcon: 'jy-tree-click-icon',
+            text: 'jy-tree-text',
+            downAnimation: 'jy-tree-animation-down',
+            upAnimation: 'jy-tree-animation-up',
+            ieHack: 'jy-tree-ie-hack'
         }
 
-        var SongTree = {
+        var JyTree = {
             render: function (option) {
                 var tree = new Class(option);
                 return {
@@ -165,19 +165,19 @@
         Class.prototype.appendItem = function (data, $parent) {
             var that = this;
             data.map(function (item, index) {
-                item._song_key = that.key;
+                item._jy_key = that.key;
                 var $item = $(Common.htmlTemplate(tpl.item, {
-                    isRoot: !item._song_parent,
+                    isRoot: !item._jy_parent,
                     style: that.style,
-                    key: item._song_key
+                    key: item._jy_key
                 }));
                 var $title = $(Common.htmlTemplate(tpl.title, {
                     title: item.title,
-                    isRoot: !item._song_parent,
+                    isRoot: !item._jy_parent,
                     isChild: !item.children || !item.children.length,
                     showCheckbox: that.showCheckbox,
                     style: that.style,
-                    key: item._song_key
+                    key: item._jy_key
                 }));
                 if (item.id !== undefined) {
                     that.idKeyMap[item.id] = that.key;
@@ -186,15 +186,15 @@
                 that.key++;
                 $item.append($title);
                 $parent.append($item);
-                item._song_checked = item._song_checked || item.checked;
-                item._song_disabled = item._song_disabled || item.disabled;
-                if (item._song_checked && that.showCheckbox && item._song_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
+                item._jy_checked = item._jy_checked || item.checked;
+                item._jy_disabled = item._jy_disabled || item.disabled;
+                if (item._jy_checked && that.showCheckbox && item._jy_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
                     $title.addClass(treeClass.checkedDisabled);
                 } else {
-                    if (item._song_disabled) {
+                    if (item._jy_disabled) {
                         $title.addClass(treeClass.disabled);
                     }
-                    if (item._song_checked && that.showCheckbox) {
+                    if (item._jy_checked && that.showCheckbox) {
                         $title.addClass(treeClass.checked);
                     }
                 }
@@ -203,9 +203,9 @@
                         style: that.style
                     }));
                     item.children.map(function (_item) {
-                        _item._song_parent = item;
-                        _item._song_checked = item._song_checked;
-                        _item._song_disabled = item._song_disabled;
+                        _item._jy_parent = item;
+                        _item._jy_checked = item._jy_checked;
+                        _item._jy_disabled = item._jy_disabled;
                     });
                     if (that.spread || item.spread) {
                         // 默认打开的组
@@ -230,14 +230,14 @@
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
                 // 已禁用
-                if (data._song_disabled) {
+                if (data._jy_disabled) {
                     return;
                 }
                 that.checkItem(key);
                 // 触发多选框事件
                 that.trigger('change', {
                     data: Common.delInnerProperty(data),
-                    checked: data._song_checked || false,
+                    checked: data._jy_checked || false,
                     dom: this
                 });
                 return false;
@@ -265,7 +265,7 @@
                 } else {
                     $title.children('div.' + treeClass.checkbox).trigger('click');
                 }
-                if (data.href && !data._song_disabled) {
+                if (data.href && !data._jy_disabled) {
                     window.open(data.href);
                 }
                 // 触发节点点击事件
@@ -288,10 +288,10 @@
                 var $title = $(dom);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
-                if (data._song_disabled) {
+                if (data._jy_disabled) {
                     return;
                 }
-                if (data._song_checked) {
+                if (data._jy_checked) {
                     $title.addClass(treeClass.checked);
                 } else {
                     $title.removeClass(treeClass.checked);
@@ -385,38 +385,38 @@
         // 选中/取消选中
         Class.prototype.checkItem = function (key, checked) {
             var data = this.dataMap[key];
-            data._song_checked = Boolean(data._song_checked);
+            data._jy_checked = Boolean(data._jy_checked);
             if (checked === undefined) {
-                checked = !data._song_checked;
+                checked = !data._jy_checked;
             }
             checked = Boolean(checked);
-            if (data._song_checked === checked) {
+            if (data._jy_checked === checked) {
                 return;
             }
-            data._song_checked = checked;
+            data._jy_checked = checked;
             var children = data.children || [];;
-            var data = data._song_parent;
+            var data = data._jy_parent;
             children = children.concat([]);
             // 处理上游
             while (data) {
-                if (checked && !data._song_checked) {
-                    data._song_checked = true;
-                } else if (!checked && data._song_checked) {
-                    data._song_checked = false;
+                if (checked && !data._jy_checked) {
+                    data._jy_checked = true;
+                } else if (!checked && data._jy_checked) {
+                    data._jy_checked = false;
                     for (var i = 0; i < data.children.length; i++) {
-                        if (data.children[i]._song_checked) {
-                            data._song_checked = true;
+                        if (data.children[i]._jy_checked) {
+                            data._jy_checked = true;
                             break;
                         }
                     }
                 }
-                data = data._song_parent;
+                data = data._jy_parent;
             }
             // 处理下游
             while (children.length) {
                 var item = children.shift();
-                if (!item._song_disabled && !item._song_hidden) {
-                    item._song_checked = checked;
+                if (!item._jy_disabled && !item._jy_hidden) {
+                    item._jy_checked = checked;
                     item.children && item.children.map(function (_item) {
                         children.push(_item);
                     });
@@ -433,11 +433,11 @@
             });
 
             function _validate(data) {
-                var checked = data._song_checked;
-                if (data._song_hidden) {
+                var checked = data._jy_checked;
+                if (data._jy_hidden) {
                     checked = false;
                 } else {
-                    if (data.children && !data._song_hidden) {
+                    if (data.children && !data._jy_hidden) {
                         checked = false;
                         for (var i = 0; i < data.children.length; i++) {
                             if (_validate(data.children[i])) {
@@ -446,7 +446,7 @@
                             }
                         }
                     }
-                    data._song_checked = checked;
+                    data._jy_checked = checked;
                 }
                 return checked;
             }
@@ -460,15 +460,15 @@
             while (list.length) {
                 var item = list.shift();
                 // 搜索
-                if (this.searchMethod(text, item) && showList.indexOf(item._song_key) == -1) {
-                    var _item = item._song_parent;
-                    showList.push(item._song_key);
+                if (this.searchMethod(text, item) && showList.indexOf(item._jy_key) == -1) {
+                    var _item = item._jy_parent;
+                    showList.push(item._jy_key);
                     // 前代节点都要选中
                     while (_item) {
-                        if (showList.indexOf(_item._song_key) == -1) {
-                            showList.push(_item._song_key);
+                        if (showList.indexOf(_item._jy_key) == -1) {
+                            showList.push(_item._jy_key);
                         }
-                        _item = _item._song_parent;
+                        _item = _item._jy_parent;
                     }
                 }
                 item.children && item.children.map(function (_item) {
@@ -481,10 +481,10 @@
                 var data = that.dataMap[key];
                 if (Common.indexOf(showList, key) > -1) {
                     $item.show();
-                    data._song_hidden = false;
+                    data._jy_hidden = false;
                 } else {
                     $item.hide();
-                    data._song_hidden = true;
+                    data._jy_hidden = true;
                 }
             });
             this.validateCheck();
@@ -505,7 +505,7 @@
             }
             while (list.length) {
                 var item = list.shift();
-                if (item._song_checked && !item._song_hidden && (!item.children || !item.children.length)) {
+                if (item._jy_checked && !item._jy_hidden && (!item.children || !item.children.length)) {
                     result.push(Common.delInnerProperty(item));
                 }
                 item.children && item.children.map(function (_item) {
@@ -514,14 +514,14 @@
             }
             return result;
         }
-        return SongTree;
+        return JyTree;
     }
     if ("function" == typeof define && define.amd) {
         define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Tree = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Tree = factory(window.$, window.JyUi.Common);
     }
 })(window)

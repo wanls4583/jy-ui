@@ -1,4 +1,4 @@
-.song-layer-shadow {
+.jy-layer-shadow {
     position: fixed;
     _position: absolute;
     top: 0;
@@ -11,12 +11,12 @@
     // ie6，ie7，ie8不支持opacity
     filter: #{'alpha(opacity: 40)'};
 
-    &.song-layer-absolute {
+    &.jy-layer-absolute {
         position: absolute;
     }
 }
 
-.song-layer {
+.jy-layer {
     position: fixed;
     // ie6不支持fixed
     // ie6及以下浏览器中，绝对定位元素中的布局和普通元素中布局一致
@@ -42,6 +42,7 @@
     }
 
     &-msg {
+        white-space: nowrap;
         color: $white-color;
         background-color: rgba(0, 0, 0, 0.6);
         // 只兼容ie8的样式，在属性值后面加\0/
@@ -54,6 +55,7 @@
     }
 
     &-msg-with-icon {
+        white-space: nowrap;
         border: 1px solid $gray-color;
         box-shadow: none;
     }
@@ -64,19 +66,20 @@
         box-shadow: none;
         text-align: center;
 
-        .song-layer-content {
+        .jy-layer-content {
             line-height: 36px;
             overflow: visible;
-            animation-name: song-rotate;
+            animation-name: jy-rotate;
             animation-duration: 1s;
             animation-timing-function: linear;
             animation-iteration-count: infinite
         }
+
+        .jy-layer-loading-icon {
+            font-size: 36px;
+        }
     }
 
-    &-loading-icon {
-        font-size: 36px;
-    }
 
     &-loading-text {
         margin-top: $pd15;
@@ -84,7 +87,7 @@
 
     &-title {
         position: relative;
-        // ie6及以下不能用height是定义song-layer-title的高度，否则将触发haslayout使元素撑开父容器
+        // ie6及以下不能用height是定义jy-layer-title的高度，否则将触发haslayout使元素撑开父容器
         line-height: 16px;
         padding: 17px 95px 17px 20px;
         font-size: 16px;
@@ -109,11 +112,11 @@
         // }
     }
 
-    &-msg .song-layer-content {
+    &-msg .jy-layer-content {
         padding: $pd10 $pd20;
     }
 
-    &-msg .song-layer-icon {
+    &-msg .jy-layer-icon {
         top: 6px;
     }
 
@@ -122,7 +125,7 @@
         text-align: center;
         white-space: nowrap;
 
-        .song-btn {
+        .jy-btn {
             margin-left: $pd20;
         }
     }
@@ -159,28 +162,28 @@
     }
 
     &-animation-stretch {
-        animation-name: song-layer-keyframes-stretch;
+        animation-name: jy-layer-keyframes-stretch;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 
     &-animation-fade-out {
-        animation-name: song-layer-keyframes-fade-out;
+        animation-name: jy-layer-keyframes-fade-out;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 
     &-animation-fade-in {
-        animation-name: song-layer-keyframes-fade-in;
+        animation-name: jy-layer-keyframes-fade-in;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 }
 
-@keyframes song-layer-keyframes-stretch {
+@keyframes jy-layer-keyframes-stretch {
     0% {
         transform: scale(0);
     }
@@ -190,7 +193,7 @@
     }
 }
 
-@keyframes song-layer-keyframes-fade-out {
+@keyframes jy-layer-keyframes-fade-out {
     0% {
         opacity: 0;
         transform: scale(0);
@@ -202,7 +205,7 @@
     }
 }
 
-@keyframes song-layer-keyframes-fade-out {
+@keyframes jy-layer-keyframes-fade-out {
     0% {
         opacity: 1;
         transform: scale(1);

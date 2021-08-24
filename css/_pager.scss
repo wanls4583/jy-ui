@@ -1,24 +1,24 @@
-@mixin song-pager($height: 30px) {
+@mixin jy-pager($height: 30px) {
     line-height: $height;
 
-    .song-pager-count {
+    .jy-pager-count {
         float: left;
         margin-left: $pd10;
     }
 
-    .song-pager-prev {
+    .jy-pager-prev {
         margin-left: $pd10;
         font-family: 'iconfont';
     }
 
-    .song-pager-next {
+    .jy-pager-next {
         font-family: 'iconfont';
     }
 
-    .song-pager-prev,
-    .song-pager-next,
-    .song-pager-num,
-    .song-pager-limits {
+    .jy-pager-prev,
+    .jy-pager-next,
+    .jy-pager-num,
+    .jy-pager-limits {
         float: left;
         padding: 0 $height/2;
         border: 1px solid $border-color;
@@ -26,16 +26,16 @@
 
     }
 
-    .song-pager-prev,
-    .song-pager-next,
-    .song-pager-num {
+    .jy-pager-prev,
+    .jy-pager-next,
+    .jy-pager-num {
         &:hover {
             color: $link-color;
         }
 
     }
 
-    .song-pager-dot {
+    .jy-pager-dot {
         float: left;
         padding: 0 $height/2;
         border: 1px solid $border-color;
@@ -43,25 +43,25 @@
         cursor: default;
     }
 
-    .song-pager-prev-disabled,
-    .song-pager-next-disabled {
+    .jy-pager-prev-disabled,
+    .jy-pager-next-disabled {
         color: $gray-color !important;
         cursor: not-allowed;
     }
 
-    .song-pager-prev,
-    .song-pager-num,
-    .song-pager-dot {
+    .jy-pager-prev,
+    .jy-pager-num,
+    .jy-pager-dot {
         border-right: none;
     }
 
-    .song-pager-now {
+    .jy-pager-now {
         color: $white-color !important;
         background-color: $success-color;
         border-color: $success-color;
     }
 
-    .song-pager-limits {
+    .jy-pager-limits {
         height: $height + 2px;
         height: #{'auto\\0/'};
         *height: auto;
@@ -74,11 +74,11 @@
         vertical-align: middle;
     }
 
-    .song-pager-nums {
+    .jy-pager-nums {
         float: left;
     }
 
-    .song-pager-jump {
+    .jy-pager-jump {
         float: left;
         margin-left: $pd10;
         color: $color-999;
@@ -108,10 +108,10 @@
     }
 }
 
-.song-pager {
-    @include song-pager;
+.jy-pager {
+    @include jy-pager;
 }
 
-.song-pager-small {
-    @include song-pager(26px);
+.jy-pager-small {
+    @include jy-pager(26px);
 }

@@ -3,35 +3,35 @@
         var leftIcon = '&#xe733;';
         var rightIcon = '&#xe734;';
         var tpl = {
-            tab: '<div class="song-tab song-tab-structure">\
-                <div class="song-tab-header">\
-                    <div class="song-tab-header-scroll">\
-                        <div class="song-tab-titles">\
+            tab: '<div class="jy-tab jy-tab-structure">\
+                <div class="jy-tab-header">\
+                    <div class="jy-tab-header-scroll">\
+                        <div class="jy-tab-titles">\
                         </div>\
                     </div>\
                 </div>\
-                <div class="song-tab-content">\
+                <div class="jy-tab-content">\
                 </div>\
             </div>',
-            item: '<div class="song-tab-item" name="<%-name%>"><%-content%></div>',
-            title: '<div class="song-tab-title" name="<%-name%>"><%-title%></div>',
-            prev: '<div class="song-tab-prev">' + leftIcon + '</div>',
-            next: '<div class="song-tab-next">' + rightIcon + '</div>'
+            item: '<div class="jy-tab-item" name="<%-name%>"><%-content%></div>',
+            title: '<div class="jy-tab-title" name="<%-name%>"><%-title%></div>',
+            prev: '<div class="jy-tab-prev">' + leftIcon + '</div>',
+            next: '<div class="jy-tab-next">' + rightIcon + '</div>'
         }
         var tabClass = {
-            tab: 'song-tab',
-            structure: 'song-tab-structure',
-            scroll: 'song-tab-scroll',
-            header: 'song-tab-header',
-            headerScroll: 'song-tab-header-scroll',
-            content: 'song-tab-content',
-            titles: 'song-tab-titles',
-            title: 'song-tab-title',
-            item: 'song-tab-item',
-            titleActive: 'song-tab-title-active',
-            itemActive: 'song-tab-item-active',
-            prev: 'song-tab-prev',
-            next: 'song-tab-next'
+            tab: 'jy-tab',
+            structure: 'jy-tab-structure',
+            scroll: 'jy-tab-scroll',
+            header: 'jy-tab-header',
+            headerScroll: 'jy-tab-header-scroll',
+            content: 'jy-tab-content',
+            titles: 'jy-tab-titles',
+            title: 'jy-tab-title',
+            item: 'jy-tab-item',
+            titleActive: 'jy-tab-title-active',
+            itemActive: 'jy-tab-item-active',
+            prev: 'jy-tab-prev',
+            next: 'jy-tab-next'
         }
         var event = Common.getEvent();
 
@@ -164,7 +164,7 @@
 
         check();
 
-        var SongTab = {
+        var JyTab = {
             on: event.on,
             once: event.once,
             trigger: event.trigger,
@@ -181,14 +181,14 @@
             }
         }
 
-        return SongTab;
+        return JyTab;
     }
     if ("function" == typeof define && define.amd) {
         define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Tab = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Tab = factory(window.$, window.JyUi.Common);
     }
 })(window)

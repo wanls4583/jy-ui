@@ -1,10 +1,10 @@
 /*
- * @Author: lisong
+ * @Author: lijy
  * @Date: 2021-04-27 12:40:07
  * @Description: 
  */
 !(function (window) {
-    function factory($, Common) {
+    function factory($, Common, Dialog) {
         var checkedIcon = '&#xe737;';
         var downIcon = '&#xe74b;';
         var radioedIcon = '&#xe61c;';
@@ -14,24 +14,24 @@
         var docElement = window.document.documentElement;
         var bindedBodyEvent = false;
         var formClass = {
-            switchClass: 'song-form-switch',
-            switchDisabled: 'song-switch-disabled',
-            switchChecked: 'song-switch-checked',
-            radio: 'song-form-radio',
-            radioDisabled: 'song-radio-disabled',
-            radioChecked: 'song-radio-checked',
-            checkbox: 'song-form-checkbox',
-            checkboxDisabled: 'song-checkbox-disabled',
-            checkboxCheckd: 'song-checkbox-checked',
-            checkboxCheckedDisabled: 'song-checkbox-checked-disabled',
-            select: 'song-form-select',
-            selectOpen: 'song-form-select-open',
-            selectTitle: 'song-select-title',
-            selectBody: 'song-select-dl',
-            selectHolder: 'song-color-holder',
-            selectDisabled: 'song-select-disabled',
-            selectActive: 'song-select-active',
-            selectAnimation: 'song-form-animation-hover-down'
+            switchClass: 'jy-form-switch',
+            switchDisabled: 'jy-switch-disabled',
+            switchChecked: 'jy-switch-checked',
+            radio: 'jy-form-radio',
+            radioDisabled: 'jy-radio-disabled',
+            radioChecked: 'jy-radio-checked',
+            checkbox: 'jy-form-checkbox',
+            checkboxDisabled: 'jy-checkbox-disabled',
+            checkboxCheckd: 'jy-checkbox-checked',
+            checkboxCheckedDisabled: 'jy-checkbox-checked-disabled',
+            select: 'jy-form-select',
+            selectOpen: 'jy-form-select-open',
+            selectTitle: 'jy-select-title',
+            selectBody: 'jy-select-dl',
+            selectHolder: 'jy-color-holder',
+            selectDisabled: 'jy-select-disabled',
+            selectActive: 'jy-select-active',
+            selectAnimation: 'jy-form-animation-hover-down'
         }
         var verifyRules = {
             required: {
@@ -68,6 +68,18 @@
             }
         };
 
+        var customRules = {
+            'max-250': {
+                msg: '最多输入250个字符',
+                verify: function(str) {
+                    if(str && str.length > 250) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        };
+
         function Class() {
             var event = Common.getEvent();
             this.on = event.on;
@@ -81,7 +93,7 @@
             var that = this;
             $(docBody).delegate('button[type="submit"]', 'click', function () {
                 var $form = $(this).parents('form');
-                var filter = $(this).attr('song-filter');
+                var filter = $(this).attr('jy-filter');
                 if ($form.length & that.verify($form)) {
                     var data = that.getJsonFromForm($form);
                     if (filter) {
@@ -92,44 +104,51 @@
             });
         }
 
+        Class.prototype.addRule = function (rules) {
+            if(typeof rules === 'object') {
+                Object(customRules, rules);
+            }
+        }
+
         // 验证
-        Class.prototype.verify = function (formId) {
+        Class.prototype.verify = function (formId, callback) {
             var $form = $(formId || 'form');
             var pass = true;
-            var dangerClass = 'song-border-danger';
-            $form.find('input,textarea').each(function (i, input) {
-                if (input.type == 'text' || input.type == 'password' || input.tagName.toLowerCase() == 'textarea') {
+            var msg = '';
+            var dangerClass = 'jy-border-danger';
+            $form.find('input,textarea,select').each(function (i, input) {
+                var tagName = input.tagName.toLowerCase();
+                if (input.type == 'text' || input.type == 'password' || tagName == 'textarea' || tagName == 'select') {
                     var $input = $(input);
-                    var verifyRules = $input.attr('song-verify') || '';
-                    verifyRules = verifyRules.split('|');
-                    for (var i = 0; i < verifyRules.length; i++) {
-                        var verifyRule = verifyRules[verifyRules[i]];
+                    var rules = $input.attr('jy-verify') || '';
+                    var value = $input.val() || '';
+                    rules = rules.split('|');
+                    for (var i = 0; i < rules.length; i++) {
+                        var verifyRule = customRules[rules[i]] || verifyRules[rules[i]];
                         if (pass && verifyRule) {
-                            pass = verifyRule.verify ? verifyRule.verify($input.val()) : verifyRule.rule.test($input.val());
+                            pass = verifyRule.verify ? verifyRule.verify(value) : verifyRule.rule.test(value);
                             if (!pass) {
-                                window.SongUi && window.SongUi.Dialog && window.SongUi.Dialog.msg(verifyRule.msg, {
+                                Dialog && Dialog.msg(verifyRule.msg, {
                                     icon: 'error'
                                 });
-                                $input.addClass(dangerClass);
+                                msg = verifyRule.msg;
+                                if (tagName == 'select') {
+                                    input.$ui && input.$ui.find('input.jy-input').addClass(dangerClass);
+                                } else {
+                                    $input.addClass(dangerClass);
+                                }
                             } else {
-                                $input.removeClass(dangerClass);
+                                if (tagName == 'select') {
+                                    input.$ui && input.$ui.find('input.jy-input').removeClass(dangerClass);
+                                } else {
+                                    $input.removeClass(dangerClass);
+                                }
                             }
                         }
                     }
                 }
             });
-            pass && $form.find('select').each(function (i, select) {
-                var $select = $(select);
-                var verifyRule = $select.attr('song-verify');
-                if (verifyRules[verifyRule]) {
-                    var pass = verifyRules[verifyRule]($select.val());
-                    if (!pass) {
-                        select.$ui && select.$ui.find('input.song-input').addClass(dangerClass);
-                    } else {
-                        select.$ui && select.$ui.find('input.song-input').removeClass(dangerClass);
-                    }
-                }
-            });
+            callback && callback(pass, msg);
             return pass
         }
 
@@ -141,7 +160,7 @@
                 var $input = $(input);
                 var name = $input.attr('name');
                 var value = $input.val();
-                var skin = $input.attr('song-skin');
+                var skin = $input.attr('jy-skin');
                 if (input.type == 'text' || input.type == 'hidden' || input.type == 'password') {
                     name && (data[name] = value);
                 } else if (input.type == 'radio') {
@@ -207,7 +226,7 @@
         Class.prototype.renderSwitch = function (filter, container) {
             var that = this;
             var $container = $(container || docBody);
-            var selector = 'input[type="checkbox"][song-skin="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var selector = 'input[type="checkbox"][jy-skin="switch"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
                 inputs = $container;
             } else {
@@ -215,7 +234,7 @@
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
-                var ignore = $input.attr('song-ignore') === undefined ? false : true;
+                var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.switchClass];
                 var text = 'OFF';
                 // 忽略标签
@@ -256,7 +275,7 @@
             $dom.on('click', function () {
                 var $this = $(this);
                 var $input = $this.prev('input');
-                var filter = $input.attr('song-filter');
+                var filter = $input.attr('jy-filter');
                 var checked = $input.prop('checked');
                 if ($input.prop('disabled')) {
                     return;
@@ -279,7 +298,7 @@
         Class.prototype.renderRadio = function (filter, container) {
             var that = this;
             var $container = $(container || docBody);
-            var selector = 'input[type="radio"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var selector = 'input[type="radio"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
                 inputs = $container;
             } else {
@@ -287,7 +306,7 @@
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
-                var ignore = $input.attr('song-ignore') === undefined ? false : true;
+                var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.radio];
                 // 忽略标签
                 if (ignore) {
@@ -309,8 +328,8 @@
                 }
                 var html =
                     '<div class="' + classNames.join(' ') + '">\
-                        <i class="song-radio-icon-checked">' + radioedIcon + '</i>\
-                        <i class="song-radio-icon-uncheck">' + radioIcon + '</i>\
+                        <i class="jy-radio-icon-checked">' + radioedIcon + '</i>\
+                        <i class="jy-radio-icon-uncheck">' + radioIcon + '</i>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>';
                 var $html = $(html);
@@ -333,14 +352,14 @@
                 var $this = $(this);
                 var $input = $this.prev('input');
                 var name = $input.attr('name');
-                var filter = $input.attr('song-filter');
+                var filter = $input.attr('jy-filter');
                 if ($input.prop('disabled')) {
                     return;
                 }
                 // 同组的radio取消选中
                 $container[0].radios.map(function (radio) {
                     var $radio = $(radio);
-                    if ($radio.attr('name') == name && $radio.attr('song-filter') == filter) {
+                    if ($radio.attr('name') == name && $radio.attr('jy-filter') == filter) {
                         radio.$ui.removeClass(formClass.radioChecked);
                     }
                 });
@@ -362,7 +381,7 @@
         Class.prototype.renderCheckbox = function (filter, container) {
             var that = this;
             var $container = $(container || docBody);
-            var selector = 'input[type="checkbox"][song-skin!="switch"]' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var selector = 'input[type="checkbox"][jy-skin!="switch"]' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
                 inputs = $container;
             } else {
@@ -370,7 +389,7 @@
             }
             inputs.each(function (i, input) {
                 var $input = $(input);
-                var ignore = $input.attr('song-ignore') === undefined ? false : true;
+                var ignore = $input.attr('jy-ignore') === undefined ? false : true;
                 var classNames = [formClass.checkbox];
                 var disabled = $input.prop('disabled');
                 var checked = $input.prop('checked')
@@ -398,7 +417,7 @@
                 }
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
-                        <span class="song-checkbox-icon"><i>' + checkedIcon + '</i></span>\
+                        <span class="jy-checkbox-icon"><i>' + checkedIcon + '</i></span>\
                         <span>' + ($input.attr('title') || '&nbsp;') + '</span>\
                     </div>');
                 $html.insertAfter(input);
@@ -420,7 +439,7 @@
                 var $this = $(this);
                 var $input = $this.prev('input');
                 var name = $input.attr('name');
-                var filter = $input.attr('song-filter');
+                var filter = $input.attr('jy-filter');
                 var checked = $input.prop('checked');
                 var data = [];
                 if ($input.prop('disabled')) {
@@ -431,7 +450,7 @@
                 // 获取同组的选中数据
                 $container[0].checkboxs.map(function (checkbox) {
                     var $checkbox = $(checkbox);
-                    if ($checkbox.attr('name') == name && $checkbox.attr('song-filter') == filter) {
+                    if ($checkbox.attr('name') == name && $checkbox.attr('jy-filter') == filter) {
                         data.push($checkbox.val());
                     }
                 });
@@ -451,7 +470,7 @@
         Class.prototype.renderSelect = function (filter, container) {
             var that = this;
             var $container = $(container || docBody);
-            var selector = 'select' + (filter ? '[song-filter="' + filter + '"]' : '');
+            var selector = 'select' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
                 selects = $container;
             } else {
@@ -459,8 +478,9 @@
             }
             selects.each(function (i, select) {
                 var $select = $(select);
-                var ignore = $select.attr('song-ignore') === undefined ? false : true;
-                var search = $select.attr('song-search') === undefined ? false : true;
+                var ignore = $select.attr('jy-ignore') === undefined ? false : true;
+                var search = $select.attr('jy-search') === undefined ? false : true;
+                var placeholder = $select.attr('placeholder') || '请选择';
                 var classNames = [formClass.select];
                 // 删除已经渲染过的ui
                 select.$ui && select.$ui.remove();
@@ -475,7 +495,7 @@
                 var $html = $(
                     '<div class="' + classNames.join(' ') + '">\
                         <div class="' + formClass.selectTitle + '">\
-                            <input type="text" class="song-input" placeholder="请选择" ' + (search ? '' : 'readonly') + '>\
+                            <input type="text" class="jy-input" placeholder="' + placeholder + '" ' + (search ? '' : 'readonly') + '>\
                             <i>' + downIcon + '</i>\
                         </div>\
                     </div>');
@@ -484,17 +504,21 @@
                 $select.find('option').each(function (i, opt) {
                     var $opt = $(opt);
                     var text = $opt.text();
-                    var value = $opt.val();
+                    var value = $opt.val() || '';
                     var classNames = [];
                     if (!text) {
                         classNames.push(formClass.selectHolder);
+                        if(text) {
+                            placeholder = text;
+                            $input.attr('placeholder', placeholder);
+                        }
                     }
                     if ($select.val() == value) {
-                        $input.attr('data-value', $select.val());
+                        $input.attr('data-value', $select.val() || '');
                         $input.val(text);
                         classNames.push(formClass.selectActive);
                     }
-                    dlHtml += '<dd class="' + classNames.join(' ') + '" data-value="' + value + '">' + (text || '请选择') + '</dd>';
+                    dlHtml += '<dd class="' + classNames.join(' ') + '" data-value="' + value + '">' + (value && text || placeholder) + '</dd>';
                 });
                 dlHtml += '</dl>';
                 $html.append(dlHtml);
@@ -514,10 +538,10 @@
             var that = this;
             container = $container[0] === docBody ? false : $container[0];
             var $select = $dom.prev('select');
-            var search = $select.attr('song-search') === undefined ? false : true;
+            var search = $select.attr('jy-search') === undefined ? false : true;
             var $title = $dom.children('div.' + formClass.selectTitle);
             var $cont = $dom.children('dl.' + formClass.selectBody);
-            var $input = $title.children('input.song-input');
+            var $input = $title.children('input.jy-input');
             // 打开，收起事件
             $title.on('click', function () {
                 if ($select.prop('disabled')) {
@@ -550,10 +574,12 @@
             // 失去焦点，收起
             $title.on('blur', function () {
                 var $dd = $cont.find('dd.' + formClass.selectActive);
+                var value = $dd.attr('data-value');
                 // 输入框显示已选中的项
-                $input.val($dd.attr('data-value') && $dd.text() || '');
+                $input.val(value && $dd.text() || '');
                 $cont.hide().removeClass(formClass.selectAnimation);
                 $dom.removeClass(formClass.selectOpen);
+                search && _search();
                 setTimeout(function () {
                     $input.blur()
                 }, 50);
@@ -562,13 +588,14 @@
             $cont.find('dd').on('click', function () {
                 var $this = $(this);
                 var value = $this.attr('data-value');
-                var filter = $select.attr('song-filter') || '';
+                var filter = $select.attr('jy-filter') || '';
                 $cont.find('dd.' + formClass.selectActive).removeClass(formClass.selectActive);
                 $this.addClass(formClass.selectActive);
                 // 输入框显示已选中的项
                 $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
                 $select.val(value);
                 $cont.hide();
+                search && _search();
                 // 触发select事件
                 filter && that.trigger('select(' + filter + ')', {
                     data: value,
@@ -578,19 +605,12 @@
                     data: value,
                     dom: $select[0]
                 });
+                return false;
             });
             // 可搜索
             if (search) {
                 $input.on('input propertychange', function () {
-                    var title = $(this).val();
-                    $cont.children('dd').each(function (i, dd) {
-                        var $dd = $(dd);
-                        if ($dd.text().indexOf(title) == -1) {
-                            $dd.hide();
-                        } else {
-                            $dd.show();
-                        }
-                    });
+                    _search();
                 });
             }
             // 点击页面收起下拉框
@@ -605,6 +625,21 @@
                 });
                 bindedBodyEvent = true;
             }
+
+            function _search(title) {
+                var title = $input.val();
+                clearTimeout($input.timer);
+                $input.timer = setTimeout(function () {
+                    $cont.children('dd').each(function (i, dd) {
+                        var $dd = $(dd);
+                        if ($dd.text().indexOf(title) == -1) {
+                            $dd.hide();
+                        } else {
+                            $dd.show();
+                        }
+                    });
+                }, 100);
+            }
         }
 
         var instance = new Class();
@@ -614,8 +649,9 @@
             trigger: instance.trigger,
             verifyRules: verifyRules,
             render: instance.render.bind(instance),
-            verify: instance.verify,
-            getJsonFromForm: instance.getJsonFromForm
+            addRule: instance.addRule.bind(instance),
+            verify: instance.verify.bind(instance),
+            getJsonFromForm: instance.getJsonFromForm.bind(instance)
         }
 
         $(function () {
@@ -627,11 +663,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define(['./jquery', './common'], function ($, Common) {
-            return factory($, Common);
+        define(['./jquery', './common', './dialog'], function ($, Common, Dialog) {
+            return factory($, Common, Dialog);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Form = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Form = factory(window.$, window.JyUi.Common);
     }
 })(window)

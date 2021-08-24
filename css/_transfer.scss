@@ -1,4 +1,4 @@
-.song-transfer {
+.jy-transfer {
 
     &-left,
     &-right {
@@ -122,7 +122,7 @@
         cursor: pointer;
         user-select: none;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             position: absolute;
             left: 0;
             top: 0;
@@ -146,7 +146,7 @@
     }
 
     &-checked {
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             background-color: $link-color;
             border-color: $link-color;
 
@@ -159,7 +159,7 @@
     &-disabled {
         color: $disabled-color;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
             cursor: not-allowed;
@@ -170,7 +170,7 @@
     &-checked-disabled {
         color: $disabled-color;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
             background-color: $disabled-background-color;

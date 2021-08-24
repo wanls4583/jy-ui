@@ -1,5 +1,5 @@
 // 按钮
-.song-btn {
+.jy-btn {
     display: inline-block;
     height: $btn-height - 2px;
     line-height: $btn-height - 2px;
@@ -70,7 +70,7 @@
 }
 
 // 表单项
-.song-form-item {
+.jy-form-item {
     clear: both;
     margin-bottom: $pd15;
     // ie7及以下不支持before，after，用zoom触发haslayout清除内部浮动
@@ -86,41 +86,50 @@
 }
 
 // 表单项label
-.song-form-label {
+.jy-form-label {
     float: left;
     width: 80px;
-    margin: 0 $pd15;
+    margin: 0 $pd15 0 0;
     padding: 9px 0;
     line-height: 20px;
     color: $color-333;
     text-align: right;
 }
 
+.jy-required {
+    &:before {
+        content: "*";
+        color: $danger-color;
+    }
+}
+
 // 块级包裹
-.song-input-block {
-    margin-left: 110px;
+.jy-input-block {
+    margin-left: 90px;
     // 在ie6，ie7中，zoom:1触发了BFC
     *margin-left: 0;
     *zoom: 1;
 }
 
 // 内联包裹
-.song-input-inline {
+.jy-input-inline {
     float: left;
     width: 190px;
 }
 
 // 内联组合包裹
-.song-inline {
+.jy-form-inline {
     display: inline-block;
     // ie6、ie7下inline-block只是触发layout，使元素可以设置宽高等属性，block元素还是会占一行
     *display: inline;
     *zoom: 1;
     margin-right: $pd10;
+    margin-bottom: 5px;
+    vertical-align: top;
 }
 
 // 输入框
-.song-input {
+.jy-input {
     display: block;
     width: 100%;
     height: $input-height;
@@ -140,8 +149,15 @@
     *vertical-align: middle;
 }
 
+.jy-input.jy-input-small {
+    height: $input-height - 10px;
+    *height: $input-height - 10px - 2px;
+    _height: $input-height - 10px;
+    line-height: $input-height - 10px - 2px;
+}
+
 // 文本域
-.song-textarea {
+.jy-textarea {
     display: block;
     width: 100%;
     height: auto;
@@ -160,7 +176,7 @@
 }
 
 // 开关
-.song-form-switch {
+.jy-form-switch {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -189,8 +205,8 @@
         transition: all 0.1s;
     }
 
-    // ie6多类选择器是或的关系，不是与的关系，song-disabled这种类名容易被其他样式覆盖
-    &.song-switch-disabled {
+    // ie6多类选择器是或的关系，不是与的关系，jy-disabled这种类名容易被其他样式覆盖
+    &.jy-switch-disabled {
         border-color: $disabled-border-color;
         color: $disabled-color;
         cursor: not-allowed;
@@ -200,7 +216,7 @@
         }
     }
 
-    &.song-switch-checked {
+    &.jy-switch-checked {
         padding-left: 5px;
         padding-right: 25px;
         background-color: $link-color;
@@ -217,7 +233,7 @@
 }
 
 // 多选框
-.song-form-checkbox {
+.jy-form-checkbox {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -229,7 +245,7 @@
     cursor: pointer;
     user-select: none;
 
-    .song-checkbox-icon {
+    .jy-checkbox-icon {
         position: absolute;
         left: 0;
         top: 0;
@@ -248,8 +264,8 @@
         }
     }
 
-    &.song-checkbox-checked {
-        .song-checkbox-icon {
+    &.jy-checkbox-checked {
+        .jy-checkbox-icon {
             background-color: $link-color;
             border-color: $link-color;
 
@@ -259,21 +275,21 @@
         }
     }
 
-    &.song-checkbox-disabled {
+    &.jy-checkbox-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
         }
     }
 
-    &.song-checkbox-checked-disabled {
+    &.jy-checkbox-checked-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
             background-color: $disabled-background-color;
@@ -286,7 +302,7 @@
 }
 
 // 单选框
-.song-form-radio {
+.jy-form-radio {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -298,8 +314,8 @@
     cursor: pointer;
     user-select: none;
 
-    .song-radio-icon-checked,
-    .song-radio-icon-uncheck {
+    .jy-radio-icon-checked,
+    .jy-radio-icon-uncheck {
         position: absolute;
         left: 0;
         top: 0;
@@ -308,56 +324,61 @@
         color: $gray-color;
     }
 
-    .song-radio-icon-checked {
+    .jy-radio-icon-checked {
         display: none;
         color: $link-color;
     }
 
-    &.song-radio-disabled {
+    &.jy-radio-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
-        .song-radio-icon-checked,
-        .song-radio-icon-uncheck {
+        .jy-radio-icon-checked,
+        .jy-radio-icon-uncheck {
             color: $disabled-color;
         }
     }
 
-    &.song-radio-checked {
-        .song-radio-icon-checked {
+    &.jy-radio-checked {
+        .jy-radio-icon-checked {
             display: block;
         }
 
-        .song-radio-icon-uncheck {
+        .jy-radio-icon-uncheck {
             display: none;
         }
     }
 }
 
+select {
+    height: $input-height;
+}
+
 // 选择框
-.song-form-select {
+.jy-form-select {
     position: relative;
     width: 100%;
     *zoom: 1;
 
-    &.song-form-select-open {
+    &.jy-form-select-open {
         z-index: 99;
     }
 
-    &.song-select-disabled {
-        .song-select-title {
-            .song-input {
+    &.jy-select-disabled {
+        .jy-select-title {
+            .jy-input {
                 cursor: not-allowed;
                 color: $disabled-color;
             }
         }
     }
 
-    .song-select-title {
+    .jy-select-title {
         position: relative;
 
-        .song-input {
+        .jy-input {
             cursor: pointer;
+            user-select: none;
         }
 
         i {
@@ -372,17 +393,19 @@
         }
     }
 
-    .song-select-dl {
+    .jy-select-dl {
         display: none;
         position: absolute;
         top: 100%;
         left: 0;
         z-index: 1;
         width: 100%;
+        max-height: 250px;
         margin-top: 5px;
         background-color: $white-color;
         border: 1px solid $gray-color;
         border-radius: 2px;
+        overflow: auto;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
         box-sizing: border-box;
 
@@ -395,7 +418,7 @@
                 background-color: $hover-background-color
             }
 
-            &.song-select-active {
+            &.jy-select-active {
                 background-color: $link-color;
                 color: $white-color;
             }
@@ -404,11 +427,11 @@
 }
 
 // 字段集区块
-.song-field {
+.jy-field {
     padding: 0;
     border: 1px solid $border-color;
 
-    &.song-field-title {
+    &.jy-field-title {
         border-style: none;
         border-top-style: solid;
     }
@@ -420,19 +443,19 @@
         color: $color-333;
     }
 
-    .song-field-box {
+    .jy-field-box {
         padding: $pd15;
     }
 }
 
-.song-form-animation-hover-down {
-    animation-name: song-form-keyframes-hover-down;
+.jy-form-animation-hover-down {
+    animation-name: jy-form-keyframes-hover-down;
     animation-duration: 0.2s;
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
 }
 
-@keyframes song-form-keyframes-hover-down {
+@keyframes jy-form-keyframes-hover-down {
     0% {
         opacity: 0;
         transform: translateY(20px);
@@ -441,5 +464,31 @@
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+.jy-form-small {
+    .jy-input {
+        height: $input-height - 8px;
+        *height: $input-height - 8px - 2px;
+        _height: $input-height - 8px;
+        line-height: $input-height - 8px - 2px;
+    }
+
+    .jy-form-label {
+        padding: 5px 0;
+    }
+
+    .jy-input-inline {
+        width: 120px;
+    }
+
+    select {
+        height: $input-height - 8px
+    }
+
+    .jy-form-label {
+        padding: 5px 0;
+        width: auto;
     }
 }

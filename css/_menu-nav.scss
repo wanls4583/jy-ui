@@ -1,4 +1,4 @@
-.song-menu {
+.jy-menu {
     $bgColor: #ffffff;
     $hoverBgColor: $hover-background-color;
     $checkedBgColor: $hover-background-color;
@@ -34,7 +34,7 @@
         cursor: pointer;
         user-select: none;
 
-        &.song-menu-border {
+        &.jy-menu-border {
             *zoom: 1;
             height: 0;
             line-height: 0;
@@ -127,14 +127,14 @@
     }
 
     &-animation-hover-right {
-        animation-name: song-menu-keyframes-hover-right;
+        animation-name: jy-menu-keyframes-hover-right;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
 
     &-animation-hover-down {
-        animation-name: song-menu-keyframes-hover-down;
+        animation-name: jy-menu-keyframes-hover-down;
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
@@ -142,7 +142,7 @@
 }
 
 
-.song-menu-nav {
+.jy-menu-nav {
     $bgColor: #393D49;
     $hoverBgColor: #393D49;
     $checkedBgColor: $success-color;
@@ -171,12 +171,12 @@
         color: $textColor;
     }
 
-    .song-menu-hover {
+    .jy-menu-hover {
         color: $activeColor;
         background-color: $hoverBgColor;
     }
 
-    .song-menu-checked {
+    .jy-menu-checked {
         color: $activeColor;
         background-color: $checkedBgColor;
 
@@ -185,13 +185,13 @@
         }
     }
 
-    .song-menu-checked-parent {
+    .jy-menu-checked-parent {
         color: $textColor;
     }
 
     // 纵向导航条的右侧菜单
-    .song-menu-hover-right,
-    .song-menu-hover-down {
+    .jy-menu-hover-right,
+    .jy-menu-hover-down {
         border: 0;
         box-shadow: none;
     }
@@ -209,7 +209,7 @@
             padding: 0 20px;
         }
 
-        .song-menu-checked {
+        .jy-menu-checked {
             background-color: transparent;
 
             &:after {
@@ -224,17 +224,17 @@
             }
         }
 
-        .song-menu-checked-parent {
+        .jy-menu-checked-parent {
             color: $activeColor;
         }
 
-        .song-menu-icon {
+        .jy-menu-icon {
             right: 4px;
         }
 
         // 水平导航条的下拉菜单
-        .song-menu-hover-right,
-        .song-menu-hover-down {
+        .jy-menu-hover-right,
+        .jy-menu-hover-down {
             background-color: $hChildBgColor;
             border: 1px solid $border-color;
             box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
@@ -243,12 +243,12 @@
                 line-height: 36px;
                 float: none;
 
-                .song-menu-hover {
+                .jy-menu-hover {
                     color: $hChildActiveColor;
                     background-color: $hChildhoverBgColor;
                 }
 
-                .song-menu-checked-parent {
+                .jy-menu-checked-parent {
                     color: $hChildActiveColor;
                 }
             }
@@ -258,14 +258,14 @@
                 color: $hChildTextColor;
             }
 
-            .song-menu-icon {
+            .jy-menu-icon {
                 right: 15px;
             }
         }
     }
 }
 
-@keyframes song-menu-keyframes-hover-right {
+@keyframes jy-menu-keyframes-hover-right {
     0% {
         opacity: 0;
         transform: translateX(-10px);
@@ -277,7 +277,7 @@
     }
 }
 
-@keyframes song-menu-keyframes-hover-down {
+@keyframes jy-menu-keyframes-hover-down {
     0% {
         opacity: 0;
         transform: translateY(-10px);

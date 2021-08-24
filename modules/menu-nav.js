@@ -4,36 +4,36 @@
         var upIcon = '&#xe757;';
         var rightIcon = '&#xe734;';
         var tpl = {
-            menu: '<ul class="song-menu song-menu-structure"></ul>',
+            menu: '<ul class="jy-menu jy-menu-structure"></ul>',
             ul: '<ul></ul>',
             item: '<li><a></a></li>',
-            rightIcon: '<i class="song-menu-icon song-menu-right-icon">' + rightIcon + '</i>',
-            downIcon: '<i class="song-menu-icon song-menu-down-icon">' + downIcon + '</i>',
-            upIcon: '<i class="song-menu-icon song-menu-up-icon">' + upIcon + '</i>',
-            border: '<li class="song-menu-border"></li>'
+            rightIcon: '<i class="jy-menu-icon jy-menu-right-icon">' + rightIcon + '</i>',
+            downIcon: '<i class="jy-menu-icon jy-menu-down-icon">' + downIcon + '</i>',
+            upIcon: '<i class="jy-menu-icon jy-menu-up-icon">' + upIcon + '</i>',
+            border: '<li class="jy-menu-border"></li>'
         }
         var menuClass = {
-            menu: 'song-menu',
-            nav: 'song-menu-nav',
-            vertical: 'song-menu-nav-vertical',
-            horizontal: 'song-menu-nav-horizontal',
-            structure: 'song-menu-structure',
-            hoverRight: 'song-menu-hover-right',
-            hoverDown: 'song-menu-hover-down',
-            spread: 'song-menu-item-spread',
-            title: 'song-menu-item-title',
-            absolute: 'song-menu-absolute',
-            border: 'song-menu-border',
-            checked: 'song-menu-checked',
-            checkedParent: 'song-menu-checked-parent',
-            downIcon: 'song-menu-down-icon',
-            upIcon: 'song-menu-up-icon',
-            hover: 'song-menu-hover',
-            child: 'song-menu-child',
-            ieHack: 'song-menu-ie-hack'
+            menu: 'jy-menu',
+            nav: 'jy-menu-nav',
+            vertical: 'jy-menu-nav-vertical',
+            horizontal: 'jy-menu-nav-horizontal',
+            structure: 'jy-menu-structure',
+            hoverRight: 'jy-menu-hover-right',
+            hoverDown: 'jy-menu-hover-down',
+            spread: 'jy-menu-item-spread',
+            title: 'jy-menu-item-title',
+            absolute: 'jy-menu-absolute',
+            border: 'jy-menu-border',
+            checked: 'jy-menu-checked',
+            checkedParent: 'jy-menu-checked-parent',
+            downIcon: 'jy-menu-down-icon',
+            upIcon: 'jy-menu-up-icon',
+            hover: 'jy-menu-hover',
+            child: 'jy-menu-child',
+            ieHack: 'jy-menu-ie-hack'
         }
-        var hoverRightAnimation = 'song-menu-animation-hover-right';
-        var hoverDownAnimation = 'song-menu-animation-hover-down';
+        var hoverRightAnimation = 'jy-menu-animation-hover-right';
+        var hoverDownAnimation = 'jy-menu-animation-hover-down';
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var $docBody = $(docBody);
@@ -194,7 +194,7 @@
                 var $item = $(tpl.item);
                 var $title = $item.children('a');
                 item = Object.assign({}, item);
-                item._song_key = that.key;
+                item._jy_key = that.key;
                 $item.attr('data-key', that.key);
                 $title.html(typeof that.option.template === 'function' ? that.option.template(item) : item.title);
                 $parent.append($item);
@@ -374,7 +374,7 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
-                    SongMenuNav.trigger($ul.is(':visible') ? 'spread' : 'close', {
+                    JyMenuNav.trigger($ul.is(':visible') ? 'spread' : 'close', {
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
@@ -396,7 +396,7 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
-                    SongMenuNav.trigger('spread', {
+                    JyMenuNav.trigger('spread', {
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
@@ -416,7 +416,7 @@
                             dom: this,
                             data: Common.delInnerProperty(data)
                         });
-                        SongMenuNav.trigger('close', {
+                        JyMenuNav.trigger('close', {
                             dom: this,
                             data: Common.delInnerProperty(data)
                         });
@@ -456,7 +456,7 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
-                    SongMenuNav.trigger('click', {
+                    JyMenuNav.trigger('click', {
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
@@ -523,7 +523,7 @@
             }
         }
 
-        var SongMenuNav = {
+        var JyMenuNav = {
             on: event.on,
             once: event.once,
             trigger: event.trigger,
@@ -568,10 +568,10 @@
                     var type = $menu.hasClass(menuClass.nav) ? 'nav' : 'menu';
                     var mode = $menu.hasClass(menuClass.horizontal) ? 'horizontal' : 'vertical';
                     var position = $menu.hasClass(menuClass.absolute) ? 'absolute' : 'static';
-                    var check = $menu.attr('song-menu-check');
-                    var elem = $menu.attr('song-menu-elem');
-                    var trigger = $menu.attr('song-menu-trigger');
-                    SongMenuNav.render({
+                    var check = $menu.attr('jy-menu-check');
+                    var elem = $menu.attr('jy-menu-elem');
+                    var trigger = $menu.attr('jy-menu-trigger');
+                    JyMenuNav.render({
                         elem: elem,
                         $menu: $menu,
                         type: type,
@@ -584,14 +584,14 @@
             });
         });
 
-        return SongMenuNav;
+        return JyMenuNav;
     }
     if ("function" == typeof define && define.amd) {
         define(['./jquery', './common'], function ($, Common) {
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.MenuNav = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.MenuNav = factory(window.$, window.JyUi.Common);
     }
 })(window)

@@ -1,5 +1,5 @@
 /*
- * @Author: lisong
+ * @Author: lijy
  * @Date: 2021-04-28 09:59:36
  * @Description: 
  */
@@ -19,18 +19,18 @@
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var layerClass = {
-            layer: 'song-layer',
-            shadow: 'song-layer-shadow',
-            title: 'song-layer-title',
-            footer: 'song-layer-footer',
-            body: 'song-layer-content',
-            dialog: 'song-layer-dialog',
-            alert: 'song-layer-alert',
-            confirm: 'song-layer-confirm',
-            msg: 'song-layer-msg',
-            iconMsg: 'song-layer-msg-with-icon',
-            loading: 'song-layer-loading',
-            loadingIcon: 'song-layer-loading-icon'
+            layer: 'jy-layer',
+            shadow: 'jy-layer-shadow',
+            title: 'jy-layer-title',
+            footer: 'jy-layer-footer',
+            body: 'jy-layer-content',
+            dialog: 'jy-layer-dialog',
+            alert: 'jy-layer-alert',
+            confirm: 'jy-layer-confirm',
+            msg: 'jy-layer-msg',
+            iconMsg: 'jy-layer-msg-with-icon',
+            loading: 'jy-layer-loading',
+            loadingIcon: 'jy-layer-loading-icon'
         }
         var ieVersion = Common.getIeVersion();
         var store = {};
@@ -56,39 +56,44 @@
             var layerIndex = ++layerCount;
             var $container = $(option.container || docBody);
             var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + 99) + '"></div>');
-            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" song-index="' + layerIndex + '" style="z-index:' + (layerIndex + 100) + '"></div>');
+            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" jy-index="' + layerIndex + '" style="z-index:' + (layerIndex + 100) + '"></div>');
             var $title = $(
                 '<div ' + (option.move ? 'onselectstart="return false;"' : '') + ' class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
-                    <div class="song-layer-op">\
-                        <i class="song-op-minus song-icon">' + minusIcon + '</i>\
-                        <i class="song-op-full song-icon">' + fullIcon + '</i>\
-                        <i class="song-op-recovery song-icon">' + recoveryIcon + '</i>\
-                        <i class="song-op-close song-icon">' + closeIcon + '</i>\
+                    <div class="jy-layer-op">\
+                        <i class="jy-op-minus jy-icon">' + minusIcon + '</i>\
+                        <i class="jy-op-full jy-icon">' + fullIcon + '</i>\
+                        <i class="jy-op-recovery jy-icon">' + recoveryIcon + '</i>\
+                        <i class="jy-op-close jy-icon">' + closeIcon + '</i>\
                     </div>\
                 </div>'
             );
-            var $content = $('<div class="' + layerClass.body + '"><div>' + (typeof option.content == 'object' ? $(option.content).html() : option.content) + '</div></div>');
+            var $content = $('<div class="' + layerClass.body + '"><div>' + '</div></div>');
             var $footer = $('<div class="' + layerClass.footer + '"></div>');
+            if (typeof option.content == 'object') {
+                $content.append($(option.content).show());
+            } else {
+                $content.append(option.content);
+            }
             // 存储弹框数据
             store[layerIndex] = {
                 option: option
             }
-            $title.find('i.song-icon').hide();
+            $title.find('i.jy-icon').hide();
             // 动画
             if (option.animation && option.type != 'msg' && option.type != 'loading') {
-                var animation = 'song-layer-animation-' + option.animation;
+                var animation = 'jy-layer-animation-' + option.animation;
                 $layer.addClass(animation);
                 setTimeout(function () {
                     $layer.removeClass(animation);
                 }, ieVersion >= 9 ? 300 : 0);
             }
             if (option.full) {
-                $title.find('i.song-op-minus').show();
-                $title.find('i.song-op-full').show();
+                $title.find('i.jy-op-minus').show();
+                $title.find('i.jy-op-full').show();
             }
             if (option.close) {
-                $title.find('i.song-op-close').show();
+                $title.find('i.jy-op-close').show();
             }
             if (option.shadow || option.mask) {
                 $container.append($shadow);
@@ -102,11 +107,11 @@
             if (option.btn) {
                 var btnHtml = '';
                 for (var i = 0; i < option.btn.length; i++) {
-                    btnHtml += '<button class="song-btn' + (i > 0 ? ' song-btn-primary' : '') + (option.type != 'dialog' ? ' song-btn-sm' : '') + '">' + option.btn[i] + '</button>';
+                    btnHtml += '<button class="jy-btn' + (i > 0 ? ' jy-btn-primary' : '') + (option.type != 'dialog' ? ' jy-btn-sm' : '') + '">' + option.btn[i] + '</button>';
                 }
                 $footer.append(btnHtml);
             }
-            if (option.title) {
+            if (option.title !== false) {
                 $layer.append($title);
             }
             $layer.append($content);
@@ -115,8 +120,8 @@
             }
             // 在特定容器里打开
             if ($container[0] != docBody) {
-                $shadow.addClass('song-layer-absolute');
-                $layer.addClass('song-layer-absolute');
+                $shadow.addClass('jy-layer-absolute');
+                $layer.addClass('jy-layer-absolute');
             }
             // 提示图标
             if (option.icon) {
@@ -125,22 +130,22 @@
                 switch (option.icon) {
                     case 'success':
                         icon = successIcon;
-                        color = 'song-color-success';
+                        color = 'jy-color-success';
                         break;
                     case 'warn':
                         icon = warnIcon;
-                        color = 'song-color-warn';
+                        color = 'jy-color-warn';
                         break;
                     case 'error':
                         icon = errorIcon;
-                        color = 'song-color-danger';
+                        color = 'jy-color-danger';
                         break;
                     case 'question':
                         icon = questionIcon;
-                        color = 'song-color-warn';
+                        color = 'jy-color-warn';
                         break;
                 }
-                $content.prepend('<i class="song-layer-icon ' + color + '">' + icon + '</i>').css({
+                $content.prepend('<i class="jy-layer-icon ' + color + '">' + icon + '</i>').css({
                     paddingLeft: '55px'
                 });
                 if (option.type == 'msg') {
@@ -174,16 +179,16 @@
                     $(this).css('z-index', zIndex);
                 });
                 // 关闭
-                $title.find('i.song-op-close').on('click', function () {
+                $title.find('i.jy-op-close').on('click', function () {
                     close(layerIndex);
                     return false;
                 });
                 if (option.full) {
                     // 全屏
-                    $title.find('i.song-op-full').on('click', function () {
+                    $title.find('i.jy-op-full').on('click', function () {
                         $(this).hide();
-                        $title.find('i.song-op-minus').hide();
-                        $title.find('i.song-op-recovery').show();
+                        $title.find('i.jy-op-minus').hide();
+                        $title.find('i.jy-op-recovery').show();
                         store[layerIndex].area = {
                             width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
                             height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
@@ -197,10 +202,10 @@
                         return false;
                     });
                     // 恢复默认大小
-                    $title.find('i.song-op-recovery').on('click', function () {
+                    $title.find('i.jy-op-recovery').on('click', function () {
                         $(this).hide();
-                        $title.find('i.song-op-minus').show();
-                        $title.find('i.song-op-full').show();
+                        $title.find('i.jy-op-minus').show();
+                        $title.find('i.jy-op-full').show();
                         $content.show();
                         $footer.show();
                         setArea(layerIndex, store[layerIndex].area);
@@ -208,14 +213,14 @@
                         return false;
                     });
                     // 最小化
-                    $title.find('i.song-op-minus').on('click', function () {
+                    $title.find('i.jy-op-minus').on('click', function () {
                         var layers = $('div.' + layerClass.layer);
                         var contentHeight = $layer.find('div.' + layerClass.body).outerHeight() || 0;
                         var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
                         var winHeight = docElement.clientHeight || docBody.clientHeight;
                         $(this).hide();
-                        $title.find('i.song-op-full').hide();
-                        $title.find('i.song-op-recovery').show();
+                        $title.find('i.jy-op-full').hide();
+                        $title.find('i.jy-op-recovery').show();
                         store[layerIndex].area = {
                             width: ieVersion <= 6 ? $layer.outerWidth() : $layer.width(),
                             height: ieVersion <= 6 ? $layer.outerHeight() : $layer.height()
@@ -278,7 +283,7 @@
                     });
                 }
                 // 底部按钮
-                $footer.find('button.song-btn').each(function (i) {
+                $footer.find('button.jy-btn').each(function (i) {
                     var $this = $(this);
                     (function (i) {
                         $this.on('click', function () {
@@ -297,9 +302,9 @@
                             } else {
                                 'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);
                             }
+                            return false;
                         });
                     })(i)
-                    return false;
                 });
 
                 // ie6修复top位置
@@ -395,14 +400,14 @@
             } else {
                 color = '#999';
             }
-            option.content = '<div ' + (color ? 'style="color:' + color + '"' : '') + '><div class="' + layerClass.loadingIcon + ' song-icon">' + loadingIcon + '</div><div>' + (option.content || '') + '</div></div>';
+            option.content = '<div ' + (color ? 'style="color:' + color + '"' : '') + '><div class="' + layerClass.loadingIcon + ' jy-icon">' + loadingIcon + '</div><div>' + (option.content || '') + '</div></div>';
             return open(option);
         }
         // 关闭弹框
         function close(layerIndex) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
             $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
-            $layer.addClass('song-layer-animation-fade-out');
+            $layer.addClass('jy-layer-animation-fade-out');
             setTimeout(function () {
                 // 关闭弹框回调
                 typeof store[layerIndex].option.end == 'function' && store[layerIndex].option.end($layer, layerIndex);
@@ -423,21 +428,21 @@
                     case 'dialog':
                         $('div.' + layerClass.dialog).each(function (i, dom) {
                             var $dom = $(dom);
-                            var index = $dom.attr('song-index');
+                            var index = $dom.attr('jy-index');
                             $('div.' + layerClass.layer + index).remove();
                         });
                         break;
                     case 'alert':
                         $('div.' + layerClass.alert).each(function (i, dom) {
                             var $dom = $(dom);
-                            var index = $dom.attr('song-index');
+                            var index = $dom.attr('jy-index');
                             $('div.' + layerClass.layer + index).remove();
                         });
                         break;
                     case 'confrim':
                         $('div.' + layerClass.confirm).each(function (i, dom) {
                             var $dom = $(dom);
-                            var index = $dom.attr('song-index');
+                            var index = $dom.attr('jy-index');
                             $('div.' + layerClass.layer + index).remove();
                         });
                         break;
@@ -574,7 +579,7 @@
             return factory($, Common);
         });
     } else {
-        window.SongUi = window.SongUi || {};
-        window.SongUi.Dialog = factory(window.$, window.SongUi.Common);
+        window.JyUi = window.JyUi || {};
+        window.JyUi.Dialog = factory(window.$, window.JyUi.Common);
     }
 })(window)

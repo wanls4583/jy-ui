@@ -1,4 +1,4 @@
-.song-tree {
+.jy-tree {
     &-search {
         display: none;
         padding: 10px 0;
@@ -49,8 +49,8 @@
 
     &-ie-hack {
 
-        .song-tree-item-title,
-        .song-tree-ul {
+        .jy-tree-item-title,
+        .jy-tree-ul {
             *zoom: 1;
         }
     }
@@ -120,7 +120,7 @@
         cursor: pointer;
         user-select: none;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             position: absolute;
             left: 0;
             top: 0;
@@ -144,7 +144,7 @@
     }
 
     &-checked {
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             background-color: $link-color;
             border-color: $link-color;
 
@@ -157,7 +157,7 @@
     &-disabled {
         color: $disabled-color;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
             cursor: not-allowed;
@@ -168,7 +168,7 @@
     &-checked-disabled {
         color: $disabled-color;
 
-        .song-checkbox-icon {
+        .jy-checkbox-icon {
             color: $disabled-color;
             border-color: $disabled-border-color;
             background-color:$disabled-background-color;
