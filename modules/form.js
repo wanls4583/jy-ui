@@ -368,7 +368,7 @@
                 $container[0].radios.map(function (radio) {
                     var $radio = $(radio);
                     if ($radio.attr('name') == name && $radio.attr('jy-filter') == filter) {
-                        radio.next('.' + formClass.radio).removeClass(formClass.radioChecked);
+                        $radio.next('.' + formClass.radio).removeClass(formClass.radioChecked);
                     }
                 });
                 $this.addClass(formClass.radioChecked);
@@ -494,7 +494,7 @@
                 var search = $select.attr('jy-search') === undefined ? false : true;
                 var placeholder = $select.attr('placeholder') || '请选择';
                 var classNames = [formClass.select];
-                var $ui = $input.next('.' + formClass.select);
+                var $ui = $select.next('.' + formClass.select);
                 // 删除已经渲染过的ui
                 $ui.remove();
                 // 忽略标签
