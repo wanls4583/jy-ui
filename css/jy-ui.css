@@ -220,7 +220,7 @@ textarea {
   overflow: hidden;
 }
 
-.jy-form-switch {
+.jy-switch {
   position: relative;
   display: inline-block;
   *display: inline;
@@ -242,7 +242,7 @@ textarea {
           user-select: none;
 }
 
-.jy-form-switch i {
+.jy-switch i {
   position: absolute;
   top: 3px;
   left: 5px;
@@ -254,17 +254,17 @@ textarea {
   transition: all 0.1s;
 }
 
-.jy-form-switch.jy-switch-disabled {
+.jy-switch-disabled {
   border-color: #eeeeee;
   color: #c2c2c2;
   cursor: not-allowed;
 }
 
-.jy-form-switch.jy-switch-disabled i {
+.jy-switch-disabled i {
   background-color: #eeeeee;
 }
 
-.jy-form-switch.jy-switch-checked {
+.jy-switch-checked {
   padding-left: 5px;
   padding-right: 25px;
   background-color: #5FB878;
@@ -273,13 +273,13 @@ textarea {
   text-align: left;
 }
 
-.jy-form-switch.jy-switch-checked i {
+.jy-switch-checked i {
   left: 100%;
   margin-left: -21px;
   background-color: #ffffff;
 }
 
-.jy-form-checkbox {
+.jy-checkbox {
   position: relative;
   display: inline-block;
   *display: inline;
@@ -295,7 +295,7 @@ textarea {
           user-select: none;
 }
 
-.jy-form-checkbox .jy-checkbox-icon {
+.jy-checkbox-icon {
   position: absolute;
   left: 0;
   top: 0;
@@ -310,45 +310,45 @@ textarea {
   color: #ffffff;
 }
 
-.jy-form-checkbox .jy-checkbox-icon i {
+.jy-checkbox-icon i {
   display: none;
 }
 
-.jy-form-checkbox.jy-checkbox-checked .jy-checkbox-icon {
+.jy-checkbox-checked .jy-checkbox-icon {
   background-color: #5FB878;
   border-color: #5FB878;
 }
 
-.jy-form-checkbox.jy-checkbox-checked .jy-checkbox-icon i {
+.jy-checkbox-checked .jy-checkbox-icon i {
   display: inline;
 }
 
-.jy-form-checkbox.jy-checkbox-disabled {
+.jy-checkbox-disabled {
   color: #c2c2c2;
   cursor: not-allowed;
 }
 
-.jy-form-checkbox.jy-checkbox-disabled .jy-checkbox-icon {
+.jy-checkbox-disabled .jy-checkbox-icon {
   color: #c2c2c2;
   border-color: #eeeeee;
 }
 
-.jy-form-checkbox.jy-checkbox-checked-disabled {
+.jy-checkbox-checked-disabled {
   color: #c2c2c2;
   cursor: not-allowed;
 }
 
-.jy-form-checkbox.jy-checkbox-checked-disabled .jy-checkbox-icon {
+.jy-checkbox-checked-disabled .jy-checkbox-icon {
   color: #c2c2c2;
   border-color: #eeeeee;
   background-color: #eeeeee;
 }
 
-.jy-form-checkbox.jy-checkbox-checked-disabled .jy-checkbox-icon i {
+.jy-checkbox-checked-disabled .jy-checkbox-icon i {
   display: inline;
 }
 
-.jy-form-radio {
+.jy-radio {
   position: relative;
   display: inline-block;
   *display: inline;
@@ -364,8 +364,7 @@ textarea {
           user-select: none;
 }
 
-.jy-form-radio .jy-radio-icon-checked,
-.jy-form-radio .jy-radio-icon-uncheck {
+.jy-radio-icon-checked, .jy-radio-icon-uncheck {
   position: absolute;
   left: 0;
   top: 0;
@@ -374,53 +373,52 @@ textarea {
   color: #d2d2d2;
 }
 
-.jy-form-radio .jy-radio-icon-checked {
+.jy-radio-icon-checked {
   display: none;
   color: #5FB878;
 }
 
-.jy-form-radio.jy-radio-disabled {
+.jy-radio-disabled {
   color: #c2c2c2;
   cursor: not-allowed;
 }
 
-.jy-form-radio.jy-radio-disabled .jy-radio-icon-checked,
-.jy-form-radio.jy-radio-disabled .jy-radio-icon-uncheck {
+.jy-radio-disabled .jy-radio-icon-checked,
+.jy-radio-disabled .jy-radio-icon-uncheck {
   color: #c2c2c2;
 }
 
-.jy-form-radio.jy-radio-checked .jy-radio-icon-checked {
+.jy-radio-checked .jy-radio-icon-checked {
   display: block;
 }
 
-.jy-form-radio.jy-radio-checked .jy-radio-icon-uncheck {
+.jy-radio-checked .jy-radio-icon-uncheck {
   display: none;
 }
 
 select {
-  height: 38px;
+  height: 36px;
 }
 
-.jy-form-select {
+.jy-select {
   position: relative;
   width: 100%;
   *zoom: 1;
 }
 
-.jy-form-select.jy-form-select-open {
+.jy-select-open {
   z-index: 99;
 }
 
-.jy-form-select.jy-select-disabled .jy-select-title .jy-input {
+.jy-select-disabled .jy-select-title .jy-input {
   cursor: not-allowed;
   color: #c2c2c2;
 }
 
-.jy-form-select .jy-select-title {
+.jy-select-title {
   position: relative;
-}
-
-.jy-form-select .jy-select-title .jy-input {
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -428,10 +426,17 @@ select {
           user-select: none;
 }
 
-.jy-form-select .jy-select-title i {
+.jy-select-title .jy-input {
+  height: 36px;
+  border: 0;
+  cursor: pointer;
+}
+
+.jy-select-suffix {
   position: absolute;
   right: 5px;
   top: 50%;
+  z-index: 1;
   margin-top: -6px;
   font-size: 12px;
   line-height: 12px;
@@ -439,7 +444,49 @@ select {
   cursor: pointer;
 }
 
-.jy-form-select .jy-select-dl {
+.jy-select-tags {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  line-height: 24px;
+  background-color: #ffffff;
+}
+
+.jy-select-tag {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin-top: 2px;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 2px;
+  background-color: #eeeeee;
+  cursor: auto;
+}
+
+.jy-select-tag i {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  margin-left: 2px;
+  background-color: #d2d2d2;
+  border-radius: 50%;
+  font-family: 'iconfont';
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.jy-select-tag i:hover {
+  background-color: #999999;
+  color: #ffffff;
+}
+
+.jy-select-dl {
   display: none;
   position: absolute;
   top: 100%;
@@ -458,17 +505,17 @@ select {
           box-sizing: border-box;
 }
 
-.jy-form-select .jy-select-dl dd {
+.jy-select-dl dd {
   line-height: 36px;
   padding-left: 15px;
   cursor: pointer;
 }
 
-.jy-form-select .jy-select-dl dd:hover {
+.jy-select-dl dd:hover {
   background-color: #f6f6f6;
 }
 
-.jy-form-select .jy-select-dl dd.jy-select-active {
+.jy-select-dl dd.jy-select-active {
   background-color: #5FB878;
   color: #ffffff;
 }
@@ -492,6 +539,30 @@ select {
 
 .jy-field .jy-field-box {
   padding: 15px;
+}
+
+.jy-form-tip {
+  position: fixed;
+  _position: absolute;
+  line-height: 30px;
+  padding: 10px 20px;
+  font-size: 12px;
+  background-color: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+  -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+          box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
+}
+
+.jy-form-tip-icon {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin-right: 5px;
+  font-family: 'iconfont';
+  font-size: 30px;
+  vertical-align: middle;
+  color: #FF5722;
 }
 
 .jy-form-animation-hover-down {

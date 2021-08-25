@@ -4,34 +4,28 @@
  * @Description: 
  */
 !(function (window) {
-    function factory($, Common, Dialog) {
+    function factory($, Common, Select, Dialog) {
         var checkedIcon = '&#xe737;';
-        var downIcon = '&#xe74b;';
         var radioedIcon = '&#xe61c;';
         var radioIcon = '&#xe619;';
-        var ieVersion = Common.getIeVersion();
+        var errorIcon = '&#xe60b;';
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
-        var bindedBodyEvent = false;
+        var ieVersion = Common.getIeVersion();
         var formClass = {
-            switchClass: 'jy-form-switch',
+            switchClass: 'jy-switch',
             switchDisabled: 'jy-switch-disabled',
             switchChecked: 'jy-switch-checked',
-            radio: 'jy-form-radio',
+            radio: 'jy-radio',
             radioDisabled: 'jy-radio-disabled',
             radioChecked: 'jy-radio-checked',
-            checkbox: 'jy-form-checkbox',
+            checkbox: 'jy-checkbox',
             checkboxDisabled: 'jy-checkbox-disabled',
             checkboxCheckd: 'jy-checkbox-checked',
-            checkboxCheckedDisabled: 'jy-checkbox-checked-disabled',
-            select: 'jy-form-select',
-            selectOpen: 'jy-form-select-open',
-            selectTitle: 'jy-select-title',
-            selectBody: 'jy-select-dl',
-            selectHolder: 'jy-color-holder',
-            selectDisabled: 'jy-select-disabled',
-            selectActive: 'jy-select-active',
-            selectAnimation: 'jy-form-animation-hover-down'
+            checkboxCheckedDisabled: 'jy-checkbox-checked-disabled'
+        }
+        var tpl = {
+            tip: '<div class="jy-form-tip"><i class="jy-form-tip-icon">' + errorIcon + '</i><span></span></div>'
         }
         var verifyRules = {
             required: {
@@ -85,7 +79,6 @@
             this.on = event.on;
             this.once = event.once;
             this.trigger = event.trigger;
-            this.init();
         }
 
         // 初始化
@@ -112,6 +105,7 @@
 
         // 验证
         Class.prototype.verify = function (formId, callback) {
+            var that = this;
             var $form = $(formId || 'form');
             var pass = true;
             var msg = '';
@@ -128,9 +122,7 @@
                         if (pass && verifyRule) {
                             pass = verifyRule.verify ? verifyRule.verify(value) : verifyRule.rule.test(value);
                             if (!pass) {
-                                Dialog && Dialog.msg(verifyRule.msg, {
-                                    icon: 'error'
-                                });
+                                that.showTip(verifyRule.msg);
                                 msg = verifyRule.msg;
                                 if (tagName == 'select') {
                                     input.next('.' + formClass.select) && input.next('.' + formClass.select).find('input.jy-input').addClass(dangerClass);
@@ -213,13 +205,13 @@
                     this.renderCheckbox(filter, container, refresh);
                     break;
                 case 'select':
-                    this.renderSelect(filter, container, refresh);
+                    this.renderSelect(filter, container);
                     break;
                 default:
                     this.renderSwitch('', container, refresh);
                     this.renderRadio('', container, refresh);
                     this.renderCheckbox('', container, refresh);
-                    this.renderSelect('', container, refresh);
+                    this.renderSelect('', container);
             }
         }
         //渲染开关
@@ -479,8 +471,7 @@
         }
 
         // 渲染下拉选择框
-        Class.prototype.renderSelect = function (filter, container, refresh) {
-            var that = this;
+        Class.prototype.renderSelect = function (filter, container) {
             var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
@@ -489,169 +480,55 @@
                 selects = $container.find(selector);
             }
             selects.each(function (i, select) {
+                var data = [];
                 var $select = $(select);
                 var ignore = $select.attr('jy-ignore') === undefined ? false : true;
+                var disabled = $select.prop('disabled');
                 var search = $select.attr('jy-search') === undefined ? false : true;
-                var placeholder = $select.attr('placeholder') || '请选择';
-                var classNames = [formClass.select];
-                var $ui = $select.next('.' + formClass.select);
-                // 删除已经渲染过的ui
-                $ui.remove();
-                // 忽略标签
-                if (ignore) {
-                    return;
+                if (!ignore) {
+                    $select.find('option').each(function (i, option) {
+                        var $option = $(option);
+                        data.push({
+                            title: $option.text(),
+                            value: $option.attr('value')
+                        });
+                    });
+                    Select.render({
+                        elem: select,
+                        disabled: disabled,
+                        search: search,
+                        data: data
+                    });
                 }
-                // 已禁用
-                if ($select.prop('disabled')) {
-                    classNames.push(formClass.selectDisabled);
-                }
-                var $html = $(
-                    '<div class="' + classNames.join(' ') + '">\
-                        <div class="' + formClass.selectTitle + '">\
-                            <input type="text" class="jy-input" placeholder="' + placeholder + '" ' + (search ? '' : 'readonly') + '>\
-                            <i>' + downIcon + '</i>\
-                        </div>\
-                    </div>');
-                var dlHtml = '<dl class="' + formClass.selectBody + '">';
-                var $input = $html.find('input');
-                $select.find('option').each(function (i, opt) {
-                    var $opt = $(opt);
-                    var text = $opt.text();
-                    var value = $opt.val() || '';
-                    var classNames = [];
-                    if (!value) {
-                        classNames.push(formClass.selectHolder);
-                        if (text) {
-                            placeholder = text;
-                            $input.attr('placeholder', placeholder);
-                        }
-                    }
-                    if ($select.val() == value) {
-                        $input.attr('data-value', $select.val() || '');
-                        $input.val(text);
-                        classNames.push(formClass.selectActive);
-                    }
-                    dlHtml += '<dd class="' + classNames.join(' ') + '" data-value="' + value + '">' + (value && text || placeholder) + '</dd>';
-                });
-                dlHtml += '</dl>';
-                $html.append(dlHtml);
-                $html.insertAfter($select);
-                $container[0].selects = $container[0].selects || [];
-                $container[0].selects.push(select);
-                docBody.selects = docBody.selects || [];
-                docBody.selects.push(select);
-                $select.hide();
-                that.bindSelectEvent($html, $container);
             });
         }
 
-        // 绑定下拉框事件
-        Class.prototype.bindSelectEvent = function ($dom, $container) {
-            var that = this;
-            container = $container[0] === docBody ? false : $container[0];
-            var $select = $dom.prev('select');
-            var search = $select.attr('jy-search') === undefined ? false : true;
-            var $title = $dom.children('div.' + formClass.selectTitle);
-            var $cont = $dom.children('dl.' + formClass.selectBody);
-            var $input = $title.children('input.jy-input');
-            // 打开，收起事件
-            $title.on('click', function () {
-                if ($select.prop('disabled')) {
-                    return;
-                }
-                if ($cont.is(':visible')) {
-                    $title.trigger('blur');
-                } else {
-                    // 其他选择框都收起
-                    $container[0].selects.map(function (select) {
-                        var $ul = $(select).next('.' + formClass.select);
-                        $ul.find('dl.' + formClass.selectBody).hide().removeClass(formClass.selectAnimation);
-                        // 解决ie7及以下定位bugfix
-                        $ul.removeClass(formClass.selectOpen);
-                    });
-                    $dom.addClass(formClass.selectOpen);
-                    $cont.show().addClass(formClass.selectAnimation);
-                    var rect = $title[0].getBoundingClientRect();
-                    var winHeight = docElement.clientHeight || docBody.clientHeight;
-                    var height = $cont[0].offsetHeight;
-                    // 使下拉框在可视范围内
-                    if (rect.bottom + 5 + height > winHeight && rect.top - 5 - height > 0) {
-                        $cont.css('top', -height - 10);
-                    } else {
-                        $cont.css('top', '100%');
-                    }
-                }
-                return false;
-            });
-            // 失去焦点，收起
-            $title.on('blur', function () {
-                var $dd = $cont.find('dd.' + formClass.selectActive);
-                var value = $dd.attr('data-value');
-                // 输入框显示已选中的项
-                $input.val(value && $dd.text() || '');
-                $cont.hide().removeClass(formClass.selectAnimation);
-                $dom.removeClass(formClass.selectOpen);
-                search && _search();
-                setTimeout(function () {
-                    $input.blur()
-                }, 50);
-            });
-            // 选中事件
-            $cont.find('dd').on('click', function () {
-                var $this = $(this);
-                var value = $this.attr('data-value');
-                var filter = $select.attr('jy-filter') || '';
-                $cont.find('dd.' + formClass.selectActive).removeClass(formClass.selectActive);
-                $this.addClass(formClass.selectActive);
-                // 输入框显示已选中的项
-                $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
-                $select.val(value);
-                $cont.hide();
-                search && _search();
-                // 触发select事件
-                filter && that.trigger('select(' + filter + ')', {
-                    data: value,
-                    dom: $select[0]
-                });
-                that.trigger('select', {
-                    data: value,
-                    dom: $select[0]
-                });
-                return false;
-            });
-            // 可搜索
-            if (search) {
-                $input.on('input propertychange', function () {
-                    _search();
-                });
+        // 显示错误提示
+        Class.prototype.showTip = function (tip) {
+            var $tip = $(tpl.tip);
+            var width = 0;
+            var height = 0;
+            var ie6MarginTop = 0;
+            var ie6MarginLeft = 0;
+            var winWidth = docElement.clientWidth || docBody.clientWidth;
+            var winHeight = docElement.clientHeight || docBody.clientHeight;
+            if (ieVersion <= 6) {
+                ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
             }
-            // 点击页面收起下拉框
-            if (!bindedBodyEvent) {
-                $(docBody).on('click', function (e) {
-                    docBody.selects && docBody.selects.map(function (select) {
-                        var $ui = $(select).next('.' + formClass.select);
-                        if ($ui.is(':visible')) {
-                            $ui.find('div.' + formClass.selectTitle).trigger('blur');
-                        }
-                    });
-                });
-                bindedBodyEvent = true;
-            }
-
-            function _search(title) {
-                var title = $input.val();
-                clearTimeout($input.timer);
-                $input.timer = setTimeout(function () {
-                    $cont.children('dd').each(function (i, dd) {
-                        var $dd = $(dd);
-                        if ($dd.text().indexOf(title) == -1) {
-                            $dd.hide();
-                        } else {
-                            $dd.show();
-                        }
-                    });
-                }, 100);
-            }
+            $tip.children('span').text(tip);
+            $(docBody).append($tip);
+            width = $tip[0].offsetWidth;
+            height = $tip[0].offsetHeight;
+            $tip.css({
+                left: (winWidth - width) / 2,
+                top: (winHeight - height) / 2,
+                marginLeft: ie6MarginLeft,
+                marginTop: ie6MarginTop
+            });
+            setTimeout(function () {
+                $tip.remove();
+            }, 1500);
         }
 
         var instance = new Class();
@@ -675,11 +552,11 @@
     }
 
     if ("function" == typeof define && define.amd) {
-        define(['./jquery', './common', './dialog'], function ($, Common, Dialog) {
-            return factory($, Common, Dialog);
+        define(['./jquery', './common', './select'], function ($, Common, Select) {
+            return factory($, Common, Select);
         });
     } else {
         window.JyUi = window.JyUi || {};
-        window.JyUi.Form = factory(window.$, window.JyUi.Common);
+        window.JyUi.Form = factory(window.$, window.JyUi.Common, window.JyUi.Select);
     }
 })(window)

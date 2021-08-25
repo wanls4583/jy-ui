@@ -176,7 +176,7 @@
 }
 
 // 开关
-.jy-form-switch {
+.jy-switch {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -206,7 +206,7 @@
     }
 
     // ie6多类选择器是或的关系，不是与的关系，jy-disabled这种类名容易被其他样式覆盖
-    &.jy-switch-disabled {
+    &-disabled {
         border-color: $disabled-border-color;
         color: $disabled-color;
         cursor: not-allowed;
@@ -216,7 +216,7 @@
         }
     }
 
-    &.jy-switch-checked {
+    &-checked {
         padding-left: 5px;
         padding-right: 25px;
         background-color: $link-color;
@@ -233,7 +233,7 @@
 }
 
 // 多选框
-.jy-form-checkbox {
+.jy-checkbox {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -245,7 +245,7 @@
     cursor: pointer;
     user-select: none;
 
-    .jy-checkbox-icon {
+    &-icon {
         position: absolute;
         left: 0;
         top: 0;
@@ -264,7 +264,7 @@
         }
     }
 
-    &.jy-checkbox-checked {
+    &-checked {
         .jy-checkbox-icon {
             background-color: $link-color;
             border-color: $link-color;
@@ -275,7 +275,7 @@
         }
     }
 
-    &.jy-checkbox-disabled {
+    &-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
@@ -285,7 +285,7 @@
         }
     }
 
-    &.jy-checkbox-checked-disabled {
+    &-checked-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
@@ -302,7 +302,7 @@
 }
 
 // 单选框
-.jy-form-radio {
+.jy-radio {
     position: relative;
     display: inline-block;
     *display: inline;
@@ -314,8 +314,8 @@
     cursor: pointer;
     user-select: none;
 
-    .jy-radio-icon-checked,
-    .jy-radio-icon-uncheck {
+    &-icon-checked,
+    &-icon-uncheck {
         position: absolute;
         left: 0;
         top: 0;
@@ -324,12 +324,12 @@
         color: $gray-color;
     }
 
-    .jy-radio-icon-checked {
+    &-icon-checked {
         display: none;
         color: $link-color;
     }
 
-    &.jy-radio-disabled {
+    &-disabled {
         color: $disabled-color;
         cursor: not-allowed;
 
@@ -339,7 +339,7 @@
         }
     }
 
-    &.jy-radio-checked {
+    &-checked {
         .jy-radio-icon-checked {
             display: block;
         }
@@ -351,20 +351,20 @@
 }
 
 select {
-    height: $input-height;
+    height: $input-height - 2px;
 }
 
 // 选择框
-.jy-form-select {
+.jy-select {
     position: relative;
     width: 100%;
     *zoom: 1;
 
-    &.jy-form-select-open {
+    &-open {
         z-index: 99;
     }
 
-    &.jy-select-disabled {
+    &-disabled {
         .jy-select-title {
             .jy-input {
                 cursor: not-allowed;
@@ -373,27 +373,76 @@ select {
         }
     }
 
-    .jy-select-title {
+    &-title {
         position: relative;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        cursor: pointer;
+        user-select: none;
 
         .jy-input {
+            height: $input-height - 2px;
+            border: 0;
             cursor: pointer;
-            user-select: none;
         }
 
+    }
+
+    &-suffix {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        z-index: 1;
+        margin-top: -6px;
+        font-size: 12px;
+        line-height: 12px;
+        font-family: 'iconfont';
+        cursor: pointer;
+    }
+
+    &-tags {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        width: 100%;
+        line-height: 24px;
+        background-color: #ffffff;
+    }
+
+    &-tag {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        margin-top: 2px;
+        margin-left: 5px;
+        padding: 0 5px;
+        border-radius: 2px;
+        background-color: $light-color;
+        cursor: auto;
+
         i {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            margin-top: -6px;
-            font-size: 12px;
-            line-height: 12px;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            width: 14px;
+            height: 14px;
+            line-height: 14px;
+            margin-left: 2px;
+            background-color: $gray-color;
+            border-radius: 50%;
             font-family: 'iconfont';
+            font-size: 12px;
+            text-align: center;
             cursor: pointer;
+
+            &:hover {
+                background-color: $color-999;
+                color: #ffffff;
+            }
         }
     }
 
-    .jy-select-dl {
+    &-dl {
         display: none;
         position: absolute;
         top: 100%;
@@ -447,6 +496,30 @@ select {
         padding: $pd15;
     }
 }
+
+.jy-form-tip {
+    position: fixed;
+    _position: absolute;
+    line-height: 30px;
+    padding: 10px 20px;
+    font-size: 12px;
+    background-color: $white-color;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+
+    &-icon {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        margin-right: 5px;
+        font-family: 'iconfont';
+        font-size: 30px;
+        vertical-align: middle;
+        color: $danger-color;
+    }
+}
+
 
 .jy-form-animation-hover-down {
     animation-name: jy-form-keyframes-hover-down;

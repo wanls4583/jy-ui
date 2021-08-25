@@ -273,7 +273,7 @@
                     if (excludeKeys.indexOf(key) > -1) {
                         continue;
                     }
-                    if (typeof value === 'object' && value !== null && assigned.indexOf(value) == -1) {
+                    if (typeof value === 'object' && (!value.nodeName || !value.nodeType) && value !== null && assigned.indexOf(value) == -1) {
                         assigned.push(value);
                         if (value instanceof Array) {
                             targetObj[key] = _assign(targetObj[key] || [], value);
