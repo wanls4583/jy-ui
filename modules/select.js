@@ -46,9 +46,9 @@
             this.trigger = event.trigger;
             this.option = Common.deepAssign({}, option);
             this.$elem = $(this.option.elem);
-            this.data = this.option.data || [];
+            // 配置参数-begin
             this.disabled = this.option.disabled;
-            this.titleKey = this.option.titleKey || 'title';
+            this.labelKey = this.option.labelKey || 'label';
             this.valueKey = this.option.valueKey || 'value';
             this.placeHolder = this.option.placeHolder || '请选择';
             this.defaultOpen = this.option.defaultOpen;
@@ -61,7 +61,7 @@
                     var reg = new RegExp(value, 'i');
                     data = that.data.filter(function (item) {
                         if (typeof item == 'object') {
-                            if (reg.exec(item[that.titleKey])) {
+                            if (reg.exec(item[that.labelKey])) {
                                 return true;
                             }
                         } else {
@@ -76,6 +76,17 @@
                 }
                 cb(data);
             }
+            this.data = this.option.data || [];
+            // 配置参数-end
+            this.data = this.data.map(function (item) {
+                if (typeof item != 'object') {
+                    return {
+                        label: item,
+                        value: item
+                    }
+                }
+                return item;
+            });
             this.render();
         }
 
@@ -125,28 +136,23 @@
                 selectValue = this.$input.attr('data-value') || '';
             this.renderedData = data;
             data.map(function (item) {
-                var title, value, dClass = [];
-                if (typeof item === 'object') {
-                    title = item[that.titleKey];
-                    value = item[that.valueKey];
-                } else {
-                    title = item;
-                    value = item;
+                var label, value, dClass = [];
+                label = item[that.labelKey] || '';
+                value = item[that.valueKey] || '';
+                if (that.type === 'input') {
+                    label = value;
                 }
-                title = title || '';
-                value = value || '';
                 if (value == selectValue) {
                     dClass.push(classNames.selectActive);
                     that.$input.attr('data-value', value);
                 }
                 if (!value) {
-                    that.placeHolder = title || that.placeHolder;
+                    that.placeHolder = label || that.placeHolder;
                     dClass.push(classNames.selectHolder);
                 }
-                html += '<dd class="' + dClass.join(' ') + '" data-value="' + value + '">' + (title || that.placeHolder) + '</dd>';
+                html += '<dd class="' + dClass.join(' ') + '" data-value="' + value + '">' + (label || that.placeHolder) + '</dd>';
             });
             this.$selectDl.html(html);
-            this.$input.attr('placeholder', this.placeHolder);
             this.setPosition();
             if (this.type === 'input') {
                 // 搜索建议组件，为空时需要隐藏面板
@@ -161,6 +167,7 @@
                 } else {
                     this.$empty.hide();
                 }
+                this.$input.attr('placeholder', this.placeHolder);
             }
         }
 
@@ -203,18 +210,18 @@
                 that.$selectDl.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
                 if (that.type === 'input') {
                     // 搜索建议组件的值即为输入的值
-                    that.$input.val(item[that.titleKey] || '');
-                    that.$elem.val(item[that.titleKey] || '');
+                    that.$input.val(item[that.valueKey] || '');
+                    that.$elem.val(item[that.valueKey] || '');
                 } else {
                     that.$elem.val(value);
-                    that.$input.val(value && item[that.titleKey] || '');
+                    that.$input.val(value && item[that.labelKey] || '');
                 }
             }
         }
 
         // 搜索
         Class.prototype.search = function () {
-            var title = this.$input.val();
+            var label = this.$input.val();
             var that = this;
             clearTimeout(this.timer);
             this.timer = setTimeout(function () {
@@ -226,7 +233,7 @@
                 } else {
                     that.$loading.show();
                 }
-                that.searchMethod(title, function (data) {
+                that.searchMethod(label, function (data) {
                     data = data || [];
                     that.renderItem(data);
                     that.$loading.hide();

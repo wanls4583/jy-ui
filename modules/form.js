@@ -489,7 +489,7 @@
                     $select.find('option').each(function (i, option) {
                         var $option = $(option);
                         data.push({
-                            title: $option.text(),
+                            label: $option.text(),
                             value: $option.attr('value')
                         });
                     });

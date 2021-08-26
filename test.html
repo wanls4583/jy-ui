@@ -211,8 +211,7 @@
                 <div class="jy-form-item">
                     <label for="" class="jy-form-label">异步搜索</label>
                     <div class="jy-input-block">
-                        <select name="city3" id="city3" jy-ignore>
-                        </select>
+                        <input name="city3" id="city3" />
                     </div>
                 </div>
                 <div class="jy-form-item">
@@ -1174,41 +1173,37 @@
     });
     require(['./modules/tab.js'], function (Form) { });
     require(['./modules/select.js'], function (Select) {
-        var city = [{
-            title: '上海',
+        var city1 = [{
+            label: '上海',
             value: 1
         }, {
-            title: '广州',
+            label: '广州',
             value: 2
         }, {
-            title: '北京',
+            label: '北京',
             value: 3
         }, {
-            title: '深圳',
+            label: '深圳',
             value: 4
         }]
         Select.render({
             elem: '#city3',
             search: true,
             searchMethod: function (value, cb) {
-                var data = city.filter(function (item) {
-                    return item.title.indexOf(value) > -1;
+                var data = city1.filter(function (item) {
+                    return item.label.indexOf(value) > -1;
                 });
                 setTimeout(function () {
                     cb(data);
                 }, 500);
             }
         });
+        var city2 = ['上海', '广州', '北京', '深圳'];
         Select.render({
             elem: '#city4',
             search: true,
             type: 'input',
-            searchMethod: function (value, cb) {
-                var data = city.filter(function (item) {
-                    return item.title.indexOf(value) > -1;
-                });
-                cb(data);
-            }
+            data: city2
         });
     });
 </script>
