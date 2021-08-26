@@ -21,7 +21,7 @@
             selectSuffix: 'jy-select-suffix',
             selectOpen: 'jy-select-open',
             selectTitle: 'jy-select-title',
-            selectDl: 'jy-select-body',
+            selectBody: 'jy-select-body',
             selectDl: 'jy-select-dl',
             selectHolder: 'jy-color-holder',
             selectDisabled: 'jy-select-disabled',
@@ -116,7 +116,6 @@
             var that = this,
                 html = '',
                 selectValue = this.$input.attr('data-value') || '';
-            this.$selectDl.empty();
             this.renderedData = data;
             data.map(function (item) {
                 var title, value, dClass = [];
@@ -249,6 +248,9 @@
                 });
                 return false;
             });
+            $selectBody.on('click', function() {
+                return false;
+            });
             // 可搜索
             if (that.searchEnable) {
                 $input.on('input propertychange', function () {
@@ -275,6 +277,8 @@
             clearTimeout(this.timer);
             this.timer = setTimeout(function () {
                 that.$loading.show();
+                that.$empty.hide();
+                that.$selectDl.empty();
                 that.searchMethod(title, function (data) {
                     data = data || [];
                     that.renderItem(data);
