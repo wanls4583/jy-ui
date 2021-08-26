@@ -534,6 +534,20 @@ select {
   color: #999999;
 }
 
+.jy-suggestion .jy-select-empty,
+.jy-suggestion .jy-select-loading,
+.jy-suggestion .jy-select-suffix {
+  display: none;
+}
+
+.jy-suggestion .jy-select-title {
+  cursor: unset;
+}
+
+.jy-suggestion .jy-select-title .jy-input {
+  cursor: unset;
+}
+
 .jy-field {
   padding: 0;
   border: 1px solid #eeeeee;

@@ -489,6 +489,23 @@ select {
     }
 }
 
+.jy-suggestion {
+
+    .jy-select-empty,
+    .jy-select-loading,
+    .jy-select-suffix {
+        display: none;
+    }
+
+    .jy-select-title {
+        cursor: unset;
+
+        .jy-input {
+            cursor: unset;
+        }
+    }
+}
+
 // 字段集区块
 .jy-field {
     padding: 0;

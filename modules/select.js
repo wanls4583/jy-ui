@@ -18,6 +18,7 @@
         }
         var classNames = {
             select: 'jy-select',
+            suggestion: 'jy-suggestion',
             selectSuffix: 'jy-select-suffix',
             selectOpen: 'jy-select-open',
             selectTitle: 'jy-select-title',
@@ -51,6 +52,8 @@
             this.valueKey = this.option.valueKey || 'value';
             this.placeHolder = this.option.placeHolder || '请选择';
             this.defaultOpen = this.option.defaultOpen;
+            // 组件类型（select/input）
+            this.type = this.option.type === 'input' ? 'input' : 'select';
             this.searchEnable = !this.disabled && this.option.search;
             this.searchMethod = this.option.searchMethod || function (value, cb) {
                 var data = [];
@@ -93,6 +96,10 @@
             this.select(this.$elem.val());
             this.$empty = this.$selectBody.children('.' + classNames.empty);
             this.$loading = this.$selectBody.children('.' + classNames.loading);
+            // input类型组件只提供搜索建议
+            if (this.type === 'input') {
+                this.$select.addClass(classNames.suggestion);
+            }
             if (this.disabled) {
                 this.$select.addClass(classNames.selectDisabled);
             } else {
@@ -141,10 +148,19 @@
             this.$selectDl.html(html);
             this.$input.attr('placeholder', this.placeHolder);
             this.setPosition();
-            if (!data.length) {
-                this.$empty.show();
+            if (this.type === 'input') {
+                // 搜索建议组件，为空时需要隐藏面板
+                if (!data.length) {
+                    this.$selectBody.css('visibility', 'hidden');
+                } else {
+                    this.$selectBody.css('visibility', 'visible');
+                }
             } else {
-                this.$empty.hide();
+                if (!data.length) {
+                    this.$empty.show();
+                } else {
+                    this.$empty.hide();
+                }
             }
         }
 
@@ -185,9 +201,37 @@
                 var value = item[that.valueKey];
                 that.$selectDl.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
                 that.$selectDl.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
-                that.$input.val(value && item[that.titleKey] || '');
-                that.$elem.val(value);
+                if (that.type === 'input') {
+                    // 搜索建议组件的值即为输入的值
+                    that.$input.val(item[that.titleKey] || '');
+                    that.$elem.val(item[that.titleKey] || '');
+                } else {
+                    that.$elem.val(value);
+                    that.$input.val(value && item[that.titleKey] || '');
+                }
             }
+        }
+
+        // 搜索
+        Class.prototype.search = function () {
+            var title = this.$input.val();
+            var that = this;
+            clearTimeout(this.timer);
+            this.timer = setTimeout(function () {
+                that.$empty.hide();
+                that.$selectDl.empty();
+                if (that.type === 'input') {
+                    // 搜索建议组件不显示加载提示
+                    that.$selectBody.css('visibility', 'hidden');
+                } else {
+                    that.$loading.show();
+                }
+                that.searchMethod(title, function (data) {
+                    data = data || [];
+                    that.renderItem(data);
+                    that.$loading.hide();
+                });
+            }, 100);
         }
 
         // 绑定下拉框事件
@@ -196,39 +240,48 @@
             var $select = this.$select;
             var $selectBody = this.$selectBody;
             var $input = this.$input;
-            // 打开，收起事件
-            this.$title.on('click', function () {
-                if ($select.prop('disabled')) {
-                    return;
-                }
-                if ($selectBody.is(':visible')) {
-                    that.$title.trigger('blur');
-                } else {
-                    // 其他选择框都收起
-                    window.jyUiSelects.map(function ($select) {
-                        $select.children('.' + classNames.selectBody).hide().removeClass(classNames.selectAnimation);
-                        // 解决ie7及以下定位bugfix
-                        $select.removeClass(classNames.selectOpen);
-                    });
+            if (this.type === 'input') {
+                this.$input.on('focus', function () {
+                    $selectBody.show();
                     $select.addClass(classNames.selectOpen);
-                    $selectBody.show().addClass(classNames.selectAnimation);
-                    that.setPosition();
-                }
-                return false;
-            });
-            // 失去焦点，收起
-            this.$title.on('blur', function () {
-                var $dd = that.$selectDl.children('dd.' + classNames.selectActive);
-                var value = $dd.attr('data-value');
-                // 输入框显示已选中的项
-                $input.val(value && $dd.text() || '');
-                $selectBody.hide().removeClass(classNames.selectAnimation);
-                $select.removeClass(classNames.selectOpen);
-                that.searchEnable && that.search();
-                setTimeout(function () {
-                    $input.blur()
-                }, 50);
-            });
+                });
+            } else {
+                // 打开，收起事件
+                this.$title.on('click', function () {
+                    if ($select.prop('disabled')) {
+                        return;
+                    }
+                    if ($selectBody.is(':visible')) {
+                        that.$title.trigger('blur');
+                    } else {
+                        // 其他选择框都收起
+                        window.jyUiSelects.map(function ($select) {
+                            $select.children('.' + classNames.selectBody).hide().removeClass(classNames.selectAnimation);
+                            // 解决ie7及以下定位bugfix
+                            $select.removeClass(classNames.selectOpen);
+                        });
+                        $select.addClass(classNames.selectOpen);
+                        $selectBody.show().addClass(classNames.selectAnimation);
+                        that.setPosition();
+                    }
+                    return false;
+                });
+                // 失去焦点，收起
+                this.$title.on('blur', function () {
+                    var $dd = that.$selectDl.children('dd.' + classNames.selectActive);
+                    var value = $dd.attr('data-value');
+                    // 输入框显示已选中的项
+                    if (that.type !== 'input') {
+                        $input.val(value && $dd.text() || '');
+                    }
+                    $selectBody.hide().removeClass(classNames.selectAnimation);
+                    $select.removeClass(classNames.selectOpen);
+                    that.searchEnable && that.search();
+                    setTimeout(function () {
+                        $input.blur()
+                    }, 50);
+                });
+            }
             // 选中事件
             $selectBody.delegate('dd', 'click', function () {
                 var $this = $(this);
@@ -248,12 +301,15 @@
                 });
                 return false;
             });
-            $selectBody.on('click', function() {
+            $select.on('click', function () {
                 return false;
             });
             // 可搜索
             if (that.searchEnable) {
                 $input.on('input propertychange', function () {
+                    if (that.type === 'input') {
+                        that.$elem.val(this.value);
+                    }
                     that.search();
                 });
             }
@@ -261,30 +317,15 @@
             if (!bindedBodyEvent) {
                 $(docBody).on('click', function (e) {
                     window.jyUiSelects.map(function ($select) {
-                        if ($select.is(':visible')) {
+                        var $selectBody = $select.children('div.' + classNames.selectBody);
+                        if ($selectBody.is(':visible')) {
                             $select.find('div.' + classNames.selectTitle).trigger('blur');
+                            $selectBody.hide();
                         }
                     });
                 });
                 bindedBodyEvent = true;
             }
-        }
-
-        // 搜索
-        Class.prototype.search = function () {
-            var title = this.$input.val();
-            var that = this;
-            clearTimeout(this.timer);
-            this.timer = setTimeout(function () {
-                that.$loading.show();
-                that.$empty.hide();
-                that.$selectDl.empty();
-                that.searchMethod(title, function (data) {
-                    data = data || [];
-                    that.renderItem(data);
-                    that.$loading.hide();
-                });
-            }, 100);
         }
 
         var JySelect = {

@@ -216,6 +216,12 @@
                     </div>
                 </div>
                 <div class="jy-form-item">
+                    <label for="" class="jy-form-label">搜索建议</label>
+                    <div class="jy-input-block">
+                        <input type="text" name="city4" class="jy-input" id="city4">
+                    </div>
+                </div>
+                <div class="jy-form-item">
                     <label for="" class="jy-form-label">禁用选择框</label>
                     <div class="jy-input-block">
                         <select name="city3" disabled>
@@ -1188,11 +1194,22 @@
                 var data = city.filter(function (item) {
                     return item.title.indexOf(value) > -1;
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     cb(data);
                 }, 500);
             }
-        })
+        });
+        Select.render({
+            elem: '#city4',
+            search: true,
+            type: 'input',
+            searchMethod: function (value, cb) {
+                var data = city.filter(function (item) {
+                    return item.title.indexOf(value) > -1;
+                });
+                cb(data);
+            }
+        });
     });
 </script>
 
