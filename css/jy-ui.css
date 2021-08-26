@@ -508,6 +508,7 @@ select {
 .jy-select-body dd {
   line-height: 36px;
   padding-left: 15px;
+  color: #666666;
   cursor: pointer;
 }
 
@@ -546,6 +547,11 @@ select {
 
 .jy-suggestion .jy-select-title .jy-input {
   cursor: unset;
+}
+
+.jy-suggestion dd.jy-select-active {
+  background-color: transparent;
+  color: #666666;
 }
 
 .jy-field {

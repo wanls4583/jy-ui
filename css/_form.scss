@@ -461,6 +461,7 @@ select {
         dd {
             line-height: 36px;
             padding-left: $pd15;
+            color: $color-666;
             cursor: pointer;
 
             &:hover {
@@ -502,6 +503,13 @@ select {
 
         .jy-input {
             cursor: unset;
+        }
+    }
+
+    dd {
+        &.jy-select-active {
+            background-color: transparent;
+            color: $color-666;
         }
     }
 }
