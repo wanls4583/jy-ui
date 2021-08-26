@@ -442,7 +442,7 @@ select {
         }
     }
 
-    &-dl {
+    &-body {
         display: none;
         position: absolute;
         top: 100%;
@@ -472,6 +472,20 @@ select {
                 color: $white-color;
             }
         }
+    }
+
+    &-empty {
+        display: none;
+        line-height: 36px;
+        text-align: center;
+        color: $color-999;
+    }
+
+    &-loading {
+        display: none;
+        line-height: 36px;
+        text-align: center;
+        color: $color-999;
     }
 }
 

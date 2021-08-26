@@ -486,7 +486,7 @@ select {
   color: #ffffff;
 }
 
-.jy-select-dl {
+.jy-select-body {
   display: none;
   position: absolute;
   top: 100%;
@@ -505,19 +505,33 @@ select {
           box-sizing: border-box;
 }
 
-.jy-select-dl dd {
+.jy-select-body dd {
   line-height: 36px;
   padding-left: 15px;
   cursor: pointer;
 }
 
-.jy-select-dl dd:hover {
+.jy-select-body dd:hover {
   background-color: #f6f6f6;
 }
 
-.jy-select-dl dd.jy-select-active {
+.jy-select-body dd.jy-select-active {
   background-color: #5FB878;
   color: #ffffff;
+}
+
+.jy-select-empty {
+  display: none;
+  line-height: 36px;
+  text-align: center;
+  color: #999999;
+}
+
+.jy-select-loading {
+  display: none;
+  line-height: 36px;
+  text-align: center;
+  color: #999999;
 }
 
 .jy-field {

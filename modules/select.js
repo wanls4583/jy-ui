@@ -10,24 +10,31 @@
             select: '<div class="jy-select"></div>',
             title: '<div class="jy-select-title"><i class="jy-select-suffix">' + downIcon + '</i></div>',
             input: '<input class="jy-input" />',
-            selectBody: '<dl class="jy-select-dl"></dl>'
+            selectBody: '<div class="jy-select-body">\
+                <div class="jy-select-empty">无匹配数据</div>\
+                <div class="jy-select-loading">加载中...</div>\
+            </div>',
+            selectDl: '<dl class="jy-select-dl"></dl>'
         }
         var classNames = {
             select: 'jy-select',
             selectSuffix: 'jy-select-suffix',
             selectOpen: 'jy-select-open',
             selectTitle: 'jy-select-title',
-            selectBody: 'jy-select-dl',
+            selectDl: 'jy-select-body',
+            selectDl: 'jy-select-dl',
             selectHolder: 'jy-color-holder',
             selectDisabled: 'jy-select-disabled',
             selectActive: 'jy-select-active',
-            selectAnimation: 'jy-form-animation-hover-down'
+            selectAnimation: 'jy-form-animation-hover-down',
+            empty: 'jy-select-empty',
+            loading: 'jy-select-loading'
         }
         var event = Common.getEvent();
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var bindedBodyEvent = false;
-        var selects = [];
+        window.jyUiSelects = window.jyUiSelects || [];
 
         // 页码类
         function Class(option) {
@@ -40,25 +47,30 @@
             this.$elem = $(this.option.elem);
             this.data = this.option.data || [];
             this.disabled = this.option.disabled;
-            this.searchEnable = !this.disabled && this.option.search;
             this.titleKey = this.option.titleKey || 'title';
             this.valueKey = this.option.valueKey || 'value';
             this.placeHolder = this.option.placeHolder || '请选择';
             this.defaultOpen = this.option.defaultOpen;
-            this.searchMethod = this.searchMethod || function (value, cb) {
-                var reg = new RegExp(value, 'i');
-                var data = that.data.filter(function (item) {
-                    if (typeof item == 'object') {
-                        if (reg.exec(item[that.titleKey])) {
-                            return true;
+            this.searchEnable = !this.disabled && this.option.search;
+            this.searchMethod = this.option.searchMethod || function (value, cb) {
+                var data = [];
+                if (value) {
+                    var reg = new RegExp(value, 'i');
+                    data = that.data.filter(function (item) {
+                        if (typeof item == 'object') {
+                            if (reg.exec(item[that.titleKey])) {
+                                return true;
+                            }
+                        } else {
+                            if (reg.exec(item)) {
+                                return true;
+                            }
                         }
-                    } else {
-                        if (reg.exec(item)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
+                        return false;
+                    });
+                } else {
+                    data = that.data;
+                }
                 cb(data);
             }
             this.render();
@@ -69,19 +81,26 @@
             this.$select = $(tpl.select);
             this.$title = $(tpl.title);
             this.$input = $(tpl.input);
+            this.$selectDl = $(tpl.selectDl);
             this.$selectBody = $(tpl.selectBody);
             this.$title.append(this.$input);
+            this.$selectBody.append(this.$selectDl);
             this.$select.append(this.$title);
             this.$select.append(this.$selectBody);
+            this.$elem.next('.' + classNames.select).remove();
             this.$select.insertAfter(this.$elem);
             this.$elem.hide();
             this.select(this.$elem.val());
+            this.$empty = this.$selectBody.children('.' + classNames.empty);
+            this.$loading = this.$selectBody.children('.' + classNames.loading);
             if (this.disabled) {
                 this.$select.addClass(classNames.selectDisabled);
             } else {
-                this.searchMethod(this.$input.val(), function (data) {
-                    that.renderItem(data);
-                });
+                if (this.searchEnable) {
+                    this.search();
+                } else {
+                    that.renderItem(this.data);
+                }
                 if (!this.defaultOpen) {
                     this.$selectBody.hide();
                 }
@@ -90,14 +109,14 @@
             if (!this.searchEnable) {
                 this.$input.attr('readonly', true);
             }
-            selects.push(this.$select);
+            window.jyUiSelects.push(this.$select);
         }
 
         Class.prototype.renderItem = function (data) {
             var that = this,
                 html = '',
                 selectValue = this.$input.attr('data-value') || '';
-            this.$selectBody.empty();
+            this.$selectDl.empty();
             this.renderedData = data;
             data.map(function (item) {
                 var title, value, dClass = [];
@@ -120,10 +139,14 @@
                 }
                 html += '<dd class="' + dClass.join(' ') + '" data-value="' + value + '">' + (title || that.placeHolder) + '</dd>';
             });
-            this.$selectBody.html(html);
+            this.$selectDl.html(html);
             this.$input.attr('placeholder', this.placeHolder);
             this.setPosition();
-            this.$selectBody.css('visibility', data.length ? 'visible' : 'hidden');
+            if (!data.length) {
+                this.$empty.show();
+            } else {
+                this.$empty.hide();
+            }
         }
 
         Class.prototype.setPosition = function () {
@@ -138,6 +161,7 @@
             }
         }
 
+        // 选中
         Class.prototype.select = function (value) {
             var that = this;
             var finded = false;
@@ -145,9 +169,7 @@
             this.$input.attr('data-value', value);
             this.data.map(function (item) {
                 if (item[that.valueKey] == value) {
-                    that.$input.val(value && item[that.titleKey] || '');
-                    that.$selectBody.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
-                    that.$selectBody.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
+                    _selct(item);
                     finded = true;
                 }
             });
@@ -155,11 +177,17 @@
             if (!finded && this.renderedData) {
                 this.renderedData.map(function (item) {
                     if (item[that.valueKey] == value) {
-                        that.$input.val(value && item[that.titleKey] || '');
-                        that.$selectBody.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
-                        that.$selectBody.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
+                        _selct(item);
                     }
                 });
+            }
+
+            function _selct(item) {
+                var value = item[that.valueKey];
+                that.$selectDl.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
+                that.$selectDl.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
+                that.$input.val(value && item[that.titleKey] || '');
+                that.$elem.val(value);
             }
         }
 
@@ -178,8 +206,8 @@
                     that.$title.trigger('blur');
                 } else {
                     // 其他选择框都收起
-                    selects.map(function ($select) {
-                        $select.find('dl.' + classNames.selectBody).hide().removeClass(classNames.selectAnimation);
+                    window.jyUiSelects.map(function ($select) {
+                        $select.children('.' + classNames.selectBody).hide().removeClass(classNames.selectAnimation);
                         // 解决ie7及以下定位bugfix
                         $select.removeClass(classNames.selectOpen);
                     });
@@ -191,7 +219,7 @@
             });
             // 失去焦点，收起
             this.$title.on('blur', function () {
-                var $dd = $selectBody.find('dd.' + classNames.selectActive);
+                var $dd = that.$selectDl.children('dd.' + classNames.selectActive);
                 var value = $dd.attr('data-value');
                 // 输入框显示已选中的项
                 $input.val(value && $dd.text() || '');
@@ -207,11 +235,7 @@
                 var $this = $(this);
                 var value = $this.attr('data-value');
                 var filter = that.$elem.attr('jy-filter') || '';
-                $selectBody.find('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
-                $this.addClass(classNames.selectActive);
-                that.$elem.val(value);
-                // 输入框显示已选中的项
-                $input.val(value && $this.text() || '').attr('data-value', $this.attr('data-value'));
+                that.select(value);
                 $selectBody.hide();
                 that.searchEnable && that.search();
                 // 触发select事件
@@ -234,7 +258,7 @@
             // 点击页面收起下拉框
             if (!bindedBodyEvent) {
                 $(docBody).on('click', function (e) {
-                    selects.map(function ($select) {
+                    window.jyUiSelects.map(function ($select) {
                         if ($select.is(':visible')) {
                             $select.find('div.' + classNames.selectTitle).trigger('blur');
                         }
@@ -250,9 +274,11 @@
             var that = this;
             clearTimeout(this.timer);
             this.timer = setTimeout(function () {
+                that.$loading.show();
                 that.searchMethod(title, function (data) {
+                    data = data || [];
                     that.renderItem(data);
-                    console.log(data);
+                    that.$loading.hide();
                 });
             }, 100);
         }

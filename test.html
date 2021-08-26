@@ -209,6 +209,13 @@
                     </div>
                 </div>
                 <div class="jy-form-item">
+                    <label for="" class="jy-form-label">异步搜索</label>
+                    <div class="jy-input-block">
+                        <select name="city3" id="city3" jy-ignore>
+                        </select>
+                    </div>
+                </div>
+                <div class="jy-form-item">
                     <label for="" class="jy-form-label">禁用选择框</label>
                     <div class="jy-input-block">
                         <select name="city3" disabled>
@@ -1161,6 +1168,29 @@
     });
     require(['./modules/tab.js'], function (Form) { });
     require(['./modules/select.js'], function (Select) {
+        var city = [{
+            title: '上海',
+            value: 1
+        }, {
+            title: '广州',
+            value: 2
+        }, {
+            title: '北京',
+            value: 3
+        }, {
+            title: '深圳',
+            value: 4
+        }]
+        Select.render({
+            elem: '#city3',
+            search: true,
+            searchMethod: function (value, cb) {
+                var data = city.filter(function (item) {
+                    return item.title.indexOf(value) > -1;
+                });
+                cb(data);
+            }
+        })
     });
 </script>
 
