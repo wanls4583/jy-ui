@@ -59,7 +59,7 @@
             this.disabled = this.option.disabled;
             this.labelKey = this.option.labelKey || 'label';
             this.valueKey = this.option.valueKey || 'value';
-            this.placeHolder = this.option.placeHolder || '请选择';
+            this.placeholder = this.option.placeholder || '请选择';
             this.defaultOpen = this.option.defaultOpen;
             this.selectAble = this.option.selectAble === undefined ? true : this.option.selectAble;
             // 组件类型（select/input）
@@ -186,10 +186,10 @@
 
                 }
                 if (!value) {
-                    that.placeHolder = label || that.placeHolder;
+                    that.placeholder = label || that.placeholder;
                     dClass.push(classNames.selectHolder);
                 }
-                labelHtml = label || that.placeHolder;
+                labelHtml = label || that.placeholder;
                 if (that.multiselect) {
                     labelHtml = Common.htmlTemplate(tpl.checkbox, {
                         label: labelHtml
@@ -216,7 +216,7 @@
                 } else {
                     this.$empty.hide();
                 }
-                this.$input.attr('placeholder', this.placeHolder);
+                this.$input.attr('placeholder', this.placeholder);
             }
         }
 

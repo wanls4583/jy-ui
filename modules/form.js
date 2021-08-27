@@ -22,7 +22,8 @@
             checkbox: 'jy-checkbox',
             checkboxDisabled: 'jy-checkbox-disabled',
             checkboxCheckd: 'jy-checkbox-checked',
-            checkboxCheckedDisabled: 'jy-checkbox-checked-disabled'
+            checkboxCheckedDisabled: 'jy-checkbox-checked-disabled',
+            select: 'jy-select'
         }
         var tpl = {
             tip: '<div class="jy-form-tip"><i class="jy-form-tip-icon">' + errorIcon + '</i><span></span></div>'
@@ -125,13 +126,13 @@
                                 that.showTip(verifyRule.msg);
                                 msg = verifyRule.msg;
                                 if (tagName == 'select') {
-                                    input.next('.' + formClass.select) && input.next('.' + formClass.select).find('input.jy-input').addClass(dangerClass);
+                                    $input.next('.' + formClass.select).children('.jy-select-title').addClass(dangerClass);
                                 } else {
                                     $input.addClass(dangerClass);
                                 }
                             } else {
                                 if (tagName == 'select') {
-                                    input.next('.' + formClass.select) && input.next('.' + formClass.select).find('input.jy-input').removeClass(dangerClass);
+                                    $input.next('.' + formClass.select).children('.jy-select-title').removeClass(dangerClass);
                                 } else {
                                     $input.removeClass(dangerClass);
                                 }
@@ -472,6 +473,7 @@
 
         // 渲染下拉选择框
         Class.prototype.renderSelect = function (filter, container) {
+            var that = this;
             var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
@@ -485,6 +487,8 @@
                 var ignore = $select.attr('jy-ignore') === undefined ? false : true;
                 var disabled = $select.prop('disabled');
                 var search = $select.attr('jy-search') === undefined ? false : true;
+                var placeholder = $select.attr('placeholder');
+                var filter = $select.attr('jy-filter');
                 if (!ignore) {
                     $select.find('option').each(function (i, option) {
                         var $option = $(option);
@@ -493,11 +497,18 @@
                             value: $option.attr('value')
                         });
                     });
-                    Select.render({
+                    var select = Select.render({
                         elem: select,
                         disabled: disabled,
                         search: search,
+                        placeholder: placeholder,
                         data: data
+                    });
+                    filter && select.on('select(' + filter + ')', function (obj) {
+                        that.trigger('select(' + filter + ')', obj)
+                    });
+                    select.on('select', function (obj) {
+                        that.trigger('select', obj);
                     });
                 }
             });

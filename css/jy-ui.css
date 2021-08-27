@@ -616,6 +616,7 @@ select {
 .jy-form-tip {
   position: fixed;
   _position: absolute;
+  z-index: 999999;
   line-height: 30px;
   padding: 10px 20px;
   font-size: 12px;
