@@ -211,13 +211,19 @@
                 <div class="jy-form-item">
                     <label for="" class="jy-form-label">异步搜索</label>
                     <div class="jy-input-block">
-                        <input name="city3" id="city3" />
+                        <input type="text" name="city3" class="jy-input" id="city3" />
                     </div>
                 </div>
                 <div class="jy-form-item">
                     <label for="" class="jy-form-label">搜索建议</label>
                     <div class="jy-input-block">
                         <input type="text" name="city4" class="jy-input" id="city4">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label">多选选择框</label>
+                    <div class="jy-input-block">
+                        <input type="text" name="city5" class="jy-input" id="city5">
                     </div>
                 </div>
                 <div class="jy-form-item">
@@ -1203,7 +1209,15 @@
             elem: '#city4',
             search: true,
             type: 'input',
+            // selectAble: false,
             data: city2
+        });
+        var city3 = city1.concat([]);
+        Select.render({
+            elem: '#city5',
+            search: true,
+            multiselect: true,
+            data: city3
         });
     });
 </script>

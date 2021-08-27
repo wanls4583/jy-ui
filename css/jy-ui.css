@@ -417,6 +417,7 @@ select {
 
 .jy-select-title {
   position: relative;
+  padding: 0 15px 0 15px;
   border: 1px solid #eeeeee;
   border-radius: 2px;
   cursor: pointer;
@@ -429,6 +430,7 @@ select {
 .jy-select-title .jy-input {
   height: 36px;
   border: 0;
+  padding-left: 0;
   cursor: pointer;
 }
 
@@ -436,7 +438,7 @@ select {
   position: absolute;
   right: 5px;
   top: 50%;
-  z-index: 1;
+  z-index: 2;
   margin-top: -6px;
   font-size: 12px;
   line-height: 12px;
@@ -444,12 +446,26 @@ select {
   cursor: pointer;
 }
 
-.jy-select-tags {
+.jy-select-search-suffix {
+  display: none;
   position: absolute;
-  top: 5px;
-  left: 0;
+  right: 5px;
+  top: 50%;
+  z-index: 2;
+  margin-top: -8px;
+  font-size: 16px;
+  line-height: 16px;
+  font-family: 'iconfont';
+  cursor: pointer;
+}
+
+.jy-select-tags {
+  display: none;
   width: 100%;
-  line-height: 24px;
+  min-height: 26px;
+  _height: 36px;
+  padding: 5px 0;
+  line-height: 22px;
   background-color: #ffffff;
 }
 
@@ -458,7 +474,7 @@ select {
   *display: inline;
   *zoom: 1;
   margin-top: 2px;
-  margin-left: 5px;
+  margin-right: 5px;
   padding: 0 5px;
   border-radius: 2px;
   background-color: #eeeeee;
@@ -552,6 +568,28 @@ select {
 .jy-suggestion dd.jy-select-active {
   background-color: transparent;
   color: #666666;
+}
+
+.jy-multi-select .jy-select-title .jy-input {
+  display: none;
+}
+
+.jy-multi-select .jy-select-title .jy-select-tags {
+  display: block;
+}
+
+.jy-multi-select dd.jy-select-active {
+  background-color: transparent;
+  color: #666666;
+}
+
+.jy-multi-select dd.jy-select-active .jy-checkbox-icon {
+  background-color: #5FB878;
+  border-color: #5FB878;
+}
+
+.jy-multi-select dd.jy-select-active .jy-checkbox-icon i {
+  display: inline;
 }
 
 .jy-field {

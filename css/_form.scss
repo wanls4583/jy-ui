@@ -375,6 +375,7 @@ select {
 
     &-title {
         position: relative;
+        padding: 0 15px 0 15px;
         border: 1px solid $border-color;
         border-radius: 2px;
         cursor: pointer;
@@ -383,6 +384,7 @@ select {
         .jy-input {
             height: $input-height - 2px;
             border: 0;
+            padding-left: 0;
             cursor: pointer;
         }
 
@@ -392,7 +394,7 @@ select {
         position: absolute;
         right: 5px;
         top: 50%;
-        z-index: 1;
+        z-index: 2;
         margin-top: -6px;
         font-size: 12px;
         line-height: 12px;
@@ -400,12 +402,26 @@ select {
         cursor: pointer;
     }
 
-    &-tags {
+    &-search-suffix {
+        display: none;
         position: absolute;
-        top: 5px;
-        left: 0;
+        right: 5px;
+        top: 50%;
+        z-index: 2;
+        margin-top: -8px;
+        font-size: 16px;
+        line-height: 16px;
+        font-family: 'iconfont';
+        cursor: pointer;
+    }
+
+    &-tags {
+        display: none;
         width: 100%;
-        line-height: 24px;
+        min-height: 26px;
+        _height: 36px;
+        padding: 5px 0;
+        line-height: 22px;
         background-color: #ffffff;
     }
 
@@ -414,7 +430,7 @@ select {
         *display: inline;
         *zoom: 1;
         margin-top: 2px;
-        margin-left: 5px;
+        margin-right: 5px;
         padding: 0 5px;
         border-radius: 2px;
         background-color: $light-color;
@@ -510,6 +526,34 @@ select {
         &.jy-select-active {
             background-color: transparent;
             color: $color-666;
+        }
+    }
+}
+
+.jy-multi-select {
+    .jy-select-title {
+        .jy-input {
+            display: none;
+        }
+
+        .jy-select-tags {
+            display: block;
+        }
+    }
+
+    dd {
+        &.jy-select-active {
+            background-color: transparent;
+            color: $color-666;
+
+            .jy-checkbox-icon {
+                background-color: $link-color;
+                border-color: $link-color;
+
+                i {
+                    display: inline;
+                }
+            }
         }
     }
 }
