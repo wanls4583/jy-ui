@@ -373,12 +373,6 @@
                     }
                     return false;
                 });
-                // 多选情况下，点击输入框不做处理
-                if (this.multiselect) {
-                    this.$input.on('click', function () {
-                        return false;
-                    });
-                }
             }
             // 失去焦点，收起
             this.$title.on('blur', function () {
