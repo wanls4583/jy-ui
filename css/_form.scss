@@ -474,6 +474,11 @@ select {
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
         box-sizing: border-box;
 
+        dl {
+            // 解决ie7及以下浏览器dl最小高度问题
+            line-height: 0;
+        }
+
         dd {
             line-height: 36px;
             padding-left: $pd15;

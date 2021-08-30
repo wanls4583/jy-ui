@@ -521,6 +521,10 @@ select {
           box-sizing: border-box;
 }
 
+.jy-select-body dl {
+  line-height: 0;
+}
+
 .jy-select-body dd {
   line-height: 36px;
   padding-left: 15px;
