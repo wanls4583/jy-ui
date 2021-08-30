@@ -526,6 +526,7 @@ select {
 }
 
 .jy-select-body dd {
+  height: 36px;
   line-height: 36px;
   padding-left: 15px;
   color: #666666;
