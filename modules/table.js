@@ -1319,6 +1319,8 @@
         Class.prototype.setArea = function (width, height) {
             this.width = Number(width || this.width) || 0;
             this.height = Number(height || this.height) || 0;
+            this.option.width = this.width;
+            this.option.height = this.height;
             this.setViewArea();
         }
 
