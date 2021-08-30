@@ -1453,15 +1453,9 @@ select {
   left: 0;
   top: 0;
   z-index: 1;
-  border-right: 1px solid #eeeeee;
   -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-}
-
-.jy-table-header-main-l th:last-child,
-.jy-table-header-main-l td:last-child {
-  border-right: 0;
 }
 
 .jy-table-header-main-l .jy-table-main {
@@ -1474,7 +1468,6 @@ select {
   top: 0;
   right: 0;
   z-index: 1;
-  border-left: 1px solid #eeeeee;
   -webkit-box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
           box-shadow: -1px 0 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;

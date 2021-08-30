@@ -295,14 +295,8 @@
         left: 0;
         top: 0;
         z-index: 1;
-        border-right: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
         overflow: hidden;
-
-        th:last-child,
-        td:last-child {
-            border-right: 0;
-        }
 
         .jy-table-main {
             overflow: hidden;
@@ -315,7 +309,6 @@
         top: 0;
         right: 0;
         z-index: 1;
-        border-left: 1px solid $border-color;
         box-shadow: -1px 0 8px rgba(0, 0, 0, .08);
         overflow: hidden;
 

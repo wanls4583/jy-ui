@@ -1299,8 +1299,9 @@
                     // 确保选择列宽度不变
                     col && this.$tableHeader.find('th[data-col="' + col._key + '"]').css('width', 50);
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
+                    // 出现纵向滚动条时需要减去滚动条的宽度
                     this.$tableHeader.css({
-                        width: this.$main[0].clientWidth - 17
+                        width: this.$main[0].clientWidth - 17 - (ieVersion <= 7 ? 1 : 0)
                     });
                     this.setColsWidth();
                     this.$tableHeader.css({
@@ -1368,7 +1369,7 @@
                     clientWidth: this.$main[0].clientWidth,
                     clientHeight: this.$main[0].clientHeight,
                     scrollWidth: this.$main[0].scrollWidth,
-                    scrollHeight: this.$main[0].scrollHeight
+                    offsetWidth: this.$main[0].offsetWidth
                 }
                 hasHscrollBar = mainRect.scrollWidth > mainRect.clientWidth;
             }
@@ -1400,7 +1401,7 @@
                     this.$leftMain[0].scrollTop = scrollTop;
                 }
                 if (this.$rightHeaderMain) {
-                    var hasVscrollBar = mainRect.scrollHeight > mainRect.clientHeight;
+                    var hasVscrollBar = mainRect.offsetWidth > mainRect.clientHeight;
                     this.$rightHeaderMain.css({
                         'top': toolbarHeight,
                         'width': rightWidth,
