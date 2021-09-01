@@ -13,13 +13,14 @@
                 <div class="jy-tab-content">\
                 </div>\
             </div>',
-            item: '<div class="jy-tab-item" name="<%-name%>"><%-content%></div>',
-            title: '<div class="jy-tab-title" name="<%-name%>"><%-title%></div>',
+            item: '<div class="jy-tab-item<%-(active?" jy-tab-item-active":"")%>" target="<%-name%>"><%-content%></div>',
+            title: '<div class="jy-tab-title<%-(active?" jy-tab-title-active":"")%>" name="<%-name%>"><%-title%></div>',
             prev: '<div class="jy-tab-prev">' + leftIcon + '</div>',
             next: '<div class="jy-tab-next">' + rightIcon + '</div>'
         }
         var tabClass = {
             tab: 'jy-tab',
+            tabLine: 'jy-tab-line',
             structure: 'jy-tab-structure',
             scroll: 'jy-tab-scroll',
             header: 'jy-tab-header',
@@ -48,13 +49,19 @@
         Class.prototype.render = function () {
             this.$tab = this.option.$tab || $(tpl.tab);
             this.data = this.option.data || [];
-            this.style = this.option.style || 'card';
+            this.style = this.option.style === 'line' ? 'line' : 'card';
             this.$header = this.$tab.children('.' + tabClass.header);
             this.$headerScroll = this.$header.children('.' + tabClass.headerScroll);
             this.$titles = this.$headerScroll.children('.' + tabClass.titles);
             this.$content = this.$tab.children('.' + tabClass.content);
             if (!this.option.$tab) {
+                this.$elem = $(this.option.elem);
                 this.appendItem();
+                this.$elem.hide();
+                this.$tab.insertAfter(this.$elem);
+                if (this.style === 'line') {
+                    this.$tab.addClass(tabClass.tabLine);
+                }
             }
             this.checkScroll();
             this.bindEvent();
@@ -62,16 +69,24 @@
 
         Class.prototype.appendItem = function () {
             var that = this;
-            this.data.map(function (tab) {
-                that.$titles.append(Common.htmlTemplate(tpl.title, {
-                    title: tab.title,
-                    name: tab.name
-                }));
-                that.$content.append(Common.htmlTemplate(tpl.item, {
-                    content: tab.content,
-                    name: tab.name
-                }));
-            });
+            if (this.data.length) {
+                this.data.map(function (tab) {
+                    that.$titles.append(Common.htmlTemplate(tpl.title, {
+                        title: tab.title,
+                        name: tab.name,
+                        active: tab.active
+                    }));
+                    that.$content.append(Common.htmlTemplate(tpl.item, {
+                        content: tab.content || '',
+                        name: tab.name,
+                        active: tab.active
+                    }));
+                });
+                if (that.$titles.children('.' + tabClass.titleActive).length == 0) {
+                    that.$titles.children().first().addClass(tabClass.titleActive);
+                    that.$content.children().first().addClass(tabClass.itemActive);
+                }
+            }
         }
 
         Class.prototype.addTab = function (tab) {

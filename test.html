@@ -512,6 +512,7 @@
     <fieldset class="jy-field">
         <legend>标签页</legend>
         <div class="jy-field-box">
+            <div style="padding:10px 0;">静态标签</div>
             <div class="jy-tab jy-tab-line" style="width:400px;">
                 <div class="jy-tab-header">
                     <div class="jy-tab-header-scroll">
@@ -534,6 +535,8 @@
                     <div class="jy-tab-item" target="tab3">内容3</div>
                 </div>
             </div>
+            <div style="padding:10px 0;">动态标签</div>
+            <div id="tab"></div>
         </div>
     </fieldset>
     <fieldset class="jy-field">
@@ -1177,7 +1180,16 @@
             // console.log(obj);
         });
     });
-    require(['./modules/tab.js'], function (Form) { });
+    require(['./modules/tab.js'], function (Tab) {
+        Tab.render({
+            elem: '#tab',
+            style: 'line',
+            data: [
+                { title: '标签1', name: 'tab1', content: '内容1' },
+                { title: '标签2', name: 'tab2', content: '内容2' }
+            ]
+        })
+    });
     require(['./modules/select.js'], function (Select) {
         var city1 = [{
             label: '上海',
