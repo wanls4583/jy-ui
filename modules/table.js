@@ -1304,7 +1304,7 @@
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
                     this.$tableHeader.css({
-                        width: this.$main[0].clientWidth - 17 - (ieVersion <= 7 ? 1 : 0)
+                        width: this.$main[0].offsetWidth - 17 - (ieVersion <= 7 ? 1 : 0)
                     });
                     this.setColsWidth();
                     this.$tableHeader.css({
