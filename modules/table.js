@@ -1325,8 +1325,10 @@
             this.height = Number(height || this.height) || 0;
             this.option.width = this.width;
             this.option.height = this.height;
+            this.stretch = this.option.stretch || false;
             this.setViewArea();
             this.setColsWidth();
+            this.stretchTable();
         }
 
         // 设置容器宽高
