@@ -27,7 +27,12 @@
     border: 1px solid $border-color;
     border-radius: 2px;
     box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
-    overflow: hidden;
+    // overflow: hidden;
+    box-sizing: content-box;
+
+    * {
+        box-sizing: content-box;
+    }
 
     &-absolute {
         position: absolute;
@@ -52,12 +57,24 @@
         // border-style: none;
         border-color: transparent;
         box-shadow: none;
+
+        .jy-layer-content {
+            padding: $pd10 $pd20;
+        }
+
+        .jy-layer-icon {
+            top: 6px;
+        }
     }
 
     &-msg-with-icon {
         white-space: nowrap;
         border: 1px solid $gray-color;
         box-shadow: none;
+
+        .jy-layer-content {
+            padding: $pd20;
+        }
     }
 
     &-loading {
@@ -103,21 +120,13 @@
     &-content {
         position: relative;
         line-height: 24px;
-        padding: $pd20;
+        padding: 10px;
         overflow: auto;
         // ie6及以下，子元素触发haslayout后，父元素将被撑开
         // & * {
         //     _display: inline;
         //     _zoom: 1;
         // }
-    }
-
-    &-msg .jy-layer-content {
-        padding: $pd10 $pd20;
-    }
-
-    &-msg .jy-layer-icon {
-        top: 6px;
     }
 
     &-footer {

@@ -130,6 +130,11 @@
         width: 100%;
         border: 1px solid $border-color;
         background-color: $white-color;
+        box-sizing: content-box;
+
+        * {
+            box-sizing: content-box;
+        }
     }
 
     &-header-main {
@@ -318,6 +323,7 @@
             right: 0;
             width: auto;
         }
+
         .jy-table-main {
             position: absolute;
             right: 0;
@@ -632,7 +638,7 @@
             border: 1px solid $gray-color;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
-            box-sizing: border-box;
+            box-sizing: border-box !important;
 
             dd {
                 line-height: 36px;

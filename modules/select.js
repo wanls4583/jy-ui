@@ -224,7 +224,7 @@
             var that = this;
             this.$tags.empty();
             this.tags.map(function (item) {
-                that.$tags.append('<div class="jy-select-tag">' + item.label + '</div>');
+                that.$tags.append('<div class="jy-select-tag">' + item[that.labelKey] + '</div>');
             });
         }
 
@@ -295,7 +295,7 @@
                     values = that.tags.map(function (item) {
                         return item[that.valueKey];
                     });
-                    that.$elem.attr('data-value', values.join(','));
+                    that.$elem.val(values.join(',')).attr('data-value', values.join(','));
                     that.renderTags();
                 } else {
                     that.$elem.val(value);
@@ -443,11 +443,12 @@
             once: event.once,
             trigger: event.trigger,
             render: function (option) {
-                var tab = new Class(option);
+                var select = new Class(option);
                 return {
-                    on: tab.on,
-                    once: tab.once,
-                    trigger: tab.trigger
+                    on: select.on,
+                    once: select.once,
+                    trigger: select.trigger,
+                    select: select.select.bind(select)
                 }
             }
         }

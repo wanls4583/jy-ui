@@ -141,7 +141,7 @@
     border-radius: 2px;
     outline: none;
     // ie6默认是border-box，ie7默认是content-box，ie6、ie7都不支持box-siziong
-    box-sizing: border-box;
+    box-sizing: border-box !important;
     // ie6能识别下划线_，ie6、ie7能识别*，ie7能识别!important，ie6不能识别
     *padding-left: 0 !important;
     _padding-left: $pd15;
@@ -171,7 +171,7 @@
     border: 1px solid $border-color;
     border-radius: 2px;
     outline: none;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
     overflow: hidden;
 }
 
@@ -472,7 +472,7 @@ select {
         border-radius: 2px;
         overflow: auto;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
-        box-sizing: border-box;
+        box-sizing: border-box !important;
 
         dl {
             // 解决ie7及以下浏览器dl最小高度问题

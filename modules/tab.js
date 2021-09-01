@@ -37,6 +37,10 @@
 
         // 页码类
         function Class(option) {
+            var event = Common.getEvent();
+            this.on = event.on;
+            this.once = event.once;
+            this.trigger = event.trigger;
             this.option = Object.assign({}, option);
             this.render();
         }
@@ -107,6 +111,14 @@
                 that.$content.children('.' + tabClass.itemActive).removeClass(tabClass.itemActive);
                 $this.addClass(tabClass.titleActive);
                 that.$content.children('[target="' + tabName + '"]').addClass(tabClass.itemActive);
+                that.trigger('change', {
+                    data: tabName,
+                    dom: this
+                });
+                JyTab.trigger('change', {
+                    data: tabName,
+                    dom: this
+                });
             });
             this.$tab.delegate('.' + tabClass.prev, 'click', function () {
                 that.prev();

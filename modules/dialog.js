@@ -406,13 +406,15 @@
         // 关闭弹框
         function close(layerIndex) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
-            $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
-            $layer.addClass('jy-layer-animation-fade-out');
-            setTimeout(function () {
-                // 关闭弹框回调
-                typeof store[layerIndex].option.end == 'function' && store[layerIndex].option.end($layer, layerIndex);
-                $layer.remove();
-            }, ieVersion >= 9 ? 300 : 0);
+            if ($layer.length) {
+                $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).remove();
+                $layer.addClass('jy-layer-animation-fade-out');
+                setTimeout(function () {
+                    // 关闭弹框回调
+                    typeof store[layerIndex].option.end == 'function' && store[layerIndex].option.end($layer, layerIndex);
+                    $layer.remove();
+                }, ieVersion >= 9 ? 300 : 0);
+            }
         }
         /**
          * 关闭所有弹窗

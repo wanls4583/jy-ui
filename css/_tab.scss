@@ -26,8 +26,9 @@
         display: inline-block;
         *display: inline;
         *zoom: 1;
-        min-width: 65px;
+        min-width: 50px;
         line-height: 38px;
+        padding: 0 10px;
         font-size: 14px;
         text-align: center;
         background-color: #ffffff;
@@ -43,7 +44,7 @@
 
     &-item {
         display: none;
-        padding: 20px 0;
+        padding-top: 10px;
 
         &-active {
             display: block;

@@ -440,8 +440,11 @@
 
         // 重载表格
         Class.prototype.reload = function (option) {
-            this.option = Common.deepAssign(this.option, option || {}, ['data']);
-            this.option.data = option.data;
+            option = option || {};
+            this.option = Common.deepAssign(this.option, option, ['data']);
+            if(option.data) {
+                this.option.data = option.data;
+            }
             this.render();
         }
 
@@ -1323,6 +1326,7 @@
             this.option.width = this.width;
             this.option.height = this.height;
             this.setViewArea();
+            this.setColsWidth();
         }
 
         // 设置容器宽高
@@ -1479,9 +1483,10 @@
                 var $cell = $(th.children[0]);
                 var width = jyBindData.col.width;
                 width = ieVersion <= 6 ? width + hCellPadding : width;
-                $cell.css('width', 'auto');
                 if (jyBindData.col.width) {
                     $cell.css('width', width);
+                } else {
+                    $cell.css('width', 'auto');
                 }
             });
             ths.map(function (th, i) {
