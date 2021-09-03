@@ -45,7 +45,8 @@
     }
 
     a {
-        position: relative;
+        // ie7及以下浏览器relative将导致a标签display:block下其高度撑不开
+        // position: relative;
         display: block;
         padding-left: 20px;
         padding-right: 35px;

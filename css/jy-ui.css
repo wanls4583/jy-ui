@@ -2385,7 +2385,6 @@ select {
 }
 
 .jy-menu a {
-  position: relative;
   display: block;
   padding-left: 20px;
   padding-right: 35px;
