@@ -2,6 +2,7 @@
     function factory($, Common) {
         var leftIcon = '&#xe733;';
         var rightIcon = '&#xe734;';
+        var closeIcon = '&#xe735;';
         var tpl = {
             tab: '<div class="jy-tab jy-tab-structure">\
                 <div class="jy-tab-header">\
@@ -16,7 +17,8 @@
             item: '<div class="jy-tab-item<%-(active?" jy-tab-item-active":"")%>" target="<%-name%>"><%-content%></div>',
             title: '<div class="jy-tab-title<%-(active?" jy-tab-title-active":"")%>" name="<%-name%>"><%-title%></div>',
             prev: '<div class="jy-tab-prev">' + leftIcon + '</div>',
-            next: '<div class="jy-tab-next">' + rightIcon + '</div>'
+            next: '<div class="jy-tab-next">' + rightIcon + '</div>',
+            closeIcon: '<i class="jy-tab-close">' + closeIcon + '</i>'
         }
         var tabClass = {
             tab: 'jy-tab',
@@ -32,7 +34,8 @@
             titleActive: 'jy-tab-title-active',
             itemActive: 'jy-tab-item-active',
             prev: 'jy-tab-prev',
-            next: 'jy-tab-next'
+            next: 'jy-tab-next',
+            closeIcon: 'jy-tab-close'
         }
         var event = Common.getEvent();
 
@@ -50,6 +53,7 @@
             this.$tab = this.option.$tab || $(tpl.tab);
             this.data = this.option.data || [];
             this.style = this.option.style === 'line' ? 'line' : 'card';
+            this.colseEnable = this.option.colseEnable === false ? false : true;
             this.$header = this.$tab.children('.' + tabClass.header);
             this.$headerScroll = this.$header.children('.' + tabClass.headerScroll);
             this.$titles = this.$headerScroll.children('.' + tabClass.titles);
@@ -63,6 +67,15 @@
                     this.$tab.addClass(tabClass.tabLine);
                 }
             }
+            // 是否可关闭
+            if (this.colseEnable) {
+                this.$titles.children('.' + tabClass.title).each(function (i, dom) {
+                    var $dom = $(dom);
+                    if ($dom.children('.' + tabClass.closeIcon).length == 0) {
+                        $dom.append(tpl.closeIcon);
+                    }
+                });
+            }
             this.checkScroll();
             this.bindEvent();
         }
@@ -70,16 +83,19 @@
         Class.prototype.appendItem = function () {
             var that = this;
             if (this.data.length) {
+                var active = false;
                 this.data.map(function (tab) {
+                    // 确保只有一个tab是激活状态
+                    active = active ? false : tab.active;
                     that.$titles.append(Common.htmlTemplate(tpl.title, {
                         title: tab.title,
                         name: tab.name,
-                        active: tab.active
+                        active: active
                     }));
                     that.$content.append(Common.htmlTemplate(tpl.item, {
                         content: tab.content || '',
                         name: tab.name,
-                        active: tab.active
+                        active: active
                     }));
                 });
                 if (that.$titles.children('.' + tabClass.titleActive).length == 0) {
@@ -90,15 +106,47 @@
         }
 
         Class.prototype.addTab = function (tab) {
-            this.$titles.append(Common.htmlTemplate(tpl.title, {
+            var $title = null;
+            for (var i = 0; i < this.data.length; i++) {
+                if (this.data[i].name == tab.name) {
+                    this.$titles.children('[name="' + tab.name + '"]').trigger('click');
+                    return;
+                }
+            }
+            if (tab.active) {
+                this.$titles.children('.' + tabClass.titleActive).removeClass(tabClass.titleActive);
+                this.$content.children('.' + tabClass.itemActive).removeClass(tabClass.itemActive);
+            }
+            $title = $(Common.htmlTemplate(tpl.title, {
                 title: tab.title,
-                name: tab.name
+                name: tab.name,
+                active: tab.active
             }));
+            this.colseEnable && $title.append(tpl.closeIcon);
+            this.$titles.append($title);
+            this.$content.append(Common.htmlTemplate(tpl.item, {
+                content: tab.content || '',
+                name: tab.name,
+                active: tab.active
+            }));
+            this.data.push(tab);
             this.checkScroll();
         }
 
         Class.prototype.removeTab = function (name) {
-            this.$titles.children('[name="' + name + '"]').remove();
+            var $title = this.$titles.children('[name="' + name + '"]');
+            var $prev = $title.prev();
+            if (!$prev.length) {
+                $prev = $title.next();
+            }
+            $title.remove();
+            this.$content.children('[target="' + name + '"]').remove();
+            this.data = this.data.filter(function (item) {
+                return item.name != name;
+            });
+            if ($title.hasClass(tabClass.titleActive)) {
+                $prev.trigger('click');
+            }
             this.checkScroll();
         }
 
@@ -140,6 +188,11 @@
             });
             this.$tab.delegate('.' + tabClass.next, 'click', function () {
                 that.next();
+            });
+            this.$tab.delegate('.' + tabClass.closeIcon, 'click', function () {
+                var name = $(this).parent().attr('name');
+                that.removeTab(name);
+                return false;
             });
         }
 

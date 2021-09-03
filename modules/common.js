@@ -19,7 +19,8 @@
             htmlTemplate: htmlTemplate,
             checkOverflow: checkOverflow,
             deepAssign: deepAssign,
-            delInnerProperty: delInnerProperty
+            delInnerProperty: delInnerProperty,
+            stopPropagation: stopPropagation
         }
 
 
@@ -203,7 +204,7 @@
                 visiblity: 'hidden',
                 width: 'auto',
                 height: ieVerjy <= 6 ? $dom[0].offsetHeight : $dom.height()
-            }).addClass('jy-display-inline-block');
+            }).addClass('jy-inline-block');
             var overflow = $temp[0].scrollWidth > $dom[0].scrollWidth;
             $temp.remove();
             return overflow;
@@ -312,6 +313,14 @@
                     }
                 }
                 return targetObj;
+            }
+        }
+
+        function stopPropagation(event) {
+            if (event.stopPropagation) {
+                event.stopPropagation();
+            } else {
+                event.cancelBubble = true;
             }
         }
 

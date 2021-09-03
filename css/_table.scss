@@ -127,7 +127,6 @@
 
     &-view {
         position: relative;
-        width: 100%;
         border: 1px solid $border-color;
         background-color: $white-color;
         box-sizing: content-box;
@@ -225,6 +224,7 @@
             *display: inline;
             *zoom: 1;
             padding: $pd10 0;
+            vertical-align: middle;
 
             .jy-pager-num,
             .jy-pager-dot,

@@ -65,7 +65,7 @@
             // 组件类型（select/input）
             this.type = this.option.type === 'input' ? 'input' : 'select';
             this.multiselect = this.type === 'select' && this.option.multiselect;
-            this.searchEnable = !this.disabled && this.option.search;
+            this.searchEnable = this.type == 'input' || !this.disabled && this.option.search;
             this.searchMethod = this.option.searchMethod || function (value, cb) {
                 var data = [];
                 if (value) {
@@ -159,6 +159,8 @@
                 var label = item[that.labelKey] || '';
                 var value = item[that.valueKey] || '';
                 var labelHtml = '';
+                item[that.labelKey] = label;
+                item[that.valueKey] = value;
                 if (that.type === 'input') {
                     label = value;
                 }
@@ -265,7 +267,7 @@
             }
 
             function _selct(item) {
-                var value = item[that.valueKey];
+                var value = item[that.valueKey] || '';
                 if (that.multiselect) {
                     that.$selectDl.children('dd[data-value="' + value + '"]').toggleClass(classNames.selectActive);
                 } else {
@@ -295,7 +297,7 @@
                     values = that.tags.map(function (item) {
                         return item[that.valueKey];
                     });
-                    that.$elem.val(values.join(',')).attr('data-value', values.join(','));
+                    that.$elem.val(values.join(','));
                     that.renderTags();
                 } else {
                     that.$elem.val(value);

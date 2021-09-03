@@ -9,6 +9,7 @@
 @import 'tree';
 @import 'transfer';
 @import 'tab';
+@import 'frame';
 
 @font-face {
     font-family: 'iconfont';
@@ -31,7 +32,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.jy-display {
+.jy {
     &-block {
         display: block;
     }
@@ -197,23 +198,12 @@ hr {
     }
 }
 
-.jy-content {
+.jy-badge {
     position: relative;
-    height: 100%;
-    padding: 10px;
-    background: #fff;
-    border: 1px solid $border-color;
-    box-sizing: border-box;
-    overflow: auto;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-iframe {
-    padding: 10px;
+    line-height: 12px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    background-color: $danger-color;
+    font-size: 12px;
+    color: #fff;
 }

@@ -146,7 +146,9 @@
                         break;
                 }
                 $content.prepend('<i class="jy-layer-icon ' + color + '">' + icon + '</i>').css({
-                    paddingLeft: '55px'
+                    paddingLeft: '55px',
+                    paddingTop: '20px',
+                    paddingBottom: '20px'
                 });
                 if (option.type == 'msg') {
                     $layer.removeClass(layerClass.msg).addClass(layerClass.iconMsg);
@@ -174,7 +176,7 @@
             return layerIndex;
 
             function _bindEvent() {
-                $layer.on('click', function () {
+                $layer.children('.jy-layer-title').on('click', function () {
                     var zIndex = ++layerCount + 100;
                     $(this).css('z-index', zIndex);
                 });
@@ -358,6 +360,7 @@
             var _option = {
                 title: '信息',
                 type: 'alert',
+                icon: 'warn',
                 full: false,
                 content: content,
                 btn: ['确定', '取消'],
@@ -441,7 +444,7 @@
                             $('div.' + layerClass.layer + index).remove();
                         });
                         break;
-                    case 'confrim':
+                    case 'confirm':
                         $('div.' + layerClass.confirm).each(function (i, dom) {
                             var $dom = $(dom);
                             var index = $dom.attr('jy-index');
@@ -564,10 +567,10 @@
                 height = winHeight;
             }
             $layer.css({
-                width: width,
+                width: width + 1,
                 height: height
             });
-            height = $layer.outerHeight() - titleHeight - footerHeight;
+            height = height - titleHeight - footerHeight;
             $content.css({
                 height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 'px'
             });

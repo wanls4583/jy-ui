@@ -1,9 +1,9 @@
 .jy-menu {
     $bgColor: #ffffff;
     $hoverBgColor: $hover-background-color;
-    $checkedBgColor: $hover-background-color;
+    $checkedBgColor: $link-color;
     $textColor: #666666;
-    $activeColor: $link-color;
+    $activeColor: #ffffff;
     $barColor: $link-color;
 
     position: relative;
@@ -45,7 +45,9 @@
     }
 
     a {
+        position: relative;
         display: block;
+        padding-left: 20px;
         padding-right: 35px;
         color: $textColor;
         white-space: nowrap;
@@ -70,7 +72,7 @@
     }
 
     & &-checked-parent {
-        color: $activeColor;
+        color: $barColor;
     }
 
     &-absolute {
@@ -79,6 +81,7 @@
 
     &-hover-right,
     &-hover-down {
+        display: none;
         position: absolute;
         top: 100%;
         left: 0;
@@ -144,7 +147,8 @@
 
 .jy-menu-nav {
     $bgColor: #393D49;
-    $hoverBgColor: #393D49;
+    $ulBgColor: #1c2334;
+    $hoverBgColor: transparent;
     $checkedBgColor: $success-color;
     $textColor: $gray-color;
     $activeColor: #ffffff;
@@ -159,7 +163,7 @@
     box-shadow: none;
 
     ul {
-        background-color: $bgColor;
+        background-color: $ulBgColor;
     }
 
     li {

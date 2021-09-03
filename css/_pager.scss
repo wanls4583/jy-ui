@@ -62,7 +62,7 @@
     }
 
     .jy-pager-limits {
-        height: $height + 2px;
+        height: $height;
         height: #{'auto\\0/'};
         *height: auto;
         padding: 0;
@@ -72,6 +72,7 @@
         font-size: 14px;
         outline: none;
         vertical-align: middle;
+        box-sizing: content-box;
     }
 
     .jy-pager-nums {
@@ -88,22 +89,26 @@
             width: $height;
             _width: 50px;
             height: $height;
+            _height: $height + 2px;
             line-height: $height;
             padding: 0 $pd10;
             border: 1px solid $border-color;
             vertical-align: middle;
             outline: none;
+            box-sizing: content-box;
         }
 
         button {
             width: 40px;
             height: $height;
+            _height: $height + 2px;
             padding: 0;
             margin-left: $pd10;
             background-color: $white-color;
             border: 1px solid $border-color;
             vertical-align: middle;
             cursor: pointer;
+            box-sizing: content-box;
         }
     }
 }

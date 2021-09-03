@@ -185,6 +185,81 @@
             return data;
         }
 
+        // 表单赋值
+        Class.prototype.setData = function (form, data) {
+            var $form = $(form);
+            $form.find('input,textarea,select').each(function (i, dom) {
+                var $dom = $(dom);
+                var name = dom.name;
+                var value = data[name];
+                var tagName = dom.tagName.toLowerCase();
+                if (value === undefined || value === null) {
+                    return true;
+                };
+                value += '';
+                if (tagName === 'select') {
+                    $dom.val(value).find('option:selected').attr('selected', true);
+                } else if (tagName === 'textarea') {
+                    $dom.val(value).html(value);
+                } else if (tagName === 'input') {
+                    switch (dom.type) {
+                        case 'checkbox':
+                            if (value instanceof Array && value.indexOf(dom.value) > -1 || dom.value == value) {
+                                dom.checked = true;
+                                $dom.attr('checked', 'checked');
+                                $dom.prop('checked', true);
+                            } else {
+                                $dom.removeAttr('checked');
+                                $dom.prop('checked', false);
+                            }
+                            break;
+                        case 'radio':
+                            if (dom.value == value) {
+                                $dom.attr('checked', 'checked');
+                                $dom.prop('checked', true);
+                            } else {
+                                $dom.removeAttr('checked');
+                                $dom.prop('checked', false);
+                            }
+                            break;
+                        default:
+                            $dom.attr('value', value);
+                            $dom.val(value);
+                    }
+                }
+            });
+            Form.render('', $form);
+        }
+
+        // 清空表单数据
+        Class.prototype.empty = function (formId) {
+            var $form = $(formId);
+            $form.find('input,textarea,select').each(function (i, dom) {
+                var $dom = $(dom);
+                var tagName = dom.tagName.toLowerCase();
+                if (tagName === 'select') {
+                    $dom.val('').find('option:selected').removeAttr('selected');
+                } else if (tagName === 'textarea') {
+                    $dom.val('').html('');
+                } else if (tagName === 'input') {
+                    switch (dom.type) {
+                        case 'checkbox':
+                            $dom.removeAttr('checked');
+                            $dom.prop('checked', false);
+                            break;
+                        case 'radio':
+                            $dom.removeAttr('checked');
+                            $dom.prop('checked', false);
+                            break;
+                        default:
+                            $dom.removeAttr('value');
+                            $dom.val('');
+                    }
+                }
+            });
+            Form.render('', $form);
+        }
+
         // 渲染页面ui
         Class.prototype.render = function (filter, container, refresh) {
             var tagName = '';
@@ -551,7 +626,9 @@
             render: instance.render.bind(instance),
             addRule: instance.addRule.bind(instance),
             verify: instance.verify.bind(instance),
-            getJsonFromForm: instance.getJsonFromForm.bind(instance)
+            getJsonFromForm: instance.getJsonFromForm.bind(instance),
+            setData: instance.setData.bind(instance),
+            empty: instance.empty.bind(instance)
         }
 
         $(function () {

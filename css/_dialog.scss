@@ -71,10 +71,6 @@
         white-space: nowrap;
         border: 1px solid $gray-color;
         box-shadow: none;
-
-        .jy-layer-content {
-            padding: $pd20;
-        }
     }
 
     &-loading {
@@ -86,7 +82,7 @@
         .jy-layer-content {
             line-height: 36px;
             overflow: visible;
-            animation-name: jy-rotate;
+            animation-name: jy-layer-keyframes-rotate;
             animation-duration: 1s;
             animation-timing-function: linear;
             animation-iteration-count: infinite
@@ -189,6 +185,16 @@
         animation-duration: 0.2s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
+    }
+}
+
+@keyframes jy-layer-keyframes-rotate {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
 

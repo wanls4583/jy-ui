@@ -258,6 +258,10 @@
 
         // 设置标题左侧内边距
         Class.prototype.setTitleLeftPadding = function () {
+            var padding = 15;
+            if (this.type === 'nav') {
+                padding = 20;
+            }
             if (this.type === 'nav' && this.mode === 'horizontal') {
                 return;
             }
@@ -268,13 +272,13 @@
                 var isPanel = $ul.hasClass(menuClass.hoverRight) || $ul.hasClass(menuClass.hoverDown);
                 $li.children('li').each(function (i, li) {
                     var $title = $(li).children('a');
-                    $title.css('padding-left', level * 20 + 'px');
+                    $title.css('padding-left', level * padding + 'px');
                     _setPadding($(li), level + 1);
                 });
                 $ul.children('li').each(function (i, li) {
                     var $title = $(li).children('a');;
                     level = isPanel ? 1 : level;
-                    $title.css('padding-left', level * 15 + 'px');
+                    $title.css('padding-left', level * padding + 'px');
                     _setPadding($(li), level + 1);
                 });
             }
@@ -344,13 +348,37 @@
                     }, 100);
                 });
             }
-            // 展开/关闭组事件
-            this.$menu.delegate('li', 'click', function () {
+            // 点击菜单
+            this.$menu.delegate('li', 'click', function (event) {
                 var $this = $(this);
                 var $title = $this.children('a');
                 var data = that.getBindData(this);
                 var $ul = $this.children('ul');
-                if ($ul.length && !$ul.hasClass(menuClass.hoverRight) && !$ul.hasClass(menuClass.hoverDown)) {
+                if (!$ul.length) { //选中事件
+                    if (that.check) {
+                        that.$menu.find('a.' + menuClass.checked).removeClass(menuClass.checked);
+                        that.$menu.find('a.' + menuClass.checkedParent).removeClass(menuClass.checkedParent);
+                        if (that.type === 'nav' && that.mode === 'horizontal' && $this.parent()[0] != that.$menu[0]) {
+                            var $parentLi = $this.parents('li');
+                            $parentLi = $($parentLi[$parentLi.length - 1]);
+                            $parentLi.children('a').addClass(menuClass.checked).removeClass(menuClass.checkedParent);
+                            $title.addClass(menuClass.checkedParent);
+                        } else {
+                            $title.addClass(menuClass.checked);
+                        }
+                        $this.parents('li').each(function (i, li) {
+                            $(li).children('a').addClass(menuClass.checkedParent);
+                        });
+                    }
+                    that.trigger('click', {
+                        dom: this,
+                        data: Common.delInnerProperty(data)
+                    });
+                    JyMenuNav.trigger('click', {
+                        dom: this,
+                        data: Common.delInnerProperty(data)
+                    });
+                } else if ($ul.length && !$ul.hasClass(menuClass.hoverRight) && !$ul.hasClass(menuClass.hoverDown)) { //展开/关闭组事件
                     var visible = $ul.is(':visible');
                     if (visible) {
                         $title.children('.' + menuClass.downIcon).show();
@@ -379,6 +407,7 @@
                         data: Common.delInnerProperty(data)
                     });
                 }
+                Common.stopPropagation(event);
             });
             // 展开hover组事件
             this.$menu.delegate('li', 'mouseenter', function () {
@@ -429,39 +458,6 @@
                 var li = $this.parent('li')[0];
                 // 到达hover子菜单面板时取消隐藏
                 li && clearTimeout(li.hideItemTimer);
-            });
-            // 选中事件
-            this.$menu.delegate('li', 'click', function () {
-                var $this = $(this);
-                var $ul = $this.children('ul');
-                var data = that.getBindData(this);
-                if (!$ul.length) {
-                    if (that.check) {
-                        var $title = $this.children('a');
-                        that.$menu.find('a.' + menuClass.checked).removeClass(menuClass.checked);
-                        that.$menu.find('a.' + menuClass.checkedParent).removeClass(menuClass.checkedParent);
-                        if (that.type === 'nav' && that.mode === 'horizontal' && $this.parent()[0] != that.$menu[0]) {
-                            var $parentLi = $this.parents('li');
-                            $parentLi = $($parentLi[$parentLi.length - 1]);
-                            $parentLi.children('a').addClass(menuClass.checked).removeClass(menuClass.checkedParent);
-                            $title.addClass(menuClass.checkedParent);
-                        } else {
-                            $title.addClass(menuClass.checked);
-                        }
-                        $this.parents('li').each(function (i, li) {
-                            $(li).children('a').addClass(menuClass.checkedParent);
-                        });
-                    }
-                    that.trigger('click', {
-                        dom: this,
-                        data: Common.delInnerProperty(data)
-                    });
-                    JyMenuNav.trigger('click', {
-                        dom: this,
-                        data: Common.delInnerProperty(data)
-                    });
-                }
-                return false;
             });
             // hover事件
             this.$menu.delegate('li a', 'mouseenter', function () {
@@ -568,7 +564,7 @@
                     var type = $menu.hasClass(menuClass.nav) ? 'nav' : 'menu';
                     var mode = $menu.hasClass(menuClass.horizontal) ? 'horizontal' : 'vertical';
                     var position = $menu.hasClass(menuClass.absolute) ? 'absolute' : 'static';
-                    var check = $menu.attr('jy-menu-check');
+                    var check = $menu.attr('jy-menu-check') === 'false' ? false : true;
                     var elem = $menu.attr('jy-menu-elem');
                     var trigger = $menu.attr('jy-menu-trigger');
                     JyMenuNav.render({

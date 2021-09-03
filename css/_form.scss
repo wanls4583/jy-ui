@@ -14,6 +14,7 @@
     width: auto;
     // 解决ie7按钮变宽的bug
     overflow: visible;
+    box-sizing: content-box;
 
     &:hover {
         opacity: 0.85;
@@ -31,7 +32,7 @@
     $height,
     $font in $list {
         &-#{$size} {
-            height: $height;
+            height: $height - 2px;
             line-height: $height - 2px;
             font-size: $font;
         }
@@ -147,14 +148,15 @@
     _padding-left: $pd15;
     // 解决ie7及以下1px外边距问题
     *vertical-align: middle;
+
+    &.jy-input-sm {
+        height: $input-height - 10px;
+        *height: $input-height - 10px - 2px;
+        _height: $input-height - 10px;
+        line-height: $input-height - 10px - 2px;
+    }
 }
 
-.jy-input.jy-input-small {
-    height: $input-height - 10px;
-    *height: $input-height - 10px - 2px;
-    _height: $input-height - 10px;
-    line-height: $input-height - 10px - 2px;
-}
 
 // 文本域
 .jy-textarea {
@@ -484,6 +486,7 @@ select {
             line-height: 38px;
             padding-left: $pd15;
             color: $color-666;
+            white-space: nowrap;
             cursor: pointer;
 
             &:hover {
@@ -610,6 +613,52 @@ select {
     }
 }
 
+.jy-form-lg {
+    .jy-form-label {
+        width: 120px;
+    }
+
+    .jy-input-block {
+        margin-left: 135px;
+    }
+}
+
+.jy-form-sm {
+    select {
+        height: $input-height - 8px - 2px;
+    }
+
+    .jy-input {
+        height: $input-height - 8px;
+        *height: $input-height - 8px - 2px;
+        _height: $input-height - 8px;
+        line-height: $input-height - 8px - 2px;
+    }
+
+    .jy-select-title {
+        .jy-input {
+            height: $input-height - 8px - 2px;
+        }
+    }
+
+    .jy-form-label {
+        padding: 5px 0;
+    }
+
+    .jy-input-inline {
+        width: 120px;
+    }
+
+    .jy-form-label {
+        padding: 5px 0;
+        width: auto;
+    }
+
+    .jy-checkbox,
+    .jy-radio {
+        margin-top: 6px;
+    }
+}
 
 .jy-form-animation-hover-down {
     animation-name: jy-form-keyframes-hover-down;
@@ -627,31 +676,5 @@ select {
     100% {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-.jy-form-small {
-    .jy-input {
-        height: $input-height - 8px;
-        *height: $input-height - 8px - 2px;
-        _height: $input-height - 8px;
-        line-height: $input-height - 8px - 2px;
-    }
-
-    .jy-form-label {
-        padding: 5px 0;
-    }
-
-    .jy-input-inline {
-        width: 120px;
-    }
-
-    select {
-        height: $input-height - 8px
-    }
-
-    .jy-form-label {
-        padding: 5px 0;
-        width: auto;
     }
 }

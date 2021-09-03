@@ -158,75 +158,6 @@
                 msg: '请输入正确的链接'
             }
         };
-        var Table = {
-            render: function (option) {
-                var table = new Class(option);
-                return {
-                    on: table.on,
-                    once: table.once,
-                    trigger: table.trigger,
-                    reload: table.reload.bind(table),
-                    addRow: function (option) {
-                        var option = Common.deepAssign(option);
-                        option.key = table.getKeyById(option.id);
-                        table.addRow(option);
-                    },
-                    deleteRow: function (id) {
-                        var key = table.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        table.deleteRow(key);
-                    },
-                    checkRow: function (id, checked) {
-                        var key = table.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        table.checkRow(key, checked);
-                    },
-                    checkAll: function (checked) {
-                        table.checkAll(checked);
-                    },
-                    save: function (id, field) {
-                        var key = table.getKeyById(id);
-                        table.save(key, field);
-                    },
-                    cancel: function (id, field) {
-                        var key = table.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        table.cancel(key, field);
-                    },
-                    edit: function (id, field) {
-                        var key = table.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        table.edit(key, field);
-                    },
-                    setData: function (option) {
-                        var option = Common.deepAssign(option);
-                        option.key = table.getKeyById(option.id);
-                        if (option.key === undefined) {
-                            return;
-                        }
-                        table.setData(option);
-                    },
-                    getData: table.getData.bind(table),
-                    getDataById: table.getDataById.bind(table),
-                    setArea: table.setArea.bind(table),
-                    setColWidth: table.setColWidth.bind(table),
-                    showLoading: table.showLoading.bind(table),
-                    hideLoading: table.hideLoading.bind(table),
-                    showEmepty: table.showEmepty.bind(table),
-                    exportsExecl: table.exportsExecl.bind(table),
-                    exportsCsv: table.exportsCsv.bind(table),
-                    print: table.print.bind(table)
-                };
-            }
-        }
 
         // 页码类
         function Class(option) {
@@ -442,10 +373,25 @@
         Class.prototype.reload = function (option) {
             option = option || {};
             this.option = Common.deepAssign(this.option, option, ['data']);
-            if(option.data) {
+            if (option.data) {
                 this.option.data = option.data;
             }
             this.render();
+        }
+
+        // 重载表格数据
+        Class.prototype.reloadData = function (option) {
+            option = option || {};
+            if (option.data) {
+                this.data = option.data;
+            }
+            if (option.nowPage) {
+                this.nowPage = option.nowPage;
+            }
+            if (option.request) {
+                Common.deepAssign(this.option.request, option.request);
+            }
+            this.renderTableBody();
         }
 
         /**
@@ -464,6 +410,7 @@
             this.renderedData = this.renderedData.concat(addedData);
             this.checkAll(false, true);
             this.hideEmpty();
+            this.setFixedArea();
             addedData.map(function (item) {
                 that.addedData.push(item);
             });
@@ -685,9 +632,10 @@
                 var value = null;
                 var jyBindData = that.getBindData(td);
                 var col = jyBindData.col;
-                if (typeof col.editable.save == 'function') {
+                var editable = that.getEditAble(jyBindData);;
+                if (typeof editable.save == 'function') {
                     var $edit = $(td.children[0].children[0]);
-                    value = col.editable.save($edit);
+                    value = editable.save($edit);
                 } else if (jyBindData.$input) {
                     value = jyBindData.$input.val();
                 } else if (jyBindData.$select) {
@@ -712,12 +660,12 @@
             function _verify(td) {
                 var pass = true;
                 var jyBindData = that.getBindData(td);
-                var col = jyBindData.col;
                 var value = _getValue(td);
+                var editable = that.getEditAble(jyBindData);
                 // 验证输入内容
-                if (col.editable.rules) {
-                    for (var i = 0; i < col.editable.rules.length; i++) {
-                        var rule = col.editable.rules[i];
+                if (editable.rules) {
+                    for (var i = 0; i < editable.rules.length; i++) {
+                        var rule = editable.rules[i];
                         var msg = rule.msg;
                         if (typeof rule.type == 'string') {
                             rule = ruleMap[rule.type];
@@ -821,8 +769,7 @@
             function _getValue(td) {
                 var jyBindData = that.getBindData(td);
                 var value = jyBindData.colData;
-                var col = jyBindData.col;
-                var editable = col.editable;
+                var editable = that.getEditAble(jyBindData);
                 if (editable.type === 'select' || editable.type === 'checkbox' || editable.type === 'radio') {
                     var values = editable.values;
                     if (editable.type === 'select') {
@@ -909,13 +856,13 @@
             function _edit(td) {
                 var jyBindData = that.getBindData(td);
                 var col = jyBindData.col;
-                if (col.editable && !jyBindData.editing) {
+                var editable = that.getEditAble(jyBindData);
+                if (editable && !jyBindData.editing) {
                     var data = jyBindData.colData;
                     var originTdHeight = that.ellipsis ? 41 : td.offsetHeight;
                     var rowData = jyBindData.rowData;
                     var key = jyBindData.rowData._jy_key;
                     var $cell = $(td.children[0]);
-                    var editable = col.editable === true ? {} : col.editable;
                     var $edit = $('<div class="' + tableClass.editCell + '"></div>');
                     var height = td.clientHeight - 2;
                     var h = 0;
@@ -964,8 +911,9 @@
                     'line-height': height + 'px'
                 });
                 $input.on('input propertychange', function () {
+                    var editable = that.getEditAble(jyBindData);
                     // 只可输入数字
-                    if (jyBindData.col.editable.type == 'number') {
+                    if (editable.type == 'number') {
                         var num = Common.getNum($input.val());
                         if (num !== $input.val()) {
                             $input.val(num);
@@ -982,8 +930,8 @@
 
             function _editSelect(td) {
                 var jyBindData = that.getBindData(td);
-                var col = jyBindData.col;
-                var values = col.editable.values;
+                var editable = that.getEditAble(jyBindData);
+                var values = editable.values;
                 var data = jyBindData.colData;
                 var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
@@ -1029,8 +977,8 @@
 
             function _editCheckbox(td) {
                 var jyBindData = that.getBindData(td);
-                var col = jyBindData.col;
-                var values = col.editable.values;
+                var editable = that.getEditAble(jyBindData);
+                var values = editable.values;
                 var data = jyBindData.colData.concat([]);
                 var $edit = $(td.children[0].children[0]);
                 var $checkboxs = $('<div class="' + tableClass.checkboxs + '"></div>');
@@ -1067,8 +1015,8 @@
 
             function _editRadio(td) {
                 var jyBindData = that.getBindData(td);
-                var col = jyBindData.col;
-                var values = col.editable.values;
+                var editable = that.getEditAble(jyBindData);
+                var values = editable.values;
                 var data = jyBindData.colData;
                 var $edit = $(td.children[0].children[0]);
                 var $radios = $('<div class="' + tableClass.radios + '"></div>');
@@ -1291,6 +1239,24 @@
             return className + '-' + this.tableCount + '-' + col._key;
         }
 
+        /**
+         * 获取编辑配置对象
+         * @param {Object} jyBindData 
+         */
+        Class.prototype.getEditAble = function (jyBindData) {
+            var col = jyBindData.col;
+            var editable = null;
+            if (typeof col.editable === 'function') {
+                editable = col.editable(jyBindData.colData, jyBindData.rowData, jyBindData.rowData._key, col);
+            } else {
+                editable = col.editable;
+            }
+            if (editable && typeof editable != 'object') {
+                editable = {};
+            }
+            return editable;
+        }
+
         // 拉伸表格至100%
         Class.prototype.stretchTable = function () {
             if (this.stretch) {
@@ -1329,6 +1295,7 @@
             this.setViewArea();
             this.setColsWidth();
             this.stretchTable();
+            this.setFixedArea();
         }
 
         // 设置容器宽高
@@ -1357,7 +1324,6 @@
                     height: h
                 });
             }
-            this.setFixedArea();
         }
 
         Class.prototype.setFixedArea = function () {
@@ -1613,10 +1579,10 @@
                 for (var i = 0; i < defaultToolbar.length; i++) {
                     switch (defaultToolbar[i]) {
                         case 'filter':
-                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'jy-icon', 'jy-display-inline-block'].join(' ') + '" jy-event="filter">' + filterIcon + '</div>');
+                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="filter">' + filterIcon + '</div>');
                             break;
                         case 'exports':
-                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'jy-icon', 'jy-display-inline-block'].join(' ') + '" jy-event="exports">' + exportsIcon + '</div>');
+                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="exports">' + exportsIcon + '</div>');
                             var $exports = $(
                                 '<ul class="' + tableClass.exports + '" style="display:none">\
                                     <li jy-event="exports-excel">导出Excel文件</li>\
@@ -1627,7 +1593,7 @@
                             this.$exports = $exports;
                             break;
                         case 'print':
-                            $tool.append('<div title="打印" class="' + [tableClass.tool, 'jy-icon', 'jy-display-inline-block'].join(' ') + '" jy-event="print">' + printIcon + '</div>');
+                            $tool.append('<div title="打印" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="print">' + printIcon + '</div>');
                             break;
                     }
                 }
@@ -1898,7 +1864,9 @@
 
             function _complate() {
                 that.hideLoading();
-                if (!that.sortedData.length) {
+                if(that.sortedData.length) {
+                    that.hideEmpty();
+                } else {
                     that.showEmepty();
                     return;
                 }
@@ -2137,7 +2105,6 @@
         Class.prototype.hideEmpty = function () {
             this.$empty.hide();
             this.$table.show();
-            this.setFixedArea();
         }
 
         // 显示错误提示
@@ -2345,8 +2312,8 @@
                 that.$view.on('keydown', function (e) {
                     if (that.enterSave) {
                         var $td = $(e.target).parents('td');
-                        var jyBindData = that.getBindData($td[0]);
                         if ($td.length && e.keyCode == 13) {
+                            var jyBindData = that.getBindData($td[0]);
                             that.save(jyBindData.rowData._jy_key);
                         }
                     }
@@ -2364,6 +2331,7 @@
                     var jyBindData = that.getBindData($td[0]);
                     var key = jyBindData.rowData._jy_key;
                     var pass = true;
+                    var editable = that.getEditAble(jyBindData);
                     // 该单元格正在编辑中
                     if (jyBindData.editing) {
                         that.tempData.stopBodyEvent = false;
@@ -2373,7 +2341,7 @@
                     if (that.autoSave) {
                         pass = that.save();
                     }
-                    if (jyBindData.col.editable && jyBindData.col.field) {
+                    if (editable && jyBindData.col.field) {
                         pass && that.edit(key, jyBindData.col.field);
                         that.tempData.stopBodyEvent = false;
                         return false;
@@ -2833,6 +2801,77 @@
                 wind.close();
             } else {
                 this.showTip('该浏览器不支持打印，请使用谷歌浏览器');
+            }
+        }
+
+        var Table = {
+            render: function (option) {
+                var table = new Class(option);
+                return {
+                    on: table.on,
+                    once: table.once,
+                    trigger: table.trigger,
+                    addRow: function (option) {
+                        var option = Common.deepAssign(option);
+                        option.key = table.getKeyById(option.id);
+                        table.addRow(option);
+                    },
+                    deleteRow: function (id) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.deleteRow(key);
+                    },
+                    checkRow: function (id, checked) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.checkRow(key, checked);
+                    },
+                    checkAll: function (checked) {
+                        table.checkAll(checked);
+                    },
+                    save: function (id, field) {
+                        var key = table.getKeyById(id);
+                        table.save(key, field);
+                    },
+                    cancel: function (id, field) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.cancel(key, field);
+                    },
+                    edit: function (id, field) {
+                        var key = table.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        table.edit(key, field);
+                    },
+                    setData: function (option) {
+                        var option = Common.deepAssign(option);
+                        option.key = table.getKeyById(option.id);
+                        if (option.key === undefined) {
+                            return;
+                        }
+                        table.setData(option);
+                    },
+                    reload: table.reload.bind(table),
+                    reloadData: table.reloadData.bind(table),
+                    getData: table.getData.bind(table),
+                    getDataById: table.getDataById.bind(table),
+                    setArea: table.setArea.bind(table),
+                    setColWidth: table.setColWidth.bind(table),
+                    showLoading: table.showLoading.bind(table),
+                    hideLoading: table.hideLoading.bind(table),
+                    showEmepty: table.showEmepty.bind(table),
+                    exportsExecl: table.exportsExecl.bind(table),
+                    exportsCsv: table.exportsCsv.bind(table),
+                    print: table.print.bind(table)
+                };
             }
         }
 
