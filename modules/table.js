@@ -726,8 +726,9 @@
                     }
                     // 触发保存事件
                     that.trigger('save', {
-                        field: col.field,
                         data: value,
+                        dom: td.children[0].children[0],
+                        field: col.field,
                         rowData: Common.delInnerProperty(jyBindData.rowData)
                     });
                 }
@@ -885,8 +886,9 @@
                     height > h && $edit.css('padding', (height - h) / 2 + 'px 0');
                     // 触发编辑事件
                     that.trigger('edit', {
-                        field: col.field,
                         data: data,
+                        dom: $edit[0],
+                        field: col.field,
                         rowData: Common.delInnerProperty(jyBindData.rowData)
                     });
                     $(td).addClass(tableClass.editing);
@@ -1341,9 +1343,10 @@
                     clientWidth: this.$main[0].clientWidth,
                     clientHeight: this.$main[0].clientHeight,
                     scrollWidth: this.$main[0].scrollWidth,
-                    offsetWidth: this.$main[0].offsetWidth
+                    offsetWidth: this.$main[0].offsetWidth,
+                    offsetHeight: this.$main[0].offsetHeight
                 }
-                hasHscrollBar = mainRect.scrollWidth > mainRect.clientWidth;
+                hasHscrollBar = mainRect.offsetHeight > mainRect.clientHeight;
             }
             if (hasHscrollBar) {
                 var ths = this.$tableHeaderHead.children('tr').first().children('th');
@@ -1373,7 +1376,7 @@
                     this.$leftMain[0].scrollTop = scrollTop;
                 }
                 if (this.$rightHeaderMain) {
-                    var hasVscrollBar = mainRect.offsetWidth > mainRect.clientHeight;
+                    var hasVscrollBar = mainRect.offsetWidth > mainRect.clientWidth;
                     this.$rightHeaderMain.css({
                         'top': toolbarHeight,
                         'width': rightWidth,
@@ -1864,7 +1867,7 @@
 
             function _complate() {
                 that.hideLoading();
-                if(that.sortedData.length) {
+                if (that.sortedData.length) {
                     that.hideEmpty();
                 } else {
                     that.showEmepty();
@@ -2215,7 +2218,6 @@
                         dom: this,
                         data: that.selectedData.id
                     });
-                    return false;
                 });
                 // 点击多选框
                 that.$view.delegate('td .' + tableClass.checkbox, 'click', function () {
@@ -2238,7 +2240,6 @@
                             return item.id;
                         })
                     });
-                    return false;
                 });
                 // 点击全选
                 that.$view.delegate('th .' + tableClass.checkbox, 'click', function () {
@@ -2249,7 +2250,6 @@
                             return item.id;
                         })
                     });
-                    return false;
                 });
             }
 
@@ -2332,19 +2332,17 @@
                     var key = jyBindData.rowData._jy_key;
                     var pass = true;
                     var editable = that.getEditAble(jyBindData);
-                    // 该单元格正在编辑中
-                    if (jyBindData.editing) {
-                        that.tempData.stopBodyEvent = false;
-                        return false;
-                    }
-                    // 先保存正在编辑中的数据
-                    if (that.autoSave) {
-                        pass = that.save();
+                    if (!jyBindData.editing) {
+                        // 先保存正在编辑中的数据
+                        if (that.autoSave) {
+                            pass = that.save();
+                        }
+                        if (editable && jyBindData.col.field) {
+                            pass && that.edit(key, jyBindData.col.field);
+                        }
                     }
                     if (editable && jyBindData.col.field) {
-                        pass && that.edit(key, jyBindData.col.field);
-                        that.tempData.stopBodyEvent = false;
-                        return false;
+                        that.tempData.stopBodyEvent = true;
                     }
                 });
             }
@@ -2603,9 +2601,6 @@
             }
             // 在工具图标下挂载
             $(dom).append($filter);
-            $filter.on('click', function () {
-                return false;
-            });
             $filter.delegate('li', 'click', function () {
                 var $checkbox = $(this).children('div.' + tableClass.checkbox);
                 var key = $checkbox.attr('data-key');
@@ -2858,6 +2853,9 @@
                             return;
                         }
                         table.setData(option);
+                    },
+                    getView: function () {
+                        return table.$view;
                     },
                     reload: table.reload.bind(table),
                     reloadData: table.reloadData.bind(table),

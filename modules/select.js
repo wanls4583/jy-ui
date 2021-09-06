@@ -40,6 +40,7 @@
             empty: 'jy-select-empty',
             loading: 'jy-select-loading'
         }
+        var ieVersion = Common.getIeVersion();
         var event = Common.getEvent();
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
@@ -56,16 +57,17 @@
             this.option = Common.deepAssign({}, option);
             this.$elem = $(this.option.elem);
             // 配置参数-begin
+            this.type = this.option.type === 'input' ? 'input' : 'select'; //组件类型（select/input）
             this.disabled = this.option.disabled;
-            this.labelKey = this.option.labelKey || 'label';
             this.valueKey = this.option.valueKey || 'value';
+            this.labelKey = this.option.labelKey || (this.type === 'input' ? this.valueKey : 'label');
             this.placeholder = this.option.placeholder || '请选择';
             this.defaultOpen = this.option.defaultOpen;
             this.selectAble = this.option.selectAble === undefined ? true : this.option.selectAble;
-            // 组件类型（select/input）
-            this.type = this.option.type === 'input' ? 'input' : 'select';
             this.multiselect = this.type === 'select' && this.option.multiselect;
-            this.searchEnable = this.type == 'input' || !this.disabled && this.option.search;
+            this.searchEnable = !this.disabled && (this.type == 'input' || this.option.search);
+            this.focus = this.option.focus;
+            this.appendTo = this.option.appendTo === 'body' ? 'body' : 'input'; //下拉框的容器
             this.searchMethod = this.option.searchMethod || function (value, cb) {
                 var data = [];
                 if (value) {
@@ -123,8 +125,13 @@
             this.select(this.$elem.val());
             this.$empty = this.$selectBody.children('.' + classNames.empty);
             this.$loading = this.$selectBody.children('.' + classNames.loading);
+            if (this.appendTo === 'body') {
+                $(docBody).append(this.$selectBody);
+                this.$selectBody.css('width', this.$title[0].offsetWidth);
+            }
             // input类型组件只提供搜索建议
             if (this.type === 'input') {
+                this.$input.val(this.selectValue);
                 this.$select.addClass(classNames.suggestion);
             }
             if (this.multiselect) {
@@ -134,7 +141,7 @@
                 this.$select.addClass(classNames.selectDisabled);
             } else {
                 if (this.searchEnable) {
-                    this.search();
+                    this.search(true);
                 } else {
                     that.renderItem(this.data);
                 }
@@ -146,7 +153,12 @@
             if (!this.searchEnable) {
                 this.$input.attr('readonly', true);
             }
-            window.jyUiSelects.push(this.$select);
+            if (this.focus) {
+                setTimeout(function() {
+                    that.$input.trigger('focus');
+                }, 100);
+            }
+            window.jyUiSelects.push(this);
         }
 
         Class.prototype.renderItem = function (data) {
@@ -233,13 +245,41 @@
         Class.prototype.setPosition = function () {
             var rect = this.$title[0].getBoundingClientRect();
             var winHeight = docElement.clientHeight || docBody.clientHeight;
-            var height = this.$selectBody[0].offsetHeight;
+            var dlHeight = this.$selectBody[0].offsetHeight;
+            var titleHeight = this.$title[0].offsetHeight;
             // 使下拉框在可视范围内
-            if (rect.bottom + 5 + height > winHeight && rect.top - 5 - height > 0) {
-                this.$selectBody.css('top', -height - 10);
+            if (rect.bottom + 5 + dlHeight > winHeight && rect.top - 5 - dlHeight > 0) {
+                if (this.appendTo === 'body') {
+                    var offset = this.$title.offset();
+                    this.$selectBody.css({
+                        top: offset.top - dlHeight - 10,
+                        left: offset.left
+                    });
+                } else {
+                    this.$selectBody.css('top', -dlHeight - 10);
+                }
             } else {
-                this.$selectBody.css('top', '100%');
+                if (this.appendTo === 'body') {
+                    var offset = this.$title.offset();
+                    this.$selectBody.css({
+                        top: offset.top + titleHeight,
+                        left: offset.left
+                    });
+                } else {
+                    this.$selectBody.css('top', '100%');
+                }
             }
+            if (this.appendTo === 'body') {
+                if (ieVersion <= 6) {
+                    var ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                    var ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                    this.$selectBody.css({
+                        marginTop: ie6MarginTop,
+                        marginLeft: ie6MarginLeft
+                    });
+                }
+            }
+            var rect = this.$title[0].getBoundingClientRect();
         }
 
         // 选中
@@ -307,11 +347,19 @@
         }
 
         // 搜索
-        Class.prototype.search = function () {
+        Class.prototype.search = function (immediately) {
             var label = this.$input.val();
             var that = this;
             clearTimeout(this.timer);
-            this.timer = setTimeout(function () {
+            if (immediately) {
+                _search();
+            } else {
+                this.timer = setTimeout(function () {
+                    _search();
+                }, 100);
+            }
+
+            function _search() {
                 that.$empty.hide();
                 that.$selectDl.empty();
                 if (that.type === 'input') {
@@ -325,18 +373,17 @@
                     that.renderItem(data);
                     that.$loading.hide();
                 });
-            }, 100);
+            }
         }
 
         Class.prototype.hideOther = function (all) {
             var that = this;
             // 其他选择框都收起
-            window.jyUiSelects.map(function ($select) {
-                if (all || $select != that.$select) {
-                    var $selectBody = $select.children('div.' + classNames.selectBody);
-                    if ($selectBody.is(':visible')) {
-                        $select.find('div.' + classNames.selectTitle).trigger('blur');
-                        $selectBody.hide();
+            window.jyUiSelects.map(function (instance) {
+                if (all || instance != that) {
+                    if (instance.$selectBody.is(':visible')) {
+                        instance.$title.trigger('blur');
+                        instance.$selectBody.hide();
                     }
                 }
             });
@@ -353,6 +400,7 @@
                     $selectBody.show();
                     $select.addClass(classNames.selectOpen);
                     that.hideOther();
+                    that.setPosition();
                 });
             } else {
                 // 打开，收起事件

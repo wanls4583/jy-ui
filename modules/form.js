@@ -564,6 +564,7 @@
                 var search = $select.attr('jy-search') === undefined ? false : true;
                 var placeholder = $select.attr('placeholder');
                 var filter = $select.attr('jy-filter');
+                var appendTo = $select.attr('jy-append-to');
                 if (!ignore) {
                     $select.find('option').each(function (i, option) {
                         var $option = $(option);
@@ -576,6 +577,7 @@
                         elem: select,
                         disabled: disabled,
                         search: search,
+                        appendTo: appendTo,
                         placeholder: placeholder,
                         data: data
                     });

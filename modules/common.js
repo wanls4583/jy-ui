@@ -199,12 +199,14 @@
             }
             var $dom = $(dom);
             var ieVerjy = getIeVersion();
-            var $temp = $dom.clone().appendTo(window.document.body).css({
+            var $temp = $dom.clone().css({
+                position: 'absolute',
+                top: '0',
                 overflow: 'visible',
                 visiblity: 'hidden',
                 width: 'auto',
                 height: ieVerjy <= 6 ? $dom[0].offsetHeight : $dom.height()
-            }).addClass('jy-inline-block');
+            }).appendTo(window.document.body).addClass('jy-inline-block');
             var overflow = $temp[0].scrollWidth > $dom[0].scrollWidth;
             $temp.remove();
             return overflow;

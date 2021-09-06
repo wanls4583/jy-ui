@@ -152,25 +152,30 @@
             this.on = event.on;
             this.once = event.once;
             this.trigger = event.trigger;
-            this.option = Object.assign({}, option);
+            this.option = Common.deepAssign({}, option);
             this.render();
         }
 
         Class.prototype.render = function () {
             var that = this;
             this.$elem = $(this.option.elem);
-            this.trigger = ['change', 'focus', 'click'].indexOf(this.option.trigger) > -1 ? this.option.trigger : 'click';
+            this.triggerEvent = ['change', 'focus', 'click'].indexOf(this.option.trigger) > -1 ? this.option.trigger : 'click';
             if (this.$elem && this.$elem.length) {
                 if (this.option.position === 'static') {
                     _render();
                 } else {
-                    this.$elem.on(this.trigger, function () {
+                    this.$elem.on(this.triggerEvent, function () {
                         _render();
                         that.data.$date.addClass(dateClass.downAnimation);
                     });
                     $(docBody).on('click', function () {
                         that.cancel();
                     });
+                    if(this.option.focus) {
+                        setTimeout(function() {
+                            that.$elem.trigger(that.triggerEvent);
+                        }, 100);
+                    }
                 }
                 this.$elem.on('click', function () {
                     return false;
