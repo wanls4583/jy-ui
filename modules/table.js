@@ -21,10 +21,10 @@
         var ieVersion = Common.getIeVersion();
         var hCellPadding = 2;
         var tableCount = 1;
-        var tableClass = {
+        var classNames = {
             view: 'jy-table-view',
             table: 'jy-table',
-            col: 'jy-table-col',
+            holder: 'jy-table-col-holder',
             cell: 'jy-table-cell',
             cellContent: 'jy-table-cell-content',
             editCell: 'jy-table-cell-edit',
@@ -73,14 +73,14 @@
         }
         var tpl = {
             table: '<table class="jy-table"></table>',
+            thead: '<thead></thead>',
+            tbody: '<tbody></tbody>',
             headerMain: '<div class="jy-table-header-main"></div>',
             headerMainLeft: '<div class="jy-table-header-main-l"></div>',
             headerMainRgiht: '<div class="jy-table-header-main-r"></div>',
             headerMain: '<div class="jy-table-header-main"></div>',
             header: '<div class="jy-table-header"></div>',
             main: '<div class="jy-table-main"></div>',
-            tableHeader: '<table class="jy-table"></table>',
-            tableHeaderHead: '<thead></thead>',
             empty: '<div class="jy-table-empty">暂无数据</div>',
             td: '\
             <td class="<%-(col.align?"jy-table-align-"+col.align:"")%>"\
@@ -183,12 +183,14 @@
             this.filter = 'table_' + Math.random();
             this.tableCount = this.tableCount || tableCount++;
             this.$view && this.$view.remove();
-            this.$view = $('<div class="' + [tableClass.view, tableClass.view + '-' + this.tableCount].join(' ') + '"></div>');
+            this.$view = $('<div class="' + [classNames.view, classNames.view + '-' + this.tableCount].join(' ') + '"></div>');
             this.$table = $(tpl.table);
+            this.$tableThead = $(tpl.thead);
+            this.$tableTbody = $(tpl.tbody);
             this.$headerMain = $(tpl.headerMain);
             this.$header = $(tpl.header);
-            this.$tableHeader = $(tpl.tableHeader);
-            this.$tableHeaderHead = $(tpl.tableHeaderHead);
+            this.$headerTable = $(tpl.table);
+            this.$headerTableThead = $(tpl.thead);
             this.$main = $(tpl.main);
             this.$empty = $(tpl.empty);
             this.$filter = null;
@@ -241,7 +243,7 @@
             this.initCols();
             this.createSheet();
             this.renderToolbar();
-            this.renderTableHeader();
+            this.renderTableHead();
             this.renderTableBody();
             this.renderTableFixed();
             this.renderPage();
@@ -363,9 +365,9 @@
             this.sheet = node.styleSheet || node.sheet;
             if (!this.ellipsis) {
                 // 行高度自适应
-                Common.insertRule(this.sheet, '.' + tableClass.view + '-' + this.tableCount + ' tbody tr', 'height:auto');
+                Common.insertRule(this.sheet, '.' + classNames.view + '-' + this.tableCount + ' tbody tr', 'height:auto');
                 // 单元格高度自适应
-                Common.insertRule(this.sheet, '.' + tableClass.view + '-' + this.tableCount + ' .' + tableClass.cellContent, 'white-space:normal;text-overflow:unset');
+                Common.insertRule(this.sheet, '.' + classNames.view + '-' + this.tableCount + ' .' + classNames.cellContent, 'white-space:normal;text-overflow:unset');
             }
         }
 
@@ -517,8 +519,8 @@
         Class.prototype.selectRow = function (key) {
             var col = this.getColByType('radio');
             if (col) {
-                this.$view.find('td div.' + tableClass.checked).removeClass(tableClass.checked);
-                this.$view.find('td div.' + tableClass.radio + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                this.$view.find('td div.' + classNames.checked).removeClass(classNames.checked);
+                this.$view.find('td div.' + classNames.radio + '[data-key="' + key + '"]').addClass(classNames.checked);
                 this.selectedData = this.getRowDataByKey(key);
             }
         }
@@ -540,10 +542,10 @@
                 }
                 if (checked) {
                     this.checkedData.push(data);
-                    this.$view.find('td div.' + tableClass.checkbox + '[data-key="' + key + '"]').addClass(tableClass.checked);
+                    this.$view.find('td div.' + classNames.checkbox + '[data-key="' + key + '"]').addClass(classNames.checked);
                 } else {
                     this.checkedData.splice(index, 1);
-                    this.$view.find('td div.' + tableClass.checkbox + '[data-key="' + key + '"]').removeClass(tableClass.checked);
+                    this.$view.find('td div.' + classNames.checkbox + '[data-key="' + key + '"]').removeClass(classNames.checked);
                 }
                 this.checkAll(this.sortedData.length === this.checkedData.length, true);
             }
@@ -558,25 +560,25 @@
                 }
                 if (checked) {
                     if (justStatus) {
-                        this.$tableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.$leftTableHeader && this.$leftTableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.$rightTableHeader && this.$rightTableHeader.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.$headerTable.find('div.' + classNames.checkbox).addClass(classNames.checked);
+                        this.$leftHeaderTable && this.$leftHeaderTable.find('div.' + classNames.checkbox).addClass(classNames.checked);
+                        this.$rightHeaderTable && this.$rightHeaderTable.find('div.' + classNames.checkbox).addClass(classNames.checked);
                     } else {
                         this.checkedData = this.sortedData.concat([]);
-                        this.$headerMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
-                        this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + tableClass.checkbox).addClass(tableClass.checked);
+                        this.$headerMain.find('div.' + classNames.checkbox).addClass(classNames.checked);
+                        this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + classNames.checkbox).addClass(classNames.checked);
+                        this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + classNames.checkbox).addClass(classNames.checked);
                     }
                 } else {
                     if (justStatus) {
-                        this.$tableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$leftTableHeader && this.$leftTableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$rightTableHeader && this.$rightTableHeader.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$headerTable.find('div.' + classNames.checkbox).removeClass(classNames.checked);
+                        this.$leftHeaderTable && this.$leftHeaderTable.find('div.' + classNames.checkbox).removeClass(classNames.checked);
+                        this.$rightHeaderTable && this.$rightHeaderTable.find('div.' + classNames.checkbox).removeClass(classNames.checked);
                     } else {
                         this.checkedData = [];
-                        this.$headerMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
-                        this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + tableClass.checkbox).removeClass(tableClass.checked);
+                        this.$headerMain.find('div.' + classNames.checkbox).removeClass(classNames.checked);
+                        this.$leftHeaderMain && this.$leftHeaderMain.find('div.' + classNames.checkbox).removeClass(classNames.checked);
+                        this.$rightHeaderMain && this.$rightHeaderMain.find('div.' + classNames.checkbox).removeClass(classNames.checked);
                     }
                 }
             }
@@ -683,9 +685,9 @@
                     }
                 }
                 if (!pass) {
-                    $(td).addClass(tableClass.error);
+                    $(td).addClass(classNames.error);
                 } else {
-                    $(td).removeClass(tableClass.error);
+                    $(td).removeClass(classNames.error);
                 }
                 return pass;
             }
@@ -702,8 +704,8 @@
                 var html = '';
                 jyBindData.rowData[col.field] = value;
                 jyBindData.colData = value;
-                $td.removeClass(tableClass.editing);
-                html = '<div class="' + tableClass.cellContent + '">' + (col.template ? col.template(jyBindData.colData, jyBindData.rowData, key, col) : fValue) + '</div>';
+                $td.removeClass(classNames.editing);
+                html = '<div class="' + classNames.cellContent + '">' + (col.template ? col.template(jyBindData.colData, jyBindData.rowData, key, col) : fValue) + '</div>';
                 jyBindData.editing = false;
                 jyBindData.$input = undefined;
                 jyBindData.$select = undefined;
@@ -800,7 +802,7 @@
                 var $td = $(td);
                 var fValue = _getValue(td);
                 td.children[0].innerHTML = col.template ? col.template(jyBindData.colData, jyBindData.rowData, key, col) : fValue;
-                $td.removeClass(tableClass.editing);
+                $td.removeClass(classNames.editing);
                 jyBindData.editing = false;
                 jyBindData.$input = undefined;
                 jyBindData.$select = undefined;
@@ -864,7 +866,7 @@
                     var rowData = jyBindData.rowData;
                     var key = jyBindData.rowData._jy_key;
                     var $cell = $(td.children[0]);
-                    var $edit = $('<div class="' + tableClass.editCell + '"></div>');
+                    var $edit = $('<div class="' + classNames.editCell + '"></div>');
                     var height = td.clientHeight - 2;
                     var h = 0;
                     $cell.html($edit);
@@ -891,7 +893,7 @@
                         field: col.field,
                         rowData: Common.delInnerProperty(jyBindData.rowData)
                     });
-                    $(td).addClass(tableClass.editing);
+                    $(td).addClass(classNames.editing);
                     jyBindData.editing = true;
                     h += 2;
                     // 高度发送变化时重新调整行高
@@ -906,7 +908,7 @@
                 var data = jyBindData.colData;
                 var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
-                var $input = $('<input class="' + [tableClass.input].join(' ') + '">');
+                var $input = $('<input class="' + [classNames.input].join(' ') + '">');
                 $input.val(data);
                 height > 38 && $input.css({
                     'height': height,
@@ -938,7 +940,7 @@
                 var height = td.clientHeight - 2;
                 var $edit = $(td.children[0].children[0]);
                 var $select = $(tpl.select);
-                var $title = $select.children('.' + tableClass.selectTitle);
+                var $title = $select.children('.' + classNames.selectTitle);
                 var $input = $title.children('input');
                 var $dl = $select.children('dl');
                 height > 38 && $input.css({
@@ -961,8 +963,8 @@
                     $dl.append($dd);
                 });
                 $dl.delegate('dd', 'click', function () {
-                    $dl.find('dd.' + tableClass.selectActive).removeClass(tableClass.selectActive);
-                    $(this).addClass(tableClass.selectActive);
+                    $dl.find('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
+                    $(this).addClass(classNames.selectActive);
                     $input.val(this.label);
                     $select[0].value = this.value;
                     $dl.hide();
@@ -983,7 +985,7 @@
                 var values = editable.values;
                 var data = jyBindData.colData.concat([]);
                 var $edit = $(td.children[0].children[0]);
-                var $checkboxs = $('<div class="' + tableClass.checkboxs + '"></div>');
+                var $checkboxs = $('<div class="' + classNames.checkboxs + '"></div>');
                 values.map(function (item) {
                     var checked = false;
                     var $checkbox = null;
@@ -997,16 +999,16 @@
                     $checkbox[0].value = item.value;
                     $checkboxs.append($checkbox);
                 });
-                $checkboxs.delegate('.' + tableClass.checkboxEdit, 'click', function () {
+                $checkboxs.delegate('.' + classNames.checkboxEdit, 'click', function () {
                     var $this = $(this);
                     var value = this.value;
                     var index = Common.indexOf($checkboxs[0].value, value);
                     if (index > -1) {
                         $checkboxs[0].value.splice(index, 1);
-                        $this.removeClass(tableClass.checked);
+                        $this.removeClass(classNames.checked);
                     } else {
                         $checkboxs[0].value.push(value);
-                        $this.addClass(tableClass.checked);
+                        $this.addClass(classNames.checked);
                     }
                     return false;
                 });
@@ -1021,7 +1023,7 @@
                 var values = editable.values;
                 var data = jyBindData.colData;
                 var $edit = $(td.children[0].children[0]);
-                var $radios = $('<div class="' + tableClass.radios + '"></div>');
+                var $radios = $('<div class="' + classNames.radios + '"></div>');
                 values.map(function (item) {
                     var checked = false;
                     var $radio = null;
@@ -1035,9 +1037,9 @@
                     $radio[0].value = item.value;
                     $radios.append($radio);
                 });
-                $radios.delegate('.' + tableClass.radioEdit, 'click', function () {
-                    $radios.find('div.' + tableClass.checked).removeClass(tableClass.checked);
-                    $(this).addClass(tableClass.checked);
+                $radios.delegate('.' + classNames.radioEdit, 'click', function () {
+                    $radios.find('div.' + classNames.checked).removeClass(classNames.checked);
+                    $(this).addClass(classNames.checked);
                     $radios[0].value = this.value;
                     return false;
                 });
@@ -1263,19 +1265,19 @@
         Class.prototype.stretchTable = function () {
             if (this.stretch) {
                 var hedaerWidth = this.$header[0].clientWidth;
-                var tableHeaderWidth = this.$tableHeader[0].offsetWidth;
+                var tableHeaderWidth = this.$headerTable[0].offsetWidth;
                 //表格拉伸至容器的宽度
                 if (tableHeaderWidth < hedaerWidth) {
                     var col = this.getColByType('radio') || this.getColByType('checkbox');
                     // 确保选择列宽度不变
-                    col && this.$tableHeader.find('th[data-col="' + col._key + '"]').css('width', 50);
+                    col && this.$headerTable.find('th[data-col="' + col._key + '"]').css('width', 50);
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
-                    this.$tableHeader.css({
+                    this.$headerTable.css({
                         width: this.$main[0].offsetWidth - 17 - (ieVersion <= 7 ? 1 : 0)
                     });
                     this.setColsWidth();
-                    this.$tableHeader.css({
+                    this.$headerTable.css({
                         width: 'auto'
                     });
                 }
@@ -1349,7 +1351,7 @@
                 hasHscrollBar = mainRect.offsetHeight > mainRect.clientHeight;
             }
             if (hasHscrollBar) {
-                var ths = this.$tableHeaderHead.children('tr').first().children('th');
+                var ths = this.$headerTableThead.children('tr').first().children('th');
                 ths.each(function (i, th) {
                     var col = that.getBindData(th).col;
                     if (col.fixed === 'left') {
@@ -1418,7 +1420,7 @@
         Class.prototype.setColWidth = function (col, width) {
             col.width = width;
             this.setColsWidth([col]);
-            this.$tableHeader.css({
+            this.$headerTable.css({
                 left: -this.$main[0].scrollLeft
             });
             if (!this.ellipsis) {
@@ -1439,7 +1441,7 @@
                     return col._key;
                 });
             }
-            this.$tableHeaderHead.find('th').each(function (i, th) {
+            this.$headerTableThead.find('th').each(function (i, th) {
                 var jyBindData = that.getBindData(th);
                 if (cols) {
                     if (cols.indexOf(jyBindData.col._key) > -1) {
@@ -1469,27 +1471,27 @@
             ths.map(function (th, i) {
                 var jyBindData = that.getBindData(th);
                 var $cell = $(th.children[0]);
-                var cw = jyBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px';
-                var cellSelector = that.getClassNameWithKey(jyBindData.col, '.' + tableClass.cell);
+                var cw = jyBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px'; //colspan大于1，说明有子列，其宽度应该设置为auto
+                var cellSelector = that.getClassNameWithKey(jyBindData.col, '.' + classNames.cell);
                 $cell.css('width', cw);
                 Common.deleteRule(that.sheet, cellSelector);
                 Common.insertRule(that.sheet, cellSelector, 'width:' + cw);
                 colWidths[jyBindData.col._key] = cw;
             });
-            this.$leftTableHeader && this.$leftTableHeader.find('th').each(function (i, th) {
+            this.$leftHeaderTable && this.$leftHeaderTable.find('th').each(function (i, th) {
                 var col = that.getBindData(th).col;
                 if (colWidths[col._key]) {
                     $(th.children[0]).css('width', colWidths[col._key]);
                 }
             });
-            this.$rightTableHeader && this.$rightTableHeader.find('th').each(function (i, th) {
+            this.$rightHeaderTable && this.$rightHeaderTable.find('th').each(function (i, th) {
                 var col = that.getBindData(th).col;
                 if (colWidths[col._key]) {
                     $(th.children[0]).css('width', colWidths[col._key]);
                 }
             });
             // 没有数据时，撑开容器
-            this.$empty.css('width', this.$tableHeader[0].offsetWidth);
+            this.$empty.css('width', this.$headerTable[0].offsetWidth);
         }
 
         // 设置单元格高度（编辑时，高度可能变化）
@@ -1571,10 +1573,10 @@
 
         // 渲染工具条
         Class.prototype.renderToolbar = function () {
-            var $toolbar = $('<div class="' + [tableClass.toolbar, 'jy-clear'].join(' ') + '"></div>');
+            var $toolbar = $('<div class="' + [classNames.toolbar, 'jy-clear'].join(' ') + '"></div>');
             if (this.defaultToolbar) {
                 var defaultToolbar = this.defaultToolbar;
-                var $tool = $('<div class="' + tableClass.toolbarSelf + '"></div>');
+                var $tool = $('<div class="' + classNames.toolbarSelf + '"></div>');
                 // 默认工具条
                 if (defaultToolbar) {
                     defaultToolbar = ['filter', 'exports', 'print']
@@ -1582,12 +1584,12 @@
                 for (var i = 0; i < defaultToolbar.length; i++) {
                     switch (defaultToolbar[i]) {
                         case 'filter':
-                            $tool.append('<div title="筛选" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="filter">' + filterIcon + '</div>');
+                            $tool.append('<div title="筛选" class="' + [classNames.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="filter">' + filterIcon + '</div>');
                             break;
                         case 'exports':
-                            var $div = $('<div title="导出" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="exports">' + exportsIcon + '</div>');
+                            var $div = $('<div title="导出" class="' + [classNames.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="exports">' + exportsIcon + '</div>');
                             var $exports = $(
-                                '<ul class="' + tableClass.exports + '" style="display:none">\
+                                '<ul class="' + classNames.exports + '" style="display:none">\
                                     <li jy-event="exports-excel">导出Excel文件</li>\
                                     <li jy-event="exports-csv">导出Csv文件</li>\
                                 </ul>');
@@ -1596,7 +1598,7 @@
                             this.$exports = $exports;
                             break;
                         case 'print':
-                            $tool.append('<div title="打印" class="' + [tableClass.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="print">' + printIcon + '</div>');
+                            $tool.append('<div title="打印" class="' + [classNames.tool, 'jy-icon', 'jy-inline-block'].join(' ') + '" jy-event="print">' + printIcon + '</div>');
                             break;
                     }
                 }
@@ -1612,28 +1614,29 @@
         /**
          * 渲染表头
          */
-        Class.prototype.renderTableHeader = function () {
+        Class.prototype.renderTableHead = function () {
             var that = this;
             var multilevelCols = this.multilevelCols;
-            var $tableHeaderHead = this.$tableHeaderHead;
             // 创建多级表头
             multilevelCols.map(function (cols) {
                 _renderCols(cols);
+                _renderHolderCols(cols);
             });
-            // 挂载主表表头
-            this.$tableHeader.append(this.$tableHeaderHead);
-            this.$header.append(this.$tableHeader);
+            // 挂载表头
+            this.$headerTable.append(this.$headerTableThead);
+            this.$header.append(this.$headerTable);
             this.$headerMain.append(this.$header);
             this.$view.append(this.$headerMain);
             this.setColsWidth();
 
+            // 渲染表头
             function _renderCols(cols) {
                 var $tr = $('<tr></tr>');
                 for (var i = 0; i < cols.length; i++) {
                     var col = cols[i];
                     col.type = col.type || 'text';
-                    var $content = $('<div class="' + tableClass.cellContent + '">' + (col.title || '&nbsp;') + '</div>');
-                    var $cell = $('<div class="' + ['jy-clear', tableClass.cell + '-' + that.tableCount + '-' + col._key, tableClass.cell].join(' ') + '"></div>');
+                    var $content = $('<div class="' + classNames.cellContent + '">' + (col.title || '&nbsp;') + '</div>');
+                    var $cell = $('<div class="' + ['jy-clear', classNames.cell + '-' + that.tableCount + '-' + col._key, classNames.cell].join(' ') + '"></div>');
                     var $th = $('<th data-col="' + col._key + '" data-key="col-' + col._key + '"></th>');
                     $cell.append($content);
                     // 隐藏
@@ -1676,39 +1679,67 @@
                         }));
                     }
                 }
-                $tableHeaderHead.append($tr);
+                that.$headerTableThead.append($tr);
+            }
+
+            // 主表中的占位表头
+            function _renderHolderCols(cols) {
+                var $tr = $('<tr></tr>');
+                for (var i = 0; i < cols.length; i++) {
+                    var col = cols[i];
+                    col.type = col.type || 'text';
+                    var $content = $('<div class="' + classNames.cellContent + '"></div>');
+                    var $cell = $('<div class="' + ['jy-clear', classNames.cell + '-' + that.tableCount + '-' + col._key, classNames.cell].join(' ') + '"></div>');
+                    var $th = $('<th class="' + classNames.holder + '" data-col="' + col._key + '" data-key="col-' + col._key + '"></th>');
+                    $cell.append($content);
+                    // 隐藏
+                    if (col.hidden) {
+                        $th.hide();
+                    }
+                    // 选择列
+                    if (col.type == 'radio' || col.type == 'checkbox') {
+                        col.width = 50;
+                    }
+                    if (col.colspan >= 2) {
+                        $th.attr('colspan', col.colspan);
+                    }
+                    col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
+                    $th.append($cell);
+                    $tr.append($th);
+                }
+                that.$tableThead.append($tr);
             }
 
             // 渲染排序图标
             function _renderSortIcon($th, $cell, col) {
-                var $up = $('<div class="' + tableClass.sortUp + '"></div>');
-                var $down = $('<div class="' + tableClass.sortDown + '"></div>');
-                var $sort = $('<div class="' + tableClass.sort + '"></div>');
+                var $up = $('<div class="' + classNames.sortUp + '"></div>');
+                var $down = $('<div class="' + classNames.sortDown + '"></div>');
+                var $sort = $('<div class="' + classNames.sort + '"></div>');
                 $sort.append($up);
                 $sort.append($down);
                 $($cell[0].children[0]).append($sort);
-                $th.addClass(tableClass.unselect);
+                $th.addClass(classNames.unselect);
                 $up.on('mouseenter', function () {
-                    $up.addClass(tableClass.sortHover);
+                    $up.addClass(classNames.sortHover);
                 }).on('mouseleave', function () {
-                    $up.removeClass(tableClass.sortHover);
+                    $up.removeClass(classNames.sortHover);
                 }).on('click', function () {
-                    that.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    that.$view.find('div.' + classNames.sortConfirm).removeClass(classNames.sortConfirm);
                     that.sortObj.field = col.field;
                     that.sortObj.sort = 'asc';
-                    $up.addClass(tableClass.sortConfirm);
+                    $up.addClass(classNames.sortConfirm);
                     that.renderTableBody(true);
                     return false;
                 });
                 $down.on('mouseenter', function () {
-                    $down.addClass(tableClass.sortHover);
+                    $down.addClass(classNames.sortHover);
                 }).on('mouseleave', function () {
-                    $down.removeClass(tableClass.sortHover);
+                    $down.removeClass(classNames.sortHover);
                 }).on('click', function () {
-                    that.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    that.$view.find('div.' + classNames.sortConfirm).removeClass(classNames.sortConfirm);
                     that.sortObj.field = col.field;
                     that.sortObj.sort = 'desc';
-                    $down.addClass(tableClass.sortConfirm);
+                    $down.addClass(classNames.sortConfirm);
                     that.renderTableBody(true);
                     return false;
                 });
@@ -1724,6 +1755,8 @@
             var cols = this.cols;
             if (!this.$main.inserted) {
                 var viewWidth = this.$view.width();
+                this.$table.append(this.$tableThead);
+                this.$table.append(this.$tableTbody);
                 this.$main.append(this.$table);
                 this.$main.append(this.$empty);
                 this.$headerMain.append(this.$main);
@@ -1805,34 +1838,34 @@
                 if (!this.$leftHeaderMain) {
                     this.$leftHeaderMain = $(tpl.headerMainLeft);
                     this.$leftHeader = $(tpl.header);
-                    this.$leftTableHeader = $(tpl.table);
+                    this.$leftHeaderTable = $(tpl.table);
                     this.$leftMain = $(tpl.main);
                     this.$leftTable = $(tpl.table);
-                    this.$leftHeader.append(this.$leftTableHeader);
+                    this.$leftHeader.append(this.$leftHeaderTable);
                     this.$leftMain.append(this.$leftTable);
                     this.$leftHeaderMain.append(this.$leftHeader);
                     this.$leftHeaderMain.append(this.$leftMain);
                     this.$view.append(this.$leftHeaderMain);
                 }
-                this.$leftTableHeader.html(this.$tableHeader.html());
+                this.$leftHeaderTable.html(this.$headerTable.html());
                 this.$leftTable.html(this.$table.html());
             }
             if (this.hasRightFixed) {
                 if (!this.$rightHeaderMain) {
                     this.$rightHeaderMain = $(tpl.headerMainRgiht);
                     this.$rightHeader = $(tpl.header);
-                    this.$rightTableHeader = $(tpl.table);
+                    this.$rightHeaderTable = $(tpl.table);
                     this.$rightMain = $(tpl.main);
                     this.$rightTable = $(tpl.table);
-                    this.$rightHeader.append(this.$rightTableHeader);
+                    this.$rightHeader.append(this.$rightHeaderTable);
                     this.$rightMain.append(this.$rightTable);
                     this.$rightHeaderMain.append(this.$rightHeader);
                     this.$rightHeaderMain.append(this.$rightMain);
-                    this.$mend = $('<div class="' + tableClass.mend + '"></div>');
+                    this.$mend = $('<div class="' + classNames.mend + '"></div>');
                     this.$view.append(this.$rightHeaderMain);
                     this.$view.append(this.$mend);
                 }
-                this.$rightTableHeader.html(this.$tableHeader.html());
+                this.$rightHeaderTable.html(this.$headerTable.html());
                 this.$rightTable.html(this.$table.html());
             }
             this.setFixedArea();
@@ -1843,9 +1876,8 @@
          */
         Class.prototype.renderTr = function () {
             var that = this;
-            var $table = this.$table;
             var data = this.sortedData;
-            $table.empty();
+            this.$tableTbody.empty();
             _appendTr(0);
 
             // 避免加载数据量太大时浏览器卡住
@@ -1855,7 +1887,7 @@
                 for (var i = start, count = 0; i < data.length && count < 100; i++, count++) {
                     html.push(that.createTr(data[i]));
                 }
-                $table.append(html.join(''));
+                that.$tableTbody.append(html.join(''));
                 if (i < data.length) {
                     that.timers.renderTimer = Common.nextFrame(function () {
                         _appendTr(i);
@@ -2029,7 +2061,7 @@
             if (!this.page) {
                 return;
             }
-            var $pager = $('<div class="' + tableClass.pager + '"></div>');
+            var $pager = $('<div class="' + classNames.pager + '"></div>');
             var $elem = $('<div jy-filter="table_pager_' + this.filter + '"></div>');
             $pager.append($elem);
             this.$pager = $pager;
@@ -2201,7 +2233,7 @@
                         var width = that.tempData.resizeData.width;
                         that.tempData.$resizeLine.remove();
                         width && that.setColWidth(col, width);
-                        that.$view.removeClass(tableClass.colResize);
+                        that.$view.removeClass(classNames.colResize);
                         that.tempData.resizeData = undefined;
                         that.tempData.$resizeLine = undefined;
                     }
@@ -2210,7 +2242,7 @@
 
             function _bindRadioCheckboxEvent() {
                 // 点击单选框
-                that.$view.delegate('td .' + tableClass.radio, 'click', function () {
+                that.$view.delegate('td .' + classNames.radio, 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     that.selectRow(key);
@@ -2220,7 +2252,7 @@
                     });
                 });
                 // 点击多选框
-                that.$view.delegate('td .' + tableClass.checkbox, 'click', function () {
+                that.$view.delegate('td .' + classNames.checkbox, 'click', function () {
                     var $this = $(this);
                     var key = $this.attr('data-key');
                     var $td = $this.parents('td');
@@ -2242,7 +2274,7 @@
                     });
                 });
                 // 点击全选
-                that.$view.delegate('th .' + tableClass.checkbox, 'click', function () {
+                that.$view.delegate('th .' + classNames.checkbox, 'click', function () {
                     that.checkAll();
                     that.trigger('checkbox', {
                         dom: this,
@@ -2380,13 +2412,13 @@
 
                 function _addHover(hoverTrs) {
                     hoverTrs && hoverTrs.map(function (tr) {
-                        $(tr).addClass(tableClass.hover);
+                        $(tr).addClass(classNames.hover);
                     });
                 }
 
                 function _delHover(hoverTrs) {
                     hoverTrs && hoverTrs.map(function (tr) {
-                        $(tr).removeClass(tableClass.hover);
+                        $(tr).removeClass(classNames.hover);
                     });
                 }
             }
@@ -2394,7 +2426,7 @@
             function _bindScrollEvent() {
                 // 滚动事件
                 that.$main.on('scroll', function (e) {
-                    that.$tableHeader.css({
+                    that.$headerTable.css({
                         left: -that.$main[0].scrollLeft
                     });
                     if (that.$leftMain) {
@@ -2426,17 +2458,17 @@
                         if (!that.tempData.resizeData && !(jyBindData.col.colspan > 1)) {
                             var $th = $(th);
                             if (e.offsetX > th.clientWidth - 10) {
-                                $th.addClass(tableClass.colResize);
+                                $th.addClass(classNames.colResize);
                                 jyBindData.$detailIcon && jyBindData.$detailIcon.remove();
                                 jyBindData.$detailIcon = undefined;
                             } else {
-                                $th.removeClass(tableClass.colResize);
+                                $th.removeClass(classNames.colResize);
                             }
                         }
                     });
                 });
                 that.$view.delegate('th', 'mousedown', function (e) {
-                    if (!that.tempData.resizeData && $(this).hasClass(tableClass.colResize)) {
+                    if (!that.tempData.resizeData && $(this).hasClass(classNames.colResize)) {
                         that.tempData.resizeData = {
                             pageX: e.pageX,
                             th: this,
@@ -2445,13 +2477,13 @@
                         }
                         var top = that.$toolbar ? that.$toolbar[0].offsetHeight : 0;
                         var height = that.$view[0].clientHeight - top - (that.$pager ? that.$pager[0].offsetHeight : 0);
-                        that.tempData.$resizeLine = $('<div class="' + tableClass.resizeLine + '"></div>');
+                        that.tempData.$resizeLine = $('<div class="' + classNames.resizeLine + '"></div>');
                         that.tempData.$resizeLine.css({
                             top: top,
                             height: height
                         });
                         that.$view.append(that.tempData.$resizeLine);
-                        that.$view.addClass(tableClass.colResize);
+                        that.$view.addClass(classNames.colResize);
                     }
                 });
             }
@@ -2468,23 +2500,23 @@
                     that.timers.overflowTimer = Common.nextFrame(function () {
                         var $td = $(td);
                         // 正在调整列宽中或准备调整列宽
-                        if (that.tempData.resizeData || $td.hasClass(tableClass.colResize)) {
+                        if (that.tempData.resizeData || $td.hasClass(classNames.colResize)) {
                             return;
                         }
                         var jyBindData = that.getBindData(td);
                         var col = jyBindData.col;
-                        var $cell = $td.children('.' + tableClass.cell);
+                        var $cell = $td.children('.' + classNames.cell);
                         if (!jyBindData.$detailIcon && col.type == 'text' && !jyBindData.editing && Common.checkOverflow($cell[0].children[0])) {
-                            var $div = $('<div class="' + tableClass.detailIcon + '">' + downIcon + '</div>');
+                            var $div = $('<div class="' + classNames.detailIcon + '">' + downIcon + '</div>');
                             jyBindData.$detailIcon = $div;
                             $cell.append($div);
                             // 点击打开内容详情弹框
                             $div.on('click', function () {
-                                var $close = $('<div class="' + tableClass.tipClose + '">' + closeIcon + '</div>');
+                                var $close = $('<div class="' + classNames.tipClose + '">' + closeIcon + '</div>');
                                 var offset = $cell.offset();
                                 var ie6MarginTop = document.documentElement.scrollTop || document.body.scrollTop || 0;
                                 $div.remove();
-                                $div = $('<div class="' + tableClass.detail + '">' + $($cell[0].children[0]).html() + '</div>');
+                                $div = $('<div class="' + classNames.detail + '">' + $($cell[0].children[0]).html() + '</div>');
                                 $div.append($close);
                                 $body.append($div);
                                 jyBindData.$detail = $div;
@@ -2516,20 +2548,20 @@
                     var $this = $(this);
                     var jyBindData = that.getBindData(this);
                     var col = jyBindData.col;
-                    if (col.sortAble && !that.tempData.resizeData && !$this.hasClass(tableClass.colResize)) {
-                        var $up = $this.find('div.' + tableClass.sortUp);
-                        var $down = $this.find('div.' + tableClass.sortDown);
-                        that.$view.find('div.' + tableClass.sortConfirm).removeClass(tableClass.sortConfirm);
+                    if (col.sortAble && !that.tempData.resizeData && !$this.hasClass(classNames.colResize)) {
+                        var $up = $this.find('div.' + classNames.sortUp);
+                        var $down = $this.find('div.' + classNames.sortDown);
+                        that.$view.find('div.' + classNames.sortConfirm).removeClass(classNames.sortConfirm);
                         if (that.sortObj.field != col.field) {
                             that.sortObj.field = col.field;
                             that.sortObj.sort = '';
                         }
                         if (!that.sortObj.sort) {
                             that.sortObj.sort = 'asc';
-                            $up.addClass(tableClass.sortConfirm);
+                            $up.addClass(classNames.sortConfirm);
                         } else if (that.sortObj.sort == 'asc') {
                             that.sortObj.sort = 'desc';
-                            $down.addClass(tableClass.sortConfirm);
+                            $down.addClass(classNames.sortConfirm);
                         } else {
                             that.sortObj.sort = '';
                         }
@@ -2544,13 +2576,13 @@
                     if (that.$filter) {
                         that.$filter.toggle();
                         if (that.$filter.is(':visible')) {
-                            that.$filter.addClass(tableClass.downAnimation);
+                            that.$filter.addClass(classNames.downAnimation);
                         } else {
-                            that.$filter.removeClass(tableClass.downAnimation);
+                            that.$filter.removeClass(classNames.downAnimation);
                         }
                     } else {
                         that.createFilter(e.dom);
-                        that.$filter.addClass(tableClass.downAnimation);
+                        that.$filter.addClass(classNames.downAnimation);
                     }
                     that.$exports && that.$exports.hide();
                     that.tempData.stopBodyEvent = true;
@@ -2561,9 +2593,9 @@
                     that.$filter && that.$filter.hide();
                     that.tempData.stopBodyEvent = true;
                     if (that.$exports.is(':visible')) {
-                        that.$exports.addClass(tableClass.downAnimation);
+                        that.$exports.addClass(classNames.downAnimation);
                     } else {
-                        that.$exports.removeClass(tableClass.downAnimation);
+                        that.$exports.removeClass(classNames.downAnimation);
                     }
                 });
                 // 导出事件
@@ -2587,7 +2619,7 @@
         Class.prototype.createFilter = function (dom) {
             var that = this;
             var $view = this.$view;
-            var $filter = $('<ul class="' + tableClass.filter + '"></ul>');
+            var $filter = $('<ul class="' + classNames.filter + '"></ul>');
             this.$filter = $filter;
             for (var i = 0; i < this.cols.length; i++) {
                 var col = this.cols[i];
@@ -2602,13 +2634,13 @@
             // 在工具图标下挂载
             $(dom).append($filter);
             $filter.delegate('li', 'click', function () {
-                var $checkbox = $(this).children('div.' + tableClass.checkbox);
+                var $checkbox = $(this).children('div.' + classNames.checkbox);
                 var key = $checkbox.attr('data-key');
                 var col = that.getColByKey(key);
                 var allThs = [];
                 var nowTh = null;
-                var checked = !$checkbox.hasClass(tableClass.checked);
-                $checkbox.toggleClass(tableClass.checked);
+                var checked = !$checkbox.hasClass(classNames.checked);
+                $checkbox.toggleClass(classNames.checked);
                 $view.find('th,td').each(function (i, td) {
                     var jyBindData = that.getBindData(this);
                     var $td = $(td);
@@ -2623,21 +2655,22 @@
                         } else {
                             checked ? $td.show() : $td.hide();
                         }
-                        if (td.tagName.toUpperCase() == 'TH' && !jyBindData.holder) {
+                        if (td.tagName.toUpperCase() == 'TH') {
                             jyBindData.col.hidden = !checked;
                             nowTh = td;
                         }
                     }
-                    if (td.tagName.toUpperCase() == 'TH' && !jyBindData.holder) {
+                    if (td.tagName.toUpperCase() == 'TH') {
                         allThs.push(td);
                     }
                 });
                 // 存在上级父列
                 if (col.parent) {
                     _setParentColspan(nowTh);
-                    that.setColsWidth(col.parent.child);
+                    // 表头总高度可能发生变化，所以需要重新设置main的高度
+                    that.setViewArea();
                 }
-                that.$tableHeader.css({
+                that.$headerTable.css({
                     left: -that.$main[0].scrollLeft
                 });
                 that.setFixedArea();
@@ -2647,10 +2680,10 @@
                     var jyBindData = that.getBindData(th);
                     var col = jyBindData.col.parent;
                     var ths = _getThByCol(col);
-                    var colspan = jyBindData.colspan === undefined ? col.colspan : jyBindData.colspan;
+                    var colspan = col._colspan === undefined ? col.colspan : col._colspan;
                     // 选中列后，父列的coslpan加1，取消列后，父列的cospan需减1
                     checked ? ++colspan : --colspan;
-                    jyBindData.colspan = colspan;
+                    col._colspan = colspan;
                     ths.map(function (th) {
                         var $th = $(th);
                         // ie7及以下浏览器设置为0时会报错
@@ -2678,7 +2711,7 @@
         // 导出
         Class.prototype.exportsExecl = function () {
             if (window.btoa) {
-                var $table = $(this.$tableHeader[0].outerHTML);
+                var $table = $(this.$headerTable[0].outerHTML);
                 var col = this.getColByType('radio') || this.getColByType('checkbox');
                 $table.append(this.$table.children('tbody').html());
                 col && $table.find('[data-col="' + col._key + '"]').remove();
@@ -2766,7 +2799,7 @@
         // 打印
         Class.prototype.print = function () {
             if (window.print) {
-                var $table = $(this.$tableHeader[0].outerHTML);
+                var $table = $(this.$headerTable[0].outerHTML);
                 var wind = window.open('', '_blank', 'toolbar=no,scrollbars=yes,menubar=no');
                 var style = '<style>\
                 table{\

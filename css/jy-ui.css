@@ -1328,6 +1328,23 @@ select {
   *zoom: 1;
 }
 
+.jy-table .jy-table-col-holder {
+  height: 0;
+  line-height: 0;
+  border-top: 0;
+  border-bottom: 0;
+  font-size: 0;
+}
+
+.jy-table .jy-table-col-holder .jy-table-cell {
+  height: 0;
+  border: 0;
+}
+
+.jy-table .jy-table-col-holder .jy-table-cell-content {
+  padding: 0;
+}
+
 .jy-table .jy-table-align-left {
   text-align: left;
 }
