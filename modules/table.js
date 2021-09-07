@@ -2647,14 +2647,14 @@
                     var jyBindData = that.getBindData(th);
                     var col = jyBindData.col.parent;
                     var ths = _getThByCol(col);
+                    var colspan = jyBindData.colspan === undefined ? col.colspan : jyBindData.colspan;
+                    checked ? ++colspan : --colspan;
+                    jyBindData.colspan = colspan;
                     ths.map(function (th) {
                         var $th = $(th);
-                        var colspan = jyBindData.colspan === undefined ? col.colspan : jyBindData.colspan;
-                        checked ? ++colspan : --colspan;
                         // ie7及以下浏览器设置为0时会报错
                         colspan > 0 && $th.attr('colspan', colspan);
                         colspan ? $th.show() : $th.hide();
-                        jyBindData.colspan = colspan;
                     });
                     if (col.parent) {
                         _setParentCol(ths[0]);
