@@ -1338,7 +1338,8 @@ select {
 
 .jy-table .jy-table-col-holder .jy-table-cell {
   height: 0;
-  border: 0;
+  border-top: 0;
+  border-bottom: 0;
 }
 
 .jy-table .jy-table-col-holder .jy-table-cell-content {
