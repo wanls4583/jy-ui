@@ -2648,6 +2648,7 @@
                     var col = jyBindData.col.parent;
                     var ths = _getThByCol(col);
                     var colspan = jyBindData.colspan === undefined ? col.colspan : jyBindData.colspan;
+                    // 选中列后，父列的coslpan加1，取消列后，父列的cospan需减1
                     checked ? ++colspan : --colspan;
                     jyBindData.colspan = colspan;
                     ths.map(function (th) {
