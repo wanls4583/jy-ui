@@ -1188,9 +1188,12 @@
          * @param {String} field 
          */
         Class.prototype.getColByField = function (field) {
-            for (var i = 0; i < this.cols.length; i++) {
-                if (this.cols[i].field == field) {
-                    return this.cols[i];
+            for(var i=0; i<this.multilevelCols.length; i++) {
+                var cols = this.multilevelCols[i]
+                for (var j = 0; j < cols.length; j++) {
+                    if (cols[j].field == field) {
+                        return cols[j];
+                    }
                 }
             }
         }
@@ -2160,6 +2163,12 @@
             var that = this;
             var allThs = [];
             var nowTh = null;
+            if(checked == undefined) {
+                checked = !col.checked;
+            }
+            if(col.hidden == !checked) {
+                return;
+            }
             col.hidden = !checked;
             this.$view.find('th,td').each(function (i, td) {
                 var jyBindData = that.getBindData(this);
@@ -2926,15 +2935,15 @@
                     getView: function () {
                         return table.$view;
                     },
-                    toggleCol: function (field) {
+                    toggleCol: function (field, checked) {
                         var col = table.getColByField(field);
                         if (col) {
                             if (col.child) {
                                 col.child.map(function (col) {
-                                    table.toggleCol(col);
+                                    table.toggleCol(col, checked);
                                 });
                             } else {
-                                table.toggleCol(col);
+                                table.toggleCol(col, checked);
                             }
                         }
                     },

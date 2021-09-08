@@ -624,7 +624,7 @@
         }
     });
     require(['./modules/table.js', './modules/dialog.js'], function (Table, Dialog) {
-        // window.table1 = renderTable1();
+        window.table1 = renderTable1();
         window.table2 = renderTable2();
         // 单选表格
         function renderTable1() {
@@ -829,6 +829,7 @@
                         rowspan: 2
                     }, {
                         title: '其他信息',
+                        field: 'other',
                         align: 'center',
                         colspan: 2
                     }, {
