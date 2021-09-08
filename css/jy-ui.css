@@ -50,8 +50,10 @@ table {
 
 .jy-btn {
   display: inline-block;
-  height: 36px;
+  height: 38px;
+  _height: 35px;
   line-height: 36px;
+  _line-height: 33px;
   padding: 0 15px;
   background-color: #009688;
   border: 1px solid #009688;
@@ -62,8 +64,8 @@ table {
   cursor: pointer;
   width: auto;
   overflow: visible;
-  -webkit-box-sizing: content-box;
-          box-sizing: content-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .jy-btn:hover {
@@ -75,20 +77,26 @@ table {
 }
 
 .jy-btn-lg {
-  height: 42px;
+  height: 44px;
+  _height: 41px;
   line-height: 42px;
+  _line-height: 39px;
   font-size: 16px;
 }
 
 .jy-btn-sm {
-  height: 28px;
+  height: 30px;
+  _height: 27px;
   line-height: 28px;
+  _line-height: 25px;
   font-size: 12px;
 }
 
 .jy-btn-xs {
-  height: 20px;
+  height: 22px;
+  _height: 19px;
   line-height: 20px;
+  _line-height: 17px;
   font-size: 12px;
 }
 
@@ -1256,6 +1264,7 @@ select {
 
 .jy-table {
   position: relative;
+  table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
   background-color: #ffffff;

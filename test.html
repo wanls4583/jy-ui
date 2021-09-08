@@ -624,7 +624,7 @@
         }
     });
     require(['./modules/table.js', './modules/dialog.js'], function (Table, Dialog) {
-        window.table1 = renderTable1();
+        // window.table1 = renderTable1();
         window.table2 = renderTable2();
         // 单选表格
         function renderTable1() {
@@ -680,7 +680,7 @@
                 }, {
                     title: '性别',
                     field: 'sex',
-                    width: 50,
+                    width: 60,
                     values: sexValues,
                     style: { //设置单元格样式
                         color: function (value, obj, id, col) {
@@ -692,7 +692,7 @@
                 }, {
                     title: '年龄',
                     field: 'age',
-                    width: 50
+                    width: 60
                 }, {
                     title: '签名',
                     field: 'sign',
@@ -830,7 +830,6 @@
                     }, {
                         title: '其他信息',
                         align: 'center',
-                        width: 100,
                         colspan: 2
                     }, {
                         type: 'operate',

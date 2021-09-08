@@ -185,12 +185,13 @@
             this.$view && this.$view.remove();
             this.$view = $('<div class="' + [classNames.view, classNames.view + '-' + this.tableCount].join(' ') + '"></div>');
             this.$table = $(tpl.table);
-            this.$tableThead = $(tpl.thead);
+            this.$tableColGroup = $('<colgroup></colgroup>');
             this.$tableTbody = $(tpl.tbody);
             this.$headerMain = $(tpl.headerMain);
             this.$header = $(tpl.header);
             this.$headerTable = $(tpl.table);
-            this.$headerTableThead = $(tpl.thead);
+            this.$headerTableColGroup = $('<colgroup></colgroup>');
+            this.$headerTableThead = $('<thead></thead>');
             this.$main = $(tpl.main);
             this.$empty = $(tpl.empty);
             this.$filter = null;
@@ -248,6 +249,7 @@
             this.renderTableFixed();
             this.renderPage();
             this.setViewArea();
+            this.setColsWidth();
             this.stretchTable();
             this.bindEvent();
         }
@@ -1273,13 +1275,7 @@
                     col && this.$headerTable.find('th[data-col="' + col._key + '"]').css('width', 50);
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
-                    this.$headerTable.css({
-                        width: this.$main[0].offsetWidth - 17 - (ieVersion <= 7 ? 1 : 0)
-                    });
-                    this.setColsWidth();
-                    this.$headerTable.css({
-                        width: 'auto'
-                    });
+                    this.setColsWidth(null, this.$main[0].clientWidth - 18);
                 }
                 this.stretch = false;
             }
@@ -1430,68 +1426,65 @@
         }
 
         // 设置单元格宽度样式表
-        Class.prototype.setColsWidth = function (cols) {
+        Class.prototype.setColsWidth = function (cols, tableWidth) {
             var that = this;
-            var ws = [];
             var ths = [];
-            var colWidths = [];
+            var widths = [];
+            var allCols = {};
+            var colKeys = this.cols.map(function (col) {
+                return col._key;
+            });
+            this.$view.find('.' + classNames.table + ' col').each(function (i, th) {
+                var colKey = $(th).attr('data-col');
+                if (colKeys.indexOf(Number(colKey)) > -1) {
+                    allCols[colKey] = allCols[colKey] || [];
+                    allCols[colKey].push(th);
+                }
+            });
             // 只设置部分列
             if (cols) {
                 cols = cols.map(function (col) {
                     return col._key;
                 });
             }
+            this.$headerTable.css({
+                'width': tableWidth || 'auto',
+                'table-layout': 'auto'
+            });
             this.$headerTableThead.find('th').each(function (i, th) {
                 var jyBindData = that.getBindData(th);
-                if (cols) {
-                    if (cols.indexOf(jyBindData.col._key) > -1) {
+                if (colKeys.indexOf(jyBindData.col._key) > -1) {
+                    if (cols) {
+                        if (cols.indexOf(jyBindData.col._key) > -1) {
+                            ths.push(th);
+                        }
+                    } else if ($(th).is(':visible')) {
                         ths.push(th);
                     }
-                } else if ($(th).is(':visible')) {
-                    ths.push(th);
                 }
             });
             ths.map(function (th, i) {
                 var jyBindData = that.getBindData(th);
-                var $cell = $(th.children[0]);
-                var width = jyBindData.col.width;
-                width = ieVersion <= 6 ? width + hCellPadding : width;
-                if (jyBindData.col.width) {
-                    $cell.css('width', width);
-                } else {
-                    $cell.css('width', 'auto');
-                }
+                var width = jyBindData.col.width || 'auto';
+                $(th.children[0]).css('width', width);
             });
             ths.map(function (th, i) {
-                var clientWidth = th.clientWidth;
-                ws.push({
-                    cw: ieVersion <= 6 ? clientWidth : clientWidth - hCellPadding
+                widths.push(th.clientWidth);
+            });
+            ths.map(function (th, i) {
+                var width = widths[i];
+                var jyBindData = that.getBindData(th);
+                width = ieVersion == 7 ? width - 1 : width;
+                jyBindData.col._width = width;
+                allCols[jyBindData.col._key].map(function (col) {
+                    $(col).css('width', width);
                 });
             });
-            ths.map(function (th, i) {
-                var jyBindData = that.getBindData(th);
-                var $cell = $(th.children[0]);
-                var cw = jyBindData.col.colspan > 1 ? 'auto' : ws[i].cw + 'px'; //colspan大于1，说明有子列，其宽度应该设置为auto
-                var cellSelector = that.getClassNameWithKey(jyBindData.col, '.' + classNames.cell);
-                $cell.css('width', cw);
-                Common.deleteRule(that.sheet, cellSelector);
-                Common.insertRule(that.sheet, cellSelector, 'width:' + cw);
-                colWidths[jyBindData.col._key] = cw;
+            var width = this.$header[0].scrollWidth;
+            this.$view.find('table.' + classNames.table).css('width', width);
+            this.$headerTable.css({
+                'table-layout': 'fixed'
             });
-            this.$leftHeaderTable && this.$leftHeaderTable.find('th').each(function (i, th) {
-                var col = that.getBindData(th).col;
-                if (colWidths[col._key]) {
-                    $(th.children[0]).css('width', colWidths[col._key]);
-                }
-            });
-            this.$rightHeaderTable && this.$rightHeaderTable.find('th').each(function (i, th) {
-                var col = that.getBindData(th).col;
-                if (colWidths[col._key]) {
-                    $(th.children[0]).css('width', colWidths[col._key]);
-                }
-            });
-            // 没有数据时，撑开容器
-            this.$empty.css('width', this.$headerTable[0].offsetWidth);
         }
 
         // 设置单元格高度（编辑时，高度可能变化）
@@ -1620,14 +1613,14 @@
             // 创建多级表头
             multilevelCols.map(function (cols) {
                 _renderCols(cols);
-                _renderHolderCols(cols);
             });
+            _renderHolderCols();
             // 挂载表头
+            this.$headerTable.append(this.$headerTableColGroup);
             this.$headerTable.append(this.$headerTableThead);
             this.$header.append(this.$headerTable);
             this.$headerMain.append(this.$header);
             this.$view.append(this.$headerMain);
-            this.setColsWidth();
 
             // 渲染表头
             function _renderCols(cols) {
@@ -1683,31 +1676,18 @@
             }
 
             // 主表中的占位表头
-            function _renderHolderCols(cols) {
-                var $tr = $('<tr></tr>');
+            function _renderHolderCols() {
+                var cols = that.cols;
                 for (var i = 0; i < cols.length; i++) {
                     var col = cols[i];
-                    col.type = col.type || 'text';
-                    var $content = $('<div class="' + classNames.cellContent + '"></div>');
-                    var $cell = $('<div class="' + ['jy-clear', classNames.cell + '-' + that.tableCount + '-' + col._key, classNames.cell].join(' ') + '"></div>');
-                    var $th = $('<th class="' + classNames.holder + '" data-col="' + col._key + '" data-key="col-' + col._key + '"></th>');
-                    $cell.append($content);
-                    // 隐藏
-                    if (col.hidden) {
-                        $th.hide();
-                    }
-                    // 选择列
+                    var width = col.width;
                     if (col.type == 'radio' || col.type == 'checkbox') {
-                        col.width = 50;
+                        width = 50;
                     }
-                    if (col.colspan >= 2) {
-                        $th.attr('colspan', col.colspan);
-                    }
-                    col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
-                    $th.append($cell);
-                    $tr.append($th);
+                    var colStr = '<col data-col="' + col._key + '" ' + (width ? 'style="width:' + width + 'px"' : '') + '></col>';
+                    that.$headerTableColGroup.append(colStr);
+                    that.$tableColGroup.append(colStr);
                 }
-                that.$tableThead.append($tr);
             }
 
             // 渲染排序图标
@@ -1755,7 +1735,7 @@
             var cols = this.cols;
             if (!this.$main.inserted) {
                 var viewWidth = this.$view.width();
-                this.$table.append(this.$tableThead);
+                this.$table.append(this.$tableColGroup);
                 this.$table.append(this.$tableTbody);
                 this.$main.append(this.$table);
                 this.$main.append(this.$empty);
@@ -1764,9 +1744,9 @@
                     width: viewWidth
                 });
                 this.$main.inserted = true;
-                that.showLoading();
+                this.showLoading();
             } else {
-                that.showLoading();
+                this.showLoading();
             }
 
             if (justSort) {
@@ -2173,6 +2153,126 @@
             if (key) {
                 this.idKeyMap[id] = key.slice(1);
             }
+        }
+
+        // 显示/隐藏某一列
+        Class.prototype.toggleCol = function (col, checked) {
+            var that = this;
+            var allThs = [];
+            var nowTh = null;
+            col.hidden = !checked;
+            this.$view.find('th,td').each(function (i, td) {
+                var jyBindData = that.getBindData(this);
+                var $td = $(td);
+                if (jyBindData.col._key == col._key) {
+                    if (td.tagName.toUpperCase() === 'TD') {
+                        var span = that.spanMethod && that.spanMethod(jyBindData.colData, jyBindData.rowData, jyBindData.rowData._jy_key, jyBindData.col);
+                        if (span && (span.rowspan == 0 || span.colspan == 0) || !checked) {
+                            $td.hide();
+                        } else {
+                            $td.show();
+                        }
+                    } else {
+                        checked ? $td.show() : $td.hide();
+                    }
+                    if (td.tagName.toUpperCase() == 'TH') {
+                        nowTh = td;
+                    }
+                }
+                if (td.tagName.toUpperCase() == 'TH') {
+                    allThs.push(td);
+                }
+            });
+            // 存在上级父列
+            if (col.parent) {
+                _setParentColspan(nowTh);
+                // 表头总高度可能发生变化，所以需要重新设置main的高度
+                this.setViewArea();
+            }
+            this.$headerTable.css({
+                left: -this.$main[0].scrollLeft
+            });
+            this.toggleHolderCol(col, checked);
+            this.setFixedArea();
+
+
+            // 设置父级列的colspan
+            function _setParentColspan(th) {
+                var jyBindData = that.getBindData(th);
+                var col = jyBindData.col.parent;
+                var ths = _getThByCol(col);
+                var colspan = col._colspan === undefined ? col.colspan : col._colspan;
+                // 选中列后，父列的coslpan加1，取消列后，父列的cospan需减1
+                checked ? ++colspan : --colspan;
+                col._colspan = colspan;
+                ths.map(function (th) {
+                    var $th = $(th);
+                    // ie7及以下浏览器设置为0时会报错
+                    colspan > 0 && $th.attr('colspan', colspan);
+                    colspan ? $th.show() : $th.hide();
+                });
+                if (col.parent) {
+                    _setParentCol(ths[0]);
+                }
+            }
+
+            function _getThByCol(col) {
+                var ths = [];
+                for (var i = 0; i < allThs.length; i++) {
+                    var jyBindData = that.getBindData(allThs[i]);
+                    if (jyBindData.col._key == col._key) {
+                        ths.push(allThs[i]);
+                    }
+                }
+                return ths;
+            }
+        }
+
+        // 新增/删除colgroup中的col
+        Class.prototype.toggleHolderCol = function (col, checked) {
+            var tableWidth = 0;
+            this.$headerTable.css({
+                'width': 'auto',
+                'table-layout': 'auto'
+            });
+            if (checked) {
+                var index = -1;
+                for (var i = 0; i < this.cols.length; i++) {
+                    var _col = this.cols[i];
+                    if (_col._key == col._key) {
+                        index = i;
+                        break;
+                    }
+                }
+                while (index > 0) {
+                    index--;
+                    var _col = this.cols[index];
+                    if (_col && !_col.hidden) {
+                        this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
+                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"></col>').insertAfter(_col);
+                        });
+                        index = Infinity;
+                        break;
+                    }
+                }
+                while (index < this.cols.length - 1) {
+                    index++;
+                    var _col = this.cols[index];
+                    if (_col && !_col.hidden) {
+                        this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
+                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"></col>').insertBefore(_col);
+                        });
+                        break;
+                    }
+                }
+            } else {
+                this.$view.find('col[data-col="' + col._key + '"]').remove();
+            }
+            tableWidth = this.$headerTable[0].clientWidth;
+            this.$view.find('table.' + classNames.table).css('width', tableWidth);
+            this.$headerTable.css({
+                'table-layout': 'fixed'
+            });
         }
 
         // 绑定容器的事件
@@ -2637,74 +2737,9 @@
                 var $checkbox = $(this).children('div.' + classNames.checkbox);
                 var key = $checkbox.attr('data-key');
                 var col = that.getColByKey(key);
-                var allThs = [];
-                var nowTh = null;
                 var checked = !$checkbox.hasClass(classNames.checked);
                 $checkbox.toggleClass(classNames.checked);
-                $view.find('th,td').each(function (i, td) {
-                    var jyBindData = that.getBindData(this);
-                    var $td = $(td);
-                    if (jyBindData.col._key == key) {
-                        if (td.tagName.toUpperCase() === 'TD') {
-                            var span = that.spanMethod && that.spanMethod(jyBindData.colData, jyBindData.rowData, jyBindData.rowData._jy_key, jyBindData.col);
-                            if (span && (span.rowspan == 0 || span.colspan == 0) || !checked) {
-                                $td.hide();
-                            } else {
-                                $td.show();
-                            }
-                        } else {
-                            checked ? $td.show() : $td.hide();
-                        }
-                        if (td.tagName.toUpperCase() == 'TH') {
-                            jyBindData.col.hidden = !checked;
-                            nowTh = td;
-                        }
-                    }
-                    if (td.tagName.toUpperCase() == 'TH') {
-                        allThs.push(td);
-                    }
-                });
-                // 存在上级父列
-                if (col.parent) {
-                    _setParentColspan(nowTh);
-                    // 表头总高度可能发生变化，所以需要重新设置main的高度
-                    that.setViewArea();
-                }
-                that.$headerTable.css({
-                    left: -that.$main[0].scrollLeft
-                });
-                that.setFixedArea();
-
-                // 设置父级列的colspan
-                function _setParentColspan(th) {
-                    var jyBindData = that.getBindData(th);
-                    var col = jyBindData.col.parent;
-                    var ths = _getThByCol(col);
-                    var colspan = col._colspan === undefined ? col.colspan : col._colspan;
-                    // 选中列后，父列的coslpan加1，取消列后，父列的cospan需减1
-                    checked ? ++colspan : --colspan;
-                    col._colspan = colspan;
-                    ths.map(function (th) {
-                        var $th = $(th);
-                        // ie7及以下浏览器设置为0时会报错
-                        colspan > 0 && $th.attr('colspan', colspan);
-                        colspan ? $th.show() : $th.hide();
-                    });
-                    if (col.parent) {
-                        _setParentCol(ths[0]);
-                    }
-                }
-
-                function _getThByCol(col) {
-                    var ths = [];
-                    for (var i = 0; i < allThs.length; i++) {
-                        var jyBindData = that.getBindData(allThs[i]);
-                        if (jyBindData.col._key == col._key) {
-                            ths.push(allThs[i]);
-                        }
-                    }
-                    return ths;
-                }
+                that.toggleCol(col, checked);
             });
         }
 
@@ -2890,6 +2925,18 @@
                     },
                     getView: function () {
                         return table.$view;
+                    },
+                    toggleCol: function (field) {
+                        var col = table.getColByField(field);
+                        if (col) {
+                            if (col.child) {
+                                col.child.map(function (col) {
+                                    table.toggleCol(col);
+                                });
+                            } else {
+                                table.toggleCol(col);
+                            }
+                        }
                     },
                     reload: table.reload.bind(table),
                     reloadData: table.reloadData.bind(table),
