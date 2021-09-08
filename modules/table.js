@@ -1628,7 +1628,7 @@
             multilevelCols.map(function (cols) {
                 _renderCols(cols);
             });
-            _renderHolderCols();
+            _renderColgroup();
             // 挂载表头
             this.$headerTable.append(this.$headerTableColGroup);
             this.$headerTable.append(this.$headerTableThead);
@@ -1674,6 +1674,23 @@
                     if (col.align) {
                         $th.addClass('jy-table-align-' + col.align);
                     }
+                    // 检查子列是否为占位列
+                    if (col.child) {
+                        var holder = true;
+                        // 子列全部为holder才有效
+                        col.child.map(function (_col) {
+                            if (!_col.holder) {
+                                holder = false;
+                            }
+                        });
+                        if (holder) {
+                            $th.css('border-bottom', 0);
+                            col._childHolder = true;
+                        }
+                    }
+                    if (col.parent && col.parent._childHolder) {
+                        $th.addClass(classNames.holder);
+                    }
                     col.rowspan >= 2 && $th.attr('rowspan', col.rowspan);
                     $th.append($cell);
                     $tr.append($th);
@@ -1690,7 +1707,7 @@
             }
 
             // 主表中的占位表头
-            function _renderHolderCols() {
+            function _renderColgroup() {
                 var cols = that.cols;
                 for (var i = 0; i < cols.length; i++) {
                     var col = cols[i];
