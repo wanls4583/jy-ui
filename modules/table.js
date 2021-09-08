@@ -1467,7 +1467,7 @@
                         if (cols.indexOf(jyBindData.col._key) > -1) {
                             ths.push(th);
                         }
-                    } else if ($(th).is(':visible')) {
+                    } else if (!jyBindData.col.hidden) {
                         ths.push(th);
                     }
                 }
