@@ -1275,7 +1275,7 @@
                 if (tableHeaderWidth < hedaerWidth) {
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
-                    this.setColsWidth(null, this.$main[0].clientWidth - 18);
+                    this.setColsWidth(null, this.$main[0].offsetWidth - 18);
                 }
                 this.stretch = false;
             }
@@ -1443,11 +1443,11 @@
             var colKeys = this.cols.map(function (col) {
                 return col._key;
             });
-            this.$view.find('.' + classNames.table + ' col').each(function (i, th) {
-                var colKey = $(th).attr('data-col');
+            this.$view.find('.' + classNames.table + ' col').each(function (i, col) {
+                var colKey = $(col).attr('data-col');
                 if (colKeys.indexOf(Number(colKey)) > -1) {
                     allCols[colKey] = allCols[colKey] || [];
-                    allCols[colKey].push(th);
+                    allCols[colKey].push(col);
                 }
             });
             // 只设置部分列
@@ -1476,6 +1476,12 @@
                 var jyBindData = that.getBindData(th);
                 var width = jyBindData.col.width || 'auto';
                 $(th.children[0]).css('width', width);
+                allCols[jyBindData.col._key].map(function (_col) {
+                    $(_col).css('width', 'auto');
+                });
+                if (['radio', 'checkbox'].indexOf(jyBindData.col.type) > -1) {
+                    $(th).css('width', width);
+                }
             });
             ths.map(function (th, i) {
                 widths.push(th.offsetWidth);
@@ -1645,7 +1651,7 @@
                         $th.hide();
                     }
                     // 选择列
-                    if (col.type == 'radio' || col.type == 'checkbox') {
+                    if (['radio', 'checkbox'].indexOf(col.type) > -1) {
                         col.width = 50;
                     }
                     if (col.colspan >= 2) {
@@ -1688,13 +1694,11 @@
                 var cols = that.cols;
                 for (var i = 0; i < cols.length; i++) {
                     var col = cols[i];
-                    var width = col.width;
-                    if (col.type == 'radio' || col.type == 'checkbox') {
-                        width = 50;
+                    var colStr = '<col data-col="' + col._key + '"/>';
+                    if (!col.hidden) {
+                        that.$headerTableColGroup.append(colStr);
+                        that.$tableColGroup.append(colStr);
                     }
-                    var colStr = '<col data-col="' + col._key + '" ' + (width ? 'style="width:' + width + 'px"' : '') + '/>';
-                    that.$headerTableColGroup.append(colStr);
-                    that.$tableColGroup.append(colStr);
                 }
             }
 
@@ -2567,7 +2571,7 @@
                     Common.cancelNextFrame(that.timers.resizeTimer);
                     that.timers.resizeTimer = Common.nextFrame(function () {
                         var jyBindData = that.getBindData(th);
-                        if (!that.tempData.resizeData && !(jyBindData.col.colspan > 1)) {
+                        if (!that.tempData.resizeData && !(jyBindData.col.colspan > 1) && ['radio', 'checkbox'].indexOf(jyBindData.col.type) == -1) {
                             var $th = $(th);
                             if (e.offsetX > th.clientWidth - 10) {
                                 $th.addClass(classNames.colResize);
