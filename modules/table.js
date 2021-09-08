@@ -1331,7 +1331,6 @@
             var width = 0;
             this.cols.map(function (col) {
                 width += !col.hidden && col._width || 0;
-                width += (ieVersion == 7 ? 1 : 0);
             });
             this.$view.find('table.' + classNames.table).css('width', width);
         }
@@ -1361,10 +1360,10 @@
                 ths.each(function (i, th) {
                     var col = that.getBindData(th).col;
                     if (col.fixed === 'left') {
-                        leftWidth += col._width + (ieVersion == 7 ? 1 : 0);
+                        leftWidth += col._width;
                     }
                     if (col.fixed === 'right') {
-                        rightWidth += col._width + (ieVersion == 7 ? 1 : 0);
+                        rightWidth += col._width;
                     }
                 });
                 headerHeight = this.$header[0].offsetHeight;
@@ -1484,10 +1483,10 @@
             ths.map(function (th, i) {
                 var width = widths[i];
                 var jyBindData = that.getBindData(th);
-                width = ieVersion == 7 ? width - 1 : width;
                 jyBindData.col._width = width;
                 allCols[jyBindData.col._key].map(function (col) {
-                    $(col).css('width', width);
+                    // ie7中，col定义的宽度对应于clientWidth
+                    $(col).css('width', ieVersion == 7 ? width - 1 : width);
                 });
             });
             this.$headerTable.css({
