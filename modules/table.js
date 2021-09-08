@@ -242,7 +242,7 @@
             this.$view.insertAfter(this.$elem);
             this.$elem.hide();
             this.initCols();
-            this.createSheet();
+            // this.createSheet();
             this.renderToolbar();
             this.renderTableHead();
             this.renderTableBody();
@@ -1188,7 +1188,7 @@
          * @param {String} field 
          */
         Class.prototype.getColByField = function (field) {
-            for(var i=0; i<this.multilevelCols.length; i++) {
+            for (var i = 0; i < this.multilevelCols.length; i++) {
                 var cols = this.multilevelCols[i]
                 for (var j = 0; j < cols.length; j++) {
                     if (cols[j].field == field) {
@@ -1273,9 +1273,6 @@
                 var tableHeaderWidth = this.$headerTable[0].offsetWidth;
                 //表格拉伸至容器的宽度
                 if (tableHeaderWidth < hedaerWidth) {
-                    var col = this.getColByType('radio') || this.getColByType('checkbox');
-                    // 确保选择列宽度不变
-                    col && this.$headerTable.find('th[data-col="' + col._key + '"]').css('width', 50);
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
                     this.setColsWidth(null, this.$main[0].clientWidth - 18);
@@ -1329,10 +1326,20 @@
             }
         }
 
+        // 设置所有表格的宽度
+        Class.prototype.setTableWidth = function () {
+            var width = 0;
+            this.cols.map(function (col) {
+                width += !col.hidden && col._width || 0;
+                width += (ieVersion == 7 ? 1 : 0);
+            });
+            this.$view.find('table.' + classNames.table).css('width', width);
+        }
+
         Class.prototype.setFixedArea = function () {
             var that = this;
-            var leftWidth = 0;
-            var rightWidth = 0;
+            var leftWidth = 1;
+            var rightWidth = 1;
             var mainRect = null;
             var height = 0;
             var headerHeight = 0;
@@ -1354,10 +1361,10 @@
                 ths.each(function (i, th) {
                     var col = that.getBindData(th).col;
                     if (col.fixed === 'left') {
-                        leftWidth += th.offsetWidth;
+                        leftWidth += col._width + (ieVersion == 7 ? 1 : 0);
                     }
                     if (col.fixed === 'right') {
-                        rightWidth += th.offsetWidth;
+                        rightWidth += col._width + (ieVersion == 7 ? 1 : 0);
                     }
                 });
                 headerHeight = this.$header[0].offsetHeight;
@@ -1472,7 +1479,7 @@
                 $(th.children[0]).css('width', width);
             });
             ths.map(function (th, i) {
-                widths.push(th.clientWidth);
+                widths.push(th.offsetWidth);
             });
             ths.map(function (th, i) {
                 var width = widths[i];
@@ -1483,11 +1490,10 @@
                     $(col).css('width', width);
                 });
             });
-            var width = this.$header[0].scrollWidth;
-            this.$view.find('table.' + classNames.table).css('width', width);
             this.$headerTable.css({
                 'table-layout': 'fixed'
             });
+            this.setTableWidth();
         }
 
         // 设置单元格高度（编辑时，高度可能变化）
@@ -1687,7 +1693,7 @@
                     if (col.type == 'radio' || col.type == 'checkbox') {
                         width = 50;
                     }
-                    var colStr = '<col data-col="' + col._key + '" ' + (width ? 'style="width:' + width + 'px"' : '') + '></col>';
+                    var colStr = '<col data-col="' + col._key + '" ' + (width ? 'style="width:' + width + 'px"' : '') + '/>';
                     that.$headerTableColGroup.append(colStr);
                     that.$tableColGroup.append(colStr);
                 }
@@ -2163,10 +2169,10 @@
             var that = this;
             var allThs = [];
             var nowTh = null;
-            if(checked == undefined) {
+            if (checked == undefined) {
                 checked = !col.checked;
             }
-            if(col.hidden == !checked) {
+            if (col.hidden == !checked) {
                 return;
             }
             col.hidden = !checked;
@@ -2198,11 +2204,11 @@
                 // 表头总高度可能发生变化，所以需要重新设置main的高度
                 this.setViewArea();
             }
+            this.toggleHolderCol(col, checked);
+            this.setFixedArea();
             this.$headerTable.css({
                 left: -this.$main[0].scrollLeft
             });
-            this.toggleHolderCol(col, checked);
-            this.setFixedArea();
 
 
             // 设置父级列的colspan
@@ -2239,7 +2245,6 @@
 
         // 新增/删除colgroup中的col
         Class.prototype.toggleHolderCol = function (col, checked) {
-            var tableWidth = 0;
             this.$headerTable.css({
                 'width': 'auto',
                 'table-layout': 'auto'
@@ -2258,7 +2263,7 @@
                     var _col = this.cols[index];
                     if (_col && !_col.hidden) {
                         this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
-                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"></col>').insertAfter(_col);
+                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"/>').insertAfter(_col);
                         });
                         index = Infinity;
                         break;
@@ -2269,7 +2274,7 @@
                     var _col = this.cols[index];
                     if (_col && !_col.hidden) {
                         this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
-                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"></col>').insertBefore(_col);
+                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"/>').insertBefore(_col);
                         });
                         break;
                     }
@@ -2277,11 +2282,10 @@
             } else {
                 this.$view.find('col[data-col="' + col._key + '"]').remove();
             }
-            tableWidth = this.$headerTable[0].clientWidth;
-            this.$view.find('table.' + classNames.table).css('width', tableWidth);
             this.$headerTable.css({
                 'table-layout': 'fixed'
             });
+            this.setTableWidth();
         }
 
         // 绑定容器的事件
