@@ -1304,6 +1304,9 @@
          * @param {Number} height 
          */
         Class.prototype.setArea = function (width, height) {
+            if(!this.$view.is(':visible')) {
+                return;
+            }
             this.width = width || this.width;
             this.height = height || this.height;
             this.option.width = this.width;
@@ -1324,25 +1327,30 @@
                     width: this.width
                 });
                 width = this.$view[0].clientWidth;
-                this.$main.css({
-                    width: (ieVersion <= 6 ? width + 2 : width)
-                });
+                if(width) {
+                    this.$main.css({
+                        width: (ieVersion <= 6 ? width + 2 : width)
+                    });
+                }
             }
             if (this.height) {
                 height = this.height;
                 this.$view.css({
                     height: height
                 });
-                height -= this.$header[0].offsetHeight;
-                if (this.$toolbar) {
-                    height -= this.$toolbar[0].offsetHeight;
+                height = this.$view[0].clientHeight;
+                if(height) {
+                    height -= this.$header[0].offsetHeight;
+                    if (this.$toolbar) {
+                        height -= this.$toolbar[0].offsetHeight;
+                    }
+                    if (this.$pager) {
+                        height -= this.$pager[0].offsetHeight;
+                    }
+                    this.$main.css({
+                        height: height
+                    });
                 }
-                if (this.$pager) {
-                    height -= this.$pager[0].offsetHeight;
-                }
-                this.$main.css({
-                    height: height
-                });
             }
         }
 
