@@ -242,7 +242,7 @@
             this.$view.insertAfter(this.$elem);
             this.$elem.hide();
             this.initCols();
-            // this.createSheet();
+            this.createSheet();
             this.renderToolbar();
             this.renderTableHead();
             this.renderTableBody();
@@ -1203,9 +1203,12 @@
          * @param {String} key 
          */
         Class.prototype.getColByKey = function (key) {
-            for (var i = 0; i < this.cols.length; i++) {
-                if (this.cols[i]._key == key) {
-                    return this.cols[i];
+            for (var i = 0; i < this.multilevelCols.length; i++) {
+                var cols = this.multilevelCols[i]
+                for (var j = 0; j < cols.length; j++) {
+                    if (cols[j]._key == key) {
+                        return cols[j];
+                    }
                 }
             }
         }
@@ -1287,8 +1290,8 @@
          * @param {Number} height 
          */
         Class.prototype.setArea = function (width, height) {
-            this.width = Number(width || this.width) || 0;
-            this.height = Number(height || this.height) || 0;
+            this.width = width || this.width;
+            this.height = height || this.height;
             this.option.width = this.width;
             this.option.height = this.height;
             this.stretch = this.option.stretch || false;
@@ -1300,28 +1303,31 @@
 
         // 设置容器宽高
         Class.prototype.setViewArea = function () {
+            var width = 0;
+            var height = 0;
             if (this.width) {
                 this.$view.css({
                     width: this.width
                 });
+                width = this.$view[0].clientWidth;
                 this.$main.css({
-                    width: (ieVersion <= 6 ? this.width - 2 : this.width)
+                    width: (ieVersion <= 6 ? width + 2 : width)
                 });
             }
             if (this.height) {
-                var h = this.height;
+                height = this.height;
                 this.$view.css({
-                    height: h
+                    height: height
                 });
-                h -= this.$header[0].offsetHeight;
+                height -= this.$header[0].offsetHeight;
                 if (this.$toolbar) {
-                    h -= this.$toolbar[0].offsetHeight;
+                    height -= this.$toolbar[0].offsetHeight;
                 }
                 if (this.$pager) {
-                    h -= this.$pager[0].offsetHeight;
+                    height -= this.$pager[0].offsetHeight;
                 }
                 this.$main.css({
-                    height: h
+                    height: height
                 });
             }
         }
@@ -1499,6 +1505,7 @@
                 'table-layout': 'fixed'
             });
             this.setTableWidth();
+            this.$empty.css('width', this.$header[0].scrollWidth);
         }
 
         // 设置单元格高度（编辑时，高度可能变化）
@@ -2185,15 +2192,23 @@
         }
 
         // 显示/隐藏某一列
-        Class.prototype.toggleCol = function (col, checked) {
+        Class.prototype.toggleCol = function (col, checked, stopCheckParent) {
             var that = this;
             var allThs = [];
             var nowTh = null;
             if (checked == undefined) {
-                checked = !col.checked;
+                checked = col.hidden;
             }
             if (col.hidden == !checked) {
                 return;
+            }
+            // 有子列，则子列也需要进行toggle
+            if (col.child) {
+                col.child.map(function (_col) {
+                    if (_col.parent == col) {
+                        that.toggleCol(_col, checked, true);
+                    }
+                });
             }
             col.hidden = !checked;
             this.$view.find('th,td').each(function (i, td) {
@@ -2210,44 +2225,37 @@
                     } else {
                         checked ? $td.show() : $td.hide();
                     }
-                    if (td.tagName.toUpperCase() == 'TH') {
-                        nowTh = td;
-                    }
                 }
                 if (td.tagName.toUpperCase() == 'TH') {
                     allThs.push(td);
                 }
             });
-            // 存在上级父列
-            if (col.parent) {
-                _setParentColspan(nowTh);
+            // 存在子列
+            col.child && _checkColspan(col);
+            this.toggleHolderCol(col, checked);
+            // 递归执行的子列不需要处理如下操作
+            if (!stopCheckParent) {
+                col.parent && _checkColspan(col.parent);
                 // 表头总高度可能发生变化，所以需要重新设置main的高度
                 this.setViewArea();
-            }
-            this.toggleHolderCol(col, checked);
-            this.setFixedArea();
-            this.$headerTable.css({
-                left: -this.$main[0].scrollLeft
-            });
-
-
-            // 设置父级列的colspan
-            function _setParentColspan(th) {
-                var jyBindData = that.getBindData(th);
-                var col = jyBindData.col.parent;
-                var ths = _getThByCol(col);
-                var colspan = col._colspan === undefined ? col.colspan : col._colspan;
-                // 选中列后，父列的coslpan加1，取消列后，父列的cospan需减1
-                checked ? ++colspan : --colspan;
-                col._colspan = colspan;
-                ths.map(function (th) {
-                    var $th = $(th);
-                    // ie7及以下浏览器设置为0时会报错
-                    colspan > 0 && $th.attr('colspan', colspan);
-                    colspan ? $th.show() : $th.hide();
+                this.setFixedArea();
+                this.$headerTable.css({
+                    left: -this.$main[0].scrollLeft
                 });
-                if (col.parent) {
-                    _setParentCol(ths[0]);
+            }
+
+            function _checkColspan(col) {
+                var colspan = 0;
+                col.child.map(function (_col) {
+                    colspan += _col.hidden ? 0 : 1;
+                });
+                if (col.colspan != colspan) {
+                    col.colspan = colspan;
+                    _getThByCol(col).map(function (th) {
+                        var $th = $(th);
+                        $(th).attr('colspan', colspan || 1);
+                        colspan ? $th.show() : $th.hide();
+                    });
                 }
             }
 
@@ -2265,6 +2273,9 @@
 
         // 新增/删除colgroup中的col
         Class.prototype.toggleHolderCol = function (col, checked) {
+            if (col.child) {
+                return;
+            }
             this.$headerTable.css({
                 'width': 'auto',
                 'table-layout': 'auto'
@@ -2588,7 +2599,7 @@
                     Common.cancelNextFrame(that.timers.resizeTimer);
                     that.timers.resizeTimer = Common.nextFrame(function () {
                         var jyBindData = that.getBindData(th);
-                        if (!that.tempData.resizeData && !(jyBindData.col.colspan > 1) && ['radio', 'checkbox'].indexOf(jyBindData.col.type) == -1) {
+                        if (!that.tempData.resizeData && !jyBindData.col.child && ['radio', 'checkbox'].indexOf(jyBindData.col.type) == -1) {
                             var $th = $(th);
                             if (e.offsetX > th.clientWidth - 10) {
                                 $th.addClass(classNames.colResize);
@@ -2751,12 +2762,20 @@
         // 创建过滤器
         Class.prototype.createFilter = function (dom) {
             var that = this;
-            var $view = this.$view;
             var $filter = $('<ul class="' + classNames.filter + '"></ul>');
+            var addedCols = [];
             this.$filter = $filter;
             for (var i = 0; i < this.cols.length; i++) {
                 var col = this.cols[i];
-                if (col.type == 'text') {
+                // 如果是占位列，则添加其父代中不为占位列的col
+                if (col.holder) {
+                    col = col.parent;
+                    while (col && col.holder) {
+                        col = col.parent;
+                    }
+                }
+                if (col && col.type == 'text' && addedCols.indexOf(col) == -1) {
+                    addedCols.push(col);
                     $filter.append('<li>' + Common.htmlTemplate(tpl.checkbox, {
                         checked: true,
                         title: col.title,
@@ -2770,9 +2789,8 @@
                 var $checkbox = $(this).children('div.' + classNames.checkbox);
                 var key = $checkbox.attr('data-key');
                 var col = that.getColByKey(key);
-                var checked = !$checkbox.hasClass(classNames.checked);
                 $checkbox.toggleClass(classNames.checked);
-                that.toggleCol(col, checked);
+                that.toggleCol(col);
             });
         }
 
@@ -2961,15 +2979,7 @@
                     },
                     toggleCol: function (field, checked) {
                         var col = table.getColByField(field);
-                        if (col) {
-                            if (col.child) {
-                                col.child.map(function (col) {
-                                    table.toggleCol(col, checked);
-                                });
-                            } else {
-                                table.toggleCol(col, checked);
-                            }
-                        }
+                        table.toggleCol(col, checked);
                     },
                     reload: table.reload.bind(table),
                     reloadData: table.reloadData.bind(table),
