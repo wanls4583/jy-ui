@@ -315,6 +315,7 @@
             }
             this.setColMap();
 
+            // 设置父子关系
             function _setColRelation(cols, level, colspan, pCol) {
                 for (var i = 0, count = 0; i < colspan && cols[level][i] && count < colspan; i++) {
                     var col = cols[level][i];
@@ -333,6 +334,19 @@
                         pCol.child = pCol.child || [];
                         pCol.child.push(col);
                         col.parent = pCol;
+                        // 是否显示子列依赖于父列
+                        col.hidden = pCol.hidden || col.hidden;
+                    }
+                }
+                if (pCol) {
+                    // 设置完父子关系后，设置col的有效colspan
+                    var _colspan = 0;
+                    pCol.child.map(function (_col) {
+                        _colspan += _col.hidden ? 0 : 1;
+                    });
+                    pCol.colspan = _colspan;
+                    if (!_colspan) {
+                        pCol.hidden = true;
                     }
                 }
                 // 只有一级表头可以设置固定列
@@ -2195,9 +2209,9 @@
         Class.prototype.toggleCol = function (col, checked, stopCheckParent) {
             var that = this;
             var allThs = [];
-            var nowTh = null;
+            var $checkbox = this.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._key + '"]');
             if (checked == undefined) {
-                checked = col.hidden;
+                checked = Boolean(col.hidden);
             }
             if (col.hidden == !checked) {
                 return;
@@ -2230,12 +2244,13 @@
                     allThs.push(td);
                 }
             });
+            checked ? $checkbox.addClass(classNames.checked) : $checkbox.removeClass(classNames.checked);
             // 存在子列
             col.child && _checkColspan(col);
             this.toggleHolderCol(col, checked);
             // 递归执行的子列不需要处理如下操作
             if (!stopCheckParent) {
-                col.parent && _checkColspan(col.parent);
+                col.parent && _checkColspan(col.parent, true);
                 // 表头总高度可能发生变化，所以需要重新设置main的高度
                 this.setViewArea();
                 this.setFixedArea();
@@ -2244,7 +2259,7 @@
                 });
             }
 
-            function _checkColspan(col) {
+            function _checkColspan(col, isParent) {
                 var colspan = 0;
                 col.child.map(function (_col) {
                     colspan += _col.hidden ? 0 : 1;
@@ -2252,10 +2267,25 @@
                 if (col.colspan != colspan) {
                     col.colspan = colspan;
                     _getThByCol(col).map(function (th) {
-                        var $th = $(th);
                         $(th).attr('colspan', colspan || 1);
-                        colspan ? $th.show() : $th.hide();
                     });
+                    // 检查的是父列
+                    if (isParent) {
+                        var $checkbox = that.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._key + '"]');
+                        _getThByCol(col).map(function (th) {
+                            var $th = $(th);
+                            $(th).attr('colspan', colspan || 1);
+                            if (colspan) {
+                                col.hidden = true;
+                                $th.show();
+                                $checkbox.addClass(classNames.checked);
+                            } else {
+                                col.hidden = false;
+                                $th.hide();
+                                $checkbox.removeClass(classNames.checked);
+                            }
+                        });
+                    }
                 }
             }
 
@@ -2281,6 +2311,10 @@
                 'table-layout': 'auto'
             });
             if (checked) {
+                var width = 0;
+                // 对于初始化时就隐藏的列，其没有_width
+                col._width = col._width || col.width + 3 || 100;
+                width = ieVersion == 7 ? col._width - 1 : col._width
                 var index = -1;
                 for (var i = 0; i < this.cols.length; i++) {
                     var _col = this.cols[i];
@@ -2294,7 +2328,7 @@
                     var _col = this.cols[index];
                     if (_col && !_col.hidden) {
                         this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
-                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"/>').insertAfter(_col);
+                            $('<col data-col="' + col._key + '" style="width:' + width + 'px"/>').insertAfter(_col);
                         });
                         index = Infinity;
                         break;
@@ -2305,7 +2339,7 @@
                     var _col = this.cols[index];
                     if (_col && !_col.hidden) {
                         this.$view.find('col[data-col="' + _col._key + '"]').each(function (i, _col) {
-                            $('<col data-col="' + col._key + '" style="width:' + col._width + 'px"/>').insertBefore(_col);
+                            $('<col data-col="' + col._key + '" style="width:' + width + 'px"/>').insertBefore(_col);
                         });
                         break;
                     }
@@ -2765,31 +2799,31 @@
             var $filter = $('<ul class="' + classNames.filter + '"></ul>');
             var addedCols = [];
             this.$filter = $filter;
-            for (var i = 0; i < this.cols.length; i++) {
-                var col = this.cols[i];
-                // 如果是占位列，则添加其父代中不为占位列的col
-                if (col.holder) {
-                    col = col.parent;
-                    while (col && col.holder) {
+            this.multilevelCols.map(function (cols) {
+                for (var i = 0; i < cols.length; i++) {
+                    var col = cols[i];
+                    // 如果是占位列，则添加其父代中不为占位列的col
+                    if (col.holder) {
                         col = col.parent;
+                        while (col && col.holder) {
+                            col = col.parent;
+                        }
+                    }
+                    if (col && col.type == 'text' && addedCols.indexOf(col) == -1) {
+                        addedCols.push(col);
+                        $filter.append('<li>' + Common.htmlTemplate(tpl.checkbox, {
+                            checked: !col.hidden,
+                            title: col.title,
+                            key: col._key
+                        }) + '</li>');
                     }
                 }
-                if (col && col.type == 'text' && addedCols.indexOf(col) == -1) {
-                    addedCols.push(col);
-                    $filter.append('<li>' + Common.htmlTemplate(tpl.checkbox, {
-                        checked: true,
-                        title: col.title,
-                        key: col._key
-                    }) + '</li>');
-                }
-            }
+            });
             // 在工具图标下挂载
             $(dom).append($filter);
             $filter.delegate('li', 'click', function () {
                 var $checkbox = $(this).children('div.' + classNames.checkbox);
-                var key = $checkbox.attr('data-key');
-                var col = that.getColByKey(key);
-                $checkbox.toggleClass(classNames.checked);
+                var col = that.getColByKey($checkbox.attr('data-key'));
                 that.toggleCol(col);
             });
         }
