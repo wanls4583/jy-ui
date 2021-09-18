@@ -1389,10 +1389,10 @@
                 var ths = this.$headerTableThead.children('tr').first().children('th');
                 ths.each(function (i, th) {
                     var col = that.getBindData(th).col;
-                    if (col.fixed === 'left') {
+                    if (col.fixed === 'left' && !col.hidden) {
                         leftWidth += col._width;
                     }
-                    if (col.fixed === 'right') {
+                    if (col.fixed === 'right' && !col.hidden) {
                         rightWidth += col._width;
                     }
                 });
