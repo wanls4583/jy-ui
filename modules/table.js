@@ -1794,15 +1794,11 @@
             var that = this;
             var cols = this.cols;
             if (!this.$main.inserted) {
-                var viewWidth = this.$view.width();
                 this.$table.append(this.$tableColGroup);
                 this.$table.append(this.$tableTbody);
                 this.$main.append(this.$table);
                 this.$main.append(this.$empty);
                 this.$headerMain.append(this.$main);
-                this.$main.css({
-                    width: viewWidth
-                });
                 this.$main.inserted = true;
                 this.showLoading();
             } else {
