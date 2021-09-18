@@ -171,8 +171,8 @@
                     $(docBody).on('click', function () {
                         that.cancel();
                     });
-                    if(this.option.focus) {
-                        setTimeout(function() {
+                    if (this.option.focus) {
+                        setTimeout(function () {
                             that.$elem.trigger(that.triggerEvent);
                         }, 100);
                     }
@@ -942,7 +942,9 @@
         Class.prototype.confirmRange = function () {
             var formatTime = [this.data.value[0].formatTime(this.data.childs[0].data.format), this.data.value[1].formatTime(this.data.childs[1].data.format)];
             if (this.data.value[0] > this.data.value[1]) {
-                this.showTip('开始时间不能大于结束时间');
+                Common.showMsg('开始时间不能大于结束时间', {
+                    container: this.data.$date
+                });
                 return;
             }
             if (this.option.position !== 'static') {
@@ -955,18 +957,6 @@
                 this.data.$date.remove();
             }
             typeof this.option.change === 'function' && this.option.change(this.data.value, formatTime);
-        }
-
-        Class.prototype.showTip = function (tip) {
-            var $tip = $(tpl.tip).text(tip);
-            this.data.$date.append($tip);
-            $tip.css({
-                marginLeft: -$tip[0].offsetWidth / 2,
-                marginTop: -$tip[0].offsetHeight / 2
-            });
-            setTimeout(function () {
-                $tip.remove();
-            }, 1500);
         }
 
         return JyDate;

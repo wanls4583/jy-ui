@@ -77,10 +77,6 @@
                 this.appendItem(this.data, this.$menu, 1);
                 this.setTitleLeftPadding();
                 this.type === 'menu' && this.addBorder();
-                if (ieVersion <= 7) {
-                    this.setUlWidth();
-                    this.$menu.addClass(menuClass.ieHack);
-                }
                 // 处理完毕后隐藏掉所有分组
                 this.$menu.find('ul').hide();
                 // 默认打开的组
@@ -97,10 +93,6 @@
                 });
             } else {
                 this.setTitleLeftPadding();
-                if (ieVersion <= 7) {
-                    this.setUlWidth();
-                    this.$menu.addClass(menuClass.ieHack);
-                }
                 this.$menu.find('ul').hide();
                 // 设置右侧图标和显示默认打开的组
                 this.$menu.find('li').each(function (i, li) {
@@ -284,21 +276,13 @@
             }
         }
 
-        // 设置子组的宽度(防止ie7及以下浏览器布局错误)
-        Class.prototype.setUlWidth = function () {
-            this.$menu.css('width', this.$menu[0].offsetWidth);
-            this.$menu.find('ul').each(function (i, ul) {
-                $(ul).css('width', ul.offsetWidth);
-            });
-        }
-
         // 设置位置
         Class.prototype.setPosition = function () {
             var offset = this.$elem.offset();
             this.$menu.css({
                 top: offset.top + this.$elem[0].offsetHeight + 5,
                 left: offset.left
-            })
+            });
             if (ieVersion <= 6) {
                 var ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
                 var ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
@@ -420,6 +404,8 @@
                     $ul.show().addClass($ul.hasClass(menuClass.hoverRight) ? hoverRightAnimation : hoverDownAnimation);
                     if ($ul.hasClass(menuClass.hoverDown) && $ul[0].offsetWidth < this.offsetWidth) {
                         $ul.css('width', this.offsetWidth);
+                    } else if (ieVersion <= 7) {
+                        $ul.css('width', ieVersion < 7 ? $ul[0].offsetWidth : $ul[0].clientWidth);
                     }
                     that.trigger('spread', {
                         dom: this,

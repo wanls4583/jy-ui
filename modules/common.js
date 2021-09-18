@@ -20,7 +20,8 @@
             checkOverflow: checkOverflow,
             deepAssign: deepAssign,
             delInnerProperty: delInnerProperty,
-            stopPropagation: stopPropagation
+            stopPropagation: stopPropagation,
+            showMsg: showMsg
         }
 
 
@@ -44,11 +45,13 @@
             function trigger(filter, event, container) {
                 container = container || on;
                 var arr = container[filter + '_event'];
+                var result;
                 if (arr) {
                     for (var i = 0; i < arr.length; i++) {
-                        arr[i](event);
+                        result = arr[i](event);
                     }
                 }
+                return result;
             }
 
             return {
@@ -324,6 +327,71 @@
             } else {
                 event.cancelBubble = true;
             }
+        }
+
+        // 显示提示
+        function showMsg(tip, option) {
+            var docBody = window.document.body;
+            var docElement = window.document.documentElement;
+            var ieVersion = Common.getIeVersion();
+            var $tip = $('<div class="jy-msg"><span></span></div>');
+            var width = 0;
+            var height = 0;
+            var ie6MarginTop = 0;
+            var ie6MarginLeft = 0;
+            var containerWidth = 0;
+            var containerHeight = 0;
+            var $container = null;
+            option = option || {};
+            $container = $(option.container || docBody);
+            if (option.icon) {
+                var icon = '';
+                var successIcon = '&#xe615;';
+                var warnIcon = '&#xe60a;';
+                var errorIcon = '&#xe60b;';
+                var questionIcon = '&#xe613;';
+                switch (icon) {
+                    case 'danger':
+                        icon = errorIcon;
+                        break;
+                    case 'warn':
+                        icon = warnIcon;
+                        break;
+                    case 'question':
+                        icon = questionIcon;
+                        break;
+                    default:
+                        icon = successIcon;
+                        break;
+                }
+                $tip.prepend('<i class="jy-msg-icon">' + icon + '</i>').addClass('jy-msg-with-icon');
+            }
+            if (option.container) {
+                containerWidth = $container[0].clientWidth;
+                containerHeight = $container[0].clientHeight;
+            } else {
+                containerWidth = docElement.clientWidth || docBody.clientWidth;
+                containerHeight = docElement.clientHeight || docBody.clientHeight;
+                if (ieVersion <= 6) {
+                    ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
+                    ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
+                } else {
+                    $tip.css('position', 'fixed');
+                }
+            }
+            $tip.children('span').text(tip);
+            $container.append($tip);
+            width = $tip[0].offsetWidth;
+            height = $tip[0].offsetHeight;
+            $tip.css({
+                left: (containerWidth - width) / 2,
+                top: (containerHeight - height) / 2,
+                marginLeft: ie6MarginLeft,
+                marginTop: ie6MarginTop
+            });
+            setTimeout(function () {
+                $tip.remove();
+            }, 1500);
         }
 
         if (!Function.prototype.bind) {

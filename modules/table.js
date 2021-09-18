@@ -23,6 +23,7 @@
         var tableCount = 1;
         var classNames = {
             view: 'jy-table-view',
+            viewBorder: 'jy-table-view-border',
             table: 'jy-table',
             holder: 'jy-table-col-holder',
             cell: 'jy-table-cell',
@@ -120,7 +121,6 @@
             </div>',
             dd: '<dd class="<%-(selected?"jy-table-select-active":"")%>"><%-title%></dd>',
             btn: '<button type="button" class="jy-btn jy-btn-xs <%-(type?"jy-btn-"+type:"")%>" jy-event="<%-event%>" style="margin-right:10px" <%-(stop?\'jy-stop="true"\':"")%>><%-text%></button>',
-            tip: '<div class="jy-table-tip"><i class="jy-table-icon">' + errorIcon + '</i><span></span></div>',
             loading: '<div class="jy-table-loading"><i class="jy-table-icon">' + loadingIcon + '</i></div>'
         }
         // 常用正则验证
@@ -184,6 +184,7 @@
             this.tableCount = this.tableCount || tableCount++;
             this.$view && this.$view.remove();
             this.$view = $('<div class="' + [classNames.view, classNames.view + '-' + this.tableCount].join(' ') + '"></div>');
+            this.$viewBorder = $('<div class="' + classNames.viewBorder + '"></div>');
             this.$table = $(tpl.table);
             this.$tableColGroup = $('<colgroup></colgroup>');
             this.$tableTbody = $(tpl.tbody);
@@ -239,6 +240,7 @@
             this.idKeyMap = {}; // 存储原始数据id到内部key的映射
             this.dataMap = {}; // 存储数据映射，可快速找到数据
             this.editMap = {} // 存储编辑中的单元格
+            this.$view.append(this.$viewBorder);
             this.$view.insertAfter(this.$elem);
             this.$elem.hide();
             this.initCols();
@@ -695,7 +697,7 @@
                             pass = rule.rule.test(String(value || ''));
                         }
                         if (!pass) {
-                            that.showTip(msg);
+                            that.showMsg(msg);
                             break;
                         }
                     }
@@ -1304,7 +1306,7 @@
          * @param {Number} height 
          */
         Class.prototype.setArea = function (width, height) {
-            if(!this.$view.is(':visible')) {
+            if (!this.$view.is(':visible')) {
                 return;
             }
             this.width = width || this.width;
@@ -1327,9 +1329,9 @@
                     width: this.width
                 });
                 width = this.$view[0].clientWidth;
-                if(width) {
+                if (width) {
                     this.$main.css({
-                        width: (ieVersion <= 6 ? width + 2 : width)
+                        width: width - 2
                     });
                 }
             }
@@ -1339,7 +1341,7 @@
                     height: height
                 });
                 height = this.$view[0].clientHeight;
-                if(height) {
+                if (height) {
                     height -= this.$header[0].offsetHeight;
                     if (this.$toolbar) {
                         height -= this.$toolbar[0].offsetHeight;
@@ -1348,7 +1350,7 @@
                         height -= this.$pager[0].offsetHeight;
                     }
                     this.$main.css({
-                        height: height
+                        height: height - 2
                     });
                 }
             }
@@ -1643,7 +1645,7 @@
             if (this.toolbar || this.defaultToolbar) {
                 this.$toolbar = $toolbar;
                 $toolbar.append(this.toolbar);
-                this.$view.prepend($toolbar);
+                this.$viewBorder.prepend($toolbar);
             }
         }
 
@@ -1663,7 +1665,7 @@
             this.$headerTable.append(this.$headerTableThead);
             this.$header.append(this.$headerTable);
             this.$headerMain.append(this.$header);
-            this.$view.append(this.$headerMain);
+            this.$viewBorder.append(this.$headerMain);
 
             // 渲染表头
             function _renderCols(cols) {
@@ -1883,7 +1885,7 @@
                     this.$leftMain.append(this.$leftTable);
                     this.$leftHeaderMain.append(this.$leftHeader);
                     this.$leftHeaderMain.append(this.$leftMain);
-                    this.$view.append(this.$leftHeaderMain);
+                    this.$viewBorder.append(this.$leftHeaderMain);
                 }
                 this.$leftHeaderTable.html(this.$headerTable.html());
                 this.$leftTable.html(this.$table.html());
@@ -1900,8 +1902,8 @@
                     this.$rightHeaderMain.append(this.$rightHeader);
                     this.$rightHeaderMain.append(this.$rightMain);
                     this.$mend = $('<div class="' + classNames.mend + '"></div>');
-                    this.$view.append(this.$rightHeaderMain);
-                    this.$view.append(this.$mend);
+                    this.$viewBorder.append(this.$rightHeaderMain);
+                    this.$viewBorder.append(this.$mend);
                 }
                 this.$rightHeaderTable.html(this.$headerTable.html());
                 this.$rightTable.html(this.$table.html());
@@ -2181,18 +2183,11 @@
         }
 
         // 显示错误提示
-        Class.prototype.showTip = function (tip) {
-            var $tip = $(tpl.tip);
-            var headerHeight = this.$header[0].clientHeight;
-            $tip.children('span').text(tip);
-            this.$headerMain.append($tip);
-            $tip.css({
-                marginLeft: -$tip[0].offsetWidth / 2,
-                marginTop: headerHeight / 2 - $tip[0].offsetHeight / 2 - 8
+        Class.prototype.showMsg = function (tip) {
+            Common.showMsg(tip, {
+                container: this.$headerMain,
+                icon: 'danger'
             });
-            setTimeout(function () {
-                $tip.remove();
-            }, 1500);
         }
 
         // 通过id获取key
@@ -2365,12 +2360,10 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             var editTrigger = this.editTrigger || 'click'; //触发编辑的事件类型
-            if (this.tempData.bindedEvent) {
-                return;
+            if (!this.bindedEvent) {
+                _bindBodyEvent();
+                this.bindedEvent = true;
             }
-            this.tempData.bindedEvent = true;
-
-            _bindBodyEvent();
             _bindRadioCheckboxEvent();
             _bindScrollEvent();
             _bindClickEvent();
@@ -2668,7 +2661,7 @@
                             top: top,
                             height: height
                         });
-                        that.$view.append(that.tempData.$resizeLine);
+                        that.$viewBorder.append(that.tempData.$resizeLine);
                         that.$view.addClass(classNames.colResize);
                     }
                 });
@@ -2865,7 +2858,7 @@
                 </head><body><table>' + $table.html() + '</table></body></html>';
                 window.location.href = uri + window.btoa(unescape(encodeURIComponent(template)));
             } else {
-                this.showTip('该浏览器不支持导出，请使用谷歌浏览器');
+                this.showMsg('该浏览器不支持导出，请使用谷歌浏览器');
             }
         }
 
@@ -2957,7 +2950,7 @@
                 wind.print();
                 wind.close();
             } else {
-                this.showTip('该浏览器不支持打印，请使用谷歌浏览器');
+                this.showMsg('该浏览器不支持打印，请使用谷歌浏览器');
             }
         }
 

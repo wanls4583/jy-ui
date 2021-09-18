@@ -2,7 +2,7 @@ html,
 body {
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
+    overflow: auto; //ie6下，iframe中的页面body必须加个overflow:auto，或者hidden，body会默认有个看不见的垂直滚动条
 }
 
 .jy-header {
@@ -10,11 +10,13 @@ body {
     height: 50px;
     z-index: 3;
     background-color: #fff;
+    *zoom: 1;
 
     .logo {
         float: left;
         height: 100%;
         width: 160px;
+        _width: 200px;
         padding: 0 20px;
         background-color: $success-color;
         line-height: 50px;
@@ -29,6 +31,7 @@ body {
         right: 0;
         height: 100%;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+        *zoom: 1;
     }
 
     .jy-header-info {
@@ -46,9 +49,10 @@ body {
         top: 0;
         right: 0;
         background-color: #fff;
+        white-space: nowrap;
 
         a {
-            display: inline-block;
+            float: left;
             margin-left: 15px;
             line-height: 50px;
         }
@@ -60,7 +64,8 @@ body {
     }
 
     .jy-menu {
-        display: inline-block;
+        float: left;
+        _width: 50px;
         padding: 0;
         border: 0;
         box-shadow: none;
@@ -73,6 +78,7 @@ body {
 
         a {
             display: block;
+            float: none;
             line-height: 36px;
             margin-left: 0;
         }
@@ -90,9 +96,10 @@ body {
     background-color: #393D49;
 
     .jy-side-scroll {
+        position: relative;
         width: 220px;
         height: 100%;
-        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .jy-menu-nav {
@@ -155,11 +162,8 @@ body {
 .jy-content {
     position: relative;
     padding: 10px;
-    _padding-bottom: 60px;
     background: #fff;
-    border: 1px solid $border-color;
-    box-sizing: border-box;
-    overflow: auto;
+    *zoom: 1;
 
     .jy-content-header {
         position: absolute;

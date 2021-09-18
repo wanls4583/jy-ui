@@ -10,6 +10,7 @@
 @import 'transfer';
 @import 'tab';
 @import 'frame';
+@import 'upload';
 
 @font-face {
     font-family: 'iconfont';
@@ -206,4 +207,39 @@ hr {
     background-color: $danger-color;
     font-size: 12px;
     color: #fff;
+}
+
+.jy-msg {
+    position: absolute;
+    z-index: 999999;
+    line-height: 24px;
+    padding: 10px 20px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    // 只兼容ie8的样式，在属性值后面加\0/
+    background-color: #{'#000000\\0/'};
+    *background-color: #000000;
+    border-radius: 2px;
+    color: $white-color;
+
+    &-with-icon {
+        padding: 20px;
+        line-height: 30px;
+        background-color: $white-color;
+        border: 1px solid $gray-color;
+        border-radius: 2px;
+        color: #666666;
+        white-space: nowrap;
+    }
+
+    &-icon {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        margin-right: 5px;
+        font-family: 'iconfont';
+        font-size: 30px;
+        vertical-align: middle;
+        color: $danger-color;
+    }
 }

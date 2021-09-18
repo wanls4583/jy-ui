@@ -10,8 +10,6 @@
         var radioIcon = '&#xe619;';
         var errorIcon = '&#xe60b;';
         var docBody = window.document.body;
-        var docElement = window.document.documentElement;
-        var ieVersion = Common.getIeVersion();
         var formClass = {
             switchClass: 'jy-switch',
             switchDisabled: 'jy-switch-disabled',
@@ -123,7 +121,7 @@
                         if (pass && verifyRule) {
                             pass = verifyRule.verify ? verifyRule.verify(value) : verifyRule.rule.test(value);
                             if (!pass) {
-                                that.showTip(verifyRule.msg);
+                                that.showMsg(verifyRule.msg);
                                 msg = verifyRule.msg;
                                 if (tagName == 'select') {
                                     $input.next('.' + formClass.select).children('.jy-select-title').addClass(dangerClass);
@@ -592,31 +590,10 @@
         }
 
         // 显示错误提示
-        Class.prototype.showTip = function (tip) {
-            var $tip = $(tpl.tip);
-            var width = 0;
-            var height = 0;
-            var ie6MarginTop = 0;
-            var ie6MarginLeft = 0;
-            var winWidth = docElement.clientWidth || docBody.clientWidth;
-            var winHeight = docElement.clientHeight || docBody.clientHeight;
-            if (ieVersion <= 6) {
-                ie6MarginTop = docElement.scrollTop || docBody.scrollTop || 0;
-                ie6MarginLeft = docElement.scrollLeft || docBody.scrollLeft || 0;
-            }
-            $tip.children('span').text(tip);
-            $(docBody).append($tip);
-            width = $tip[0].offsetWidth;
-            height = $tip[0].offsetHeight;
-            $tip.css({
-                left: (winWidth - width) / 2,
-                top: (winHeight - height) / 2,
-                marginLeft: ie6MarginLeft,
-                marginTop: ie6MarginTop
+        Class.prototype.showMsg = function (tip) {
+            Common.showMsg(tip, {
+                icon: 'danger'
             });
-            setTimeout(function () {
-                $tip.remove();
-            }, 1500);
         }
 
         var instance = new Class();

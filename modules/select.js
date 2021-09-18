@@ -27,12 +27,8 @@
             select: 'jy-select',
             suggestion: 'jy-suggestion',
             multi: 'jy-multi-select',
-            selectSuffix: 'jy-select-suffix',
             selectOpen: 'jy-select-open',
-            selectTitle: 'jy-select-title',
-            searIcon: 'jy-select-search-suffix',
             selectBody: 'jy-select-body',
-            selectDl: 'jy-select-dl',
             selectHolder: 'jy-color-holder',
             selectDisabled: 'jy-select-disabled',
             selectActive: 'jy-select-active',
@@ -71,16 +67,13 @@
             this.searchMethod = this.option.searchMethod || function (value, cb) {
                 var data = [];
                 if (value) {
-                    var reg = new RegExp(value, 'i');
+                    value = value.toLowerCase();
                     data = that.data.filter(function (item) {
-                        if (typeof item == 'object') {
-                            if (reg.exec(item[that.labelKey])) {
-                                return true;
-                            }
-                        } else {
-                            if (reg.exec(item)) {
-                                return true;
-                            }
+                        var label = '';
+                        label = item[that.labelKey] + '';
+                        label = label.toLowerCase();
+                        if (item[that.valueKey] && label.indexOf(value) > -1) {
+                            return true;
                         }
                         return false;
                     });
@@ -100,9 +93,10 @@
                 }
                 return item;
             });
+            that.selectValue = '';
+            that.selectLabel = '';
             // 多选记录
             this.tags = [];
-            this.selectValue = this.$elem.val() || '';
             this.render();
         }
 
@@ -154,7 +148,7 @@
                 this.$input.attr('readonly', true);
             }
             if (this.focus) {
-                setTimeout(function() {
+                setTimeout(function () {
                     that.$input.trigger('focus');
                 }, 100);
             }
@@ -192,7 +186,8 @@
                 } else {
                     if (item.selected) { //默认选中
                         item.selected = false;
-                        that.selectValue = item[that.valueKey];
+                        that.selectValue = value;
+                        that.selectLabel = label;
                         dClass.push(classNames.selectActive);
                     } else if (value == that.selectValue) {
                         dClass.push(classNames.selectActive);
@@ -293,7 +288,7 @@
             }
             this.data.map(function (item) {
                 if (item[that.valueKey] == value) {
-                    _selct(item);
+                    _select(item);
                     finded = true;
                 }
             });
@@ -301,17 +296,18 @@
             if (!finded && this.renderedData) {
                 this.renderedData.map(function (item) {
                     if (item[that.valueKey] == value) {
-                        _selct(item);
+                        _select(item);
                     }
                 });
             }
 
-            function _selct(item) {
+            function _select(item) {
                 var value = item[that.valueKey] || '';
                 if (that.multiselect) {
                     that.$selectDl.children('dd[data-value="' + value + '"]').toggleClass(classNames.selectActive);
                 } else {
                     that.selectValue = value;
+                    that.selectLabel = item[that.labelKey] || '';
                     that.$selectDl.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
                     that.$selectDl.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
                 }
@@ -433,8 +429,7 @@
                         that.$input.hide();
                         that.$tags.show();
                     } else {
-                        var $dd = that.$selectDl.children('dd.' + classNames.selectActive);
-                        that.$input.val(that.selectValue && $dd.text() || '');
+                        that.$input.val(that.selectLabel);
                     }
                 }
                 $selectBody.hide().removeClass(classNames.selectAnimation);

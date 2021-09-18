@@ -373,21 +373,6 @@
         z-index: 0;
     }
 
-    &-tip {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 1;
-        line-height: 24px;
-        padding: 10px 20px;
-        font-size: 12px;
-        color: $white-color;
-        background-color: rgba(0, 0, 0, 0.6);
-        // 只兼容ie8的样式，在属性值后面加\0/
-        background-color: #{'#000000\\0/'};
-        *background-color: #000000;
-    }
-
     &-animation-hover-down {
         animation-name: jy-date-keyframes-hover-down;
         animation-duration: 0.2s;

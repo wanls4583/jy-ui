@@ -12,7 +12,9 @@ ol,
 li,
 dl,
 dd,
-p {
+p,
+form,
+hr {
   margin: 0;
   padding: 0;
 }
@@ -189,7 +191,7 @@ table {
   *zoom: 1;
   margin-right: 10px;
   margin-bottom: 5px;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .jy-input {
@@ -420,6 +422,7 @@ select {
   position: relative;
   width: 100%;
   *zoom: 1;
+  *vertical-align: middle;
 }
 
 .jy-select-open {
@@ -441,6 +444,7 @@ select {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  *zoom: 1;
 }
 
 .jy-select-title .jy-input {
@@ -635,31 +639,6 @@ select {
   padding: 15px;
 }
 
-.jy-form-tip {
-  position: fixed;
-  _position: absolute;
-  z-index: 999999;
-  line-height: 30px;
-  padding: 10px 20px;
-  font-size: 12px;
-  background-color: #ffffff;
-  border: 1px solid #eeeeee;
-  border-radius: 2px;
-  -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
-          box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
-}
-
-.jy-form-tip-icon {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  margin-right: 5px;
-  font-family: 'iconfont';
-  font-size: 30px;
-  vertical-align: middle;
-  color: #FF5722;
-}
-
 .jy-form-lg .jy-form-label {
   width: 120px;
 }
@@ -774,6 +753,11 @@ select {
           box-sizing: content-box;
 }
 
+.jy-layer .jy-btn {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 .jy-layer-absolute {
   position: absolute;
 }
@@ -843,6 +827,8 @@ select {
 
 .jy-layer-title {
   position: relative;
+  height: 16px;
+  _height: auto;
   line-height: 16px;
   padding: 17px 95px 17px 20px;
   font-size: 16px;
@@ -1380,15 +1366,13 @@ select {
 
 .jy-table-view {
   position: relative;
-  border: 1px solid #eeeeee;
   background-color: #ffffff;
-  -webkit-box-sizing: content-box;
-          box-sizing: content-box;
+  overflow: hidden;
 }
 
-.jy-table-view * {
-  -webkit-box-sizing: content-box;
-          box-sizing: content-box;
+.jy-table-view-border {
+  position: relative;
+  border: 1px solid #eeeeee;
 }
 
 .jy-table-header-main {
@@ -1694,20 +1678,6 @@ select {
 
 .jy-table .jy-table-error .jy-table-cell {
   border-color: #FF5722;
-}
-
-.jy-table-tip {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  line-height: 30px;
-  padding: 10px 20px;
-  font-size: 12px;
-  background-color: #ffffff;
-  border: 1px solid #eeeeee;
-  border-radius: 2px;
-  -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
-          box-shadow: 1px 1px 50px rgba(0, 0, 0, 0.3);
 }
 
 .jy-table-icon {
@@ -2317,20 +2287,6 @@ select {
   z-index: 0;
 }
 
-.jy-date-tip {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  line-height: 24px;
-  padding: 10px 20px;
-  font-size: 12px;
-  color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.6);
-  background-color: #000000\0/;
-  *background-color: #000000;
-}
-
 .jy-date-animation-hover-down {
   -webkit-animation-name: jy-date-keyframes-hover-down;
           animation-name: jy-date-keyframes-hover-down;
@@ -2392,13 +2348,14 @@ select {
 
 .jy-menu li {
   position: relative;
-  line-height: 36px;
   color: #666666;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  *zoom: 1;
+  *vertical-align: middle;
 }
 
 .jy-menu li.jy-menu-border {
@@ -2411,7 +2368,10 @@ select {
 }
 
 .jy-menu a {
+  position: relative;
   display: block;
+  zoom: 1;
+  line-height: 36px;
   padding-left: 20px;
   padding-right: 35px;
   color: #666666;
@@ -2464,10 +2424,6 @@ select {
   left: 100%;
   margin-top: -5px;
   margin-left: 5px;
-}
-
-.jy-menu-ie-hack li {
-  *zoom: 1;
 }
 
 .jy-menu-icon {
@@ -2525,11 +2481,11 @@ select {
 }
 
 .jy-menu-nav li {
-  line-height: 50px;
   color: #d2d2d2;
 }
 
 .jy-menu-nav a {
+  line-height: 50px;
   color: #d2d2d2;
 }
 
@@ -2565,10 +2521,11 @@ select {
 
 .jy-menu-nav-horizontal li {
   float: left;
-  line-height: 60px;
 }
 
 .jy-menu-nav-horizontal a {
+  _display: inline-block;
+  line-height: 60px;
   padding: 0 20px;
 }
 
@@ -2605,7 +2562,6 @@ select {
 
 .jy-menu-nav-horizontal .jy-menu-hover-right li,
 .jy-menu-nav-horizontal .jy-menu-hover-down li {
-  line-height: 36px;
   float: none;
 }
 
@@ -2622,6 +2578,8 @@ select {
 
 .jy-menu-nav-horizontal .jy-menu-hover-right a,
 .jy-menu-nav-horizontal .jy-menu-hover-down a {
+  display: block;
+  line-height: 36px;
   padding-right: 35px;
   color: #666666;
 }
@@ -3173,8 +3131,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  overflow: auto;
 }
 
 .jy-header {
@@ -3182,12 +3139,14 @@ body {
   height: 50px;
   z-index: 3;
   background-color: #fff;
+  *zoom: 1;
 }
 
 .jy-header .logo {
   float: left;
   height: 100%;
   width: 160px;
+  _width: 200px;
   padding: 0 20px;
   background-color: #009688;
   line-height: 50px;
@@ -3203,6 +3162,7 @@ body {
   height: 100%;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  *zoom: 1;
 }
 
 .jy-header .jy-header-info {
@@ -3220,10 +3180,11 @@ body {
   top: 0;
   right: 0;
   background-color: #fff;
+  white-space: nowrap;
 }
 
 .jy-header .jy-header-op a {
-  display: inline-block;
+  float: left;
   margin-left: 15px;
   line-height: 50px;
 }
@@ -3234,7 +3195,8 @@ body {
 }
 
 .jy-header .jy-menu {
-  display: inline-block;
+  float: left;
+  _width: 50px;
   padding: 0;
   border: 0;
   -webkit-box-shadow: none;
@@ -3247,6 +3209,7 @@ body {
 
 .jy-header .jy-menu a {
   display: block;
+  float: none;
   line-height: 36px;
   margin-left: 0;
 }
@@ -3263,9 +3226,10 @@ body {
 }
 
 .jy-side-menu .jy-side-scroll {
+  position: relative;
   width: 220px;
   height: 100%;
-  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .jy-side-menu .jy-menu-nav {
@@ -3330,12 +3294,8 @@ body {
 .jy-content {
   position: relative;
   padding: 10px;
-  _padding-bottom: 60px;
   background: #fff;
-  border: 1px solid #eeeeee;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  overflow: auto;
+  *zoom: 1;
 }
 
 .jy-content .jy-content-header {
@@ -3371,6 +3331,34 @@ body {
 .jy-content .jy-content-btns {
   float: right;
   margin-right: 15px;
+}
+
+.jy-upload {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  cursor: pointer;
+}
+
+.jy-upload-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  border: 0;
+  visibility: hidden;
+}
+
+.jy-upload-file {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 100px;
+  opacity: 0.01;
+  filter: Alpha(opacity=1);
 }
 
 @font-face {
@@ -3670,5 +3658,39 @@ hr {
   background-color: #FF5722;
   font-size: 12px;
   color: #fff;
+}
+
+.jy-msg {
+  position: absolute;
+  z-index: 999999;
+  line-height: 24px;
+  padding: 10px 20px;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #000000\0/;
+  *background-color: #000000;
+  border-radius: 2px;
+  color: #ffffff;
+}
+
+.jy-msg-with-icon {
+  padding: 20px;
+  line-height: 30px;
+  background-color: #ffffff;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  color: #666666;
+  white-space: nowrap;
+}
+
+.jy-msg-icon {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin-right: 5px;
+  font-family: 'iconfont';
+  font-size: 30px;
+  vertical-align: middle;
+  color: #FF5722;
 }
 /*# sourceMappingURL=jy-ui.css.map */

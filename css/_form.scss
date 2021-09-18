@@ -126,12 +126,11 @@
 // 内联组合包裹
 .jy-form-inline {
     display: inline-block;
-    // ie6、ie7下inline-block只是触发layout，使元素可以设置宽高等属性，block元素还是会占一行
     *display: inline;
     *zoom: 1;
     margin-right: $pd10;
     margin-bottom: 5px;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 // 输入框
@@ -366,6 +365,8 @@ select {
     position: relative;
     width: 100%;
     *zoom: 1;
+    // 清除i7及以下浏览器当.jy-select-body显示的时候，导致.jy-select父元素多出几像素的bug
+    *vertical-align: middle;
 
     &-open {
         z-index: 99;
@@ -387,6 +388,7 @@ select {
         border-radius: 2px;
         cursor: pointer;
         user-select: none;
+        *zoom: 1;
 
         .jy-input {
             height: $input-height - 2px;
@@ -591,30 +593,6 @@ select {
 
     .jy-field-box {
         padding: $pd15;
-    }
-}
-
-.jy-form-tip {
-    position: fixed;
-    _position: absolute;
-    z-index: 999999;
-    line-height: 30px;
-    padding: 10px 20px;
-    font-size: 12px;
-    background-color: $white-color;
-    border: 1px solid $border-color;
-    border-radius: 2px;
-    box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
-
-    &-icon {
-        display: inline-block;
-        *display: inline;
-        *zoom: 1;
-        margin-right: 5px;
-        font-family: 'iconfont';
-        font-size: 30px;
-        vertical-align: middle;
-        color: $danger-color;
     }
 }
 

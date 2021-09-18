@@ -29,10 +29,11 @@
 
     li {
         position: relative;
-        line-height: 36px;
         color: $textColor;
         cursor: pointer;
         user-select: none;
+        *zoom: 1;
+        *vertical-align: middle;
 
         &.jy-menu-border {
             *zoom: 1;
@@ -45,9 +46,10 @@
     }
 
     a {
-        // ie7及以下浏览器relative将导致a标签display:block下其高度撑不开
-        // position: relative;
+        position: relative;
         display: block;
+        zoom: 1;
+        line-height: 36px;
         padding-left: 20px;
         padding-right: 35px;
         color: $textColor;
@@ -100,13 +102,6 @@
         left: 100%;
         margin-top: -5px;
         margin-left: 5px;
-    }
-
-    &-ie-hack {
-
-        li {
-            *zoom: 1
-        }
     }
 
     &-icon {
@@ -168,11 +163,11 @@
     }
 
     li {
-        line-height: 50px;
         color: $textColor;
     }
 
     a {
+        line-height: 50px;
         color: $textColor;
     }
 
@@ -207,10 +202,11 @@
 
         li {
             float: left;
-            line-height: 60px;
         }
 
         a {
+            _display: inline-block;
+            line-height: 60px;
             padding: 0 20px;
         }
 
@@ -245,7 +241,6 @@
             box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
 
             li {
-                line-height: 36px;
                 float: none;
 
                 .jy-menu-hover {
@@ -259,6 +254,8 @@
             }
 
             a {
+                display: block;
+                line-height: 36px;
                 padding-right: 35px;
                 color: $hChildTextColor;
             }

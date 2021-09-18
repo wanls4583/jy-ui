@@ -546,8 +546,8 @@
         function setArea(layerIndex, area) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
             var $content = $layer.children('div.' + layerClass.body);
-            var width = area.width || (ieVersion <= 6 ? $layer.outerWidth() : $layer.width());
-            var height = area.height || (ieVersion <= 6 ? $layer.outerHeight() : $layer.height());
+            var width = area.width || (ieVersion <= 6 ? $layer[0].offsetWidth : $layer[0].clientWidth);
+            var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
             var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
             var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
             var winWidth = docElement.clientWidth || docBody.clientWidth;
@@ -568,11 +568,11 @@
             }
             $layer.css({
                 width: width + 1,
-                height: height
+                height: height + 1
             });
             height = height - titleHeight - footerHeight;
             $content.css({
-                height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 'px'
+                height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 1
             });
         }
 
