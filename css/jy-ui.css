@@ -3012,6 +3012,7 @@ select {
 
 .jy-tab-titles {
   height: 40px;
+  _height: 41px;
   font-size: 0;
   white-space: nowrap;
   -webkit-transition: left 0.2s;
@@ -3025,6 +3026,7 @@ select {
   *display: inline;
   *zoom: 1;
   min-width: 50px;
+  height: 38px;
   line-height: 38px;
   padding: 0 10px;
   font-size: 14px;
@@ -3040,7 +3042,8 @@ select {
 
 .jy-tab-title-active {
   border-color: #eeeeee;
-  border-bottom: 2px solid #ffffff;
+  border-bottom-color: #ffffff;
+  top: 1px;
 }
 
 .jy-tab-item {
