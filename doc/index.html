@@ -1,0 +1,51 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>jy-ui</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+</head>
+
+<body>
+    <div class="jy-header">
+        <div class="logo">JY-UI</div>
+        <div class="jy-header-right">
+            <ul class="jy-menu jy-menu-nav jy-menu-nav-horizontal">
+                <li class="jy-menu-checked"><a href="javascript:;" title="栅格" url="">文档</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="jy-side-menu">
+        <div class="jy-side-scroll">
+            <ul class="jy-menu jy-menu-nav">
+                <li>
+                    <a href="javascript:;">布局</a>
+                    <ul>
+                        <li><a href="javascript:;" title="栅格" url="">栅格</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="jy-frame-container">
+        <div id="tab"></div>
+    </div>
+</body>
+<script type="text/javascript">
+    require.config({
+        baseUrl: '../'
+    });
+    require(['./frame.js'], function (Frame) {
+        Frame.init();
+    });
+</script>
+
+</html>

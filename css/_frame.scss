@@ -7,7 +7,7 @@ body {
 
 .jy-header {
     position: relative;
-    height: 50px;
+    height: 60px;
     z-index: 3;
     background-color: #fff;
     *zoom: 1;
@@ -19,7 +19,7 @@ body {
         _width: 200px;
         padding: 0 20px;
         background-color: $success-color;
-        line-height: 50px;
+        line-height: 60px;
         font-size: 16px;
         font-weight: bold;
         color: #fff;
@@ -30,72 +30,15 @@ body {
         left: 200px;
         right: 0;
         height: 100%;
-        line-height: 50px;
+        line-height: 60px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
         *zoom: 1;
-    }
-
-    .jy-header-menu{
-        float: left;
-    }
-
-    .jy-header-info {
-        display: inline-block;
-        *display: inline;
-        *zoom: 1;
-        line-height: 25px;
-        vertical-align: middle;
-    }
-
-    .jy-header-info-label {
-        display: inline-block;
-        margin-right: 10px;
-    }
-
-    .jy-header-op {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #fff;
-        white-space: nowrap;
-
-        a {
-            float: left;
-            margin-left: 15px;
-            line-height: 50px;
-        }
-
-        .jy-menu-hover-down {
-            left: auto;
-            right: 0;
-        }
-    }
-
-    .jy-menu {
-        float: left;
-        _width: 50px;
-        padding: 0;
-        border: 0;
-        box-shadow: none;
-
-        &>li {
-            &>a:hover {
-                background-color: #fff;
-            }
-        }
-
-        a {
-            display: block;
-            float: none;
-            line-height: 36px;
-            margin-left: 0;
-        }
     }
 }
 
 .jy-side-menu {
     position: absolute;
-    top: 50px;
+    top: 60px;
     bottom: 0;
     left: 0;
     width: 200px;
@@ -118,7 +61,7 @@ body {
 
 .jy-frame-container {
     position: absolute;
-    top: 50px;
+    top: 60px;
     left: 200px;
     right: 0;
     bottom: 0;
@@ -158,13 +101,6 @@ body {
             padding: 0;
         }
     }
-}
-
-/* 底部通知 */
-.jy-bottom-notice td,
-.jy-bottom-notice th {
-    border: 1px solid #ddd;
-    padding: 5px;
 }
 
 .jy-content {
