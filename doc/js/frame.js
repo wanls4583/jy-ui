@@ -70,6 +70,9 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
         if (url) {
             openTab(title, url);
             selectMenu(url);
+            setTimeout(function() {
+                selectMenu(url);
+            }, 500);
         }
     }
 
