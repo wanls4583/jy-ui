@@ -118,11 +118,13 @@
 
     .jy-tab-title {
         line-height: 37px;
+        height: 37px;
         border: 0;
         border-bottom: 3px solid transparent;
     }
 
     .jy-tab-title-active {
+        top: 0;
         border-bottom: 3px solid $link-color;
     }
 

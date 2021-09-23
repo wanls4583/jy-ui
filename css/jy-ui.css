@@ -3117,11 +3117,13 @@ select {
 
 .jy-tab-line .jy-tab-title {
   line-height: 37px;
+  height: 37px;
   border: 0;
   border-bottom: 3px solid transparent;
 }
 
 .jy-tab-line .jy-tab-title-active {
+  top: 0;
   border-bottom: 3px solid #5FB878;
 }
 
@@ -3163,14 +3165,22 @@ body {
   left: 200px;
   right: 0;
   height: 100%;
+  line-height: 50px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   *zoom: 1;
 }
 
-.jy-header .jy-header-info {
+.jy-header .jy-header-menu {
   float: left;
-  line-height: 50px;
+}
+
+.jy-header .jy-header-info {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  line-height: 25px;
+  vertical-align: middle;
 }
 
 .jy-header .jy-header-info-label {
