@@ -2,14 +2,13 @@ html,
 body {
     width: 100%;
     height: 100%;
-    overflow: auto; //ie6下，iframe中的页面body必须加个overflow:auto，或者hidden，body会默认有个看不见的垂直滚动条
 }
 
 .jy-header {
     position: relative;
     height: 60px;
     z-index: 3;
-    background-color: #fff;
+    background-color: #393D49;
     *zoom: 1;
 
     .logo {
@@ -18,7 +17,6 @@ body {
         width: 160px;
         _width: 200px;
         padding: 0 20px;
-        background-color: $success-color;
         line-height: 60px;
         font-size: 16px;
         font-weight: bold;
@@ -31,8 +29,12 @@ body {
         right: 0;
         height: 100%;
         line-height: 60px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+        padding-right: 50px;
         *zoom: 1;
+
+        .jy-menu-nav-horizontal li {
+            float: right;
+        }
     }
 }
 
@@ -90,8 +92,6 @@ body {
             top: 40px;
             bottom: 0;
             width: 100%;
-            padding: 10px;
-            background-color: #f1f2f7;
             box-sizing: border-box;
         }
 
