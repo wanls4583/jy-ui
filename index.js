@@ -9,7 +9,7 @@ if ("function" == typeof define && define.amd) {
         'modules/date',
         'modules/dialog',
         'modules/form',
-        'modules/Select',
+        'modules/select',
         'modules/menu-nav',
         'modules/pager',
         'modules/tab',
