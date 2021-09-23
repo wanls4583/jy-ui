@@ -1,0 +1,25 @@
+{
+  "name": "jy-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build/r.js -o \"build/app.build.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wanls4583/song-ui.git"
+  },
+  "keywords": [
+    "ui",
+    "webui",
+    "ie6",
+    "ie7"
+  ],
+  "author": "lisong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wanls4583/song-ui/issues"
+  },
+  "homepage": "https://github.com/wanls4583/song-ui#readme"
+}
