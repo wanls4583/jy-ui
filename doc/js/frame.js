@@ -44,14 +44,13 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
                 var $content = $('div.jy-tab-content');
                 $content.css({
                     width: winWidth - 201 - 20,
-                    height: winHeight - 91 - 20
+                    height: winHeight - 101 - 20
                 });
                 // 如果父元素是通过top,bottom获得的高度，子元素百分比高度将无效
                 $sideMenu.css('height', winHeight - 61);
             }
             // ie6不支持同时设置left,right或top,bottom
             if (ieVersion <= 6) {
-                console.log(6)
                 var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 var $sideMenu = $('.jy-side-menu');
                 var $container = $('div.jy-frame-container');
@@ -59,7 +58,7 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
                 $headerRight.css('width', winWidth - 201);
                 $sideMenu.css('height', winHeight - 61);
                 $container.css('width', winWidth - 201);
-                $content.css('height', winHeight - 91);
+                $content.css('height', winHeight - 101);
             }
         }
     }
