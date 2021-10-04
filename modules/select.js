@@ -37,27 +37,32 @@
             loading: 'jy-select-loading'
         }
         var ieVersion = Common.getIeVersion();
-        var event = Common.getEvent();
         var docBody = window.document.body;
         var docElement = window.document.documentElement;
         var bindedBodyEvent = false;
+        var idCount = 0;
         window.jyUiSelects = window.jyUiSelects || [];
 
         // 页码类
         function Class(option) {
-            var that = this;
             var event = Common.getEvent();
             this.on = event.on;
             this.once = event.once;
             this.trigger = event.trigger;
             this.option = Common.deepAssign({}, option);
+            this.init();
+            this.render();
+        }
+
+        Class.prototype.init = function () {
+            var that = this;
             this.$elem = $(this.option.elem);
             // 配置参数-begin
             this.type = this.option.type === 'input' ? 'input' : 'select'; //组件类型（select/input）
             this.disabled = this.option.disabled;
-            this.valueKey = this.option.valueKey || 'value';
-            this.labelKey = this.option.labelKey || (this.type === 'input' ? this.valueKey : 'label');
-            this.placeholder = this.option.placeholder || '请选择';
+            this.labelKey = this.option.labelKey || 'label';
+            this.valueKey = this.option.valueKey || (this.type === 'input' ? (this.labelKey || 'value') : 'value');
+            this.placeholder = this.option.placeholder || this.$elem.attr('placeholder') || '请选择';
             this.defaultOpen = this.option.defaultOpen;
             this.selectAble = this.option.selectAble === undefined ? true : this.option.selectAble;
             this.multiselect = this.type === 'select' && this.option.multiselect;
@@ -88,16 +93,19 @@
                 if (typeof item != 'object') {
                     return {
                         label: item,
-                        value: item
+                        value: item,
+                        _key: idCount++
                     }
                 }
+                item._key = idCount++;
                 return item;
             });
-            that.selectValue = '';
-            that.selectLabel = '';
+            this.selectValue = '';
+            this.selectLabel = '';
+            // 搜索记录
+            this.searchList = [];
             // 多选记录
             this.tags = [];
-            this.render();
         }
 
         Class.prototype.render = function () {
@@ -125,7 +133,6 @@
             }
             // input类型组件只提供搜索建议
             if (this.type === 'input') {
-                this.$input.val(this.selectValue);
                 this.$select.addClass(classNames.suggestion);
             }
             if (this.multiselect) {
@@ -155,6 +162,13 @@
             window.jyUiSelects.push(this);
         }
 
+        Class.prototype.reload = function (option) {
+            option = option || {};
+            this.option = Common.deepAssign(this.option, option);
+            this.init();
+            this.render();
+        }
+
         Class.prototype.renderItem = function (data) {
             var that = this;
             var html = '';
@@ -167,9 +181,6 @@
                 var labelHtml = '';
                 item[that.labelKey] = label;
                 item[that.valueKey] = value;
-                if (that.type === 'input') {
-                    label = value;
-                }
                 if (that.multiselect) {
                     if (item.selected) { //默认选中
                         dClass.push(classNames.selectActive);
@@ -204,7 +215,7 @@
                         label: labelHtml
                     });
                 }
-                html += '<dd class="' + dClass.join(' ') + '" data-value="' + value + '">' + labelHtml + '</dd>';
+                html += '<dd class="' + dClass.join(' ') + '" data-value="' + value + '" data-key="' + item._key + '">' + labelHtml + '</dd>';
             });
             this.$selectDl.html(html);
             this.setPosition();
@@ -214,19 +225,15 @@
             }
             if (this.type === 'input') {
                 // 搜索建议组件，为空时需要隐藏面板
-                if (!data.length) {
-                    this.$selectBody.css('visibility', 'hidden');
-                } else {
-                    this.$selectBody.css('visibility', 'visible');
-                }
+                this.$selectBody.css('visibility', data.length ? 'visible' : 'hidden');
             } else {
                 if (!data.length) {
                     this.$empty.show();
                 } else {
                     this.$empty.hide();
                 }
-                this.$input.attr('placeholder', this.placeholder);
             }
+            this.$input.attr('placeholder', this.placeholder);
         }
 
         Class.prototype.renderTags = function () {
@@ -311,11 +318,7 @@
                     that.$selectDl.children('dd.' + classNames.selectActive).removeClass(classNames.selectActive);
                     that.$selectDl.children('dd[data-value="' + value + '"]').addClass(classNames.selectActive);
                 }
-                if (that.type === 'input') {
-                    // 搜索建议组件的值即为输入的值
-                    that.$input.val(item[that.valueKey] || '');
-                    that.$elem.val(item[that.valueKey] || '');
-                } else if (that.multiselect) {
+                if (that.multiselect) {
                     // 多选情况下，只做选中处理
                     var index = -1;
                     var values = null;
@@ -337,7 +340,13 @@
                     that.renderTags();
                 } else {
                     that.$elem.val(value);
-                    that.$input.val(value && item[that.labelKey] || '');
+                    if (that.type === 'input') {
+                        that.$input.val(value);
+                    } else {
+                        that.$input.val(value && item[that.labelKey] || '');
+                    }
+                    // 选中后执行搜索
+                    that.searchEnable && that.search();
                 }
             }
         }
@@ -366,9 +375,27 @@
                 }
                 that.searchMethod(label, function (data) {
                     data = data || [];
+                    if (that.option.searchMethod) {
+                        data = Common.deepAssign([], data);
+                    }
+                    data.map(function (item) {
+                        item._key = item._key || idCount++;
+                    });
+                    that.searchList = data;
                     that.renderItem(data);
                     that.$loading.hide();
                 });
+            }
+        }
+
+        // 根据值获取数据对象
+        Class.prototype.getItemByKey = function (key) {
+            // 远程搜索时，需要从搜索记录里获取
+            var list = this.data.length ? this.data : this.searchList;
+            for (var i = 0; i < list.length; i++) {
+                if (list[i]._key == key) {
+                    return list[i];
+                }
             }
         }
 
@@ -422,13 +449,13 @@
             }
             // 失去焦点，收起
             this.$title.on('blur', function () {
-                // 输入框显示已选中的项
                 if (that.type !== 'input') {
                     // 多选情况下只隐藏搜索输入框
                     if (that.multiselect) {
                         that.$input.hide();
                         that.$tags.show();
                     } else {
+                        // 输入框显示已选中的项
                         that.$input.val(that.selectLabel);
                     }
                 }
@@ -443,21 +470,25 @@
             $selectBody.delegate('dd', 'click', function () {
                 var $this = $(this);
                 var value = $this.attr('data-value');
+                var key = $this.attr('data-key');
                 var filter = that.$elem.attr('jy-filter') || '';
+                var item = that.getItemByKey(key);
+                item = Common.deepAssign({}, item);
                 that.select(value);
                 // 多选情况下不做处理
                 if (!that.multiselect) {
                     $selectBody.hide();
                     $select.removeClass(classNames.selectOpen);
-                    that.searchEnable && that.search();
                 }
                 // 触发select事件
-                filter && that.trigger('select(' + filter + ')', {
+                JySelect.trigger('select' + (filter ? '(' + filter + ')' : ''), {
                     data: value,
+                    item: item,
                     dom: $select[0]
                 });
                 that.trigger('select', {
                     data: value,
+                    item: item,
                     dom: $select[0]
                 });
                 return false;
@@ -483,6 +514,7 @@
             }
         }
 
+        var event = Common.getEvent();
         var JySelect = {
             on: event.on,
             once: event.once,
@@ -493,7 +525,14 @@
                     on: select.on,
                     once: select.once,
                     trigger: select.trigger,
-                    select: select.select.bind(select)
+                    select: select.select.bind(select),
+                    reload: select.reload.bind(select),
+                    search: function (label) {
+                        if (select.searchEnable) {
+                            select.$input.val(label);
+                            select.search(true);
+                        }
+                    }
                 }
             }
         }

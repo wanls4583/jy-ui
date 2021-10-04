@@ -12,6 +12,10 @@
         height: 41px;
     }
 
+    &-content {
+        margin-top: 10px;
+    }
+
     &-titles {
         height: 40px;
         _height: 41px;
@@ -47,7 +51,8 @@
 
     &-item {
         display: none;
-        padding-top: 10px;
+        position: relative;
+        height: 100%;
 
         &-active {
             display: block;

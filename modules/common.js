@@ -13,7 +13,8 @@
             insertRule: insertRule,
             deleteRule: deleteRule,
             getScrBarWidth: getScrBarWidth,
-            getRect: getRect,
+            getMarginPadding: getMarginPadding,
+            getComputedStyle: getComputedStyle,
             nextFrame: nextFrame,
             cancelNextFrame: cancelNextFrame,
             htmlTemplate: htmlTemplate,
@@ -28,9 +29,12 @@
         function getEvent() {
             // 监听事件
             function on(filter, callback, container) {
-                container = container || on;
-                container[filter + '_event'] = container[filter + '_event'] || [];
-                container[filter + '_event'].push(callback);
+                var filters = filter.split(/\s+/);
+                filters.map(function (filter) {
+                    container = container || on;
+                    container[filter + '_event'] = container[filter + '_event'] || [];
+                    container[filter + '_event'].push(callback);
+                });
             }
 
             // 监听事件
@@ -131,15 +135,18 @@
             return num;
         }
 
-        //获取margin,padding,offset(相对页面边缘)
-        function getRect(dom) {
-            var _r = dom.getBoundingClientRect();
+        function getComputedStyle(dom) {
             var styles = null;
             if (window.getComputedStyle) {
                 styles = window.getComputedStyle(dom, null);
             } else {
                 styles = dom.currentStyle;
             }
+            return styles;
+        }
+
+        function getMarginPadding(dom) {
+            var styles = getComputedStyle(dom);
             var _pt = styles['paddingTop'];
             _pt = getNum(_pt);
             var _pb = styles['paddingBottom'];
@@ -157,10 +164,6 @@
             var _mr = styles['marginRight'];
             _mr = getNum(_mr);
             return {
-                top: _r.top,
-                bottom: _r.bottom,
-                left: _r.left,
-                right: _r.right,
                 paddingTop: _pt,
                 paddingBottom: _pb,
                 paddingLeft: _pl,
@@ -168,11 +171,7 @@
                 marginTop: _mt,
                 marginBottom: _mb,
                 marginLeft: _ml,
-                marginRight: _mr,
-                offsetTop: dom.offsetTop,
-                offsetBottom: dom.offsetBottom,
-                offsetLeft: dom.offsetLeft,
-                offsetRight: dom.offsetRight
+                marginRight: _mr
             }
         }
 
@@ -538,21 +537,20 @@
 
             function _getNum() {
                 var num = '';
-                for (var i = 0; i < str.length; i++) {
-                    if (!str.charAt(i).match(/\d/)) {
-                        i++;
-                    } else {
-                        break;
-                    }
+                var start = /\d/.exec(str);
+                if(start) {
+                    start = start.index;
+                } else {
+                    start = Infinity;
                 }
-                for (; i < str.length; i++) {
+                for (var i = start; i < str.length; i++) {
                     if (str.charAt(i).match(/\d/)) {
                         num += str.charAt(i);
                     } else {
-                        str = str.slice(i + 1);
                         break;
                     }
                 }
+                str = str.slice(i + 1);
                 return num;
             }
         }

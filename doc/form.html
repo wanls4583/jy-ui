@@ -7,47 +7,142 @@
 <html lang="en">
 
 <head>
-    <title>jy-ui</title>
+    <title>jy-form</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <script type='text/javascript' src='./js//require.js'></script>
+    <script type='text/javascript' src='./js/require.js'></script>
     <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
     <link rel="stylesheet" type="text/css" href="./css/frame.css">
 </head>
 
 <body>
-    <div class="jy-header">
-        <div class="logo">JY-UI</div>
-        <div class="jy-header-right">
-            <ul class="jy-menu jy-menu-nav jy-menu-nav-horizontal">
-                <li class="jy-menu-checked"><a href="javascript:;" title="栅格" url="">文档</a></li>
-            </ul>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">表单</div>
+            <div class="jy-content-btns">
+                <button class="jy-btn" id="example">示例</button>
+            </div>
         </div>
-    </div>
-    <div class="jy-side-menu">
-        <div class="jy-side-scroll">
-            <ul class="jy-menu jy-menu-nav">
-                <li>
-                    <a href="javascript:;">页面元素</a>
-                    <ul>
-                        <li><a href="javascript:;" title="布局" url="https://codepen.io/wanls4583/embed/rNwrPBv?default-tab=html%2Cresult&editable=true&theme-id=light">布局</a></li>
-                        <li><a href="javascript:;" title="颜色" url="https://codepen.io/wanls4583/embed/RwgBmwb?default-tab=html%2Cresult&editable=true&theme-id=light">颜色</a></li>
-                        <li><a href="javascript:;" title="按钮" url="https://codepen.io/wanls4583/embed/LYLJVxo?default-tab=html%2Cresult&editable=true&theme-id=light">按钮</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="jy-frame-container">
-        <div id="tab"></div>
+        <fieldset class="jy-field">
+            <legend>小睹为快</legend>
+            <div class="jy-field-box code1">
+                <form action="javascript:;" class="jy-form" style="width:625px;">
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label jy-required">姓名</label>
+                        <div class="jy-input-block">
+                            <input type="text" class="jy-input" name="name" jy-verify="required">
+                        </div>
+                    </div>
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label">是否成年</label>
+                        <div class="jy-input-block">
+                            <span>否</span>
+                            <input type="checkbox" name="adult" jy-skin="switch">
+                            <span>是</span>
+                        </div>
+                    </div>
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label">性别</label>
+                        <div class="jy-input-block">
+                            <input type="radio" name="sex" title="男" value="男" checked>
+                            <input type="radio" name="sex" title="女" value="女">
+                        </div>
+                    </div>
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label">爱好</label>
+                        <div class="jy-input-block">
+                            <input type="checkbox" name="like" title="篮球" value="篮球" checked>
+                            <input type="checkbox" name="like" title="看书" value="看书">
+                            <input type="checkbox" name="like" title="唱歌" value="唱歌">
+                        </div>
+                    </div>
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label jy-required">城市</label>
+                        <div class="jy-input-block">
+                            <select name="city" jy-verify="required">
+                                <option value=""></option>
+                                <option value="0">北京</option>
+                                <option value="1">上海</option>
+                                <option value="2">广州</option>
+                                <option value="3">深圳</option>
+                                <option value="4">杭州</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="jy-form-item">
+                        <label for="" class="jy-form-label">个性签名</label>
+                        <div class="jy-input-block">
+                            <textarea class="jy-textarea" name="sign"></textarea>
+                        </div>
+                    </div>
+                    <div style="text-align:center">
+                        <button type="submit" class="jy-btn">保存</button>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        <div style="padding:10px 0;">下面是【小睹为快】对应的代码</div>
+        <pre><code id="code1" class="language-html"></code></pre>
+        <fieldset class="jy-field">
+            <legend>输入框</legend>
+            <div class="jy-field-box">
+                <div class="jy-form-inline code2">
+                    <input type="text" class="jy-input" jy-verify="required">
+                </div>
+                <div style="padding:10px 0;">代码：</div>
+                <pre><code id="code2"></code></pre>
+                <blockquote>
+                    <div>class="jy-input"：jy.css提供的通用css类</div>
+                    <div>jy-verify：注册form模块需要验证的类型</div>
+                </blockquote>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>下拉选择框</legend>
+            <div class="jy-field-box">
+                <div class="jy-form-inline code3">
+                    <select name="city" jy-verify="required" jy-search="true">
+                        <option value="">请选择</option>
+                        <option value="1">上海</option>
+                        <option value="2" selected>北京</option>
+                    </select>
+                </div>
+                <div style="padding:10px 0;">代码：</div>
+                <pre><code id="code3"></code></pre>
+                <blockquote>
+                    <div>selected：默认选中的项</div>
+                    <div>jy-verify：注册form模块需要验证的类型</div>
+                    <div>jy-search：是否开启搜索</div>
+                </blockquote>
+            </div>
+        </fieldset>
     </div>
 </body>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
 <script type="text/javascript">
     require.config({
         baseUrl: '../'
     });
-    require(['doc/js/frame'], function (Frame) {
-        Frame.init();
+    require(['modules/form', 'modules/jquery'], function (Form, $) {
+        var codes = ['code1','code2'];
+        codes.map(function (code) {
+            var space = 0;
+            var html = $('.' + code)[0].innerHTML;
+            html = html.split('\n');
+            html = html.slice(1, html.length - 1);
+            space = /^\s*/.exec(html[0]);
+            space = space[0].length;
+            html = html.map(function (line) {
+                return line.slice(space);
+            });
+            $('#' + code).text(html.join('\n'));
+        });
+        hljs.highlightAll();
+        Form.render();
+        $('#example').on('click', function () {
+            window.top.openTab('表单示例', 'https://codepen.io/wanls4583/embed/bGRxVKQ?default-tab=html%2Cresult&editable=true&theme-id=light');
+        });
     });
 </script>
 

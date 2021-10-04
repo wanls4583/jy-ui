@@ -38,7 +38,6 @@
         var docElement = window.document.documentElement;
         var $docBody = $(docBody);
         var ieVersion = Common.getIeVersion();
-        var event = Common.getEvent();
 
         // 菜单类
         function Class(option) {
@@ -505,10 +504,38 @@
             }
         }
 
+        function checkStaticMenu() {
+            $(function () {
+                $('ul.' + menuClass.menu).each(function (i, menu) {
+                    var $menu = $(menu);
+                    // 如果不是内部生成的，则绑定相关事件
+                    if (!$menu.hasClass(menuClass.structure)) {
+                        var type = $menu.hasClass(menuClass.nav) ? 'nav' : 'menu';
+                        var mode = $menu.hasClass(menuClass.horizontal) ? 'horizontal' : 'vertical';
+                        var position = $menu.hasClass(menuClass.absolute) ? 'absolute' : 'static';
+                        var check = $menu.attr('jy-menu-check') === 'false' ? false : true;
+                        var elem = $menu.attr('jy-menu-elem');
+                        var trigger = $menu.attr('jy-menu-trigger');
+                        JyMenuNav.render({
+                            elem: elem,
+                            $menu: $menu,
+                            type: type,
+                            position: position,
+                            mode: mode,
+                            check: check,
+                            trigger: trigger
+                        });
+                    }
+                });
+            });
+        }
+
+        var event = Common.getEvent();
         var JyMenuNav = {
             on: event.on,
             once: event.once,
             trigger: event.trigger,
+            checkStaticMenu: checkStaticMenu,
             render: function (option) {
                 var menu = new Class(option);
                 return {
@@ -542,29 +569,7 @@
             }
         }
 
-        $(function () {
-            $('ul.' + menuClass.menu).each(function (i, menu) {
-                var $menu = $(menu);
-                // 如果不是内部生成的，则绑定相关事件
-                if (!$menu.hasClass(menuClass.structure)) {
-                    var type = $menu.hasClass(menuClass.nav) ? 'nav' : 'menu';
-                    var mode = $menu.hasClass(menuClass.horizontal) ? 'horizontal' : 'vertical';
-                    var position = $menu.hasClass(menuClass.absolute) ? 'absolute' : 'static';
-                    var check = $menu.attr('jy-menu-check') === 'false' ? false : true;
-                    var elem = $menu.attr('jy-menu-elem');
-                    var trigger = $menu.attr('jy-menu-trigger');
-                    JyMenuNav.render({
-                        elem: elem,
-                        $menu: $menu,
-                        type: type,
-                        position: position,
-                        mode: mode,
-                        check: check,
-                        trigger: trigger
-                    });
-                }
-            });
-        });
+        checkStaticMenu();
 
         return JyMenuNav;
     }

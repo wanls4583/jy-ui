@@ -47,38 +47,6 @@
             ieHack: 'jy-tree-ie-hack'
         }
 
-        var JyTree = {
-            render: function (option) {
-                var tree = new Class(option);
-                return {
-                    on: tree.on,
-                    once: tree.once,
-                    trigger: tree.trigger,
-                    getChecked: tree.getChecked.bind(tree),
-                    spread: function (id) {
-                        var key = tree.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        tree.toggle(key, true);
-                    },
-                    close: function (id) {
-                        var key = tree.getKeyById(id);
-                        if (key === undefined) {
-                            return;
-                        }
-                        tree.toggle(key, false);
-                    },
-                    reload: function (option) {
-                        tree.reload(option);
-                    },
-                    destroy: function () {
-                        tree.$tree.remove();
-                    }
-                }
-            }
-        }
-
         // 页码类
         function Class(option) {
             var event = Common.getEvent();
@@ -240,6 +208,11 @@
                     checked: data._jy_checked || false,
                     dom: this
                 });
+                JyTree.trigger('change', {
+                    data: Common.delInnerProperty(data),
+                    checked: data._jy_checked || false,
+                    dom: this
+                });
                 return false;
             });
             // 展开/收起事件
@@ -270,6 +243,10 @@
                 }
                 // 触发节点点击事件
                 that.trigger('click', {
+                    data: Common.delInnerProperty(data),
+                    dom: this
+                });
+                JyTree.trigger('click', {
                     data: Common.delInnerProperty(data),
                     dom: this
                 });
@@ -514,6 +491,43 @@
             }
             return result;
         }
+
+        var event = Common.getEvent();
+        var JyTree = {
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger,
+            render: function (option) {
+                var tree = new Class(option);
+                return {
+                    on: tree.on,
+                    once: tree.once,
+                    trigger: tree.trigger,
+                    getChecked: tree.getChecked.bind(tree),
+                    spread: function (id) {
+                        var key = tree.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        tree.toggle(key, true);
+                    },
+                    close: function (id) {
+                        var key = tree.getKeyById(id);
+                        if (key === undefined) {
+                            return;
+                        }
+                        tree.toggle(key, false);
+                    },
+                    reload: function (option) {
+                        tree.reload(option);
+                    },
+                    destroy: function () {
+                        tree.$tree.remove();
+                    }
+                }
+            }
+        }
+
         return JyTree;
     }
     if ("function" == typeof define && define.amd) {

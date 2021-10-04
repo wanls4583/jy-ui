@@ -4,6 +4,16 @@ body {
     height: 100%;
 }
 
+code {
+    font-family: Consolas, Monaco, monospace;
+}
+
+blockquote {
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 5px solid #5FB878;
+}
+
 .jy-header {
     position: relative;
     height: 60px;
@@ -89,7 +99,7 @@ body {
 
         .jy-tab-content {
             position: absolute;
-            top: 40px;
+            top: 30px;
             bottom: 0;
             width: 100%;
             box-sizing: border-box;

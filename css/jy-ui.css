@@ -13,7 +13,8 @@ dl,
 dd,
 p,
 form,
-hr {
+hr,
+pre {
   margin: 0;
   padding: 0;
 }
@@ -150,6 +151,7 @@ table {
   clear: both;
   margin-bottom: 15px;
   *zoom: 1;
+  font-size: 14px;
 }
 
 .jy-form-item:before, .jy-form-item:after {
@@ -650,6 +652,10 @@ select {
   height: 28px;
 }
 
+.jy-form-sm .jy-form-item {
+  margin-bottom: 5px;
+}
+
 .jy-form-sm .jy-input {
   height: 30px;
   *height: 28px;
@@ -851,7 +857,7 @@ select {
 }
 
 .jy-layer-footer {
-  padding: 10px 20px 10px 0;
+  padding: 0 20px 10px 0;
   text-align: center;
   white-space: nowrap;
 }
@@ -3009,6 +3015,10 @@ select {
   height: 41px;
 }
 
+.jy-tab-content {
+  margin-top: 10px;
+}
+
 .jy-tab-titles {
   height: 40px;
   _height: 41px;
@@ -3047,7 +3057,8 @@ select {
 
 .jy-tab-item {
   display: none;
-  padding-top: 10px;
+  position: relative;
+  height: 100%;
 }
 
 .jy-tab-item-active {
@@ -3193,12 +3204,15 @@ select {
   font-size: 0;
 }
 
+.jy-row * {
+  font-size: 14px;
+}
+
 .jy-row .jy-col-1 {
   width: 8.33333%;
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-1 {
@@ -3210,7 +3224,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-2 {
@@ -3222,7 +3235,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-3 {
@@ -3234,7 +3246,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-4 {
@@ -3246,7 +3257,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-5 {
@@ -3258,7 +3268,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-6 {
@@ -3270,7 +3279,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-7 {
@@ -3282,7 +3290,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-8 {
@@ -3294,7 +3301,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-9 {
@@ -3306,7 +3312,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-10 {
@@ -3318,7 +3323,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-11 {
@@ -3330,7 +3334,6 @@ select {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  font-size: 14px;
 }
 
 .jy-row .jy-col-offset-12 {
@@ -3350,6 +3353,18 @@ select {
 
 .jy-nowrap {
   white-space: nowrap;
+}
+
+.jy-align-center {
+  text-align: center;
+}
+
+.jy-align-left {
+  text-align: left;
+}
+
+.jy-align-right {
+  text-align: right;
 }
 
 hr {

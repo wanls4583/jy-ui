@@ -73,12 +73,9 @@
             }
         };
 
-        function Class() {
-            var event = Common.getEvent();
-            this.on = event.on;
-            this.once = event.once;
-            this.trigger = event.trigger;
-        }
+        var event = Common.getEvent();
+
+        function Class() {}
 
         // 初始化
         Class.prototype.init = function () {
@@ -86,19 +83,16 @@
             $(docBody).delegate('button[type="submit"]', 'click', function () {
                 var $form = $(this).parents('form');
                 var filter = $(this).attr('jy-filter');
-                if ($form.length & that.verify($form)) {
+                if ($form.length && that.verify($form)) {
                     var data = that.getJsonFromForm($form);
-                    if (filter) {
-                        that.trigger('submit(' + filter + ')', data);
-                    }
-                    that.trigger('submit', data);
+                    JyForm.trigger('submit' + (filter ? '(' + filter + ')' : ''), data);
                 }
             });
         }
 
         Class.prototype.addRule = function (rules) {
             if (typeof rules === 'object') {
-                Object(customRules, rules);
+                Object.assign(customRules, rules);
             }
         }
 
@@ -110,15 +104,26 @@
             var msg = '';
             var dangerClass = 'jy-border-danger';
             $form.find('input,textarea,select').each(function (i, input) {
+                var $input = $(input);
                 var tagName = input.tagName.toLowerCase();
+                // 只对显示的控件进行验证
+                if (!$input.is(':visible')) {
+                    var $select = null;
+                    if (tagName != 'select') {
+                        return;
+                    }
+                    $select = $input.next('.jy-select');
+                    if (!$select.length || !$select.is(':visible')) {
+                        return;
+                    }
+                }
                 if (input.type == 'text' || input.type == 'password' || tagName == 'textarea' || tagName == 'select') {
-                    var $input = $(input);
                     var rules = $input.attr('jy-verify') || '';
                     var value = $input.val() || '';
                     rules = rules.split('|');
                     for (var i = 0; i < rules.length; i++) {
                         var verifyRule = customRules[rules[i]] || verifyRules[rules[i]];
-                        if (pass && verifyRule) {
+                        if (pass && verifyRule && (value || rules[i] == 'required')) {
                             pass = verifyRule.verify ? verifyRule.verify(value) : verifyRule.rule.test(value);
                             if (!pass) {
                                 that.showMsg(verifyRule.msg);
@@ -183,9 +188,18 @@
             return data;
         }
 
-        // 表单赋值
-        Class.prototype.setData = function (form, data) {
+        /**
+         * 
+         * @param {String/DOM} form 
+         * @param {Object} data 
+         * @param {Boolean} empty [是否清空表单] 
+         * @param {refesh} refesh [是否重新渲染控件] 
+         */
+        Class.prototype.setData = function (form, data, empty, refesh) {
             var $form = $(form);
+            if(empty) {
+                this.empty(form);
+            }
             $form.find('input,textarea,select').each(function (i, dom) {
                 var $dom = $(dom);
                 var name = dom.name;
@@ -226,15 +240,20 @@
                     }
                 }
             });
-            Form.render('', $form);
+            JyForm.render('', $form, refesh);
         }
 
-        // 清空表单数据
-        Class.prototype.empty = function (formId) {
+        /**
+         * 
+         * @param {String/DOM} formId 
+         * @param {Boolean} refesh [是否重新渲染控件] 
+         */
+        Class.prototype.empty = function (formId, refesh) {
             var $form = $(formId);
             $form.find('input,textarea,select').each(function (i, dom) {
                 var $dom = $(dom);
                 var tagName = dom.tagName.toLowerCase();
+                $dom.removeClass('jy-border-danger');
                 if (tagName === 'select') {
                     $dom.val('').find('option:selected').removeAttr('selected');
                 } else if (tagName === 'textarea') {
@@ -255,7 +274,7 @@
                     }
                 }
             });
-            Form.render('', $form);
+            JyForm.render('', $form, refesh);
         }
 
         // 渲染页面ui
@@ -354,11 +373,7 @@
                 $this.toggleClass(formClass.switchChecked);
                 $this.find('span').html(checked ? 'OFF' : 'ON');
                 // 触发switch事件
-                filter && that.trigger('switch(' + filter + ')', {
-                    data: $input.prop('checked'),
-                    dom: $input[0]
-                });
-                that.trigger('switch', {
+                JyForm.trigger('switch' + (filter ? '(' + filter + ')' : ''), {
                     data: $input.prop('checked'),
                     dom: $input[0]
                 });
@@ -440,11 +455,7 @@
                 $this.addClass(formClass.radioChecked);
                 $input.prop('checked', true);
                 // 触发radio事件
-                filter && that.trigger('radio(' + filter + ')', {
-                    data: $input.val(),
-                    dom: $input[0]
-                });
-                that.trigger('radio', {
+                JyForm.trigger('radio' + (filter ? '(' + filter + ')' : ''), {
                     data: $input.val(),
                     dom: $input[0]
                 });
@@ -533,11 +544,7 @@
                     }
                 });
                 // 触发checkbox事件
-                filter && that.trigger('checkbox(' + filter + ')', {
-                    data: data,
-                    dom: $input[0]
-                });
-                that.trigger('checkbox', {
+                JyForm.trigger('checkbox' + (filter ? '(' + filter + ')' : ''), {
                     data: data,
                     dom: $input[0]
                 });
@@ -579,11 +586,8 @@
                         placeholder: placeholder,
                         data: data
                     });
-                    filter && select.on('select(' + filter + ')', function (obj) {
-                        that.trigger('select(' + filter + ')', obj)
-                    });
                     select.on('select', function (obj) {
-                        that.trigger('select', obj);
+                        JyForm.trigger('select' + (filter ? '(' + filter + ')' : ''), obj);
                     });
                 }
             });
@@ -597,10 +601,10 @@
         }
 
         var instance = new Class();
-        var Form = {
-            on: instance.on,
-            once: instance.once,
-            trigger: instance.trigger,
+        var JyForm = {
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger,
             verifyRules: verifyRules,
             render: instance.render.bind(instance),
             addRule: instance.addRule.bind(instance),
@@ -615,7 +619,7 @@
             instance.init();
         });
 
-        return Form;
+        return JyForm;
     }
 
     if ("function" == typeof define && define.amd) {

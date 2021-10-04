@@ -37,9 +37,7 @@
             next: 'jy-tab-next',
             closeIcon: 'jy-tab-close'
         }
-        var event = Common.getEvent();
 
-        // 页码类
         function Class(option) {
             var event = Common.getEvent();
             this.on = event.on;
@@ -231,7 +229,7 @@
             });
         }
 
-        function check() {
+        function checkStaticTab() {
             $('div.' + tabClass.tab).each(function (i, tab) {
                 var $tab = $(tab);
                 if (!$tab.hasClass(tabClass.structure)) {
@@ -242,13 +240,12 @@
             });
         }
 
-        check();
-
+        var event = Common.getEvent();
         var JyTab = {
             on: event.on,
             once: event.once,
             trigger: event.trigger,
-            check: check,
+            checkStaticTab: checkStaticTab,
             render: function (option) {
                 var tab = new Class(option);
                 return {
@@ -260,6 +257,8 @@
                 }
             }
         }
+
+        checkStaticTab();
 
         return JyTab;
     }

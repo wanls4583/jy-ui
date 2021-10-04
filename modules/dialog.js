@@ -70,6 +70,7 @@
             );
             var $content = $('<div class="' + layerClass.body + '"><div>' + '</div></div>');
             var $footer = $('<div class="' + layerClass.footer + '"></div>');
+            option.overflow && $content.css('overflow', option.overflow);
             if (typeof option.content == 'object') {
                 $content.append($(option.content).show());
             } else {
@@ -161,6 +162,8 @@
                 }, option.duration);
             }
             $container.append($layer);
+            // 弹框之前回调
+            typeof option.before == 'function' && option.before($layer, layerIndex);
             // 设置弹框尺寸
             setArea(layerIndex, {
                 width: option.width,
@@ -262,7 +265,7 @@
                 // 拖动
                 if (option.move) {
                     $title.on('mousedown', function (e) {
-                        var rect = Common.getRect($layer[0]);
+                        var rect = Common.getMarginPadding($layer[0]);
                         var marginTop = rect.marginTop;
                         var marginLeft = rect.marginLeft;
                         $title[0].startX = e.pageX;
@@ -304,7 +307,6 @@
                             } else {
                                 'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);
                             }
-                            return false;
                         });
                     })(i)
                 });
@@ -546,13 +548,8 @@
         function setArea(layerIndex, area) {
             var $layer = $('div.' + layerClass.layer + '.' + layerClass.layer + layerIndex);
             var $content = $layer.children('div.' + layerClass.body);
-            var width = area.width || (ieVersion <= 6 ? $layer[0].offsetWidth : $layer[0].clientWidth);
-            var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
-            var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
-            var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
             var winWidth = docElement.clientWidth || docBody.clientWidth;
             var winHeight = docElement.clientHeight || docBody.clientHeight;
-            var rect = Common.getRect($content[0]);
             var container = $layer.parent()[0];
             if (ieVersion <= 6) {
                 $('div.' + layerClass.shadow + '.' + layerClass.layer + layerIndex).css({
@@ -560,20 +557,41 @@
                     height: container.scrollHeight + 'px'
                 });
             }
-            if (width > winWidth) {
-                width = winWidth;
+
+            if (area.width) { //先设置宽度
+                _setWidth();
+                _setHeight();
+            } else { //先设置高度
+                _setHeight();
+                _setWidth();
             }
-            if (height > winHeight) {
-                height = winHeight;
+
+            function _setWidth() {
+                var width = area.width || (ieVersion <= 6 ? $layer[0].offsetWidth : $layer[0].clientWidth);
+                if (width > winWidth) {
+                    width = winWidth;
+                }
+                $layer.css({
+                    width: width + 1
+                });
             }
-            $layer.css({
-                width: width + 1,
-                height: height + 1
-            });
-            height = height - titleHeight - footerHeight;
-            $content.css({
-                height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 1
-            });
+
+            function _setHeight() {
+                var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
+                var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
+                var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+                var rect = Common.getMarginPadding($content[0]);
+                if (height > winHeight) {
+                    height = winHeight;
+                }
+                $layer.css({
+                    height: height + 1
+                });
+                height = height - titleHeight - footerHeight;
+                $content.css({
+                    height: (ieVersion <= 6 ? height : height - rect.paddingTop - rect.paddingBottom) + 1
+                });
+            }
         }
 
         return Dialog;

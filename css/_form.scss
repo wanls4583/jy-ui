@@ -81,6 +81,7 @@
     margin-bottom: $pd15;
     // ie7及以下不支持before，after，用zoom触发haslayout清除内部浮动
     *zoom: 1;
+    font-size: 14px;
 
     &:before,
     &:after {
@@ -609,6 +610,10 @@ select {
 .jy-form-sm {
     select {
         height: $input-height - 8px - 2px;
+    }
+
+    .jy-form-item {
+        margin-bottom: 5px;
     }
 
     .jy-input {

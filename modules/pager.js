@@ -22,18 +22,6 @@
             count: 'jy-pager-count'
         }
         var ieVersion = Common.getIeVersion();
-        var Pager = {
-            render: function (option) {
-                var pager = new Class(option);
-                return {
-                    on: pager.on,
-                    once: pager.once,
-                    trigger: pager.trigger,
-                    setCount: pager.setCount.bind(pager),
-                    reload: pager.reload.bind(pager)
-                }
-            }
-        }
 
         // 页码类
         function Class(option) {
@@ -196,6 +184,7 @@
                 Common.cancelNextFrame(this.triggerTimer);
                 this.triggerTimer = Common.nextFrame(function () {
                     that.trigger('page', that.nowPage);
+                    JyPager.trigger('page', that.nowPage);
                 })
             }
             if (!this.$page) {
@@ -301,11 +290,29 @@
             this.$pager.delegate('select.' + pageClass.limit, 'change', function () {
                 var limit = Number($(this).val()) || 0;
                 that.trigger('limit', limit);
+                JyPager.trigger('limit', limit);
                 that.setLimit(limit);
             });
         }
 
-        return Pager;
+        var event = Common.getEvent();
+        var JyPager = {
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger,
+            render: function (option) {
+                var pager = new Class(option);
+                return {
+                    on: pager.on,
+                    once: pager.once,
+                    trigger: pager.trigger,
+                    setCount: pager.setCount.bind(pager),
+                    reload: pager.reload.bind(pager)
+                }
+            }
+        }
+
+        return JyPager;
     }
 
     if ("function" == typeof define && define.amd) {

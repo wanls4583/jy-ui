@@ -55,6 +55,10 @@
 .jy-row {
     font-size: 0;
 
+    & * {
+        font-size: 14px;
+    }
+
     // ie7默认content-box模式，ie6默认为border-box，且ie6,ie7不支持box-sizing。
     @for $i from 1 through 12 {
         .jy-col-#{$i} {
@@ -62,7 +66,6 @@
             display: inline-block;
             *display: inline;
             *zoom: 1;
-            font-size: 14px;
         }
 
         // 列偏移
@@ -89,6 +92,20 @@
 
 .jy-nowrap {
     white-space: nowrap;
+}
+
+.jy-align {
+    &-center {
+        text-align: center;
+    }
+
+    &-left {
+        text-align: left;
+    }
+
+    &-right {
+        text-align: right;
+    }
 }
 
 // 分割线

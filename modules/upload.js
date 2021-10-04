@@ -11,7 +11,6 @@
             iframe: '<iframe class="jy-upload-iframe" name="<%-name%>"></iframe>',
             upload: '<div class="jy-upload"></div>'
         }
-        var event = Common.getEvent();
         var ieVersion = Common.getIeVersion();
         var iframeCount = 0;
 
@@ -78,10 +77,16 @@
                         that.trigger('size', {
                             data: files[i]
                         });
+                        JyUpload.trigger('size', {
+                            data: files[i]
+                        });
                         return;
                     }
                 }
                 that.trigger('change', {
+                    dom: that.$fileInput[0]
+                });
+                JyUpload.trigger('change', {
                     dom: that.$fileInput[0]
                 });
                 that.autoUpload && that.upload();
@@ -98,6 +103,7 @@
                     }
                 } catch (e) {}
                 that.trigger('success', result);
+                JyUpload.trigger('success', result);
             });
         }
 
@@ -110,6 +116,9 @@
                 return;
             }
             this.trigger('before', {
+                dom: that.$fileInput[0]
+            });
+            JyUpload.trigger('before', {
                 dom: that.$fileInput[0]
             });
             if (this.$iframe) {
@@ -132,9 +141,14 @@
                         contentType: false,
                         success: function (res) {
                             that.trigger('success', res);
+                            JyUpload.trigger('success', res);
                         },
                         error: function (res) {
                             that.trigger('error', {
+                                data: res,
+                                file: file
+                            });
+                            JyUpload.trigger('error', {
                                 data: res,
                                 file: file
                             });
@@ -145,6 +159,7 @@
             }
         }
 
+        var event = Common.getEvent();
         var JyUpload = {
             on: event.on,
             once: event.once,

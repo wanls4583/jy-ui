@@ -52,28 +52,6 @@
             empty: 'jy-transfer-empty'
         }
 
-        var JyTransfer = {
-            render: function (option) {
-                var transfer = new Class(option);
-                return {
-                    on: transfer.on,
-                    once: transfer.once,
-                    trigger: transfer.trigger,
-                    reload: function (option) {
-                        transfer.reload(option);
-                    },
-                    destroy: function () {
-                        transfer.$transfer.remove();
-                    },
-                    getData: function () {
-                        return transfer.value.map(function (item) {
-                            return Common.delInnerProperty(item);
-                        });
-                    }
-                }
-            }
-        }
-
         // 页码类
         function Class(option) {
             var event = Common.getEvent();
@@ -278,6 +256,12 @@
                         }),
                         dom: this
                     });
+                    JyTransfer.trigger('change', {
+                        data: that.rightData.map(function (item) {
+                            return Common.delInnerProperty(item);
+                        }),
+                        dom: this
+                    });
                 }
             });
             // 往右移动事件
@@ -310,6 +294,12 @@
                     that.setEmpty();
                     // 触发change事件
                     that.trigger('change', {
+                        data: that.rightData.map(function (item) {
+                            return Common.delInnerProperty(item);
+                        }),
+                        dom: this
+                    });
+                    JyTransfer.trigger('change', {
                         data: that.rightData.map(function (item) {
                             return Common.delInnerProperty(item);
                         }),
@@ -439,6 +429,32 @@
                 result.push(Common.delInnerProperty({}, item));
             });
             return result;
+        }
+
+        var event = Common.getEvent();
+        var JyTransfer = {
+            on: event.on,
+            once: event.once,
+            trigger: event.trigger,
+            render: function (option) {
+                var transfer = new Class(option);
+                return {
+                    on: transfer.on,
+                    once: transfer.once,
+                    trigger: transfer.trigger,
+                    reload: function (option) {
+                        transfer.reload(option);
+                    },
+                    destroy: function () {
+                        transfer.$transfer.remove();
+                    },
+                    getData: function () {
+                        return transfer.value.map(function (item) {
+                            return Common.delInnerProperty(item);
+                        });
+                    }
+                }
+            }
         }
 
         return JyTransfer;

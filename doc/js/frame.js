@@ -37,18 +37,6 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
         function _setArea() {
             var winWidth = document.documentElement.clientWidth || document.body.clientWidth;
             var $headerRight = $('.jy-header-right');
-            // ie7只支持content-box
-            if (ieVersion == 7) {
-                var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
-                var $sideMenu = $('.jy-side-menu');
-                var $content = $('div.jy-tab-content');
-                $content.css({
-                    width: winWidth - 201 - 20,
-                    height: winHeight - 101 - 20
-                });
-                // 如果父元素是通过top,bottom获得的高度，子元素百分比高度将无效
-                $sideMenu.css('height', winHeight - 61);
-            }
             // ie6不支持同时设置left,right或top,bottom
             if (ieVersion <= 6) {
                 var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -56,9 +44,19 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
                 var $container = $('div.jy-frame-container');
                 var $content = $('div.jy-tab-content');
                 $headerRight.css('width', winWidth - 201);
-                $sideMenu.css('height', winHeight - 61);
+                $sideMenu.css('height', winHeight - 51);
                 $container.css('width', winWidth - 201);
-                $content.css('height', winHeight - 101);
+                $content.css('height', winHeight - 91);
+            } else if (ieVersion == 7) { // ie7只支持content-box
+                var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                var $sideMenu = $('.jy-side-menu');
+                var $content = $('div.jy-tab-content');
+                $content.css({
+                    width: winWidth - 201 - 20,
+                    height: winHeight - 91 - 20
+                });
+                // 如果父元素是通过top,bottom获得的高度，子元素百分比高度将无效
+                $sideMenu.css('height', winHeight - 51);
             }
         }
     }
@@ -69,10 +67,6 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
         var url = 'https://codepen.io/wanls4583/embed/rNwrPBv?default-tab=html%2Cresult&editable=true&theme-id=light';
         if (url) {
             openTab(title, url);
-            selectMenu(url);
-            setTimeout(function() {
-                selectMenu(url);
-            }, 500);
         }
     }
 
@@ -92,8 +86,12 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
             content: '<iframe border="0" frameBorder="0" src="' + url + '"></iframe>',
             active: true
         });
+        setTimeout(function () {
+            selectMenu(url);
+        }, 500);
     }
 
+    window.openTab = openTab;
     return {
         init: init
     }
