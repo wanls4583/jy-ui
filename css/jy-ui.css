@@ -623,27 +623,6 @@ select {
   display: inline;
 }
 
-.jy-field {
-  padding: 0;
-  border: 1px solid #eeeeee;
-}
-
-.jy-field.jy-field-title {
-  border-style: none;
-  border-top-style: solid;
-}
-
-.jy-field legend {
-  margin-left: 15px;
-  font-size: 20px;
-  font-weight: 300;
-  color: #333333;
-}
-
-.jy-field .jy-field-box {
-  padding: 15px;
-}
-
 .jy-form-lg .jy-form-label {
   width: 120px;
 }
@@ -3465,6 +3444,28 @@ hr {
 
 .jy-border-danger {
   border: 1px solid #FF5722;
+}
+
+.jy-field {
+  padding: 0;
+  margin: 0;
+  border: 1px solid #eeeeee;
+}
+
+.jy-field.jy-field-title {
+  border-style: none;
+  border-top-style: solid;
+}
+
+.jy-field legend {
+  margin-left: 15px;
+  font-size: 20px;
+  font-weight: 300;
+  color: #333333;
+}
+
+.jy-field .jy-field-box {
+  padding: 15px;
 }
 
 .jy-badge {

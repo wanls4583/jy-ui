@@ -147,7 +147,9 @@
                 } else {
                     that.renderItem(this.data);
                 }
-                if (!this.defaultOpen) {
+                if (this.defaultOpen) {
+                    this.$selectBody.show();
+                } else {
                     this.$selectBody.hide();
                 }
                 this.bindEvent();

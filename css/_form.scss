@@ -505,7 +505,7 @@ select {
                 background-color: $link-color;
                 color: $white-color;
             }
-            
+
             &.jy-select-dd-disabled {
                 color: $disabled-color;
             }
@@ -576,28 +576,6 @@ select {
                 }
             }
         }
-    }
-}
-
-// 字段集区块
-.jy-field {
-    padding: 0;
-    border: 1px solid $border-color;
-
-    &.jy-field-title {
-        border-style: none;
-        border-top-style: solid;
-    }
-
-    legend {
-        margin-left: $pd15;
-        font-size: 20px;
-        font-weight: 300;
-        color: $color-333;
-    }
-
-    .jy-field-box {
-        padding: $pd15;
     }
 }
 
