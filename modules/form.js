@@ -197,7 +197,7 @@
          */
         Class.prototype.setData = function (form, data, empty, refesh) {
             var $form = $(form);
-            if(empty) {
+            if (empty) {
                 this.empty(form);
             }
             $form.find('input,textarea,select').each(function (i, dom) {
@@ -575,7 +575,8 @@
                         var $option = $(option);
                         data.push({
                             label: $option.text(),
-                            value: $option.attr('value')
+                            value: $option.attr('value'),
+                            disabled: $option.attr('disabled') != undefined
                         });
                     });
                     var select = Select.render({

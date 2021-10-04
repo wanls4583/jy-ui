@@ -505,6 +505,10 @@ select {
                 background-color: $link-color;
                 color: $white-color;
             }
+            
+            &.jy-select-dd-disabled {
+                color: $disabled-color;
+            }
         }
     }
 

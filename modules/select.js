@@ -31,6 +31,7 @@
             selectBody: 'jy-select-body',
             selectHolder: 'jy-color-holder',
             selectDisabled: 'jy-select-disabled',
+            optionDisabled: 'jy-select-dd-disabled',
             selectActive: 'jy-select-active',
             selectAnimation: 'jy-form-animation-hover-down',
             empty: 'jy-select-empty',
@@ -208,6 +209,10 @@
                 if (!value) {
                     that.placeholder = label || that.placeholder;
                     dClass.push(classNames.selectHolder);
+                }
+                // 禁用
+                if(item.disabled) {
+                    dClass.push(classNames.optionDisabled);
                 }
                 labelHtml = label || that.placeholder;
                 if (that.multiselect) {
@@ -473,6 +478,10 @@
                 var key = $this.attr('data-key');
                 var filter = that.$elem.attr('jy-filter') || '';
                 var item = that.getItemByKey(key);
+                // 选项禁用
+                if(item.disabled) {
+                    return false;
+                }
                 item = Common.deepAssign({}, item);
                 that.select(value);
                 // 多选情况下不做处理
