@@ -14,6 +14,31 @@ blockquote {
     border-left: 5px solid #5FB878;
 }
 
+.property-table {
+
+    td,
+    th {
+        padding: 10px;
+        border: 1px solid #eeeeee;
+    }
+
+    th {
+        background-color: #f6f6f6;
+    }
+}
+
+.pad-10 {
+    padding: 10px 0;
+}
+
+.pad-top-10 {
+    padding-top: 10px;
+}
+
+.pad-bottom-10 {
+    padding-bottom: 10px;
+}
+
 .jy-header {
     position: relative;
     height: 60px;
