@@ -12,6 +12,7 @@ blockquote {
   margin: 10px 0;
   padding: 10px;
   border-left: 5px solid #5FB878;
+  background-color: #fafafa;
 }
 
 a {

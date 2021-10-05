@@ -61,11 +61,11 @@
             this.height = this.option.height || 0;
             this.type = this.option.type === 'nav' ? 'nav' : 'menu';
             this.mode = this.option.mode === 'horizontal' ? 'horizontal' : 'vertical';
-            this.position = this.option.position === 'absolute' ? 'absolute' : 'static';
+            this.position = this.option.position === 'absolute' && this.type === 'menu' ? 'absolute' : 'static';
             this.check = this.option.check === undefined ? true : Boolean(this.option.check);
             this.showList = [];
             this.width && this.$menu.css('width', this.width);
-            this.height && this.$menu.css('height', this.height);
+            this.height && this.type === 'menu' && this.$menu.css('height', this.height);
             this.mounted = !this.$menu.hasClass(menuClass.structure);
             this.type === 'menu' ? this.mountMenu() : this.mountNav();
             if (this.type === 'nav') {
@@ -320,7 +320,7 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             // 元素触发方式
-            if (this.type === 'menu' && this.position === 'absolute' && this.triggerEvent === 'mouseenter') {
+            if (this.position === 'absolute' && this.triggerEvent === 'mouseenter') {
                 this.$menu.on('mouseenter', function () {
                     clearTimeout(that.hideMenuTimer);
                 });

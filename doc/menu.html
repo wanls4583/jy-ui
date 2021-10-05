@@ -1,0 +1,354 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>jy-form</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">表单</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>静态菜单</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">普通静态菜单</div>
+                <div>
+                    <ul class="jy-menu" jy-menu-check="true" style="width:200px;">
+                        <li>
+                            <a>菜单1</a>
+                        </li>
+                        <li class="jy-menu-border"></li>
+                        <li class="jy-menu-item-spread">
+                            <a>菜单2</a>
+                            <ul>
+                                <li>
+                                    <a>菜单2-1</a>
+                                </li>
+                                <li>
+                                    <a>菜单2-2</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="jy-menu-border"></li>
+                        <li>
+                            <a>菜单3</a>
+                            <ul class="jy-menu-hover-right">
+                                <li>
+                                    <a>菜单3-1</a>
+                                </li>
+                                <li>
+                                    <a>菜单3-2</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+                <blockquote>
+                    <div><em> jy-menu-check </em>：设置菜单项是否可以被选中，可选值 ture，false</div>
+                    <div><em>jy-menu-hover-right </em>类代表该子菜单用鼠标移上去时将向右弹出</div>
+                    <div><em>jy-menu-item-spread </em>类代表该子菜单默认打开</div>
+                    <div><em>jy-menu-border </em>类代表分割线</div>
+                </blockquote>
+                <div class="pad-10">静态下拉菜单</div>
+                <div>
+                    <button class="jy-btn" id="menu3">下拉菜单<i class="jy-icon" style="font-size:14px;">&#xe74b;</i></button>
+                    <ul class="jy-menu jy-menu-absolute" jy-menu-elem="#menu3" jy-menu-trigger="hover">
+                        <li>
+                            <a>菜单1</a>
+                        </li>
+                        <li class="jy-menu-border"></li>
+                        <li>
+                            <a>菜单2</a>
+                        </li>
+                        <li>
+                            <a>菜单3</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code1"></code></pre>
+                <blockquote>
+                    <div>静态下拉菜单需要添加<em> jy-menu-absolute </em>类</div>
+                    <div><em>jy-menu-elem</em>：声明绑定的触发元素</div>
+                </blockquote>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>动态菜单</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">动态普通菜单</div>
+                <div id="menu1" style="width:200px"></div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code2"></code></pre>
+                <div class="pad-10">动态下拉菜单</div>
+                <button class="jy-btn" id="menu2">下拉菜单<i class="jy-icon" style="font-size:14px;">&#xe74b;</i></button>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code3" class="language-html"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>静态导航条</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">静态水平导航条</div>
+                <ul class="jy-menu jy-menu-nav jy-menu-nav-horizontal">
+                    <li><a>导航菜单1</a></li>
+                    <li><a>导航菜单2</a></li>
+                    <li><a>导航菜单3</a>
+                        <ul class="jy-menu-hover-down">
+                            <li><a>菜单3-1</a></li>
+                            <li><a>菜单3-2</a>
+                                <ul class="jy-menu-hover-right">
+                                    <li><a>菜单3-2-1</a></li>
+                                    <li><a>菜单3-2-2</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code4"></code></pre>
+                <blockquote>
+                    <div>导航条和菜单一样，只不过需要添加一个<em> jy-menu-nav </em>类</div>
+                    <div>默认情况下为垂直导航条，添加一个 <em> jy-menu-nav-horizontal </em>类可以变成水平导航条</div>
+                    <div><em>jy-menu-hover-down </em>类代表该子菜单用鼠标移上去时将向下弹出</div>
+                    <div><em>jy-menu-hover-right </em>类代表该子菜单用鼠标移上去时将向右弹出</div>
+                </blockquote>
+                <div class="pad-10">静态垂直导航条</div>
+                <ul class="jy-menu jy-menu-nav" style="width:200px;">
+                    <li><a>导航菜单1</a></li>
+                    <li><a>导航菜单2</a></li>
+                    <li class="jy-menu-item-spread"><a>导航菜单3</a>
+                        <ul>
+                            <li><a>菜单3-1</a></li>
+                            <li><a>菜单3-2</a>
+                                <ul>
+                                    <li><a>菜单3-2-1</a></li>
+                                    <li><a>菜单3-2-2</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code5"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>动态导航条</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">动态水平导航条</div>
+                <div id="nav1"></div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code6"></code></pre>
+                <div class="pad-10">动态垂直导航条</div>
+                <div id="nav2"></div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code7"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>动态模块参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>string</td>
+                        <td>
+                            <div>菜单类型，可选值："menu"、"nav"</div>
+                        </td>
+                        <td>"menu"</td>
+                    </tr>
+                    <tr>
+                        <td>mode</td>
+                        <td>string</td>
+                        <td>
+                            <div>导航类型，可选值："horizontal"、"vertical"</div>
+                            <div>注意：只有 type="nav" 时有效</div>
+                        </td>
+                        <td>"vertical"</td>
+                    </tr>
+                    <tr>
+                        <td>position</td>
+                        <td>string</td>
+                        <td>
+                            <div>菜单展示类型，可选值："absolute"、"static"</div>
+                            <div>注意：只有 type="menu" 时有效</div>
+                        </td>
+                        <td>"static"</td>
+                    </tr>
+                    <tr>
+                        <td>check</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>菜单是否可选中</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>string</td>
+                        <td>
+                            <div>设置菜单的宽度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>string</td>
+                        <td>
+                            <div>设置菜单的高度</div>
+                            <div>注意：当为水平导航条时，该参数无效</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script src="js/menu-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/menu-nav', 'modules/jquery'], function (MenuNav, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        var menu = MenuNav.render({
+            position: 'static',
+            elem: '#menu1',
+            check: true,
+            template: function (item) {
+                if (item.title == '菜单1') {
+                    return '<span style="color:red">' + '★' + '</span>' + item.title;
+                } else {
+                    return item.title;
+                }
+            },
+            data: [{
+                title: '菜单1',
+                id: 0
+            },
+            {
+                title: '菜单2',
+                spreadType: 'hover-right',
+                children: [
+                    { title: '菜单2-1', children: [{ title: '菜单2-1-1' }] },
+                    { title: '菜单2-2' }
+                ],
+                id: 1
+            },
+            {
+                title: '菜单3',
+                children: [
+                    { title: '菜单3-1' },
+                    { title: '菜单3-2', spread: true, children: [{ title: '菜单3-2-1' }] },
+                    { title: '菜单3-3', children: [{ title: '菜单3-3-1' }] }
+                ],
+                id: 2
+            }]
+        });
+        menu.on('click', function (obj) {
+            // console.log(obj);
+        });
+        menu.on('spread', function (obj) {
+            // console.log(obj);
+        });
+        menu.on('close', function (obj) {
+            // console.log(obj);
+        });
+        MenuNav.render({
+            elem: '#menu2',
+            position: 'absolute',
+            trigger: 'hover',
+            data: [{
+                title: '菜单1'
+            },
+            {
+                title: '菜单2'
+            },
+            {
+                title: '菜单3'
+            }]
+        });
+        MenuNav.render({
+            elem: '#nav1',
+            type: 'nav',
+            mode: 'horizontal',
+            data: [{
+                title: '导航菜单1'
+            },
+            {
+                title: '导航菜单2'
+            },
+            {
+                title: '导航菜单3',
+                children: [{
+                    title: '菜单3-1'
+                }, {
+                    title: '菜单3-2',
+                    children: [{
+                        title: '菜单3-2-1'
+                    }, {
+                        title: '菜单3-2-2'
+                    }]
+                }]
+            }]
+        });
+        MenuNav.render({
+            elem: '#nav2',
+            type: 'nav',
+            width: 200,
+            data: [{
+                title: '导航菜单1',
+                children: [{
+                    title: '导航菜单1-1'
+                }, {
+                    title: '导航菜单1-2',
+                    spread: true,
+                    children: [{
+                        title: '导航菜单1-2-1'
+                    }, {
+                        title: '导航菜单1-2-2'
+                    }]
+                }]
+            },
+            {
+                title: '导航菜单2'
+            },
+            {
+                title: '导航菜单3'
+            }]
+        });
+    });
+</script>
+
+</html>

@@ -59,8 +59,10 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
 
     //默认打开哪个页面
     function initDefaultPage() {
-        var title = '栅格';
-        var url = 'https://codepen.io/wanls4583/embed/rNwrPBv?default-tab=html%2Cresult&editable=true&theme-id=light';
+        // var title = '栅格';
+        // var url = 'https://codepen.io/wanls4583/embed/rNwrPBv?default-tab=html%2Cresult&editable=true&theme-id=light';
+        var title = '导航/菜单';
+        var url = 'menu.html';
         if (url) {
             openTab(title, url);
         }
