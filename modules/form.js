@@ -85,7 +85,8 @@
                 var filter = $(this).attr('jy-filter');
                 if ($form.length && that.verify($form)) {
                     var data = that.getJsonFromForm($form);
-                    JyForm.trigger('submit' + (filter ? '(' + filter + ')' : ''), data);
+                    filter && JyForm.trigger('submit(' + filter + ')', data);
+                    JyForm.trigger('submit', data);
                 }
             });
         }
@@ -373,7 +374,11 @@
                 $this.toggleClass(formClass.switchChecked);
                 $this.find('span').html(checked ? 'OFF' : 'ON');
                 // 触发switch事件
-                JyForm.trigger('switch' + (filter ? '(' + filter + ')' : ''), {
+                filter && JyForm.trigger('switch(' + filter + ')', {
+                    data: $input.prop('checked'),
+                    dom: $input[0]
+                });
+                JyForm.trigger('switch', {
                     data: $input.prop('checked'),
                     dom: $input[0]
                 });
@@ -435,7 +440,6 @@
 
         // 绑定单选框事件
         Class.prototype.bindRadioEvent = function ($dom, $container) {
-            var that = this;
             container = $container[0] === docBody ? false : $container[0];
             $dom.on('click', function () {
                 var $this = $(this);
@@ -455,7 +459,11 @@
                 $this.addClass(formClass.radioChecked);
                 $input.prop('checked', true);
                 // 触发radio事件
-                JyForm.trigger('radio' + (filter ? '(' + filter + ')' : ''), {
+                filter && JyForm.trigger('radio(' + filter + ')', {
+                    data: $input.val(),
+                    dom: $input[0]
+                });
+                JyForm.trigger('radio', {
                     data: $input.val(),
                     dom: $input[0]
                 });
@@ -544,7 +552,11 @@
                     }
                 });
                 // 触发checkbox事件
-                JyForm.trigger('checkbox' + (filter ? '(' + filter + ')' : ''), {
+                filter && JyForm.trigger('checkbox(' + filter + ')', {
+                    data: data,
+                    dom: $input[0]
+                });
+                JyForm.trigger('checkbox', {
                     data: data,
                     dom: $input[0]
                 });
@@ -553,7 +565,6 @@
 
         // 渲染下拉选择框
         Class.prototype.renderSelect = function (filter, container) {
-            var that = this;
             var $container = $(container || docBody);
             var selector = 'select' + (filter ? '[jy-filter="' + filter + '"]' : '');
             if ($container.is(selector)) {
@@ -588,7 +599,8 @@
                         data: data
                     });
                     select.on('select', function (obj) {
-                        JyForm.trigger('select' + (filter ? '(' + filter + ')' : ''), obj);
+                        filter && JyForm.trigger('select(' + filter + ')', obj);
+                        JyForm.trigger('select', obj);
                     });
                 }
             });

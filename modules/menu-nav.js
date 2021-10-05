@@ -91,6 +91,7 @@
                     }
                 });
             } else {
+                this.filter = this.$menu.attr('jy-fillter');
                 this.setTitleLeftPadding();
                 this.$menu.find('ul').hide();
                 // 设置右侧图标和显示默认打开的组
@@ -357,6 +358,10 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
+                    that.filter && JyMenuNav.trigger('click(' + that.filter + ')', {
+                        dom: this,
+                        data: Common.delInnerProperty(data)
+                    });
                     JyMenuNav.trigger('click', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -385,6 +390,10 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
+                    that.filter && JyMenuNav.trigger(($ul.is(':visible') ? 'spread' : 'close') + '(' + that.filter + ')', {
+                        dom: this,
+                        data: Common.delInnerProperty(data)
+                    });
                     JyMenuNav.trigger($ul.is(':visible') ? 'spread' : 'close', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -410,6 +419,10 @@
                         dom: this,
                         data: Common.delInnerProperty(data)
                     });
+                    that.filter && JyMenuNav.trigger('spread(' + that.filter + ')', {
+                        dom: this,
+                        data: Common.delInnerProperty(data)
+                    });
                     JyMenuNav.trigger('spread', {
                         dom: this,
                         data: Common.delInnerProperty(data)
@@ -427,6 +440,10 @@
                         $ul.hide().removeClass(hoverRightAnimation).removeClass(hoverDownAnimation);
                         $this.removeClass(menuClass.spread);
                         that.trigger('close', {
+                            dom: this,
+                            data: Common.delInnerProperty(data)
+                        });
+                        that.filter && JyMenuNav.trigger('close(' + that.filter + ')', {
                             dom: this,
                             data: Common.delInnerProperty(data)
                         });

@@ -47,15 +47,14 @@
 
             // 触发事件
             function trigger(filter, event, container) {
-                container = container || on;
-                var arr = container[filter + '_event'];
-                var result;
-                if (arr) {
-                    for (var i = 0; i < arr.length; i++) {
-                        result = arr[i](event);
-                    }
-                }
-                return result;
+                var filters = filter.split(/\s+/);
+                filters.map(function (filter) {
+                    container = container || on;
+                    var arr = container[filter + '_event'];
+                    arr.map(function (fun) {
+                        fun(event)
+                    });
+                })
             }
 
             return {
@@ -538,7 +537,7 @@
             function _getNum() {
                 var num = '';
                 var start = /\d/.exec(str);
-                if(start) {
+                if (start) {
                     start = start.index;
                 } else {
                     start = Infinity;

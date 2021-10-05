@@ -1,0 +1,49 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>标签页</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">标签页</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend></legend>
+            <div class="jy-field-box"></div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script src="js/tab.js"></script>
+<script type="text/javascript">
+    require(['modules/tab', 'modules/jquery'], function (Tab, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+
+    });
+</script>
+
+</html>

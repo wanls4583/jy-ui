@@ -7,7 +7,7 @@
 <html lang="en">
 
 <head>
-    <title>jy-form</title>
+    <title>表单</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script type='text/javascript' src='./js/require.js'></script>
@@ -353,7 +353,7 @@
                         <td>监听事件</td>
                         <td>
                             <div>参数：(string：监听类型[(过滤器)]，function：回调函数)</div>
-                            <div>监听类型：<em> submit </em><em> raido </em><em> checkbox </em><em> select </em><em> switch </em></div>
+                            <div>监听类型：<em> submit </em><em> raido </em><em> checkbox </em><em> select </em><em> switch </em>，多个监听类型可以用空格分隔</div>
                             <div>过滤器为可选参数</div>
                             <div>回调函数的参数结构为：</div>
                             <div class="code14" style="display:none;"> { data: value值, dom: 触发事件的元素 } </div>
@@ -366,6 +366,7 @@
                         <td>手动触发事件</td>
                         <td>
                             <div>参数：(string：监听类型[(过滤器)]，object：回调函数的参数)</div>
+                            <div>多个监听类型可以用空格分隔</div>
                         </td>
                         <td></td>
                     </tr>
