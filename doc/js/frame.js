@@ -44,19 +44,15 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
                 var $container = $('div.jy-frame-container');
                 var $content = $('div.jy-tab-content');
                 $headerRight.css('width', winWidth - 201);
-                $sideMenu.css('height', winHeight - 51);
+                $sideMenu.css('height', winHeight - 61);
                 $container.css('width', winWidth - 201);
-                $content.css('height', winHeight - 91);
-            } else if (ieVersion == 7) { // ie7只支持content-box
-                var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                $content.css('height', winHeight - 101);
+            } else if (ieVersion == 7) {
                 var $sideMenu = $('.jy-side-menu');
                 var $content = $('div.jy-tab-content');
-                $content.css({
-                    width: winWidth - 201 - 20,
-                    height: winHeight - 91 - 20
-                });
                 // 如果父元素是通过top,bottom获得的高度，子元素百分比高度将无效
-                $sideMenu.css('height', winHeight - 51);
+                $sideMenu.css('height', winHeight - 61);
+                $content.css('height', winHeight - 101);
             }
         }
     }
