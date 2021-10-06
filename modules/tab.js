@@ -143,6 +143,18 @@
             this.data = this.data.filter(function (item) {
                 return item.name != name;
             });
+            that.trigger('close', {
+                data: name,
+                dom: $title[0]
+            });
+            that.filter && JyTab.trigger('close(' + that.filter + ')', {
+                data: name,
+                dom: $title[0]
+            });
+            JyTab.trigger('close', {
+                data: name,
+                dom: $title[0]
+            });
             if ($title.hasClass(tabClass.titleActive)) {
                 $prev.trigger('click');
             }

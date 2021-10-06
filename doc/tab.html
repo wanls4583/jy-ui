@@ -26,14 +26,209 @@
             <div class="jy-content-title">标签页</div>
         </div>
         <fieldset class="jy-field">
-            <legend></legend>
-            <div class="jy-field-box"></div>
+            <legend>静态标签</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">普通标签</div>
+                <div class="jy-tab" style="width:400px;">
+                    <div class="jy-tab-header">
+                        <div class="jy-tab-header-scroll">
+                            <div class="jy-tab-titles">
+                                <div class="jy-tab-title jy-tab-title-active" name="tab1">标签1</div>
+                                <div class="jy-tab-title" name="tab2">标签2</div>
+                                <div class="jy-tab-title" name="tab3">标签3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jy-tab-content">
+                        <div class="jy-tab-item jy-tab-item-active" target="tab1">内容1</div>
+                        <div class="jy-tab-item" target="tab2">内容2</div>
+                        <div class="jy-tab-item" target="tab3">内容3</div>
+                    </div>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+                <div class="pad-10">线条样式</div>
+                <div class="jy-tab jy-tab-line" style="width:400px;">
+                    <div class="jy-tab-header">
+                        <div class="jy-tab-header-scroll">
+                            <div class="jy-tab-titles">
+                                <div class="jy-tab-title jy-tab-title-active" name="tab1">标签1</div>
+                                <div class="jy-tab-title" name="tab2">标签2</div>
+                                <div class="jy-tab-title" name="tab3">标签3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jy-tab-content">
+                        <div class="jy-tab-item jy-tab-item-active" target="tab1">内容1</div>
+                        <div class="jy-tab-item" target="tab2">内容2</div>
+                        <div class="jy-tab-item" target="tab3">内容3</div>
+                    </div>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code1"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>动态标签</legend>
+            <div class="jy-field-box">
+                <div id="tab"></div>
+            </div>
+            <div class="pad-10">代码：</div>
+            <pre><code id="code2"></code></pre>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>动态生成菜单</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>菜单实例</td>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)])</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)]，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>checkStaticTab</td>
+                        <td>检查静态标签</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能监听该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能触发该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>addTab</td>
+                        <td>添加标签</td>
+                        <td>(object：{title：标签标题，name：标签名称，active：是否默认选中})</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>removeTab</td>
+                        <td>删除标签</td>
+                        <td>(string：标签名称)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>
+                            <div>标签数据，结构：</div>
+                            <div>{title：标签标题，name：标签名称，active：是否默认选中}</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>style</td>
+                        <td>string</td>
+                        <td>
+                            <div>标签样式，可选值："card"、"line"</div>
+                        </td>
+                        <td>"card"</td>
+                    </tr>
+                    <tr>
+                        <td>colseEnable</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>标签项是否可关闭</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>事件</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>事件</th>
+                        <th>描述</th>
+                        <th>回调参数</th>
+                    </tr>
+                    <tr>
+                        <td>change</td>
+                        <td>当前标签项改变时触发</td>
+                        <td>object: {data：标签名称，dom：标题dom}</td>
+                    </tr>
+                    <tr>
+                        <td>close</td>
+                        <td>标签项改变时触发</td>
+                        <td>object: {data：标签名称，dom：标题dom}</td>
+                    </tr>
+                </table>
+            </div>
         </fieldset>
     </div>
 </body>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
-<script src="js/tab.js"></script>
+<script src="js/tab-codes.js"></script>
 <script type="text/javascript">
     require(['modules/tab', 'modules/jquery'], function (Tab, $) {
         codes.map(function (code, index) {
@@ -42,7 +237,14 @@
         try {
             hljs.highlightAll();
         } catch (e) { }
-
+        Tab.render({
+            elem: '#tab',
+            style: 'line',
+            data: [
+                { title: '标签1', name: 'tab1', content: '内容1' },
+                { title: '标签2', name: 'tab2', content: '内容2' }
+            ]
+        })
     });
 </script>
 
