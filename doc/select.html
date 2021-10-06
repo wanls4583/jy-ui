@@ -51,7 +51,170 @@
             </div>
         </fieldset>
         <fieldset class="jy-field">
-            <legend>参数</legend>
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div class="pad-10" id="test1">示例1：</div>
+                <div class="jy-form-inline code2 rendered">
+                    <input type="text" id="select2">
+                    <script>
+                        require(['modules/select'], function (Select) {
+                            Select.render({
+                                elem: '#select2',
+                                type: 'input',
+                                data: [
+                                    { label: '上海', value: 1 },
+                                    { label: '广州', value: 2 },
+                                    { label: '北京', value: 3 }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <pre><code id="code2"></code></pre>
+                <div class="pad-10" id="test2">示例2：</div>
+                <div class="jy-form-inline code3 rendered" style="width:200px;">
+                    <input type="text" id="select3">
+                    <script>
+                        require(['modules/select'], function (Select) {
+                            Select.render({
+                                elem: '#select3',
+                                multiselect: true,
+                                data: [
+                                    { label: '上海', value: 1 },
+                                    { label: '广州', value: 2 },
+                                    { label: '北京', value: 3 }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <pre><code id="code3"></code></pre>
+                <div class="pad-10" id="test3">示例3：</div>
+                <div class="jy-form-inline code4 rendered" style="width:200px;">
+                    <input type="text" id="select4">
+                    <script>
+                        require(['modules/select'], function (Select) {
+                            var citys = [{
+                                label: '上海',
+                                value: 1
+                            }, {
+                                label: '广州',
+                                value: 2
+                            }, {
+                                label: '北京',
+                                value: 3
+                            }, {
+                                label: '深圳',
+                                value: 4
+                            }]
+                            Select.render({
+                                elem: '#select4',
+                                search: true,
+                                searchMethod: function (value, cb) {
+                                    var data = citys.filter(function (item) {
+                                        return item.label.indexOf(value) > -1;
+                                    });
+                                    setTimeout(function () {
+                                        cb(data);
+                                    }, 500);
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+                <pre><code id="code4"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>动态生成菜单</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>Select 实例</td>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)])</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)]，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能监听该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能触发该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>select</td>
+                        <td>选中下拉项</td>
+                        <td>
+                            <div>(string：下拉项的值)</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>reload</td>
+                        <td>重载实例</td>
+                        <td>
+                            <div>和 render 参数一致</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
             <div class="jy-field-box">
                 <table class="property-table">
                     <tr>
@@ -165,78 +328,20 @@
             </div>
         </fieldset>
         <fieldset class="jy-field">
-            <legend>示例</legend>
+            <legend>事件</legend>
             <div class="jy-field-box">
-                <div class="pad-10" id="test1">示例1：</div>
-                <div class="jy-form-inline code2 rendered">
-                    <input type="text" id="select2">
-                    <script>
-                        require(['modules/select'], function (Select) {
-                            Select.render({
-                                elem: '#select2',
-                                type: 'input',
-                                data: [
-                                    { label: '上海', value: 1 },
-                                    { label: '广州', value: 2 },
-                                    { label: '北京', value: 3 }
-                                ]
-                            });
-                        });
-                    </script>
-                </div>
-                <pre><code id="code2"></code></pre>
-                <div class="pad-10" id="test2">示例2：</div>
-                <div class="jy-form-inline code3 rendered" style="width:200px;">
-                    <input type="text" id="select3">
-                    <script>
-                        require(['modules/select'], function (Select) {
-                            Select.render({
-                                elem: '#select3',
-                                multiselect: true,
-                                data: [
-                                    { label: '上海', value: 1 },
-                                    { label: '广州', value: 2 },
-                                    { label: '北京', value: 3 }
-                                ]
-                            });
-                        });
-                    </script>
-                </div>
-                <pre><code id="code3"></code></pre>
-                <div class="pad-10" id="test3">示例3：</div>
-                <div class="jy-form-inline code4 rendered" style="width:200px;">
-                    <input type="text" id="select4">
-                    <script>
-                        require(['modules/select'], function (Select) {
-                            var citys = [{
-                                label: '上海',
-                                value: 1
-                            }, {
-                                label: '广州',
-                                value: 2
-                            }, {
-                                label: '北京',
-                                value: 3
-                            }, {
-                                label: '深圳',
-                                value: 4
-                            }]
-                            Select.render({
-                                elem: '#select4',
-                                search: true,
-                                searchMethod: function (value, cb) {
-                                    var data = citys.filter(function (item) {
-                                        return item.label.indexOf(value) > -1;
-                                    });
-                                    setTimeout(function () {
-                                        cb(data);
-                                    }, 500);
-                                }
-                            });
-                        });
-                    </script>
-                </div>
-                <pre><code id="code4"></code></pre>
+                <table class="property-table">
+                    <tr>
+                        <th>事件</th>
+                        <th>描述</th>
+                        <th>回调参数</th>
+                    </tr>
+                    <tr>
+                        <td>select</td>
+                        <td>下拉项被选中时触发</td>
+                        <td>object: {data：下拉项的 value 值，item：下拉项原始数据，dom：当前下拉项的 dom}</td>
+                    </tr>
+                </table>
             </div>
         </fieldset>
     </div>
