@@ -179,8 +179,9 @@
                         <td>render</td>
                         <td>动态生成菜单</td>
                         <td>
-                            <div>(object：菜单配置)</div>
+                            <div>(object：参数配置)</div>
                         </td>
+                        <td>菜单实例</td>
                     </tr>
                     <tr>
                         <td>on</td>
@@ -189,6 +190,7 @@
                             <div>(string：监听类型[(过滤器)])</div>
                             <div>多个监听类型可用空格分隔</div>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>trigger</td>
@@ -197,12 +199,46 @@
                             <div>(string：监听类型[(过滤器)]，object：回调函数的参数))</div>
                             <div>多个监听类型可用空格分隔</div>
                         </td>
+                        <td></td>
                     </tr>
                 </table>
             </div>
         </fieldset>
         <fieldset class="jy-field">
-            <legend>基础参数</legend>
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能监听该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能触发该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
             <div class="jy-field-box">
                 <table class="property-table">
                     <tr>
