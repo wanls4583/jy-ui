@@ -56,6 +56,7 @@
             this.$headerScroll = this.$header.children('.' + tabClass.headerScroll);
             this.$titles = this.$headerScroll.children('.' + tabClass.titles);
             this.$content = this.$tab.children('.' + tabClass.content);
+            this.filter = this.$tab.attr('jy-filter');
             if (!this.option.$tab) {
                 this.$elem = $(this.option.elem);
                 this.appendItem();
@@ -173,6 +174,10 @@
                 $this.addClass(tabClass.titleActive);
                 that.$content.children('[target="' + tabName + '"]').addClass(tabClass.itemActive);
                 that.trigger('change', {
+                    data: tabName,
+                    dom: this
+                });
+                that.filter && JyTab.trigger('change(' + that.filter + ')', {
                     data: tabName,
                     dom: this
                 });

@@ -51,8 +51,8 @@
                 filters.map(function (filter) {
                     container = container || on;
                     var arr = container[filter + '_event'];
-                    arr.map(function (fun) {
-                        fun(event)
+                    arr && arr.map(function (fun) {
+                        fun(event);
                     });
                 })
             }
