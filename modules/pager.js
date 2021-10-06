@@ -44,6 +44,7 @@
                 this.$pager.insertAfter($elem);
                 $elem.hide();
             }
+            this.filter = $elem.attr('jy-filter');
             this.option = Object.assign({}, this.option);
             this.count = this.option.count || 0;
             this.limit = this.option.limit || 10;
@@ -184,6 +185,7 @@
                 Common.cancelNextFrame(this.triggerTimer);
                 this.triggerTimer = Common.nextFrame(function () {
                     that.trigger('page', that.nowPage);
+                    that.filter && JyPager.trigger('page(' + that.filter + ')', that.nowPage);
                     JyPager.trigger('page', that.nowPage);
                 })
             }
@@ -290,6 +292,7 @@
             this.$pager.delegate('select.' + pageClass.limit, 'change', function () {
                 var limit = Number($(this).val()) || 0;
                 that.trigger('limit', limit);
+                that.filter && JyPager.trigger('limit(' + that.filter + ')', limit);
                 JyPager.trigger('limit', limit);
                 that.setLimit(limit);
             });

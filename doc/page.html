@@ -7,7 +7,7 @@
 <html lang="en">
 
 <head>
-    <title>标签页</title>
+    <title>分页</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script type='text/javascript' src='./js/require.js'></script>
@@ -23,57 +23,14 @@
 <body>
     <div class="jy-content">
         <div class="jy-content-header">
-            <div class="jy-content-title">标签页</div>
+            <div class="jy-content-title">分页</div>
         </div>
         <fieldset class="jy-field">
-            <legend>静态标签</legend>
+            <legend>示例</legend>
             <div class="jy-field-box">
-                <div class="pad-10">普通标签</div>
-                <div class="jy-tab" style="width:400px;">
-                    <div class="jy-tab-header">
-                        <div class="jy-tab-header-scroll">
-                            <div class="jy-tab-titles">
-                                <div class="jy-tab-title jy-tab-title-active" name="tab1">标签1</div>
-                                <div class="jy-tab-title" name="tab2">标签2</div>
-                                <div class="jy-tab-title" name="tab3">标签3</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="jy-tab-content">
-                        <div class="jy-tab-item jy-tab-item-active" target="tab1">内容1</div>
-                        <div class="jy-tab-item" target="tab2">内容2</div>
-                        <div class="jy-tab-item" target="tab3">内容3</div>
-                    </div>
-                </div>
+                <div id="pager"></div>
                 <div class="pad-10">代码：</div>
                 <pre><code id="code0"></code></pre>
-                <div class="pad-10">线条样式</div>
-                <div class="jy-tab jy-tab-line" style="width:400px;">
-                    <div class="jy-tab-header">
-                        <div class="jy-tab-header-scroll">
-                            <div class="jy-tab-titles">
-                                <div class="jy-tab-title jy-tab-title-active" name="tab1">标签1</div>
-                                <div class="jy-tab-title" name="tab2">标签2</div>
-                                <div class="jy-tab-title" name="tab3">标签3</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="jy-tab-content">
-                        <div class="jy-tab-item jy-tab-item-active" target="tab1">内容1</div>
-                        <div class="jy-tab-item" target="tab2">内容2</div>
-                        <div class="jy-tab-item" target="tab3">内容3</div>
-                    </div>
-                </div>
-                <div class="pad-10">代码：</div>
-                <pre><code id="code1"></code></pre>
-            </div>
-        </fieldset>
-        <fieldset class="jy-field">
-            <legend>动态标签</legend>
-            <div class="jy-field-box">
-                <div id="tab"></div>
-                <div class="pad-10">代码：</div>
-                <pre><code id="code2"></code></pre>
             </div>
         </fieldset>
         <fieldset class="jy-field">
@@ -112,10 +69,6 @@
                         </td>
                         <td></td>
                     </tr>
-                    <tr>
-                        <td>checkStaticTab</td>
-                        <td>检查静态标签</td>
-                    </tr>
                 </table>
             </div>
         </fieldset>
@@ -150,15 +103,15 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>addTab</td>
-                        <td>添加标签</td>
-                        <td>(object：{title：标签标题，name：标签名称，active：是否默认选中})</td>
+                        <td>setCount</td>
+                        <td>设置总记录数</td>
+                        <td>(number：记录数)</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>removeTab</td>
-                        <td>删除标签</td>
-                        <td>(string：标签名称)</td>
+                        <td>reload</td>
+                        <td>重载实例</td>
+                        <td>(string：和 render 参数一致)</td>
                         <td></td>
                     </tr>
                 </table>
@@ -175,29 +128,76 @@
                         <th>默认值</th>
                     </tr>
                     <tr>
-                        <td>data</td>
+                        <td>count</td>
+                        <td>number</td>
+                        <td>
+                            <div>总记录数</div>
+                        </td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>limit</td>
+                        <td>number</td>
+                        <td>
+                            <div>每页数量</div>
+                        </td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>limits</td>
                         <td>array</td>
                         <td>
-                            <div>标签数据，结构：</div>
-                            <div>{title：标签标题，name：标签名称，active：是否默认选中}</div>
+                            <div>limit组</div>
                         </td>
-                        <td></td>
+                        <td>[10,20,50,100]</td>
                     </tr>
                     <tr>
-                        <td>style</td>
+                        <td>nowPage</td>
+                        <td>number</td>
+                        <td>
+                            <div>当前页码</div>
+                        </td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>groups</td>
+                        <td>number</td>
+                        <td>
+                            <div>显示的页码数量</div>
+                        </td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>layout</td>
+                        <td>array</td>
+                        <td>
+                            <div>页码布局</div>
+                        </td>
+                        <td>['count', 'prev', 'page', 'next', 'limit', 'jump']</td>
+                    </tr>
+                    <tr>
+                        <td>prev</td>
                         <td>string</td>
                         <td>
-                            <div>标签样式，可选值："card"、"line"</div>
+                            <div>上一页标签</div>
                         </td>
-                        <td>"card"</td>
+                        <td>&lt;</td>
                     </tr>
                     <tr>
-                        <td>colseEnable</td>
-                        <td>boolean</td>
+                        <td>prev</td>
+                        <td>string</td>
                         <td>
-                            <div>标签项是否可关闭</div>
+                            <div>下一页标签</div>
                         </td>
-                        <td>true</td>
+                        <td>&gt;</td>
+                    </tr>
+                    <tr>
+                        <td>size</td>
+                        <td>string</td>
+                        <td>
+                            <div>页码样式大小，可选值："small"、"normal"</div>
+                        </td>
+                        <td>normal</td>
                     </tr>
                 </table>
             </div>
@@ -212,14 +212,14 @@
                         <th>回调参数</th>
                     </tr>
                     <tr>
-                        <td>change</td>
-                        <td>当前标签项改变时触发</td>
-                        <td>object: {data：标签名称，dom：标题dom}</td>
+                        <td>page</td>
+                        <td>当前页码改变时触发</td>
+                        <td>number：页码</td>
                     </tr>
                     <tr>
-                        <td>close</td>
-                        <td>标签项改变时触发</td>
-                        <td>object: {data：标签名称，dom：标题dom}</td>
+                        <td>limit</td>
+                        <td>每页数量改变时触发</td>
+                        <td>number：每页数量</td>
                     </tr>
                 </table>
             </div>
@@ -228,23 +228,23 @@
 </body>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
-<script src="js/tab-codes.js"></script>
+<script src="js/page-codes.js"></script>
 <script type="text/javascript">
-    require(['modules/tab', 'modules/jquery'], function (Tab, $) {
+    require(['modules/pager', 'modules/jquery'], function (Pager, $) {
         codes.map(function (code, index) {
             $('#code' + index).text(code);
         });
         try {
             hljs.highlightAll();
         } catch (e) { }
-        Tab.render({
-            elem: '#tab',
-            style: 'line',
-            data: [
-                { title: '标签1', name: 'tab1', content: '内容1' },
-                { title: '标签2', name: 'tab2', content: '内容2' }
-            ]
-        })
+        Pager.render({
+            elem: '#pager',
+            count: 100,
+            first: '首页',
+            last: '尾页',
+            prev: '上一页',
+            next: '下一页'
+        });
     });
 </script>
 

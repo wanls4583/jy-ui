@@ -143,11 +143,11 @@
             this.data = this.data.filter(function (item) {
                 return item.name != name;
             });
-            that.trigger('close', {
+            this.trigger('close', {
                 data: name,
                 dom: $title[0]
             });
-            that.filter && JyTab.trigger('close(' + that.filter + ')', {
+            this.filter && JyTab.trigger('close(' + this.filter + ')', {
                 data: name,
                 dom: $title[0]
             });
