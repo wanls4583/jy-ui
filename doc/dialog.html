@@ -1,0 +1,297 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>弹框</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">弹框</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <button class="jy-btn" onclick="openAlert()">提示框</button>
+                <button class="jy-btn" onclick="openMsg()">提示文字</button>
+                <button class="jy-btn" onclick="openConfirm()">确认框</button>
+                <button class="jy-btn" onclick="openDialog()">自定义框</button>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>open</td>
+                        <td>打开弹框</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                    <tr>
+                        <td>alert</td>
+                        <td>信息提示</td>
+                        <td>
+                            <div>(string：提示内容，object：和 open 参数配置一致)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                    <tr>
+                        <td>confirm</td>
+                        <td>信息确认</td>
+                        <td>
+                            <div>(string：提示内容，object：和 open 参数配置一致)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                    <tr>
+                        <td>confirm</td>
+                        <td>信息确认</td>
+                        <td>
+                            <div>(string：提示内容，object：和 open 参数配置一致)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                    <tr>
+                        <td>msg</td>
+                        <td>消息提示</td>
+                        <td>
+                            <div>(string：提示内容，object：和 open 参数配置一致)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                    <tr>
+                        <td>loading</td>
+                        <td>加载提示</td>
+                        <td>
+                            <div>(string：提示内容，object：和 open 参数配置一致)</div>
+                        </td>
+                        <td>弹框标识</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>open </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>string</td>
+                        <td>
+                            <div>弹框标题</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>string/dom</td>
+                        <td>
+                            <div>弹框内容</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>icon</td>
+                        <td>string</td>
+                        <td>
+                            <div>图标，可选值："success"、"error"、"warn"、"question"</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>close</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否有关闭按钮</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>shadow</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否有遮罩层</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>move</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否可移动</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>full</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否有全屏按钮</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>number</td>
+                        <td>
+                            <div>弹框宽度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>number</td>
+                        <td>
+                            <div>弹框高度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>btn</td>
+                        <td>array</td>
+                        <td>
+                            <div>底部按钮文本</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>btn(0-n)</td>
+                        <td>function</td>
+                        <td>
+                            <div>底部按钮点击回调函数，参数：($dom：弹框，nunber：弹框标识)</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>before</td>
+                        <td>function</td>
+                        <td>
+                            <div>弹框渲染之前回调</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>success</td>
+                        <td>function</td>
+                        <td>
+                            <div>弹框渲染完成回调</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>yes</td>
+                        <td>function</td>
+                        <td>
+                            <div>第一个按钮点击回调函数，和 btn0 功能一致</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>cancel</td>
+                        <td>function</td>
+                        <td>
+                            <div>第二个按钮点击回调函数，和 btn1 功能一致</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/dialog-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/dialog', 'modules/jquery'], function (Dialog, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        window.openAlert = function (icon) {
+            Dialog.alert('点击确认更改图标', {
+                icon: icon,
+                yes: function ($layer, index) {
+                    Dialog.close(index);
+                    switch (icon) {
+                        case 'success':
+                            openAlert('error'); break;
+                        case 'error':
+                            openAlert('warn'); break;
+                        case 'warn':
+                            openAlert('question'); break;
+                        case 'question': break;
+                        default:
+                            openAlert('success'); break;
+                    }
+                }
+            });
+        }
+        window.openMsg = function () {
+            Dialog.msg('信息');
+        }
+        window.openConfirm = function () {
+            Dialog.confirm('确认框', {
+                yes: function ($layer, index) {
+                    Dialog.close(index);
+                }
+            });
+        }
+        window.openDialog = function () {
+            Dialog.open({
+                title: '自定义框',
+                icon: 'success',
+                content: '<div>自定义内容<br>自定义内容</div>',
+                btn: ['按钮1', '按钮2', '按钮3'],
+                full: true,
+                shadow: false,
+                yes: function ($layer, index) {
+                    Dialog.close(index);
+                },
+                cancel: function ($layer, index) {
+                    Dialog.close(index);
+                },
+                btn2: function ($layer, index) {
+                    Dialog.close(index);
+                }
+            });
+        }
+    });
+</script>
+
+</html>

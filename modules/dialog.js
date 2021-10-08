@@ -35,16 +35,7 @@
         var ieVersion = Common.getIeVersion();
         var store = {};
         var layerCount = 0;
-        var Dialog = {
-            open: open,
-            alert: alert,
-            confirm: confirm,
-            msg: msg,
-            loading: loading,
-            close: close,
-            setPosition: setPosition,
-            setArea: setArea
-        };
+        
         // 打开弹框
         function open(option) {
             option.type = option.type || 'dialog';
@@ -361,7 +352,7 @@
             };
             var _option = {
                 title: '信息',
-                type: 'alert',
+                type: 'confirm',
                 icon: 'warn',
                 full: false,
                 content: content,
@@ -594,6 +585,17 @@
             }
         }
 
+        var Dialog = {
+            open: open,
+            alert: alert,
+            confirm: confirm,
+            msg: msg,
+            loading: loading,
+            close: close,
+            setPosition: setPosition,
+            setArea: setArea
+        };
+        
         return Dialog;
     }
 
