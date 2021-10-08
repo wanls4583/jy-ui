@@ -1493,11 +1493,12 @@
                 mainRect = {
                     clientWidth: this.$main[0].clientWidth,
                     clientHeight: this.$main[0].clientHeight,
+                    scrollHeight: this.$main[0].scrollHeight,
                     scrollWidth: this.$main[0].scrollWidth,
                     offsetWidth: this.$main[0].offsetWidth,
                     offsetHeight: this.$main[0].offsetHeight
                 }
-                hasHscrollBar = mainRect.offsetHeight > mainRect.clientHeight;
+                hasHscrollBar = mainRect.scrollWidth > mainRect.clientWidth;
             }
             if (hasHscrollBar) {
                 var ths = this.$headerTableThead.children('tr').first().children('th');
@@ -1527,12 +1528,12 @@
                     this.$leftMain[0].scrollTop = scrollTop;
                 }
                 if (this.$rightHeaderMain) {
-                    var hasVscrollBar = mainRect.offsetWidth > mainRect.clientWidth;
+                    var hasVscrollBar = mainRect.scrollHeight > mainRect.clientHeight;
                     this.$rightHeaderMain.css({
                         'top': toolbarHeight,
                         'width': rightWidth,
                         'height': height,
-                        'right': hasVscrollBar ? 17 : 0
+                        'right': hasVscrollBar ? mainRect.offsetWidth - mainRect.clientWidth : 0
                     }).show();
                     this.$rightMain.css({
                         'top': headerHeight,
@@ -1567,7 +1568,7 @@
 
         // 设置列宽
         Class.prototype.setColWidth = function (col, width) {
-            if(typeof col === 'string') {
+            if (typeof col === 'string') {
                 col = this.getColByField(col);
             }
             col.width = width;
