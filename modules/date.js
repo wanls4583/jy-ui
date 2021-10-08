@@ -958,7 +958,7 @@
                 };
             }
         }
-
+        
         return JyDate;
     }
     if ("function" == typeof define && define.amd) {

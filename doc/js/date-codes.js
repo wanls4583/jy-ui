@@ -4,7 +4,9 @@
  * @Description: 
  */
 var codes = [];
-codes.push(`<div style="padding:20px 0;">常规用法</div>
+codes.push(`<div class="jy-form-item">
+    <label for="" class="jy-form-label">常规用法</label>
+</div>
 <div class="jy-form-inline">
     <label for="" class="jy-form-label">日期时间</label>
     <div class="jy-input-inline">
@@ -41,7 +43,9 @@ codes.push(`<div style="padding:20px 0;">常规用法</div>
         <input type="text" class="jy-input" id="time" autocomplete="off">
     </div>
 </div>
-<div style="padding:20px 0;">范围选择</div>
+<div class="jy-form-item">
+    <label for="" class="jy-form-label">范围选择</label>
+</div>
 <div class="jy-form-item">
     <label for="" class="jy-form-label" style="white-space:nowrap;">日期时间范围</label>
     <div class="jy-input-inline">
