@@ -82,7 +82,7 @@ codes.push(`<div id="table1"></div>
                 values: likeValues
             }]
         });
-        table.on('change', function () {
+        table.on('selected', function () {
             Dialog.alert(JSON.stringify(table.getData('select')));
         });
     });
