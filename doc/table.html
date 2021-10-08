@@ -1,0 +1,879 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>表格</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">表格</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>普通表格</legend>
+            <div class="jy-field-box">
+                <table id="table1"></table>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0" class="language-html"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>复杂表格</legend>
+            <div class="jy-field-box">
+                <table id="table2"></table>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code1" class="language-html"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>渲染表格</td>
+                        <td>
+                            <div>(object：<a href="#render">参数配置</a>)</div>
+                        </td>
+                        <td>表格实例</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>reload</td>
+                        <td>重载表格</td>
+                        <td>
+                            <div>(object：和 render 一致)</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>reloadData</td>
+                        <td>重载表格数据</td>
+                        <td>
+                            <div>(object：{data，request，nowPage})</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>getData</td>
+                        <td>获取表格数据</td>
+                        <td>
+                            <div>(string："render"、"select"、"check"、"add"、"delete"、"edit")</div>
+                            <div>"render"：获取所有数据</div>
+                            <div>"select"：获取单选选择的数据</div>
+                            <div>"check"：获取多项选择的数据</div>
+                            <div>"add"：获取添加的数据</div>
+                            <div>"delete"：获取删除的数据</div>
+                            <div>"edit"：获取编辑过的数据</div>
+                            <div>默认为 "render"</div>
+                        </td>
+                        <td>array</td>
+                    </tr>
+                    <tr>
+                        <td>getDataById</td>
+                        <td>根据唯一标识获取某一条数据</td>
+                        <td>(string：id)</td>
+                        <td>object</td>
+                    </tr>
+                    <tr>
+                        <td>addRow</td>
+                        <td>添加数据</td>
+                        <td>(object：{id，data})，id 代表插入位置</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>deleteRow</td>
+                        <td>删除数据</td>
+                        <td>(string：id)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>checkRow</td>
+                        <td>选中某一行</td>
+                        <td>(string：id)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>checkAll</td>
+                        <td>选中所有行</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>save</td>
+                        <td>保存编辑中的数据</td>
+                        <td>(string：id, string：field)，不传参数时候，代表保存所有数据</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>cancel</td>
+                        <td>取消编辑</td>
+                        <td>(string：id, string：field)，不传参数时候，代表取消所有编辑</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>edit</td>
+                        <td>编辑数据</td>
+                        <td>(string：id, string：field)，field 为空代表编辑整行数据</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>setData</td>
+                        <td>设置数据</td>
+                        <td>(object：{id，field，data})，field 为空时代表设置整行数据</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>toggleCol</td>
+                        <td>显示/隐藏某一列</td>
+                        <td>(string：field，boolean：checked)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>setArea</td>
+                        <td>设置表格尺寸</td>
+                        <td>(string：width，string：height)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>setColWidth</td>
+                        <td>设置某一列宽度</td>
+                        <td>(string：field，number：width)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>showLoading</td>
+                        <td>显示加载提示</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>hideLoading</td>
+                        <td>隐藏加载提示</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>exportsExecl</td>
+                        <td>导出 execl 表格</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>exportsCsv</td>
+                        <td>导出 Csv 表格</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>print</td>
+                        <td>打印表格</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>getPrintTableHtml</td>
+                        <td>获取打印表格内容</td>
+                        <td></td>
+                        <td>string</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field" id="render">
+            <legend><em>render </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>elem</td>
+                        <td>string/dom</td>
+                        <td>
+                            <div>table</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>string</td>
+                        <td>
+                            <div>表格宽度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>string</td>
+                        <td>
+                            <div>表格高度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>
+                            <div>本地数据</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>request</td>
+                        <td>object</td>
+                        <td>
+                            <div>远程加载对象，点击<a href="#request" style="color:#5FB878;">【request】</a>查看详情</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>defaultToolbar</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否开启默认工具</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>toolbar</td>
+                        <td>string</td>
+                        <td>
+                            <div>自定义工具栏</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>nowPage</td>
+                        <td>number</td>
+                        <td>
+                            <div>当前页码</div>
+                        </td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>limit</td>
+                        <td>number</td>
+                        <td>
+                            <div>每页最大数量</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>page</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否开启分页</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>stretch</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>表格是否铺面容器</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>autoHeight</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>高度是否自适应，外部容器需要设置 position：relative</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>ellipsis</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>表格每一行高度是否固定，超出时显示省略号</div>
+                        </td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>spanMethod</td>
+                        <td>function</td>
+                        <td>
+                            <div>行列合并方式</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field" id="request">
+            <legend><em>request </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>url</td>
+                        <td>string</td>
+                        <td>接口</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>pageName</td>
+                        <td>string</td>
+                        <td>请求数据时的页码字段名</td>
+                        <td>"page"</td>
+                    </tr>
+                    <tr>
+                        <td>limitName</td>
+                        <td>string</td>
+                        <td>请求数据时的每页数量字段名</td>
+                        <td>"limit"</td>
+                    </tr>
+                    <tr>
+                        <td>method</td>
+                        <td>string</td>
+                        <td>请求类型</td>
+                        <td>"get"</td>
+                    </tr>
+                    <tr>
+                        <td>dataType</td>
+                        <td>string</td>
+                        <td>请求数据类型</td>
+                        <td>"json"</td>
+                    </tr>
+                    <tr>
+                        <td>contentType</td>
+                        <td>string</td>
+                        <td>返回数据类型</td>
+                        <td>"application/json"</td>
+                    </tr>
+                    <tr>
+                        <td>parseData</td>
+                        <td>function</td>
+                        <td>解析函数</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>success</td>
+                        <td>function</td>
+                        <td>请求成功回调</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>error</td>
+                        <td>function</td>
+                        <td>请求失败回调</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field" id="col">
+            <legend><em>col </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>string</td>
+                        <td>列名称</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>field</td>
+                        <td>string</td>
+                        <td>列对应的字段名称</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>colspan</td>
+                        <td>number</td>
+                        <td>表头列合并</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>rowspan</td>
+                        <td>number</td>
+                        <td>表头行合并</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>number</td>
+                        <td>列宽</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>align</td>
+                        <td>string</td>
+                        <td>列内容对齐方式，可选值："center"、"left"、"right"</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>string</td>
+                        <td>列类型，可选值："text"、""radio"、"checkbox"、"operate"</td>
+                        <td>"text"</td>
+                    </tr>
+                    <tr>
+                        <td>holder</td>
+                        <td>boolean</td>
+                        <td>该列是否为占位列（当表头只需要显示父列，不显示子列时候时用到）</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>template</td>
+                        <td>function</td>
+                        <td>自定义模板函数，参数：(colData，rowData，index，col)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>values</td>
+                        <td>array</td>
+                        <td>文本映射：结构：[{label，value}]</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>fixed</td>
+                        <td>string</td>
+                        <td>固定列，可选值："left"、"right"</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>btns</td>
+                        <td>array</td>
+                        <td>当列为"operate"时，该参数可以定义具体操作按钮，结构：[{text，type，event}]</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>event</td>
+                        <td>string</td>
+                        <td>定义单元格事件</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>editable</td>
+                        <td>object/boolean</td>
+                        <td>
+                            <div>定义列编辑规则，结构：{type，values，rules}</div>
+                            <div>type 可选值："raido"、"checkbox"、"select"、"text"</div>
+                            <div>当为 true 时，和{type："text"}效果一致</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>事件</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>事件</th>
+                        <th>描述</th>
+                        <th>回调参数</th>
+                    </tr>
+                    <tr>
+                        <td>change</td>
+                        <td>选中行时触发</td>
+                        <td>object: {data：选中的行 id，dom}</td>
+                    </tr>
+                    <tr>
+                        <td>row</td>
+                        <td>点击行时触发</td>
+                        <td>object: {data：当前行数据，dom：tr}</td>
+                    </tr>
+                    <tr>
+                        <td>col</td>
+                        <td>点击单元格时触发</td>
+                        <td>object: {data：当前单元格数据，dom：td，rowData}</td>
+                    </tr>
+                    <tr>
+                        <td>complete</td>
+                        <td>渲染完成事件</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>edit</td>
+                        <td>编辑数据时触发</td>
+                        <td>object: {data：单元格数据，dom，field，rowData}</td>
+                    </tr>
+                    <tr>
+                        <td>edit.input</td>
+                        <td>输入框输入事件</td>
+                        <td>object: {data：输入框文本，dom：input，field，rowData}</td>
+                    </tr>
+                    <tr>
+                        <td>edit.change</td>
+                        <td>radio、checkbox、select的chang事件</td>
+                        <td>object: {data，dom，field，rowData}</td>
+                    </tr>
+                    <tr>
+                        <td>save</td>
+                        <td>保存数据时触发</td>
+                        <td>object: {data：单元格数据，dom，field，rowData}</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/table-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/table', 'modules/dialog', 'modules/jquery'], function (Table, Dialog, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        renderTable1();
+        renderTable2();
+        // 单选表格
+        function renderTable1() {
+            var data = [];
+            var sexValues = [{
+                label: '男',
+                value: 1
+            }, {
+                label: '女',
+                value: 2
+            }];
+            var likeValues = [{
+                label: '听歌',
+                value: 1
+            }, {
+                label: '游泳',
+                value: 2
+            }, {
+                label: '看小说',
+                value: 3
+            }];
+            for (var i = 0; i < 1000; i++) {
+                var sex = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                data.push({ id: i, user: '匿名用户-0000' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] });
+            };
+            var table = Table.render({
+                elem: '#table1',
+                width: 1000,
+                height: 500,
+                data: data,
+                limit: 10,
+                defaultToolbar: true,
+                stretch: true,
+                toolbar: '<button class="jy-btn jy-btn-sm" jy-event="selected">获取选择的项</button>',
+                cols: [{
+                    type: 'radio'
+                }, {
+                    title: '用户',
+                    field: 'user'
+                }, {
+                    title: '手机号',
+                    field: 'phone',
+                    width: 100,
+                    attr: { //设置单元属性
+                        title: function (value, obj, id, col) {
+                            return value;
+                        }
+                    }
+                }, {
+                    title: '性别',
+                    field: 'sex',
+                    width: 60,
+                    values: sexValues,
+                    style: { //设置单元格样式
+                        color: function (value, obj, id, col) {
+                            if (value == 2) {
+                                return 'red';
+                            }
+                        }
+                    }
+                }, {
+                    title: '年龄',
+                    field: 'age',
+                    width: 60
+                }, {
+                    title: '签名',
+                    field: 'sign',
+                    width: 80
+                }, {
+                    title: '爱好',
+                    field: 'like',
+                    values: likeValues
+                }]
+            });
+            table.on('change', function () {
+                Dialog.alert(JSON.stringify(table.getData('select')));
+            });
+            return table;
+        }
+        // 可编辑表格
+        function renderTable2() {
+            var data = [];
+            var sexValues = [{
+                label: '男',
+                value: 1
+            }, {
+                label: '女',
+                value: 2
+            }];
+            var likeValues = [{
+                label: '听歌',
+                value: 1
+            }, {
+                label: '游泳',
+                value: 2
+            }, {
+                label: '看小说',
+                value: 3
+            }];
+            var marriageValues = [{
+                label: '未婚',
+                value: 1
+            }, {
+                label: '已婚',
+                value: 2
+            }];
+            for (var i = 0; i < 10000; i++) {
+                var sex = Math.ceil(Math.random() * 2);
+                var marriage = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                data.push({ id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, marriage: marriage, phone: phone, sign: sign, like: [like] });
+            };
+            var table = Table.render({
+                elem: '#table2',
+                width: 1000,
+                height: 500,
+                data: data,
+                limit: 20,
+                // ellipsis: false,
+                defaultToolbar: true,
+                toolbar: '<button class="jy-btn jy-btn-sm" jy-event="custom-add">添加行</button>\
+                <button class="jy-btn jy-btn-sm" jy-event="custom-checkall">全选/全不选</button>\
+                <button class="jy-btn jy-btn-sm" jy-event="custom-checked">获取选中的数据</button>\
+                <button class="jy-btn jy-btn-sm" jy-event="custom-getadd">获取添加的数据</button>\
+                <button class="jy-btn jy-btn-sm" jy-event="custom-getdel">获取删除的数据</button>\
+                <button class="jy-btn jy-btn-sm" jy-event="custom-getedit">获取修改过的数据</button>',
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left',
+                        rowspan: 2
+                    }, {
+                        title: '用户',
+                        field: 'user',
+                        width: 90,
+                        event: 'custom-name',
+                        fixed: 'left',
+                        rowspan: 2
+                    }, {
+                        title: '手机号',
+                        field: 'phone',
+                        width: 150,
+                        editable: {
+                            type: 'number',
+                            rules: [{ type: 'number' }]
+                        },
+                        fixed: 'left',
+                        sortAble: true,
+                        rowspan: 2
+                    }, {
+                        title: '城市',
+                        field: 'city',
+                        width: 100,
+                        editable: true,
+                        rowspan: 2
+                    }, {
+                        title: '性别',
+                        field: 'sex',
+                        width: 60,
+                        values: sexValues,
+                        editable: {
+                            type: 'select',
+                            values: sexValues,
+                            rules: [{ type: 'required' }]
+                        },
+                        rowspan: 2
+                    }, {
+                        title: '年龄',
+                        field: 'age',
+                        width: 80,
+                        editable: {
+                            edit: function (value, data, id, col) {
+                                return '<input class="jy-table-input jy-inline-block" style="width:50px;" value="' + value + '" /><span>岁</span>';
+                            },
+                            save: function ($edit) {
+                                return $edit.find('input').val();
+                            },
+                            rules: [{ type: 'number' }]
+                        },
+                        sortAble: true,
+                        rowspan: 2,
+                        template: function (value) {
+                            return value + '岁';
+                        }
+                    }, {
+                        title: '婚姻',
+                        field: 'marriage',
+                        width: 150,
+                        values: marriageValues,
+                        editable: {
+                            type: 'radio',
+                            values: marriageValues,
+                            rules: [{ type: 'required' }]
+                        },
+                        rowspan: 2
+                    }, {
+                        title: '其他信息',
+                        field: 'other',
+                        align: 'center',
+                        colspan: 2
+                    }, {
+                        type: 'operate',
+                        title: '操作',
+                        width: 170,
+                        btns: [{
+                            text: '详情',
+                            event: 'custom-detail'
+                        }, {
+                            text: '删除',
+                            event: 'custom-del',
+                            type: 'danger',
+                            stop: true
+                        }],
+                        event: 'custom-op',
+                        fixed: 'right',
+                        rowspan: 2
+                    }],
+                    [{
+                        title: '签名',
+                        field: 'sign',
+                        width: 200,
+                        align: 'center',
+                        // holder: true,
+                        editable: true
+                    }, {
+                        title: '爱好',
+                        field: 'like',
+                        width: 150,
+                        align: 'center',
+                        values: likeValues,
+                        // holder: true,
+                        editable: {
+                            type: 'checkbox',
+                            values: likeValues,
+                            rules: [{ type: 'required' }]
+                        }
+                    }]
+                ]
+            });
+            table.on('save', function (obj) {
+                // console.log(obj);
+            });
+            table.on('edit', function (obj) {
+                // console.log(obj);
+            });
+            table.on('custom-add', function (obj) {
+                var sex = Math.ceil(Math.random() * 2);
+                var age = Math.ceil(Math.random() * 100);
+                var phone = '1' + Math.ceil(Math.random() * 100000000000);
+                var like = Math.ceil(Math.random() * 3);
+                var sign = '个性签名' + i;
+                table.addRow({
+                    id: 1,
+                    data: { id: i, user: '匿名用户-0000' + i, city: '城市-' + i, sex: sex, age: age, phone: phone, sign: sign, like: [like] }
+                });
+            });
+            table.on('custom-del', function (obj) {
+                table.deleteRow(obj.data.id);
+            });
+            table.on('custom-detail', function (obj) {
+                Dialog.alert(JSON.stringify(obj.data));
+            });
+            table.on('custom-op', function (obj) {
+                // console.log('custom-op');
+            });
+            table.on('custom-checkall', function (obj) {
+                table.checkAll();
+            });
+            table.on('custom-checked', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('check')));
+            });
+            table.on('custom-getadd', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('add')));
+            });
+            table.on('custom-getdel', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('delelte')));
+            });
+            table.on('custom-getedit', function (obj) {
+                Dialog.alert(JSON.stringify(table.getData('edit')));
+            });
+            table.on('custom-name', function (obj) {
+                Dialog.alert(obj.data.user);
+            });
+            return table;
+        }
+    });
+</script>
+
+</html>

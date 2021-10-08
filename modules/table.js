@@ -1567,6 +1567,9 @@
 
         // 设置列宽
         Class.prototype.setColWidth = function (col, width) {
+            if(typeof col === 'string') {
+                col = this.getColByField(col);
+            }
             col.width = width;
             this.setColsWidth([col]);
             this.$headerTable.css({
@@ -2597,7 +2600,7 @@
                 // 点击全选
                 that.$view.delegate('th .' + classNames.checkbox, 'click', function () {
                     that.checkAll();
-                    that.trigger('checkbox', {
+                    that.trigger('change', {
                         dom: this,
                         data: that.checkedData.map(function (item) {
                             return item.id;
