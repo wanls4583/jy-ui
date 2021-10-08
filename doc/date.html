@@ -1,0 +1,296 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>日期/时间</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">日期/时间</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div style="padding:20px 0;">常规用法</div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">日期时间</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="datetime" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">日期</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="date" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">年月</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="yearmonth" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">年</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="year" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">月</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="month" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-inline">
+                    <label for="" class="jy-form-label">时间</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="time" autocomplete="off">
+                    </div>
+                </div>
+                <div style="padding:20px 0;">范围选择</div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">日期时间范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="datetime1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="datetime2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">日期范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="date1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="date2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">年月范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="yearmonth1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="yearmonth2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">年范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="year1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="year2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">月范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="month1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="month2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">时间范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="time1" autocomplete="off">
+                    </div>
+                    <span style="float:left;line-height:38px;">&nbsp;-&nbsp;</span>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="time2" autocomplete="off">
+                    </div>
+                </div>
+                <div class="jy-form-item">
+                    <label for="" class="jy-form-label" style="white-space:nowrap;">时间范围</label>
+                    <div class="jy-input-inline">
+                        <input type="text" class="jy-input" id="time3" autocomplete="off">
+                    </div>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>动态生成菜单</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>模块实例</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>elem</td>
+                        <td>string/dom</td>
+                        <td>
+                            <div>日期输入框或外部容器</div>
+                        </td>
+                        <td>document.body</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>string</td>
+                        <td>
+                            <div>日期类型，可选值："year"、"month"、"yearmonth"、"date"、"datetime"、"time"</div>
+                        </td>
+                        <td>"date"</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>array</td>
+                        <td>
+                            <div>右侧数据列表，结构和 data 一致</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>format</td>
+                        <td>string</td>
+                        <td>
+                            <div>日期格式</div>
+                        </td>
+                        <td>"yyyy-MM-dd hh:mm:ss"</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>number/string</td>
+                        <td>
+                            <div>默认时间，当为字符串时，其格式需符合 format</div>
+                        </td>
+                        <td>当前时间</td>
+                    </tr>
+                    <tr>
+                        <td>range</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否为时间范围</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/date-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/date', 'modules/jquery'], function (Date, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        Date.render({
+            elem: '#datetime',
+            type: 'datetime'
+        });
+        Date.render({
+            elem: '#date',
+            type: 'date'
+        });
+        Date.render({
+            elem: '#yearmonth',
+            type: 'yearmonth'
+        });
+        Date.render({
+            elem: '#year',
+            type: 'year'
+        });
+        Date.render({
+            elem: '#month',
+            type: 'month'
+        });
+        Date.render({
+            elem: '#time',
+            type: 'time'
+        });
+        Date.render({
+            elem: '#datetime1,#datetime2',
+            type: 'datetime',
+            range: true
+        });
+        Date.render({
+            elem: '#date1,#date2',
+            type: 'date',
+            range: true
+        });
+        Date.render({
+            elem: '#yearmonth1,#yearmonth2',
+            type: 'yearmonth',
+            range: true
+        });
+        Date.render({
+            elem: '#month1,#month2',
+            type: 'month',
+            range: true
+        });
+        Date.render({
+            elem: '#year1,#year2',
+            type: 'year',
+            range: true
+        });
+        Date.render({
+            elem: '#time1,#time2',
+            type: 'time',
+            range: true
+        });
+        Date.render({
+            elem: '#time3',
+            type: 'time',
+            range: true
+        });
+    });
+</script>
+
+</html>

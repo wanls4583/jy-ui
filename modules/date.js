@@ -137,15 +137,6 @@
         var $docBody = $(docBody);
         var months = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
-        var JyDate = {
-            render: function (option) {
-                var date = new Class(option);
-                return {
-
-                };
-            }
-        }
-
         // 页码类
         function Class(option) {
             var event = Common.getEvent();
@@ -957,6 +948,15 @@
                 this.data.$date.remove();
             }
             typeof this.option.change === 'function' && this.option.change(this.data.value, formatTime);
+        }
+
+        var JyDate = {
+            render: function (option) {
+                var date = new Class(option);
+                return {
+
+                };
+            }
         }
 
         return JyDate;
