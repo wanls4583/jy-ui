@@ -1,0 +1,319 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>树形结构</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">树形结构</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div id="tree"></div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)])</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)]，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>动态生成菜单</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>菜单实例</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能监听该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能触发该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>getChecked</td>
+                        <td>获取已选中的数据</td>
+                        <td></td>
+                        <td>array</td>
+                    </tr>
+                    <tr>
+                        <td>spread</td>
+                        <td>展开某一项</td>
+                        <td>(id：唯一标识)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>close</td>
+                        <td>关闭某一项</td>
+                        <td>(id：唯一标识)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>reload</td>
+                        <td>重载实例</td>
+                        <td>(string：和 render 参数一致)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>elem</td>
+                        <td>string/dom</td>
+                        <td>
+                            <div>外部容器</div>
+                        </td>
+                        <td>document.body</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>
+                            <div>左侧数据列表，结构：{id：唯一值，title：标签名称，disabled：是否禁用，spread：是否默认展开，children：子树}</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>spread</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否默认都展开</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>showCheckbox</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否显示多选框</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>style</td>
+                        <td>string</td>
+                        <td>
+                            <div>树形结构风格，可选值："arrow"、"line"</div>
+                        </td>
+                        <td>"line"</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>number</td>
+                        <td>
+                            <div>树形结构宽度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>number</td>
+                        <td>
+                            <div>树形结构高度</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>onlyIconSwitch</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否只允许icon来控制展开/收起</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>search</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否支持搜索</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>searchMethod</td>
+                        <td>function</td>
+                        <td>
+                            <div>自定义搜索函数</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>事件</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>事件</th>
+                        <th>描述</th>
+                        <th>回调参数</th>
+                    </tr>
+                    <tr>
+                        <td>click</td>
+                        <td>标题文本点击事件</td>
+                        <td>{dom：触发 dom，data：当前项的数据}</td>
+                    </tr>
+                    <tr>
+                        <td>change</td>
+                        <td>多选框事件</td>
+                        <td>{dom：触发 dom，data：当前项的数据，checked：是否选中}</td>
+                    </tr>
+                    <tr>
+                        <td>spread</td>
+                        <td>展开事件</td>
+                        <td>{dom：触发 dom，data：当前项的数据}</td>
+                    </tr>
+                    <tr>
+                        <td>close</td>
+                        <td>收起事件</td>
+                        <td>{dom：触发 dom，data：当前项的数据}</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script src="js/tree-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/tree', 'modules/jquery'], function (Tree, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        var tree = Tree.render({
+            elem: '#tree',
+            style: 'line',
+            showCheckbox: true,
+            onlyIconSwitch: false,
+            search: true,
+            data: [{
+                title: 'item1',
+                id: '1',
+                children: [{
+                    id: '1-1',
+                    title: 'item1-1'
+                }, {
+                    id: '1-2',
+                    title: 'item1-2',
+                    // disabled: true,
+                    spread: true,
+                    children: [{
+                        id: '1-2-1',
+                        title: 'item1-2-1'
+                    }]
+                }]
+            },
+            {
+                id: '2',
+                title: 'item2',
+                disabled: true,
+                checked: true
+            },
+            {
+                id: '3',
+                title: 'item3'
+            }]
+        });
+        tree.on('click', function (obj) {
+            // console.log(obj);
+        });
+        tree.on('change', function (obj) {
+            // console.log(obj);
+        });
+        tree.on('spread', function (obj) {
+            // console.log(obj);
+        });
+        tree.on('close', function (obj) {
+            // console.log(obj);
+        });
+    });
+</script>
+
+</html>

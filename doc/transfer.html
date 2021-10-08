@@ -1,0 +1,275 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>穿梭框</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">穿梭框</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div id="tansfer" style="width:500px;"></div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)])</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型[(过滤器)]，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>动态生成菜单</td>
+                        <td>
+                            <div>(object：参数配置)</div>
+                        </td>
+                        <td>菜单实例</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>实例方法</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>参数</th>
+                        <th>返回值</th>
+                    </tr>
+                    <tr>
+                        <td>on</td>
+                        <td>监听事件</td>
+                        <td>
+                            <div>(string：监听类型)</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能监听该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>触发事件</td>
+                        <td>
+                            <div>(string：监听类型，object：回调函数的参数))</div>
+                            <div>多个监听类型可用空格分隔</div>
+                            <div>实例方法只能触发该实例对应的菜单事件</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>getData</td>
+                        <td>获取已移动的数据</td>
+                        <td></td>
+                        <td>array</td>
+                    </tr>
+                    <tr>
+                        <td>reload</td>
+                        <td>重载实例</td>
+                        <td>(string：和 render 参数一致)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend><em>render </em>参数</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                        <th>默认值</th>
+                    </tr>
+                    <tr>
+                        <td>elem</td>
+                        <td>string/dom</td>
+                        <td>
+                            <div>外部容器</div>
+                        </td>
+                        <td>document.body</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>
+                            <div>左侧数据列表，结构：{id：唯一值，title：标签名称，checked：是否选中，disabled：是否禁用}</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>array</td>
+                        <td>
+                            <div>右侧数据列表，结构和 data 一致</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>stretch</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>穿梭框是否铺满容器</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>number</td>
+                        <td>
+                            <div>穿梭框宽度</div>
+                        </td>
+                        <td>200</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>number</td>
+                        <td>
+                            <div>穿梭框高度</div>
+                        </td>
+                        <td>320</td>
+                    </tr>
+                    <tr>
+                        <td>leftTitle</td>
+                        <td>string</td>
+                        <td>
+                            <div>左侧穿梭框标题</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>rightTitle</td>
+                        <td>string</td>
+                        <td>
+                            <div>右侧穿梭框标题</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>search</td>
+                        <td>boolean</td>
+                        <td>
+                            <div>是否支持搜索</div>
+                        </td>
+                        <td>false</td>
+                    </tr>
+                    <tr>
+                        <td>searchMethod</td>
+                        <td>function</td>
+                        <td>
+                            <div>自定义搜索函数</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>事件</legend>
+            <div class="jy-field-box">
+                <table class="property-table">
+                    <tr>
+                        <th>事件</th>
+                        <th>描述</th>
+                        <th>回调参数</th>
+                    </tr>
+                    <tr>
+                        <td>change</td>
+                        <td>穿梭框移动时触发</td>
+                        <td>{dom：触发按钮，data：已移动的数据列表}</td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+<script src="js/tansfer-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/transfer', 'modules/jquery'], function (Transfer, $) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+        var transfer = Transfer.render({
+            elem: '#tansfer',
+            search: true,
+            stretch: true,
+            leftTitle: '标题1',
+            rightTitle: '标题2',
+            data: [{
+                id: 1,
+                title: 'item1',
+                checked: true
+            }, {
+                id: 2,
+                title: 'item2',
+                disabled: true
+            }, {
+                id: 3,
+                title: 'item3'
+            }, {
+                id: 4,
+                title: 'item4'
+            }],
+            value: [{
+                id: 5,
+                title: 'item5'
+            }]
+        });
+        transfer.on('change', function (obj) {
+            console.log(obj);
+        });
+    });
+</script>
+
+</html>

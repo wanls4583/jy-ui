@@ -33,7 +33,7 @@
             leftBtn: '<div class="jy-transfer-btn">' + leftIcon + '</div>',
             rightBtn: '<div class="jy-transfer-btn">' + rightIcon + '</div>'
         }
-        var transferClass = {
+        var classNames = {
             transfer: 'jy-transfer',
             left: 'jy-transfer-left',
             right: 'jy-transfer-right',
@@ -69,6 +69,8 @@
             this.width = this.option.width || 200;
             this.height = this.option.height || 320;
             this.search = this.option.search || false;
+            this.leftTitle = this.option.leftTitle || '';
+            this.rightTitle = this.option.rightTitle || '';
             searchMethod = typeof this.option.searchMethod === 'function' ? this.option.searchMethod : function (text, item) {
                 return item.title.indexOf(text) > -1
             }
@@ -81,21 +83,22 @@
             // 自定义配置-end
             this.$elem = $(this.option.elem);
             this.$elem = this.$elem.length ? this.$elem : $docBody;
+            this.filter = this.$elem.attr('jy-filter');
             this.leftData = Object.assign([], this.option.data);
             this.rightData = Object.assign([], this.option.value);
             this.$transfer = $(tpl.transfer);
             this.$left = $(Common.htmlTemplate(tpl.left, {
-                title: this.option.leftTitle || '列表1'
+                title: this.leftTitle || '列表1'
             }));
             this.$right = $(Common.htmlTemplate(tpl.right, {
-                title: this.option.rightTitle || '列表2'
+                title: this.rightTitle || '列表2'
             }));
-            this.$leftBody = this.$left.children('.' + transferClass.leftBody);
-            this.$rightBody = this.$right.children('.' + transferClass.rightBody);
-            this.$leftTitle = this.$left.children('.' + transferClass.title);
-            this.$rightTitle = this.$right.children('.' + transferClass.title);
-            this.$leftSearch = this.$left.children('.' + transferClass.search);
-            this.$rightSearch = this.$right.children('.' + transferClass.search);
+            this.$leftBody = this.$left.children('.' + classNames.leftBody);
+            this.$rightBody = this.$right.children('.' + classNames.rightBody);
+            this.$leftTitle = this.$left.children('.' + classNames.title);
+            this.$rightTitle = this.$right.children('.' + classNames.title);
+            this.$leftSearch = this.$left.children('.' + classNames.search);
+            this.$rightSearch = this.$right.children('.' + classNames.search);
             this.$leftBtn = $(tpl.leftBtn);
             this.$rightBtn = $(tpl.rightBtn);
             this.$center = $(tpl.center);
@@ -127,10 +130,11 @@
                 'width': this.width,
                 'height': this.height
             });
-            this.$center.children('.' + transferClass.btns).append(this.$rightBtn).append(this.$leftBtn);
+            this.$center.children('.' + classNames.btns).append(this.$rightBtn).append(this.$leftBtn);
             this.$transfer.append(this.$left);
             this.$transfer.append(this.$center);
             this.$transfer.append(this.$right);
+            this.$elem.children('.' + classNames.transfer);
             this.$elem.append(this.$transfer);
             this.bindEvent();
         }
@@ -160,13 +164,13 @@
                 item._jy_checked = item._jy_checked || item.checked && !item.disabled;
                 item._jy_disabled = item._jy_disabled || item.disabled;
                 if (item._jy_checked && item._jy_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
-                    $item.addClass(transferClass.checkedDisabled);
+                    $item.addClass(classNames.checkedDisabled);
                 } else {
                     if (item._jy_checked) {
-                        $item.addClass(transferClass.checked);
+                        $item.addClass(classNames.checked);
                     }
                     if (item._jy_disabled) {
-                        $item.addClass(transferClass.disabled);
+                        $item.addClass(classNames.disabled);
                     }
                 }
             });
@@ -175,7 +179,7 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             // 多选框事件
-            this.$transfer.delegate('.' + transferClass.item, 'click', function () {
+            this.$transfer.delegate('.' + classNames.item, 'click', function () {
                 var $this = $(this);
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
@@ -186,37 +190,37 @@
                 }
                 if (checked) {
                     data._jy_checked = true;
-                    $this.addClass(transferClass.checked);
+                    $this.addClass(classNames.checked);
                 } else {
                     data._jy_checked = false;
-                    $this.removeClass(transferClass.checked);
+                    $this.removeClass(classNames.checked);
                 }
                 that.setAllChecked();
                 that.setBtnActive();
                 return false;
             });
             // 全选/全不选事件
-            this.$transfer.delegate('.' + transferClass.title, 'click', function () {
+            this.$transfer.delegate('.' + classNames.title, 'click', function () {
                 var $this = $(this);
                 var checked = false;
-                var $tansferBody = $this.parent('.' + transferClass.left).children('.' + transferClass.leftBody);
+                var $tansferBody = $this.parent('.' + classNames.left).children('.' + classNames.leftBody);
                 var dataList = that.getEnable(that.leftData);
                 if (!$tansferBody.length) {
                     $tansferBody = that.$rightBody;
                     dataList = that.getEnable(that.rightData);
                 }
                 checked = that.getChecked(dataList).length != dataList.length;
-                checked ? $this.addClass(transferClass.checked) : $this.removeClass(transferClass.checked);
+                checked ? $this.addClass(classNames.checked) : $this.removeClass(classNames.checked);
                 dataList.map(function (item) {
                     if (!item._jy_disabled) {
                         item._jy_checked = checked;
                     }
                 });
-                $tansferBody.children('.' + transferClass.item).each(function (i, item) {
+                $tansferBody.children('.' + classNames.item).each(function (i, item) {
                     var $item = $(item);
                     var _data = that.dataMap[$item.attr('data-key')];
                     if (!_data._jy_disabled && !_data._jy_hidden) {
-                        checked ? $item.addClass(transferClass.checked) : $item.removeClass(transferClass.checked);
+                        checked ? $item.addClass(classNames.checked) : $item.removeClass(classNames.checked);
                     }
                 });
                 that.setBtnActive();
@@ -238,16 +242,16 @@
                             item._jy_hidden = false;
                         }
                     });
-                    that.$rightBody.children('.' + transferClass.checked).each(function (i, item) {
+                    that.$rightBody.children('.' + classNames.checked).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
-                        $item.removeClass(transferClass.checked);
+                        $item.removeClass(classNames.checked);
                         that.$leftBody.append($item);
                         data._jy_hidden && $item.hide();
                     });
-                    $(this).removeClass(transferClass.activeBtn);
-                    that.$leftTitle.removeClass(transferClass.checked);
-                    that.$rightTitle.removeClass(transferClass.checked);
+                    $(this).removeClass(classNames.activeBtn);
+                    that.$leftTitle.removeClass(classNames.checked);
+                    that.$rightTitle.removeClass(classNames.checked);
                     that.setEmpty();
                     // 触发change事件
                     that.trigger('change', {
@@ -257,6 +261,12 @@
                         dom: this
                     });
                     JyTransfer.trigger('change', {
+                        data: that.rightData.map(function (item) {
+                            return Common.delInnerProperty(item);
+                        }),
+                        dom: this
+                    });
+                    that.filter && JyTransfer.trigger('change(' + that.filter + ')', {
                         data: that.rightData.map(function (item) {
                             return Common.delInnerProperty(item);
                         }),
@@ -281,16 +291,16 @@
                             item._jy_hidden = false;
                         }
                     });
-                    that.$leftBody.children('.' + transferClass.checked).each(function (i, item) {
+                    that.$leftBody.children('.' + classNames.checked).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
-                        $item.removeClass(transferClass.checked);
+                        $item.removeClass(classNames.checked);
                         that.$rightBody.append($item);
                         data._jy_hidden && $item.hide();
                     });
-                    $(this).removeClass(transferClass.activeBtn);
-                    that.$leftTitle.removeClass(transferClass.checked);
-                    that.$rightTitle.removeClass(transferClass.checked);
+                    $(this).removeClass(classNames.activeBtn);
+                    that.$leftTitle.removeClass(classNames.checked);
+                    that.$rightTitle.removeClass(classNames.checked);
                     that.setEmpty();
                     // 触发change事件
                     that.trigger('change', {
@@ -300,6 +310,12 @@
                         dom: this
                     });
                     JyTransfer.trigger('change', {
+                        data: that.rightData.map(function (item) {
+                            return Common.delInnerProperty(item);
+                        }),
+                        dom: this
+                    });
+                    that.filter && JyTransfer.trigger('change(' + that.filter + ')', {
                         data: that.rightData.map(function (item) {
                             return Common.delInnerProperty(item);
                         }),
@@ -319,7 +335,7 @@
                             item._jy_hidden = false;
                         }
                     });
-                    that.$leftBody.children('.' + transferClass.item).each(function (i, item) {
+                    that.$leftBody.children('.' + classNames.item).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
                         data._jy_hidden ? $item.hide() : $item.show();
@@ -340,7 +356,7 @@
                             item._jy_hidden = false;
                         }
                     });
-                    that.$rightBody.children('.' + transferClass.item).each(function (i, item) {
+                    that.$rightBody.children('.' + classNames.item).each(function (i, item) {
                         var $item = $(item);
                         var data = that.dataMap[$item.attr('data-key')];
                         data._jy_hidden ? $item.hide() : $item.show();
@@ -354,14 +370,14 @@
         // 按钮是否可用
         Class.prototype.setBtnActive = function () {
             if (this.getChecked(this.leftData).length > 0) {
-                this.$rightBtn.addClass(transferClass.activeBtn);
+                this.$rightBtn.addClass(classNames.activeBtn);
             } else {
-                this.$rightBtn.removeClass(transferClass.activeBtn);
+                this.$rightBtn.removeClass(classNames.activeBtn);
             }
             if (this.getChecked(this.rightData).length > 0) {
-                this.$leftBtn.addClass(transferClass.activeBtn);
+                this.$leftBtn.addClass(classNames.activeBtn);
             } else {
-                this.$leftBtn.removeClass(transferClass.activeBtn);
+                this.$leftBtn.removeClass(classNames.activeBtn);
             }
         }
 
@@ -372,28 +388,28 @@
             checkedData = this.getChecked(this.leftData);
             enableData = this.getEnable(this.leftData);
             if (checkedData.length == enableData.length && enableData.length) {
-                this.$leftTitle.addClass(transferClass.checked);
+                this.$leftTitle.addClass(classNames.checked);
             } else {
-                this.$leftTitle.removeClass(transferClass.checked);
+                this.$leftTitle.removeClass(classNames.checked);
             }
             checkedData = this.getChecked(this.rightData);
             enableData = this.getEnable(this.rightData);
             if (checkedData.length == enableData.length && enableData.length) {
-                this.$rightTitle.addClass(transferClass.checked);
+                this.$rightTitle.addClass(classNames.checked);
             } else {
-                this.$rightTitle.removeClass(transferClass.checked);
+                this.$rightTitle.removeClass(classNames.checked);
             }
         }
 
         // 列表是否为空
         Class.prototype.setEmpty = function () {
-            var $empty = this.$leftBody.children('.' + transferClass.empty);
+            var $empty = this.$leftBody.children('.' + classNames.empty);
             if (this.leftData.length) {
                 $empty.hide();
             } else {
                 $empty.show();
             }
-            $empty = this.$rightBody.children('.' + transferClass.empty);
+            $empty = this.$rightBody.children('.' + classNames.empty);
             if (this.rightData.length) {
                 $empty.hide();
             } else {
@@ -444,9 +460,6 @@
                     trigger: transfer.trigger,
                     reload: function (option) {
                         transfer.reload(option);
-                    },
-                    destroy: function () {
-                        transfer.$transfer.remove();
                     },
                     getData: function () {
                         return transfer.value.map(function (item) {

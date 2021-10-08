@@ -1,5 +1,7 @@
 !(function (window) {
     function factory($, Common) {
+        var docBody = window.document.body;
+        var $docBody = $(docBody);
         var ieVersion = Common.getIeVersion();
         var docIcon = '&#xe6fd;';
         var plusIcon = '&#xe95e;';
@@ -30,7 +32,8 @@
             </div>',
             search: ''
         }
-        var treeClass = {
+        var classNames = {
+            tree: 'jy-tree',
             checkbox: 'jy-tree-checkbox',
             checked: 'jy-tree-checked',
             disabled: 'jy-tree-disabled',
@@ -83,9 +86,11 @@
             }
             // 自定义配置-end
             this.$elem = $(this.option.elem);
+            this.$elem = this.$elem.length ? this.$elem : $docBody;
+            this.filter = this.$elem.attr('jy-filter');
             this.data = Object.assign([], this.option.data);
             this.$tree = $(tpl.tree);
-            this.$search = this.$tree.children('div.' + treeClass.search);
+            this.$search = this.$tree.children('div.' + classNames.search);
             this.idKeyMap = {};
             this.dataMap = {};
             this.key = 0;
@@ -101,25 +106,26 @@
                 'height': this.height
             })
             this.appendItem(this.data, this.$tree);
+            this.$elem.children('.' + classNames.tree);
             this.$elem.append(this.$tree);
             this.bindEvent();
             this.showList.map(function (item) {
                 var $item = $(item);
-                var $title = $item.children('div.' + treeClass.title);
-                var $ul = $item.children('.' + treeClass.ul);
-                $title.children('div.' + treeClass.clickIcon).toggle();
+                var $title = $item.children('div.' + classNames.title);
+                var $ul = $item.children('.' + classNames.ul);
+                $title.children('div.' + classNames.clickIcon).toggle();
                 $ul.show();
                 if (ieVersion <= 6) {
                     setTimeout(function () {
-                        $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
-                        $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
-                            $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                        $ul.children('div.' + classNames.vLine).css('height', $ul[0].offsetHeight);
+                        $ul.parents('div.' + classNames.ul).each(function (i, ul) {
+                            $(ul).children('.' + classNames.vLine).css('height', ul.offsetHeight);
                             console.log(ul.offsetHeight);
                         });
                     });
                 }
             });
-            ieVersion <= 7 && this.$tree.addClass(treeClass.ieHack);
+            ieVersion <= 7 && this.$tree.addClass(classNames.ieHack);
         }
 
         // 重载
@@ -157,13 +163,13 @@
                 item._jy_checked = item._jy_checked || item.checked;
                 item._jy_disabled = item._jy_disabled || item.disabled;
                 if (item._jy_checked && that.showCheckbox && item._jy_disabled) { //解决ie6及以下浏览器不支持并列类名增加优先级的bug
-                    $title.addClass(treeClass.checkedDisabled);
+                    $title.addClass(classNames.checkedDisabled);
                 } else {
                     if (item._jy_disabled) {
-                        $title.addClass(treeClass.disabled);
+                        $title.addClass(classNames.disabled);
                     }
                     if (item._jy_checked && that.showCheckbox) {
-                        $title.addClass(treeClass.checked);
+                        $title.addClass(classNames.checked);
                     }
                 }
                 if (item.children && item.children.length) {
@@ -178,7 +184,7 @@
                     if (that.spread || item.spread) {
                         // 默认打开的组
                         that.showList.push($item[0]);
-                        $item.parents('.' + treeClass.item).each(function (i, dom) {
+                        $item.parents('.' + classNames.item).each(function (i, dom) {
                             if (that.showList.indexOf(dom) == -1) {
                                 that.showList.push(dom);
                             }
@@ -193,7 +199,7 @@
         Class.prototype.bindEvent = function () {
             var that = this;
             // 多选框事件
-            this.$tree.delegate('.' + treeClass.checkbox, 'click', function () {
+            this.$tree.delegate('.' + classNames.checkbox, 'click', function () {
                 var $this = $(this);
                 var key = $this.attr('data-key');
                 var data = that.dataMap[key];
@@ -213,30 +219,44 @@
                     checked: data._jy_checked || false,
                     dom: this
                 });
+                that.filter && JyTree.trigger('change(' + that.filter + ')', {
+                    data: Common.delInnerProperty(data),
+                    checked: data._jy_checked || false,
+                    dom: this
+                });
                 return false;
             });
             // 展开/收起事件
-            this.$tree.delegate('.' + treeClass.clickIcon, 'click', function () {
-                var $title = $(this).parent('.' + treeClass.title);
+            this.$tree.delegate('.' + classNames.clickIcon, 'click', function () {
+                var $title = $(this).parent('.' + classNames.title);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
+                var event = $title.next('.' + classNames.ul).is(':visible') ? 'spread' : 'close';
                 that.toggle(key);
                 // 触发节点展开/收起事件
-                that.trigger($title.next('.' + treeClass.ul).is(':visible') ? 'spread' : 'close', {
+                that.trigger(event, {
+                    data: Common.delInnerProperty(data),
+                    dom: this
+                });
+                JyTree.trigger(event, {
+                    data: Common.delInnerProperty(data),
+                    dom: this
+                });
+                that.filter && JyTree.trigger(event + '(' + that.filter + ')', {
                     data: Common.delInnerProperty(data),
                     dom: this
                 });
                 return false;
             });
             // 点击标题文本事件
-            this.$tree.delegate('.' + treeClass.text, 'click', function () {
-                var $title = $(this).parent('.' + treeClass.title);
+            this.$tree.delegate('.' + classNames.text, 'click', function () {
+                var $title = $(this).parent('.' + classNames.title);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
                 if (data.children && data.children.length) {
                     !that.onlyIconSwitch && that.toggle(key);
                 } else {
-                    $title.children('div.' + treeClass.checkbox).trigger('click');
+                    $title.children('div.' + classNames.checkbox).trigger('click');
                 }
                 if (data.href && !data._jy_disabled) {
                     window.open(data.href);
@@ -247,6 +267,10 @@
                     dom: this
                 });
                 JyTree.trigger('click', {
+                    data: Common.delInnerProperty(data),
+                    dom: this
+                });
+                that.filter && JyTree.trigger('click(' + that.filter + ')', {
                     data: Common.delInnerProperty(data),
                     dom: this
                 });
@@ -261,7 +285,7 @@
         // 刷新选中状态UI
         Class.prototype.refreshCheckbox = function () {
             var that = this;
-            this.$tree.find('div.' + treeClass.title).each(function (i, dom) {
+            this.$tree.find('div.' + classNames.title).each(function (i, dom) {
                 var $title = $(dom);
                 var key = $title.attr('data-key');
                 var data = that.dataMap[key];
@@ -269,9 +293,9 @@
                     return;
                 }
                 if (data._jy_checked) {
-                    $title.addClass(treeClass.checked);
+                    $title.addClass(classNames.checked);
                 } else {
-                    $title.removeClass(treeClass.checked);
+                    $title.removeClass(classNames.checked);
                 }
             });
         }
@@ -279,8 +303,8 @@
         // 展开/关闭
         Class.prototype.toggle = function (key, spread) {
             var that = this;
-            var $title = this.$tree.find('.' + treeClass.title + '[data-key="' + key + '"]');
-            var $ul = $title.next('.' + treeClass.ul);
+            var $title = this.$tree.find('.' + classNames.title + '[data-key="' + key + '"]');
+            var $ul = $title.next('.' + classNames.ul);
             var visible = $ul.is(':visible');
             if (!$ul.length) {
                 return;
@@ -291,7 +315,7 @@
                 }
             }
             $ul.show();
-            $title.children('div.' + treeClass.clickIcon).toggle();
+            $title.children('div.' + classNames.clickIcon).toggle();
             if (visible) {
                 if (window.requestAnimationFrame) {
                     _hideAnimation($ul);
@@ -305,9 +329,9 @@
             }
             if (!visible && ieVersion <= 6) {
                 setTimeout(function () {
-                    $ul.children('div.' + treeClass.vLine).css('height', $ul[0].offsetHeight);
-                    $ul.parents('div.' + treeClass.ul).each(function (i, ul) {
-                        $(ul).children('.' + treeClass.vLine).css('height', ul.offsetHeight);
+                    $ul.children('div.' + classNames.vLine).css('height', $ul[0].offsetHeight);
+                    $ul.parents('div.' + classNames.ul).each(function (i, ul) {
+                        $(ul).children('.' + classNames.vLine).css('height', ul.offsetHeight);
                     });
                 });
             }
@@ -452,7 +476,7 @@
                     list.push(_item);
                 });
             }
-            this.$tree.find('div.' + treeClass.item).each(function (i, item) {
+            this.$tree.find('div.' + classNames.item).each(function (i, item) {
                 var $item = $(item)
                 var key = $item.attr('data-key');
                 var data = that.dataMap[key];
@@ -520,9 +544,6 @@
                     },
                     reload: function (option) {
                         tree.reload(option);
-                    },
-                    destroy: function () {
-                        tree.$tree.remove();
                     }
                 }
             }
