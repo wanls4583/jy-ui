@@ -60,7 +60,7 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
     //默认打开哪个页面
     function initDefaultPage() {
         var title = '开始使用';
-        var url = 'hone.html';
+        var url = 'home.html';
         if (url) {
             openTab(title, url);
         }
