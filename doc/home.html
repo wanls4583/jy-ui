@@ -1,0 +1,70 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>开始使用</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">开始使用</div>
+        </div>
+        <blockquote>JY-UI 一套开源的 Web UI 解决方案，支持模块化和非模块化开发，遵循原生 HTML/CSS/JS 的开发方式，极易上手，属于偏业务型的 Web 快速开发框架。</blockquote>
+        <fieldset class="jy-field">
+            <legend>获得 jy-ui</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">暂时只支持 Git 仓库下载</div>
+                <iframe src="//ghbtns.com/github-btn.html?user=wanls4583&amp;repo=jy-ui&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="156px" height="30px"></iframe>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>非模块化开发</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">对于非模块化开发，只需将 jy-ui.css 文件和 jy-ui.all.js 文件引入即可。</div>
+                <pre><code id="code0"></code></pre>
+                <div class="pad-10">也可以值引入部分模块（当引入部分模块时候，必须引入公共文件 common.js）</div>
+                <pre><code id="code1"></code></pre>
+            </div>
+        </fieldset>
+        <fieldset class="jy-field">
+            <legend>模块化开发</legend>
+            <div class="jy-field-box">
+                <div class="pad-10">jy-ui 也支持此模块化开发，使用模块化工具引入即可。</div>
+                <pre><code id="code2"></code></pre>
+                <div class="pad-10">也可以引入完整包。</div>
+                <pre><code id="code3"></code></pre>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/tree-codes.js"></script>
+<script type="text/javascript">
+    require(['modules/jquery'], function ($) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+    });
+</script>
+
+</html>

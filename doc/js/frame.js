@@ -59,11 +59,11 @@ define(['index', 'modules/jquery'], function (Jyui, $) {
 
     //默认打开哪个页面
     function initDefaultPage() {
-        // var title = '分页';
-        // var url = 'page.html';
-        // if (url) {
-        //     openTab(title, url);
-        // }
+        var title = '开始使用';
+        var url = 'hone.html';
+        if (url) {
+            openTab(title, url);
+        }
     }
 
     // 选中菜单
