@@ -6,7 +6,7 @@
 var codes = [];
 codes.push(`<div id="transfer" style="width:500px"></div>
 <script>
-require(['./modules/transfer.js'], function (Transfer) {
+require(['./jyui/transfer.js'], function (Transfer) {
     var transfer = Transfer.render({
         elem: '#tansfer',
         search: true,

@@ -6,7 +6,7 @@
 var codes = [];
 codes.push(`<div id="table1"></div>
 <script>
-    require(['modules/table'], function (Table) {
+    require(['jyui/table'], function (Table) {
         var data = [];
         var sexValues = [{
             label: '男',
@@ -89,7 +89,7 @@ codes.push(`<div id="table1"></div>
 </script>`);
 codes.push(`<div id="table1"></div>
 <script>
-    require(['modules/table', 'modules/dialog'], function (Table, Dialog) {
+    require(['jyui/table', 'jyui/dialog'], function (Table, Dialog) {
         var data = [];
         var sexValues = [{
             label: '男',

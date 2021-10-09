@@ -13,8 +13,8 @@ codes.push(`<!DOCTYPE html>
     <link rel="stylesheet" href="./css/jy-ui.css">
 </head>
 <body>
-    <script src="./modules/jquery.js"></script>
-    <script src="./jy-ui.all.js"></script>
+    <script src="./jyui/jquery.js"></script>
+    <script src="./jyui.min.js"></script>
     <script>
         JyUi.Dialog.msg('测试');
     </script>
@@ -29,9 +29,9 @@ codes.push(`<!DOCTYPE html>
     <link rel="stylesheet" href="./css/jy-ui.css">
 </head>
 <body>
-    <script src="./modules/jquery.js"></script>
-    <script src="./modules/common.js"></script>
-    <script src="./modules/dialog.js"></script>
+    <script src="./jyui/jquery.js"></script>
+    <script src="./jyui/common.js"></script>
+    <script src="./jyui/dialog.js"></script>
     <script>
         JyUi.Dialog.msg('测试');
     </script>
@@ -48,7 +48,7 @@ codes.push(`<!DOCTYPE html>
 <body>
     <script src="./require.js"></script>
     <script>
-        require(['./modules/dialog'], function(Dialog) {
+        require(['./jyui/dialog'], function(Dialog) {
             Dialog.msg('测试');
         });
     </script>
@@ -64,10 +64,10 @@ codes.push(`<!DOCTYPE html>
 </head>
 <body>
     <script src="./require.js"></script>
-    <script src="./jy-ui.all.js"></script>
+    <script src="./jyui.min.js"></script>
     <script>
-        require(['modules/dialog'], function(Dialog) {
-            Dialog.msg('测试');
+        require(['jyui'], function(Jyui) {
+            Jyui.Dialog.msg('测试');
         });
     </script>
 </body>

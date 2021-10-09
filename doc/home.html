@@ -36,7 +36,7 @@
         <fieldset class="jy-field">
             <legend>非模块化开发</legend>
             <div class="jy-field-box">
-                <div class="pad-10">对于非模块化开发，只需将 jy-ui.css 文件和 jy-ui.all.js 文件引入即可。</div>
+                <div class="pad-10">对于非模块化开发，只需将 jy-ui.css 文件和 jy-ui.min.js 文件引入即可。</div>
                 <pre><code id="code0"></code></pre>
                 <div class="pad-10">也可以值引入部分模块（当引入部分模块时候，必须引入公共文件 common.js）</div>
                 <pre><code id="code1"></code></pre>
@@ -57,7 +57,7 @@
 <script src="js/highlight.min.js"></script>
 <script src="js/home-codes.js"></script>
 <script type="text/javascript">
-    require(['modules/jquery'], function ($) {
+    require(['jyui/jquery'], function ($) {
         codes.map(function (code, index) {
             $('#code' + index).text(code);
         });

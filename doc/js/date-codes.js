@@ -113,7 +113,7 @@ codes.push(`<div class="jy-form-item">
     </div>
 </div>
 <script>
-require(['./modules/date.js'], function (Date) {
+require(['./jyui/date.js'], function (Date) {
     Date.render({
         elem: '#datetime',
         type: 'datetime'

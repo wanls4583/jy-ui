@@ -5,8 +5,8 @@
  */
 ({
     baseUrl: '../',
-    name: 'index',
-    out: '../jy-ui.all.js',
+    name: 'jyui',
+    out: '../jyui.min.js',
     map: {
         '*': {
             'css': 'lib/require-css/css.min'

@@ -1929,6 +1929,8 @@
             if (!this.$main.inserted) {
                 this.$table.append(this.$tableColGroup);
                 this.$table.append(this.$tableTbody);
+                // 对于移动端浏览器，需要先隐藏table，渲染完数据后再显示，否则 table-layout:fixed 无效
+                this.$table.hide();
                 this.$main.append(this.$table);
                 this.$main.append(this.$empty);
                 this.$headerMain.append(this.$main);

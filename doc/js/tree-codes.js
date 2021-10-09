@@ -6,7 +6,7 @@
 var codes = [];
 codes.push(`<div id="tree"></div>
 <script>
-require(['./modules/tree.js'], function (Tree) {
+require(['./jyui/tree.js'], function (Tree) {
     var tree = Tree.render({
         elem: '#tree1',
         style: 'line',

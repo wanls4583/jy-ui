@@ -34,7 +34,7 @@ codes.push(`<ul class="jy-menu" jy-menu-check="true" style="width:200px;">
 </li>
 </ul>
 <script>
-    require(['modules/menu-nav']);
+    require(['jyui/menu-nav']);
 </script>
 `);
 codes.push(`<button class="jy-btn" id="menu3">下拉菜单<i class="jy-icon" style="font-size:14px;">&#xe74b;</i></button>
@@ -51,11 +51,11 @@ codes.push(`<button class="jy-btn" id="menu3">下拉菜单<i class="jy-icon" sty
     </li>
 </ul>
 <script>
-    require(['modules/menu-nav']);
+    require(['jyui/menu-nav']);
 </script>`);
 codes.push(`<div id="menu1" style="width:200px"></div>
 <script type="text/javascript">
-    require(['modules/menu-nav'], function (MenuNav) {
+    require(['jyui/menu-nav'], function (MenuNav) {
         var menu = MenuNav.render({
             position: 'static',
             elem: '#menu1',
@@ -103,7 +103,7 @@ codes.push(`<div id="menu1" style="width:200px"></div>
 </script>`);
 codes.push(`<button class="jy-btn" id="menu2">下拉菜单<i class="jy-icon" style="font-size:14px;">&#xe74b;</i></button>
 <script type="text/javascript">
-    require(['modules/menu-nav'], function (MenuNav) {
+    require(['jyui/menu-nav'], function (MenuNav) {
         MenuNav.render({
             elem: '#menu2',
             position: 'absolute',
@@ -136,7 +136,7 @@ codes.push(`<ul class="jy-menu jy-menu-nav jy-menu-nav-horizontal">
 </li>
 </ul>
 <script>
-    require(['modules/menu-nav']);
+    require(['jyui/menu-nav']);
 </script>`);
 codes.push(`<ul class="jy-menu jy-menu-nav" style="width:200px;">
 <li><a>导航菜单1</a></li>
@@ -154,11 +154,11 @@ codes.push(`<ul class="jy-menu jy-menu-nav" style="width:200px;">
 </li>
 </ul>
 <script>
-    require(['modules/menu-nav']);
+    require(['jyui/menu-nav']);
 </script>`);
 codes.push(`<div id="nav1"></div>
 <script>
-require(['modules/menu-nav'], function(){
+require(['jyui/menu-nav'], function(){
     MenuNav.render({
         elem: '#nav1',
         type: 'nav',
@@ -187,7 +187,7 @@ require(['modules/menu-nav'], function(){
 </script>`);
 codes.push(`<div id="nav2"></div>
 <script>
-require(['modules/menu-nav'], function(){
+require(['jyui/menu-nav'], function(){
     MenuNav.render({
         elem: '#nav2',
         type: 'nav',

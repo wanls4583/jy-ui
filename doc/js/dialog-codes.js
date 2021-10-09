@@ -9,7 +9,7 @@ codes.push(`<button class="jy-btn" onclick="openAlert()">提示框</button>
 <button class="jy-btn" onclick="openConfirm()">确认框</button>
 <button class="jy-btn" onclick="openDialog()">自定义框</button>
 <script>
-    require(['./modules/dialog.js'], function (Dialog) {
+    require(['./jyui/dialog.js'], function (Dialog) {
         window.openAlert = function (icon) {
             Dialog.alert('点击确认更改图标', {
                 icon: icon,

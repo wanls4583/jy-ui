@@ -21,7 +21,7 @@ codes.push(`<div class="jy-tab" style="width:400px;">
     </div>
 </div>
 <script>
-    require(['modules/tab']);
+    require(['jyui/tab']);
 </script>`);
 codes.push(`<div class="jy-tab jy-tab-line" style="width:400px;">
     <div class="jy-tab-header">
@@ -40,11 +40,11 @@ codes.push(`<div class="jy-tab jy-tab-line" style="width:400px;">
     </div>
 </div>
 <script>
-    require(['modules/tab']);
+    require(['jyui/tab']);
 </script>`);
 codes.push(`<div id="tab"></div>
 <script type="text/javascript">
-    require(['modules/tab'], function (Tab) {
+    require(['jyui/tab'], function (Tab) {
         Tab.render({
             elem: '#tab',
             style: 'line',

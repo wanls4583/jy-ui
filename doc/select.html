@@ -34,7 +34,7 @@
                 <div class="jy-form-inline code1 rendered">
                     <input type="text" id="select1" value="2">
                     <script>
-                        require(['modules/select'], function (Select) {
+                        require(['jyui/select'], function (Select) {
                             Select.render({
                                 elem: '#select1',
                                 data: [
@@ -57,7 +57,7 @@
                 <div class="jy-form-inline code2 rendered">
                     <input type="text" id="select2">
                     <script>
-                        require(['modules/select'], function (Select) {
+                        require(['jyui/select'], function (Select) {
                             Select.render({
                                 elem: '#select2',
                                 type: 'input',
@@ -75,7 +75,7 @@
                 <div class="jy-form-inline code3 rendered" style="width:200px;">
                     <input type="text" id="select3">
                     <script>
-                        require(['modules/select'], function (Select) {
+                        require(['jyui/select'], function (Select) {
                             Select.render({
                                 elem: '#select3',
                                 multiselect: true,
@@ -93,7 +93,7 @@
                 <div class="jy-form-inline code4 rendered" style="width:200px;">
                     <input type="text" id="select4">
                     <script>
-                        require(['modules/select'], function (Select) {
+                        require(['jyui/select'], function (Select) {
                             var citys = [{
                                 label: '上海',
                                 value: 1
@@ -349,7 +349,7 @@
 <link rel="stylesheet" href="css/atom-one-light.min.css">
 <script src="js/highlight.min.js"></script>
 <script type="text/javascript">
-    require(['modules/select', 'modules/jquery'], function (Select, $) {
+    require(['jyui/select', 'jyui/jquery'], function (Select, $) {
         var codes = ['code1', 'code2', 'code3', 'code4'];
         codes.map(function (code) {
             var html = $('.' + code);

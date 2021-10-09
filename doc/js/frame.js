@@ -3,7 +3,7 @@
  * @Date: 2021-09-2 09:33
  * @Description: 
  */
-define(['index', 'modules/jquery'], function (Jyui, $) {
+define(['jyui', 'jyui/jquery'], function (Jyui, $) {
     var domObj = {
         menu: $('.jy-side-menu ul.jy-menu')
     }

@@ -6,7 +6,7 @@
 var codes = [];
 codes.push(`<div id="pager"></div>
 <script>
-    require(['./modules/pager.js'], function (Pager) {
+    require(['./jyui/pager.js'], function (Pager) {
         Pager.render({
             elem: '#pager',
             count: 100,

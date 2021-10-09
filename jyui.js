@@ -5,18 +5,18 @@
  */
 if ("function" == typeof define && define.amd) {
     define([
-        'modules/common',
-        'modules/date',
-        'modules/dialog',
-        'modules/form',
-        'modules/select',
-        'modules/menu-nav',
-        'modules/pager',
-        'modules/tab',
-        'modules/table',
-        'modules/transfer',
-        'modules/tree',
-        'modules/upload'
+        'jyui/common',
+        'jyui/date',
+        'jyui/dialog',
+        'jyui/form',
+        'jyui/select',
+        'jyui/menu-nav',
+        'jyui/pager',
+        'jyui/tab',
+        'jyui/table',
+        'jyui/transfer',
+        'jyui/tree',
+        'jyui/upload'
     ], function (Common, _Date, Dialog, Form, Select, MenuNav, Pager, Tab, Table, Transfer, Tree, Upload) {
         return {
             Common: Common,

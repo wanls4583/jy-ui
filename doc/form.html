@@ -90,7 +90,7 @@
                             <button type="submit" class="jy-btn">保存</button>
                         </div>
                         <script>
-                            require(['modules/form'], function (Form) {
+                            require(['jyui/form'], function (Form) {
                                 Form.render('', '#form');
                                 Form.on('submit(form-test)', function () {
                                     console.log('提交成功');
@@ -383,7 +383,7 @@
 <link rel="stylesheet" href="css/atom-one-light.min.css">
 <script src="js/highlight.min.js"></script>
 <script type="text/javascript">
-    require(['modules/form', 'modules/jquery'], function (Form, $) {
+    require(['jyui/form', 'jyui/jquery'], function (Form, $) {
         var codes = ['code1', 'code2', 'code3', 'code4', 'code5', 'code6', 'code7', 'code8', 'code9', 'code10', 'code11', 'code12', 'code13', 'code14'];
         codes.map(function (code) {
             var html = $('.' + code);
