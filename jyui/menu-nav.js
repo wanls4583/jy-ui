@@ -413,6 +413,7 @@
                     if ($ul.hasClass(menuClass.hoverDown) && $ul[0].offsetWidth < this.offsetWidth) {
                         $ul.css('width', this.offsetWidth);
                     } else if (ieVersion <= 7) {
+                        // 避免内部haslaout的li撑开ul
                         $ul.css('width', ieVersion < 7 ? $ul[0].offsetWidth : $ul[0].clientWidth);
                     }
                     that.trigger('spread', {

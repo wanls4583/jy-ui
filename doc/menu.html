@@ -71,7 +71,7 @@
                 <div class="pad-10">静态下拉菜单</div>
                 <div>
                     <button class="jy-btn" id="menu3">下拉菜单<i class="jy-icon" style="font-size:14px;">&#xe74b;</i></button>
-                    <ul class="jy-menu jy-menu-absolute" jy-menu-elem="#menu3" jy-menu-trigger="hover">
+                    <ul class="jy-menu jy-menu-absolute" jy-menu-elem="#menu3" jy-menu-trigger="hover" style="width:100px">
                         <li>
                             <a>菜单1</a>
                         </li>
@@ -386,6 +386,7 @@
         });
         MenuNav.render({
             elem: '#menu2',
+            width: 100,
             position: 'absolute',
             trigger: 'hover',
             data: [{
