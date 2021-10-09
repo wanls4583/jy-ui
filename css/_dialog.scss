@@ -20,6 +20,8 @@
     position: fixed;
     // ie6不支持fixed
     _position: absolute;
+    //避免ie6下宽度被撑开
+    _width: 1px;
     top: 0;
     left: 0;
     background-color: $white-color;

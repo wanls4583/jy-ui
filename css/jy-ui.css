@@ -725,6 +725,7 @@ select {
 .jy-layer {
   position: fixed;
   _position: absolute;
+  _width: 1px;
   top: 0;
   left: 0;
   background-color: #ffffff;

@@ -35,7 +35,7 @@
         var ieVersion = Common.getIeVersion();
         var store = {};
         var layerCount = 0;
-        
+
         // 打开弹框
         function open(option) {
             option.type = option.type || 'dialog';
@@ -549,7 +549,7 @@
                 });
             }
 
-            if (area.width) { //先设置宽度
+            if (area.width || !area.height) { //先设置宽度，ie6下设置了_width:1px
                 _setWidth();
                 _setHeight();
             } else { //先设置高度
@@ -569,8 +569,8 @@
 
             function _setHeight() {
                 var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
-                var titleHeight = $layer.find('div.' + layerClass.title).outerHeight() || 0;
-                var footerHeight = $layer.find('div.' + layerClass.footer).outerHeight() || 0;
+                var titleHeight = $layer.find('div.' + layerClass.title).length ? 51 : 0;
+                var footerHeight = $layer.find('div.' + layerClass.footer).length ? 40 : 0;
                 var rect = Common.getMarginPadding($content[0]);
                 if (height > winHeight) {
                     height = winHeight;
@@ -595,7 +595,7 @@
             setPosition: setPosition,
             setArea: setArea
         };
-        
+
         return Dialog;
     }
 
