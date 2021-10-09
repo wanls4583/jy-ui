@@ -24,27 +24,12 @@
     <div class="jy-content">
         <div class="jy-content-header">
             <div class="jy-content-title">select</div>
-            <div class="jy-content-btns">
-                <button class="jy-btn jy-btn-sm" id="example">示例</button>
-            </div>
         </div>
-        <fieldset class="jy-field">
-            <legend>小睹为快</legend>
+        <fieldset class="jy-field" style="margin-top:0;">
+            <legend style="margin-top:50px">小睹为快</legend>
             <div class="jy-field-box">
                 <div class="jy-form-inline code1 rendered" style="width:200px;">
                     <input type="text" id="select1" value="2">
-                    <script>
-                        require(['jyui/select'], function (Select) {
-                            Select.render({
-                                elem: '#select1',
-                                data: [
-                                    { label: '上海', value: 1 },
-                                    { label: '广州', value: 2 },
-                                    { label: '北京', value: 3 }
-                                ]
-                            });
-                        });
-                    </script>
                 </div>
                 <div class="pad-10">代码：</div>
                 <pre><code id="code1"></code></pre>
@@ -56,71 +41,16 @@
                 <div class="pad-10" id="test1">示例1：</div>
                 <div class="jy-form-inline code2 rendered" style="width:200px;">
                     <input type="text" id="select2">
-                    <script>
-                        require(['jyui/select'], function (Select) {
-                            Select.render({
-                                elem: '#select2',
-                                type: 'input',
-                                data: [
-                                    { label: '上海', value: 1 },
-                                    { label: '广州', value: 2 },
-                                    { label: '北京', value: 3 }
-                                ]
-                            });
-                        });
-                    </script>
                 </div>
                 <pre><code id="code2"></code></pre>
                 <div class="pad-10" id="test2">示例2：</div>
                 <div class="jy-form-inline code3 rendered" style="width:200px;">
                     <input type="text" id="select3">
-                    <script>
-                        require(['jyui/select'], function (Select) {
-                            Select.render({
-                                elem: '#select3',
-                                multiselect: true,
-                                data: [
-                                    { label: '上海', value: 1 },
-                                    { label: '广州', value: 2 },
-                                    { label: '北京', value: 3 }
-                                ]
-                            });
-                        });
-                    </script>
                 </div>
                 <pre><code id="code3"></code></pre>
                 <div class="pad-10" id="test3">示例3：</div>
                 <div class="jy-form-inline code4 rendered" style="width:200px;">
                     <input type="text" id="select4">
-                    <script>
-                        require(['jyui/select'], function (Select) {
-                            var citys = [{
-                                label: '上海',
-                                value: 1
-                            }, {
-                                label: '广州',
-                                value: 2
-                            }, {
-                                label: '北京',
-                                value: 3
-                            }, {
-                                label: '深圳',
-                                value: 4
-                            }]
-                            Select.render({
-                                elem: '#select4',
-                                search: true,
-                                searchMethod: function (value, cb) {
-                                    var data = citys.filter(function (item) {
-                                        return item.label.indexOf(value) > -1;
-                                    });
-                                    setTimeout(function () {
-                                        cb(data);
-                                    }, 500);
-                                }
-                            });
-                        });
-                    </script>
                 </div>
                 <pre><code id="code4"></code></pre>
             </div>
@@ -347,33 +277,67 @@
     </div>
 </body>
 <link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/select-codes.js"></script>
 <script src="js/highlight.min.js"></script>
 <script type="text/javascript">
     require(['jyui/select', 'jyui/jquery'], function (Select, $) {
-        var codes = ['code1', 'code2', 'code3', 'code4'];
-        codes.map(function (code) {
-            var html = $('.' + code);
-            var space = 0;
-            if (html.hasClass('rendered')) {
-                html = $('<div>' + html[0].innerHTML + '</div>');
-                html.find('div.jy-select,div.jy-checkbox,div.jy-radio,div.jy-switch').remove();
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        Select.render({
+            elem: '#select1',
+            data: [
+                { label: '上海', value: 1 },
+                { label: '广州', value: 2 },
+                { label: '北京', value: 3 }
+            ]
+        });
+        Select.render({
+            elem: '#select2',
+            type: 'input',
+            data: [
+                { label: '上海', value: 1 },
+                { label: '广州', value: 2 },
+                { label: '北京', value: 3 }
+            ]
+        });
+        Select.render({
+            elem: '#select3',
+            multiselect: true,
+            data: [
+                { label: '上海', value: 1 },
+                { label: '广州', value: 2 },
+                { label: '北京', value: 3 }
+            ]
+        });
+        var citys = [{
+            label: '上海',
+            value: 1
+        }, {
+            label: '广州',
+            value: 2
+        }, {
+            label: '北京',
+            value: 3
+        }, {
+            label: '深圳',
+            value: 4
+        }]
+        Select.render({
+            elem: '#select4',
+            search: true,
+            searchMethod: function (value, cb) {
+                var data = citys.filter(function (item) {
+                    return item.label.indexOf(value) > -1;
+                });
+                setTimeout(function () {
+                    cb(data);
+                }, 500);
             }
-            html = html[0].innerHTML;
-            html = html.split('\n');
-            html = html.slice(1, html.length - 1);
-            space = /^\s*/.exec(html[0]);
-            space = space[0].length;
-            html = html.map(function (line) {
-                return line.slice(space);
-            });
-            $('#' + code).text(html.join('\n'));
         });
         try {
             hljs.highlightAll();
         } catch (e) { }
-        $('#example').on('click', function () {
-            window.top.openTab('表单示例', 'https://codepen.io/wanls4583/embed/bGRxVKQ?default-tab=html%2Cresult&editable=true&theme-id=light');
-        });
     });
 </script>
 
