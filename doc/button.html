@@ -1,0 +1,65 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>按钮</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">按钮</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div style="margin-top: 20px;">
+                    <button class="jy-btn jy-btn-primary">原始按钮</button>
+                    <button class="jy-btn">默认按钮</button>
+                    <button class="jy-btn jy-btn-normal">百搭按钮</button>
+                    <button class="jy-btn jy-btn-warn">暖色按钮</button>
+                    <button class="jy-btn jy-btn-danger">警告按钮</button>
+                    <button class="jy-btn jy-btn-disabled">禁用按钮</button>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="jy-btn jy-btn-lg">大型按钮</button>
+                    <button class="jy-btn">默认按钮</button>
+                    <button class="jy-btn jy-btn-sm">小型按钮</button>
+                    <button class="jy-btn jy-btn-xs">迷你按钮</button>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/button-codes.js"></script>
+<script type="text/javascript">
+    require(['jyui/jquery', 'jyui/common'], function ($) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+    });
+</script>
+
+</html>

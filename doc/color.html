@@ -1,0 +1,77 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>颜色</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <style>
+        .color-cont {
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">颜色</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <span class="jy-bgcolor-success color-cont">#009688</span>
+                <span class="jy-bgcolor-warn color-cont">#FFB800</span>
+                <span class="jy-bgcolor-danger color-cont">#FF5722</span>
+                <span class="jy-bgcolor-link color-cont">#5FB878</span>
+                <span class="jy-bgcolor-blue color-cont">#1E9FFF</span>
+                <span class="jy-bgcolor-light color-cont">#eeeeee</span>
+                <br /><br />
+                <span class="jy-color-success">#009688</span>
+                <span class="jy-color-link">#5FB878</span>
+                <span class="jy-color-blue">#1E9FFF</span>
+                <span class="jy-color-warn">#FFB800</span>
+                <span class="jy-color-danger">#FF5722</span>
+                <span class="jy-color-light">#EEEEEE</span>
+                <span class="jy-color-text">#666666</span>
+                <span class="jy-color-title">#333333</span>
+                <span class="jy-color-holder">#999999</span>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/color-codes.js"></script>
+<script type="text/javascript">
+    require(['jyui/jquery', 'jyui/common'], function ($) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+    });
+</script>
+
+</html>

@@ -4,8 +4,17 @@ body {
   height: 100%;
 }
 
-code {
+pre {
+  white-space: pre;
+}
+
+pre code {
+  display: block;
+  padding: 1em;
+  background-color: #fafafa;
   font-family: Consolas, Monaco, monospace;
+  *white-space: pre;
+  *word-wrap: break-word;
 }
 
 blockquote {

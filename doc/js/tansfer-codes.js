@@ -4,37 +4,37 @@
  * @Description: 
  */
 var codes = [];
-codes.push(`<div id="transfer" style="width:500px"></div>
-<script>
-require(['./jyui/transfer.js'], function (Transfer) {
-    var transfer = Transfer.render({
-        elem: '#tansfer',
-        search: true,
-        stretch: true,
-        leftTitle: '标题1',
-        rightTitle: '标题2',
-        data: [{
-            id: 1,
-            title: 'item1',
-            checked: true
-        }, {
-            id: 2,
-            title: 'item2',
-            disabled: true
-        }, {
-            id: 3,
-            title: 'item3'
-        }, {
-            id: 4,
-            title: 'item4'
-        }],
-        value: [{
-            id: 5,
-            title: 'item5'
-        }]
-    });
-    transfer.on('change', function (obj) {
-        console.log(obj);
-    });
-});
-</script>`);
+codes.push('<div id="transfer" style="width:500px"></div>\n\
+<script>\n\
+require(["./jyui/transfer.js"], function (Transfer) {\n\
+    var transfer = Transfer.render({\n\
+        elem: "#tansfer",\n\
+        search: true,\n\
+        stretch: true,\n\
+        leftTitle: "标题1",\n\
+        rightTitle: "标题2",\n\
+        data: [{\n\
+            id: 1,\n\
+            title: "item1",\n\
+            checked: true\n\
+        }, {\n\
+            id: 2,\n\
+            title: "item2",\n\
+            disabled: true\n\
+        }, {\n\
+            id: 3,\n\
+            title: "item3"\n\
+        }, {\n\
+            id: 4,\n\
+            title: "item4"\n\
+        }],\n\
+        value: [{\n\
+            id: 5,\n\
+            title: "item5"\n\
+        }]\n\
+    });\n\
+    transfer.on("change", function (obj) {\n\
+        console.log(obj);\n\
+    });\n\
+});\n\
+</script>');

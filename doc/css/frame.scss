@@ -4,8 +4,17 @@ body {
     height: 100%;
 }
 
-code {
+pre {
+    white-space: pre;
+}
+
+pre code {
+    display: block;
+    padding: 1em;
+    background-color: #fafafa;
     font-family: Consolas, Monaco, monospace;
+    *white-space: pre;
+    *word-wrap: break-word;
 }
 
 blockquote {
@@ -13,10 +22,6 @@ blockquote {
     padding: 10px;
     border-left: 5px solid #5FB878;
     background-color: #fafafa;
-}
-
-a {
-    color: #5FB878;;
 }
 
 .property-table {

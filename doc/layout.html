@@ -1,0 +1,109 @@
+<!--
+ * @Author: lisong
+ * @Date: 2021-03-16 15:19:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>布局</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script type='text/javascript' src='./js/require.js'></script>
+    <link rel="stylesheet" type="text/css" href="../css/jy-ui.css">
+    <link rel="stylesheet" type="text/css" href="./css/frame.css">
+    <style>
+        .col-cont {
+            padding: 10px;
+            background-color: #5FB878;
+            border: 1px solid #fff;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+    <script>
+        require.config({
+            baseUrl: '../'
+        });
+    </script>
+</head>
+
+<body>
+    <div class="jy-content">
+        <div class="jy-content-header">
+            <div class="jy-content-title">布局</div>
+        </div>
+        <fieldset class="jy-field">
+            <legend>示例</legend>
+            <div class="jy-field-box">
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-1 jy-border-success">
+                        <div class="col-cont">1</div>
+                    </div>
+                    <div class="jy-col-11 jy-border-success">
+                        <div class="col-cont">11</div>
+                    </div>
+                </div>
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-2 jy-border-success">
+                        <div class="col-cont">2</div>
+                    </div>
+                    <div class="jy-col-10 jy-border-success">
+                        <div class="col-cont">10</div>
+                    </div>
+                </div>
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-3 jy-border-success">
+                        <div class="col-cont">3</div>
+                    </div>
+                    <div class="jy-col-9 jy-border-success">
+                        <div class="col-cont">9</div>
+                    </div>
+                </div>
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-4 jy-border-success">
+                        <div class="col-cont">4</div>
+                    </div>
+                    <div class="jy-col-8 jy-border-success">
+                        <div class="col-cont">8</div>
+                    </div>
+                </div>
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-5 jy-border-success">
+                        <div class="col-cont">5</div>
+                    </div>
+                    <div class="jy-col-7 jy-border-success">
+                        <div class="col-cont">7</div>
+                    </div>
+                </div>
+                <div class="jy-row jy-nowrap">
+                    <div class="jy-col-6 jy-border-success">
+                        <div class="col-cont">6</div>
+                    </div>
+                    <div class="jy-col-6 jy-border-success">
+                        <div class="col-cont">6</div>
+                    </div>
+                </div>
+                <div class="pad-10">代码：</div>
+                <pre><code id="code0"></code></pre>
+            </div>
+        </fieldset>
+    </div>
+</body>
+<link rel="stylesheet" href="css/atom-one-light.min.css">
+<script src="js/highlight.min.js"></script>
+<script src="js/layout-codes.js"></script>
+<script type="text/javascript">
+    require(['jyui/jquery', 'jyui/common'], function ($) {
+        codes.map(function (code, index) {
+            $('#code' + index).text(code);
+        });
+        try {
+            hljs.highlightAll();
+        } catch (e) { }
+    });
+</script>
+
+</html>

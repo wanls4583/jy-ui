@@ -36,16 +36,17 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
 
         function _setArea() {
             var winWidth = document.documentElement.clientWidth || document.body.clientWidth;
+            var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
             var $headerRight = $('.jy-header-right');
             // ie6不支持同时设置left,right或top,bottom
             if (ieVersion <= 6) {
-                var winHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 var $sideMenu = $('.jy-side-menu');
                 var $container = $('div.jy-frame-container');
                 var $content = $('div.jy-tab-content');
                 $headerRight.css('width', winWidth - 201);
                 $sideMenu.css('height', winHeight - 61);
                 $container.css('width', winWidth - 201);
+                $container.css('height', winHeight - 61);
                 $content.css('height', winHeight - 101);
             } else if (ieVersion == 7) {
                 var $sideMenu = $('.jy-side-menu');
@@ -54,6 +55,7 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
                 $sideMenu.css('height', winHeight - 61);
                 $content.css('height', winHeight - 101);
             }
+            console.log(ieVersion)
         }
     }
 

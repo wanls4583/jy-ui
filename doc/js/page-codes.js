@@ -4,16 +4,16 @@
  * @Description: 
  */
 var codes = [];
-codes.push(`<div id="pager"></div>
-<script>
-    require(['./jyui/pager.js'], function (Pager) {
-        Pager.render({
-            elem: '#pager',
-            count: 100,
-            first: '首页',
-            last: '尾页',
-            prev: '上一页',
-            next: '下一页'
-        });
-    });
-</script>`)
+codes.push('<div id="pager"></div>\n\
+<script>\n\
+    require(["./jyui/pager.js"], function (Pager) {\n\
+        Pager.render({\n\
+            elem: "#pager",\n\
+            count: 100,\n\
+            first: "首页",\n\
+            last: "尾页",\n\
+            prev: "上一页",\n\
+            next: "下一页"\n\
+        });\n\
+    });\n\
+</script>');
