@@ -55,7 +55,6 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
                 $sideMenu.css('height', winHeight - 61);
                 $content.css('height', winHeight - 101);
             }
-            console.log(ieVersion)
         }
     }
 
@@ -81,7 +80,7 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
         tab.addTab({
             title: title,
             name: url,
-            content: '<iframe border="0" frameBorder="0" src="' + url + '"></iframe>',
+            content: '<iframe border="0" frameBorder="0" src="' + url + '" name="' + url + '"></iframe>', //name用于避免ie缓存加载其他页面
             active: true
         });
         setTimeout(function () {

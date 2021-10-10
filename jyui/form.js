@@ -84,7 +84,7 @@
                 var $form = $(this).parents('form');
                 var filter = $(this).attr('jy-filter');
                 if ($form.length && that.verify($form)) {
-                    var data = that.getJsonFromForm($form);
+                    var data = that.getData($form);
                     filter && JyForm.trigger('submit(' + filter + ')', data);
                     JyForm.trigger('submit', data);
                 }
@@ -150,7 +150,7 @@
         }
 
         // 获取表单数据
-        Class.prototype.getJsonFromForm = function (formId) {
+        Class.prototype.getData = function (formId) {
             var $form = $(formId);
             var data = {};
             $form.find('input').each(function (i, input) {
@@ -622,7 +622,7 @@
             render: instance.render.bind(instance),
             addRule: instance.addRule.bind(instance),
             verify: instance.verify.bind(instance),
-            getJsonFromForm: instance.getJsonFromForm.bind(instance),
+            getData: instance.getData.bind(instance),
             setData: instance.setData.bind(instance),
             empty: instance.empty.bind(instance)
         }

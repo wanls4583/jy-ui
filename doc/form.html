@@ -252,25 +252,7 @@
                         <th>返回值</th>
                     </tr>
                     <tr>
-                        <td>Form.render</td>
-                        <td>渲染表单控件</td>
-                        <td>
-                            <div>参数：(string：控件类型，string/dom：[容器]，boolean：[强制刷新])</div>
-                            <div>如果传递了容器参数，将只渲染改容器类的控件</div>
-                            <div>强制刷新将把之前渲染过的UI删除，再重新渲染</div>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Form.verify</td>
-                        <td>手动验证表单</td>
-                        <td>
-                            <div>参数：(string/dom：容器)</div>
-                        </td>
-                        <td>boolean：验证是否通过</td>
-                    </tr>
-                    <tr>
-                        <td>Form.on</td>
+                        <td>on</td>
                         <td>监听事件</td>
                         <td>
                             <div>参数：(string：监听类型[(过滤器)]，function：回调函数)</div>
@@ -283,11 +265,53 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>Form.trigger</td>
+                        <td>trigger</td>
                         <td>手动触发事件</td>
                         <td>
                             <div>参数：(string：监听类型[(过滤器)]，object：回调函数的参数)</div>
                             <div>多个监听类型可以用空格分隔</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>render</td>
+                        <td>渲染表单控件</td>
+                        <td>
+                            <div>参数：(string：控件类型，string/dom：[容器]，boolean：[强制刷新])</div>
+                            <div>如果传递了容器参数，将只渲染改容器类的控件</div>
+                            <div>强制刷新将把之前渲染过的UI删除，再重新渲染</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>verify</td>
+                        <td>手动验证表单</td>
+                        <td>
+                            <div>参数：(string/dom：容器)</div>
+                        </td>
+                        <td>boolean：验证是否通过</td>
+                    </tr>
+                    <tr>
+                        <td>getData</td>
+                        <td>获取表单数据</td>
+                        <td>
+                            <div>参数：(string/dom：容器)</div>
+                        </td>
+                        <td>object</td>
+                    </tr>
+                    <tr>
+                        <td>setData</td>
+                        <td>设置表单数据</td>
+                        <td>
+                            <div>参数：(string/dom：容器，object：数据)</div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>empty</td>
+                        <td>清空表单数据</td>
+                        <td>
+                            <div>参数：(string/dom：容器)</div>
                         </td>
                         <td></td>
                     </tr>
