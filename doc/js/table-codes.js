@@ -132,12 +132,12 @@ codes.push('<div id="table2"></div>\r\n\
             limit: 20,\r\n\
             // ellipsis: false,\r\n\
             defaultToolbar: true,\r\n\
-            toolbar: \'<button class="jy-btn jy-btn-sm" jy-event="custom-add">添加行</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-checkall">全选/全不选</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-checked">获取选中的数据</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-getadd">获取添加的数据</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-getdel">获取删除的数据</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-getedit">获取修改过的数据</button>\',\r\n\
+            toolbar: \'<button class="jy-btn jy-btn-sm" jy-event="custom-add">添加行</button>\'+\r\n\
+            \'<button class="jy-btn jy-btn-sm" jy-event="custom-checkall">全选/全不选</button>\'+\r\n\
+            \'<button class="jy-btn jy-btn-sm" jy-event="custom-checked">获取选中的数据</button>\'+\r\n\
+            \'<button class="jy-btn jy-btn-sm" jy-event="custom-getadd">获取添加的数据</button>\'+\r\n\
+            \'<button class="jy-btn jy-btn-sm" jy-event="custom-getdel">获取删除的数据</button>\'+\r\n\
+            \'<button class="jy-btn jy-btn-sm" jy-event="custom-getedit">获取修改过的数据</button>\',\r\n\
             cols: [\r\n\
                 [{\r\n\
                     type: "checkbox",\r\n\
