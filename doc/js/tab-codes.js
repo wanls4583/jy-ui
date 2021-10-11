@@ -4,7 +4,7 @@
  * @Description: 
  */
 var codes = [];
-codes.push('<div class="jy-tab" style="width:400px;">\r\n\
+codes.push('<div class="jy-tab" jy-tab-close="false" style="width:400px;">\r\n\
     <div class="jy-tab-header">\r\n\
         <div class="jy-tab-header-scroll">\r\n\
             <div class="jy-tab-titles">\r\n\
