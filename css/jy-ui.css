@@ -808,6 +808,8 @@ select {
 
 .jy-layer-loading .jy-layer-loading-icon {
   font-size: 36px;
+  min-width: 36px;
+  _width: 36px;
 }
 
 .jy-layer-loading-text {
