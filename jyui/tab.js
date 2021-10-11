@@ -51,7 +51,7 @@
             this.$tab = this.option.$tab || $(tpl.tab);
             this.data = this.option.data || [];
             this.style = this.option.style === 'line' ? 'line' : 'card';
-            this.colseEnable = this.option.colseEnable === false ? false : true;
+            this.colseEnable = this.option.close === false ? false : true;
             this.$header = this.$tab.children('.' + tabClass.header);
             this.$headerScroll = this.$header.children('.' + tabClass.headerScroll);
             this.$titles = this.$headerScroll.children('.' + tabClass.titles);
@@ -264,8 +264,12 @@
         function checkStaticTab() {
             $('div.' + tabClass.tab).each(function (i, tab) {
                 var $tab = $(tab);
+                var close = $tab.attr('jy-tab-close') != 'false';
+                var style = $tab.attr('jy-tab-style');
                 if (!$tab.hasClass(tabClass.structure)) {
                     new Class({
+                        close: close,
+                        style: style,
                         $tab: $(tab)
                     });
                 }

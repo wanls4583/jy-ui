@@ -29,7 +29,7 @@
             <legend style="margin-top:50px">静态标签</legend>
             <div class="jy-field-box">
                 <div class="pad-10">普通标签</div>
-                <div class="jy-tab" style="width:400px;">
+                <div class="jy-tab" jy-tab-close="false" style="width:400px;">
                     <div class="jy-tab-header">
                         <div class="jy-tab-header-scroll">
                             <div class="jy-tab-titles">
@@ -47,6 +47,9 @@
                 </div>
                 <div class="pad-10">代码：</div>
                 <pre><code id="code0"></code></pre>
+                <blockquote>
+                    <div>jy-tab-close="false"：close 参数为 false 代表没有关闭按钮</div>
+                </blockquote>
                 <div class="pad-10">线条样式</div>
                 <div class="jy-tab jy-tab-line" style="width:400px;">
                     <div class="jy-tab-header">
@@ -66,6 +69,9 @@
                 </div>
                 <div class="pad-10">代码：</div>
                 <pre><code id="code1"></code></pre>
+                <blockquote>
+                    <div>添加“jy-tab-line”类使用线条样式</div>
+                </blockquote>
             </div>
         </fieldset>
         <fieldset class="jy-field">
@@ -192,7 +198,7 @@
                         <td>"card"</td>
                     </tr>
                     <tr>
-                        <td>colseEnable</td>
+                        <td>close</td>
                         <td>boolean</td>
                         <td>
                             <div>标签项是否可关闭</div>
