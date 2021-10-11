@@ -87,7 +87,7 @@ codes.push('<div id="table1"></div>\r\n\
         });\r\n\
     });\r\n\
 </script>');
-codes.push('<div id="table1"></div>\r\n\
+codes.push('<div id="table2"></div>\r\n\
 <script>\r\n\
     require(["jyui/table", "jyui/dialog"], function (Table, Dialog) {\r\n\
         var data = [];\r\n\
@@ -132,12 +132,12 @@ codes.push('<div id="table1"></div>\r\n\
             limit: 20,\r\n\
             // ellipsis: false,\r\n\
             defaultToolbar: true,\r\n\
-            toolbar: "<button class="jy-btn jy-btn-sm" jy-event="custom-add">添加行</button>\\\r\n\
+            toolbar: \'<button class="jy-btn jy-btn-sm" jy-event="custom-add">添加行</button>\\\r\n\
             <button class="jy-btn jy-btn-sm" jy-event="custom-checkall">全选/全不选</button>\\\r\n\
             <button class="jy-btn jy-btn-sm" jy-event="custom-checked">获取选中的数据</button>\\\r\n\
             <button class="jy-btn jy-btn-sm" jy-event="custom-getadd">获取添加的数据</button>\\\r\n\
             <button class="jy-btn jy-btn-sm" jy-event="custom-getdel">获取删除的数据</button>\\\r\n\
-            <button class="jy-btn jy-btn-sm" jy-event="custom-getedit">获取修改过的数据</button>",\r\n\
+            <button class="jy-btn jy-btn-sm" jy-event="custom-getedit">获取修改过的数据</button>\',\r\n\
             cols: [\r\n\
                 [{\r\n\
                     type: "checkbox",\r\n\
@@ -184,7 +184,7 @@ codes.push('<div id="table1"></div>\r\n\
                     width: 80,\r\n\
                     editable: {\r\n\
                         edit: function (value, data, id, col) {\r\n\
-                            return "<input class="jy-table-input jy-inline-block" style="width:50px;" value="" + value + "" /><span>岁</span>";\r\n\
+                            return \'<input class="jy-table-input jy-inline-block" style="width:50px;" value="" + value + "" /><span>岁</span>\';\r\n\
                         },\r\n\
                         save: function ($edit) {\r\n\
                             return $edit.find("input").val();\r\n\
