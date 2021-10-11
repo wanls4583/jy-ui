@@ -24,6 +24,12 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
         tab.on('change', function (obj) {
             selectMenu(obj.data);
         });
+        tab.on('success', function(obj) {
+            var index = Jyui.Dialog.loading({container: obj.dom});
+            $(obj.dom).find('iframe').on('load', function() {
+                Jyui.Dialog.close(index);
+            });
+        });
         domObj.menu.find('a').on('click', function () {
             var $this = $(this);
             var title = $this.attr('title');

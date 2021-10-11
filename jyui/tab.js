@@ -106,6 +106,7 @@
 
         Class.prototype.addTab = function (tab) {
             var $title = null;
+            var $content = null;
             for (var i = 0; i < this.data.length; i++) {
                 if (this.data[i].name == tab.name) {
                     this.$titles.children('[name="' + tab.name + '"]').trigger('click');
@@ -123,37 +124,51 @@
             }));
             this.colseEnable && $title.append(tpl.closeIcon);
             this.$titles.append($title);
-            this.$content.append(Common.htmlTemplate(tpl.item, {
+            $content = $(Common.htmlTemplate(tpl.item, {
                 content: tab.content || '',
                 name: tab.name,
                 active: tab.active
             }));
+            this.$content.append($content);
             this.data.push(tab);
             this.checkScroll();
+            this.trigger('success', {
+                data: tab.name,
+                dom: $content[0]
+            });
+            this.filter && JyTab.trigger('success(' + this.filter + ')', {
+                data: tab.name,
+                dom: $content[0]
+            });
+            JyTab.trigger('success', {
+                data: tab.name,
+                dom: $content[0]
+            });
         }
 
         Class.prototype.removeTab = function (name) {
             var $title = this.$titles.children('[name="' + name + '"]');
             var $prev = $title.prev();
+            var delData = null;
             if (!$prev.length) {
                 $prev = $title.next();
             }
             $title.remove();
             this.$content.children('[target="' + name + '"]').remove();
+            delData = this.data.filter(function (item) {
+                return item.name == name;
+            })[0];
             this.data = this.data.filter(function (item) {
                 return item.name != name;
             });
             this.trigger('close', {
-                data: name,
-                dom: $title[0]
+                data: delData
             });
             this.filter && JyTab.trigger('close(' + this.filter + ')', {
-                data: name,
-                dom: $title[0]
+                data: delData
             });
             JyTab.trigger('close', {
-                data: name,
-                dom: $title[0]
+                data: delData
             });
             if ($title.hasClass(tabClass.titleActive)) {
                 $prev.trigger('click');
@@ -181,21 +196,21 @@
             this.$tab.delegate('.' + tabClass.title, 'click', function () {
                 var $this = $(this);
                 var tabName = $this.attr('name');
+                var data = that.data.filter(function (item) {
+                    return item.name == tabName;
+                })[0];
                 that.$titles.children('.' + tabClass.titleActive).removeClass(tabClass.titleActive);
                 that.$content.children('.' + tabClass.itemActive).removeClass(tabClass.itemActive);
                 $this.addClass(tabClass.titleActive);
                 that.$content.children('[target="' + tabName + '"]').addClass(tabClass.itemActive);
                 that.trigger('change', {
-                    data: tabName,
-                    dom: this
+                    data: data
                 });
                 that.filter && JyTab.trigger('change(' + that.filter + ')', {
-                    data: tabName,
-                    dom: this
+                    data: data
                 });
                 JyTab.trigger('change', {
-                    data: tabName,
-                    dom: this
+                    data: data
                 });
             });
             this.$tab.delegate('.' + tabClass.prev, 'click', function () {
