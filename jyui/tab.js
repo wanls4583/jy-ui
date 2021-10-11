@@ -132,16 +132,17 @@
             this.$content.append($content);
             this.data.push(tab);
             this.checkScroll();
+            tab = Common.deepAssign({}, tab);
             this.trigger('success', {
-                data: tab.name,
+                data: tab,
                 dom: $content[0]
             });
             this.filter && JyTab.trigger('success(' + this.filter + ')', {
-                data: tab.name,
+                data: tab,
                 dom: $content[0]
             });
             JyTab.trigger('success', {
-                data: tab.name,
+                data: tab,
                 dom: $content[0]
             });
         }
@@ -158,6 +159,7 @@
             delData = this.data.filter(function (item) {
                 return item.name == name;
             })[0];
+            delData = Common.deepAssign({}, delData);
             this.data = this.data.filter(function (item) {
                 return item.name != name;
             });
@@ -203,6 +205,7 @@
                 that.$content.children('.' + tabClass.itemActive).removeClass(tabClass.itemActive);
                 $this.addClass(tabClass.titleActive);
                 that.$content.children('[target="' + tabName + '"]').addClass(tabClass.itemActive);
+                data = Common.deepAssign({}, data);
                 that.trigger('change', {
                     data: data
                 });
@@ -265,11 +268,19 @@
             $('div.' + tabClass.tab).each(function (i, tab) {
                 var $tab = $(tab);
                 var close = $tab.attr('jy-tab-close') != 'false';
-                var style = $tab.attr('jy-tab-style');
                 if (!$tab.hasClass(tabClass.structure)) {
+                    var data = [];
+                    $tab.children('.jy-tab-header').find('div.jy-tab-title').each(function (i, dom) {
+                        var $dom = $(dom);
+                        data.push({
+                            title: $dom.text(),
+                            name: $dom.attr('name'),
+                            active: $dom.hasClass('jy-tab-title-active')
+                        });
+                    });
                     new Class({
                         close: close,
-                        style: style,
+                        data: data,
                         $tab: $(tab)
                     });
                 }

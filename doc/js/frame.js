@@ -22,7 +22,10 @@ define(['jyui', 'jyui/jquery'], function (Jyui, $) {
             style: 'line'
         });
         tab.on('change', function (obj) {
-            selectMenu(obj.data);
+            selectMenu(obj.data.name);
+        });
+        tab.on('close', function (obj) {
+            domObj.menu.find('a.jy-menu-checked').removeClass('jy-menu-checked');
         });
         tab.on('success', function (obj) {
             var index = Jyui.Dialog.loading({
