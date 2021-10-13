@@ -94,7 +94,7 @@
              <%for(var k in col.attr){%> <%-k%>="<%-col.attr[k]%>"<%}%>>\
                 <%-cell%>\
             </td>',
-            cell: '<div class="jy-clear jy-table-cell jy-table-cell-<%-tableCount%>-<%-col._col_key%>"><div class="jy-table-cell-content"><%-(content||"&nbsp;")%></div></div>',
+            cell: '<div class="jy-clear jy-table-cell jy-table-cell-<%-tableCount%>-<%-col._col_key%>"><div class="jy-table-cell-content"><%-(content===undefined?"&nbsp;":content)%></div></div>',
             radio: '<div class="jy-table-radio <%-(checked?"jy-table-checked":"")%>" data-key="<%-key%>">\
                 <i class="jy-radio-icon-checked">' + radioedIcon + '</i>\
                 <i class="jy-radio-icon-uncheck">' + radioIcon + '</i>\
@@ -916,7 +916,15 @@
                     editable.type = editable.type || 'text';
                     if (typeof editable.edit == 'function') {
                         $edit.append(that.callByDataAndCol(editable.edit, rowData, col));
-                        $edit.find('input').trigger('focus');
+                        $edit.find('input').on('input propertychange', function () {
+                            // 触发输入事件
+                            that.trigger('edit.input', {
+                                data: this.value,
+                                dom: this,
+                                field: jyBindData.col.field,
+                                rowData: Common.delInnerProperty(jyBindData.rowData)
+                            });
+                        }).trigger('focus');
                     } else if (editable.type == 'text' || editable.type == 'number') { // 输入框编辑
                         _editInput(td);
                     } else if (editable.type == 'select') { // 下拉框编辑
@@ -2350,7 +2358,7 @@
         Class.prototype.toggleCol = function (col, checked, stopCheckParent) {
             var that = this;
             var allThs = [];
-            var $checkbox = this.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._col_key + '"]');
+            var $checkbox = this.$filter && this.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._col_key + '"]') || $('<div></div>');
             if (checked == undefined) {
                 checked = Boolean(col.hidden);
             }
@@ -2412,7 +2420,7 @@
                     });
                     // 检查的是父列
                     if (isParent) {
-                        var $checkbox = that.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._col_key + '"]');
+                        var $checkbox = that.$filter && that.$filter.find('div.' + classNames.checkbox + '[data-key="' + col._col_key + '"]') || $('<div></div>');
                         _getThByCol(col).map(function (th) {
                             var $th = $(th);
                             $(th).attr('colspan', colspan || 1);

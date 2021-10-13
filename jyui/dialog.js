@@ -154,7 +154,7 @@
             }
             $container.append($layer);
             // 弹框之前回调
-            typeof option.before == 'function' && option.before($layer, layerIndex);
+            typeof option.beforeShow == 'function' && option.beforeShow($layer, layerIndex);
             // 设置弹框尺寸
             setArea(layerIndex, {
                 width: option.width,
@@ -570,7 +570,7 @@
             function _setHeight() {
                 var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
                 var titleHeight = $layer.find('div.' + layerClass.title).length ? 51 : 0;
-                var footerHeight = $layer.find('div.' + layerClass.footer).length ? 40 : 0;
+                var footerHeight = $layer.find('div.' + layerClass.footer).length ? 48 : 0;
                 var rect = Common.getMarginPadding($content[0]);
                 if (height > winHeight) {
                     height = winHeight;
