@@ -127,8 +127,8 @@
                         if (pass && verifyRule && (value || rules[i] == 'required')) {
                             pass = verifyRule.verify ? verifyRule.verify(value) : verifyRule.rule.test(value);
                             if (!pass) {
-                                that.showMsg(verifyRule.msg);
                                 msg = verifyRule.msg;
+                                msg && that.showMsg(msg);
                                 if (tagName == 'select') {
                                     $input.next('.' + formClass.select).children('.jy-select-title').addClass(dangerClass);
                                 } else {

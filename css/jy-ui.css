@@ -1,3 +1,23 @@
+@font-face {
+  font-family: 'jy-iconfont';
+  /* Project id 2505561 */
+  src: url("./font/iconfont.eot");
+  /* IE9 */
+  src: url("./font/iconfont.eot#iefix") format("embedded-opentype"), url("./font/iconfont.woff2") format("woff2"), url("./font/iconfont.woff") format("woff"), url("./font/iconfont.ttf") format("truetype");
+}
+
+.jy-icon {
+  font-family: "jy-iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.jy-icon.jy-icon-search:before {
+  content: "\e642";
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -324,7 +344,7 @@ table {
   border-radius: 2px;
   text-align: center;
   line-height: 16px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 14px;
   color: #ffffff;
 }
@@ -387,7 +407,7 @@ table {
   position: absolute;
   left: 0;
   top: 0;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 22px;
   color: #d2d2d2;
 }
@@ -463,7 +483,7 @@ select {
   margin-top: -6px;
   font-size: 12px;
   line-height: 12px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   cursor: pointer;
 }
 
@@ -476,7 +496,7 @@ select {
   margin-top: -8px;
   font-size: 16px;
   line-height: 16px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   cursor: pointer;
 }
 
@@ -512,7 +532,7 @@ select {
   margin-left: 2px;
   background-color: #d2d2d2;
   border-radius: 50%;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 12px;
   text-align: center;
   cursor: pointer;
@@ -879,7 +899,7 @@ select {
   top: 16px;
   left: 15px;
   line-height: 30px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 30px;
 }
 
@@ -1010,11 +1030,11 @@ select {
 
 .jy-pager .jy-pager-prev {
   margin-left: 10px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
 }
 
 .jy-pager .jy-pager-next {
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
 }
 
 .jy-pager .jy-pager-prev,
@@ -1130,11 +1150,11 @@ select {
 
 .jy-pager-small .jy-pager-prev {
   margin-left: 10px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
 }
 
 .jy-pager-small .jy-pager-next {
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
 }
 
 .jy-pager-small .jy-pager-prev,
@@ -1498,7 +1518,7 @@ select {
   line-height: 36px;
   background-color: #ffffff;
   border: 1px solid #eeeeee;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 16px;
   text-align: center;
   cursor: pointer;
@@ -1519,7 +1539,7 @@ select {
   background-color: rgba(0, 0, 0, 0.6);
   background-color: #000000\0/;
   *background-color: #000000;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   color: #ffffff;
   text-align: center;
   cursor: pointer;
@@ -1676,7 +1696,7 @@ select {
   *display: inline;
   *zoom: 1;
   margin-right: 5px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 30px;
   vertical-align: middle;
   color: #FF5722;
@@ -1723,7 +1743,7 @@ select {
   position: absolute;
   left: 0;
   top: 0;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 22px;
   color: #d2d2d2;
 }
@@ -1765,7 +1785,7 @@ select {
   border-radius: 2px;
   text-align: center;
   line-height: 16px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 14px;
   color: #ffffff;
 }
@@ -1835,13 +1855,13 @@ select {
 
 .jy-table-select-title i {
   position: absolute;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   right: 5px;
   top: 50%;
   margin-top: -6px;
   font-size: 12px;
   line-height: 12px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   cursor: pointer;
 }
 
@@ -2418,7 +2438,7 @@ select {
 }
 
 .jy-menu-icon {
-  font-family: "iconfont" !important;
+  font-family: "jy-iconfont" !important;
   font-size: 14px;
   font-style: normal;
   right: 15px;
@@ -2639,7 +2659,7 @@ select {
 
 .jy-tree-search i {
   position: absolute;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 16px;
   top: 7px;
   left: 6px;
@@ -2715,7 +2735,7 @@ select {
   border-radius: 2px;
   text-align: center;
   line-height: 12px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 12px;
   color: #666666;
   cursor: pointer;
@@ -2766,7 +2786,7 @@ select {
   border-radius: 2px;
   text-align: center;
   line-height: 16px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 14px;
   color: #ffffff;
 }
@@ -2851,7 +2871,7 @@ select {
 
 .jy-transfer-search i {
   position: absolute;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 16px;
   top: 7px;
   left: 6px;
@@ -2898,7 +2918,7 @@ select {
   border-radius: 2px;
   border: 1px solid #eeeeee;
   background-color: #f6f6f6;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   color: #c2c2c2;
   text-align: center;
   cursor: not-allowed;
@@ -2947,7 +2967,7 @@ select {
   border-radius: 2px;
   text-align: center;
   line-height: 16px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 14px;
   color: #ffffff;
 }
@@ -3066,7 +3086,7 @@ select {
   top: 0;
   left: 0;
   z-index: 1;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   width: 40px;
   height: 40px;
   line-height: 40px;
@@ -3088,7 +3108,7 @@ select {
 .jy-tab-close {
   display: inline-block;
   margin-left: 5px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
 }
 
 .jy-tab-close:hover {
@@ -3154,22 +3174,6 @@ select {
   font-size: 100px;
   opacity: 0.01;
   filter: Alpha(opacity=1);
-}
-
-@font-face {
-  font-family: 'iconfont';
-  /* Project id 2505561 */
-  src: url("./font/iconfont.eot");
-  /* IE9 */
-  src: url("./font/iconfont.eot#iefix") format("embedded-opentype"), url("./font/iconfont.woff2") format("woff2"), url("./font/iconfont.woff") format("woff"), url("./font/iconfont.ttf") format("truetype");
-}
-
-.jy-icon {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .jy-block {
@@ -3509,7 +3513,7 @@ hr {
   *display: inline;
   *zoom: 1;
   margin-right: 5px;
-  font-family: 'iconfont';
+  font-family: 'jy-iconfont';
   font-size: 30px;
   vertical-align: middle;
   color: #FF5722;

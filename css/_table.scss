@@ -281,7 +281,7 @@
             line-height: $input-height - 2px;
             background-color: $white-color;
             border: 1px solid $border-color;
-            font-family: 'iconfont';
+            font-family: 'jy-iconfont';
             font-size: 16px;
             text-align: center;
             cursor: pointer;
@@ -303,7 +303,7 @@
             // 只兼容ie8的样式，在属性值后面加\0/
             background-color: #{'#000000\\0/'};
             *background-color: #000000;
-            font-family: 'iconfont';
+            font-family: 'jy-iconfont';
             color: $white-color;
             text-align: center;
             cursor: pointer;
@@ -457,7 +457,7 @@
         *display: inline;
         *zoom: 1;
         margin-right: 5px;
-        font-family: 'iconfont';
+        font-family: 'jy-iconfont';
         font-size: 30px;
         vertical-align: middle;
         color: $danger-color;
@@ -497,7 +497,7 @@
             position: absolute;
             left: 0;
             top: 0;
-            font-family: 'iconfont';
+            font-family: 'jy-iconfont';
             font-size: 22px;
             color: $gray-color;
         }
@@ -540,7 +540,7 @@
             border-radius: 2px;
             text-align: center;
             line-height: 16px;
-            font-family: 'iconfont';
+            font-family: 'jy-iconfont';
             font-size: 14px;
             color: $white-color;
 
@@ -613,13 +613,13 @@
 
             i {
                 position: absolute;
-                font-family: 'iconfont';
+                font-family: 'jy-iconfont';
                 right: 5px;
                 top: 50%;
                 margin-top: -6px;
                 font-size: 12px;
                 line-height: 12px;
-                font-family: 'iconfont';
+                font-family: 'jy-iconfont';
                 cursor: pointer;
             }
         }

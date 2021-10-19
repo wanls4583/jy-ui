@@ -94,7 +94,7 @@
              <%for(var k in col.attr){%> <%-k%>="<%-col.attr[k]%>"<%}%>>\
                 <%-cell%>\
             </td>',
-            cell: '<div class="jy-clear jy-table-cell jy-table-cell-<%-tableCount%>-<%-col._col_key%>"><div class="jy-table-cell-content"><%-(content===undefined?"&nbsp;":content)%></div></div>',
+            cell: '<div class="jy-clear jy-table-cell jy-table-cell-<%-tableCount%>-<%-col._col_key%>"><div class="jy-table-cell-content"><%-(!content&&String(content)!="0"?"&nbsp;":content)%></div></div>',
             radio: '<div class="jy-table-radio <%-(checked?"jy-table-checked":"")%>" data-key="<%-key%>">\
                 <i class="jy-radio-icon-checked">' + radioedIcon + '</i>\
                 <i class="jy-radio-icon-uncheck">' + radioIcon + '</i>\

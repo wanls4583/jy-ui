@@ -1,4 +1,5 @@
 @import 'theme';
+@import 'icon';
 @import 'reset';
 @import 'form';
 @import 'dialog';
@@ -10,27 +11,6 @@
 @import 'transfer';
 @import 'tab';
 @import 'upload';
-
-@font-face {
-    font-family: 'iconfont';
-    /* Project id 2505561 */
-    src: url('./font/iconfont.eot');
-    /* IE9 */
-    src: url('./font/iconfont.eot#iefix') format('embedded-opentype'),
-        /* IE6-IE8 */
-        url('./font/iconfont.woff2') format('woff2'),
-        url('./font/iconfont.woff') format('woff'),
-        url('./font/iconfont.ttf') format('truetype');
-}
-
-.jy-icon {
-    font-family: "iconfont" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    // -webkit-text-stroke-width: 0.2px;
-    -moz-osx-font-smoothing: grayscale;
-}
 
 .jy {
     &-block {
@@ -276,7 +256,7 @@ hr {
         *display: inline;
         *zoom: 1;
         margin-right: 5px;
-        font-family: 'iconfont';
+        font-family: 'jy-iconfont';
         font-size: 30px;
         vertical-align: middle;
         color: $danger-color;
