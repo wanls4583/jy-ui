@@ -13,12 +13,12 @@
         var rightIon = '&#xe734;';
         var downIcon = '&#xe74b;';
         var closeIcon = '&#xe735;';
-        var errorIcon = '&#xe60b;';
         var loadingIcon = '&#xe61e;';
         var radioedIcon = '&#xe61c;';
         var radioIcon = '&#xe619;';
         var checkedIcon = '&#xe737;';
         var ieVersion = Common.getIeVersion();
+        var barWidth = Common.getScrBarWidth();
         var hCellPadding = 2;
         var tableCount = 1;
         var classNames = {
@@ -714,14 +714,17 @@
                         if (typeof rule.type == 'string') {
                             rule = ruleMap[rule.type];
                             msg = msg || rule.msg;
+                            if (!value && rule.type != 'required') {
+                                continue;
+                            }
                         }
                         if (typeof rule.rule == 'function') {
-                            pass = rule.rule(value);
+                            pass = that.callByDataAndCol(rule.rule, jyBindData.rowData, jyBindData.col, value);
                         } else if (rule.rule) {
                             pass = rule.rule.test(String(value || ''));
                         }
                         if (!pass) {
-                            that.showMsg(msg);
+                            msg && that.showMsg(msg);
                             break;
                         }
                     }
@@ -1381,10 +1384,10 @@
                 var hedaerWidth = this.$header[0].clientWidth;
                 var tableHeaderWidth = this.$headerTable[0].offsetWidth;
                 //表格拉伸至容器的宽度
-                if (tableHeaderWidth < hedaerWidth) {
+                if (tableHeaderWidth < hedaerWidth - barWidth) {
                     // ie下，table宽度可能会多出一像素，从而撑破父容器
                     // 出现纵向滚动条时需要减去滚动条的宽度
-                    this.setColsWidth(null, this.$main[0].offsetWidth - 18);
+                    this.setColsWidth(null, this.$main[0].offsetWidth - barWidth - 1);
                 }
                 this.stretch = false;
             }
@@ -1426,44 +1429,44 @@
                 });
                 return;
             }
-            _setView();
-            _setMain();
-
-            function _setView() {
-                var height = 0;
-                if (that.width) {
-                    that.$view.css({
-                        width: that.width
-                    });
-                }
-                if (that.height) {
-                    height = that.height;
-                } else if (that.autoHeight) {
-                    var $parent = that.$view.parent();
-                    height = $parent[0].clientHeight;
-                    height -= that.$view[0].offsetTop;
-                    height -= Common.getMarginPadding($parent[0]).paddingBottom;
-                    height -= 1;
-                }
-                if (height) {
-                    that.$view.css({
-                        height: height
-                    });
-                }
+            var height = 0;
+            if (that.width) {
+                that.$view.css({
+                    width: that.width
+                });
             }
+            if (that.height) {
+                height = that.height;
+            } else if (that.autoHeight) {
+                var $parent = that.$view.parent();
+                height = $parent[0].clientHeight;
+                height -= that.$view[0].offsetTop;
+                height -= Common.getMarginPadding($parent[0]).paddingBottom;
+                height -= 1;
+            }
+            if (height) {
+                that.$view.css({
+                    height: height
+                });
+            }
+            this.setMainArea();
+        }
 
-            function _setMain() {
-                var width = that.$view[0].clientWidth;
-                var height = that.$view[0].clientHeight;
-                height -= that.$header[0].offsetHeight;
-                if (that.$toolbar) {
-                    height -= that.$toolbar[0].offsetHeight;
+        Class.prototype.setMainArea = function () {
+            var width = this.$view[0].clientWidth;
+            this.$main.css({
+                width: width - 2
+            });
+            if (this.height && this.height != 'auto') {
+                var height = this.$view[0].clientHeight;
+                height -= this.$header[0].offsetHeight;
+                if (this.$toolbar) {
+                    height -= this.$toolbar[0].offsetHeight;
                 }
-                if (that.$pager) {
-                    height -= that.$pager[0].offsetHeight;
+                if (this.$pager) {
+                    height -= this.$pager[0].offsetHeight;
                 }
-                that.$main.css({
-                    width: width - 2,
+                this.$main.css({
                     height: height - 2
                 });
             }
@@ -1666,6 +1669,7 @@
                 'table-layout': 'fixed'
             });
             this.setTableWidth();
+            this.setMainArea(); //设置完列宽后，view可能被撑开
         }
 
         // 设置单元格高度（编辑时，高度可能变化）
@@ -2503,10 +2507,14 @@
         }
 
         // 执行回调函数，避免外部回调污染内部数据
-        Class.prototype.callByDataAndCol = function (cb, rowData, col) {
+        Class.prototype.callByDataAndCol = function (cb, rowData, col, other) {
             rowData = Common.delInnerProperty(rowData);
             col = Common.delInnerProperty(col);
-            return cb(rowData[col.field], rowData, rowData._row_index, col);
+            if (other !== undefined) {
+                return cb(other, rowData[col.field], rowData, rowData._row_index, col);
+            } else {
+                return cb(rowData[col.field], rowData, rowData._row_index, col);
+            }
         }
 
         // 绑定容器的事件
