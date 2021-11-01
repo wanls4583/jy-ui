@@ -1457,7 +1457,7 @@
             this.$main.css({
                 width: width - 2
             });
-            if (this.height && this.height != 'auto') {
+            if (this.height && this.height != 'auto' || this.autoHeight) {
                 var height = this.$view[0].clientHeight;
                 height -= this.$header[0].offsetHeight;
                 if (this.$toolbar) {
