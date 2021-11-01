@@ -88,6 +88,9 @@
                 }
                 cb(data);
             }
+            this.labelMethod = this.option.labelMethod || function(label) {
+                return label;
+            }
             this.data = this.option.data || [];
             // 配置参数-end
             this.data = this.data.map(function (item) {
@@ -216,7 +219,7 @@
                 if(item.disabled) {
                     dClass.push(classNames.optionDisabled);
                 }
-                labelHtml = label || that.placeholder;
+                labelHtml = that.labelMethod(label, Common.deepAssign({}, item)) || that.placeholder;
                 if (that.multiselect) {
                     labelHtml = Common.htmlTemplate(tpl.checkbox, {
                         label: labelHtml
@@ -359,7 +362,7 @@
         }
 
         // 搜索
-        Class.prototype.search = function (immediately) {
+        Class.prototype.search = function (immediately, cb) {
             var label = this.$input.val();
             var that = this;
             clearTimeout(this.timer);
@@ -391,8 +394,16 @@
                     that.searchList = data;
                     that.renderItem(data);
                     that.$loading.hide();
+                    typeof cb === 'function' && cb();
                 });
             }
+        }
+
+        Class.prototype.empty = function() {
+            this.selectLabel = '';
+            this.selectValue = '';
+            this.$input.val('');
+            this.search();
         }
 
         // 根据值获取数据对象
@@ -538,10 +549,14 @@
                     trigger: select.trigger,
                     select: select.select.bind(select),
                     reload: select.reload.bind(select),
-                    search: function (label) {
+                    empty: select.empty.bind(select),
+                    getDom: function() {
+                        return select.$select[0];
+                    },
+                    search: function (label, cb) {
                         if (select.searchEnable) {
                             select.$input.val(label);
-                            select.search(true);
+                            select.search(true, cb);
                         }
                     }
                 }
