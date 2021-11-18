@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wanls4583/song-ui.git"
+    "url": "git+https://github.com/wanls4583/jy-ui.git"
   },
   "keywords": [
     "ui",
@@ -19,7 +19,7 @@
   "author": "lisong",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wanls4583/song-ui/issues"
+    "url": "https://github.com/wanls4583/jy-ui/issues"
   },
-  "homepage": "https://github.com/wanls4583/song-ui#readme"
+  "homepage": "https://github.com/wanls4583/jy-ui#readme"
 }
