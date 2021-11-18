@@ -462,7 +462,7 @@
             function _getIndex(key) {
                 if (key !== undefined) {
                     for (var i = 0; i < that.sortedData.length; i++) {
-                        if (that.sortedData[i]._row_key == key) {
+                        if (that.sortedData[i]._jy_row_key == key) {
                             return i;
                         }
                     }
@@ -535,7 +535,7 @@
                 if (fixed) {
                     return;
                 }
-                if (that.selectedData && that.selectedData._row_key == key) {
+                if (that.selectedData && that.selectedData._jy_row_key == key) {
                     that.selectedData = null;
                 }
                 that.deletedData.push(rowData);
@@ -549,7 +549,7 @@
 
             function _deleteData(data) {
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i]._row_key == key) {
+                    if (data[i]._jy_row_key == key) {
                         data.splice(i, 1);
                         break;
                     }
@@ -574,7 +574,7 @@
             if (col) {
                 var index = -1;
                 for (var i = 0; i < this.checkedData.length; i++) {
-                    if (this.checkedData[i]._row_key == key) {
+                    if (this.checkedData[i]._jy_row_key == key) {
                         index = i;
                         break;
                     }
@@ -712,11 +712,11 @@
                         var rule = editable.rules[i];
                         var msg = rule.msg;
                         if (typeof rule.type == 'string') {
-                            rule = ruleMap[rule.type];
-                            msg = msg || rule.msg;
                             if (!value && rule.type != 'required') {
                                 continue;
                             }
+                            rule = ruleMap[rule.type];
+                            msg = msg || rule.msg;
                         }
                         if (typeof rule.rule == 'function') {
                             pass = that.callByDataAndCol(rule.rule, jyBindData.rowData, jyBindData.col, value);
@@ -740,7 +740,7 @@
             // 保存编辑的数据
             function _save(td) {
                 var jyBindData = that.getBindData(td);
-                var key = jyBindData.rowData._row_key;
+                var key = jyBindData.rowData._jy_row_key;
                 var col = jyBindData.col;
                 var $td = $(td);
                 var value = _getValue(td);
@@ -763,7 +763,7 @@
                 if (String(originValue) != String(value)) {
                     var pushed = true;
                     for (var i = 0; i < that.editedData.length; i++) {
-                        if (that.editedData[i]._row_key == key) {
+                        if (that.editedData[i]._jy_row_key == key) {
                             pushed = false;
                             break;
                         }
@@ -843,7 +843,7 @@
             // 保存编辑的数据
             function _save(td) {
                 var jyBindData = that.getBindData(td);
-                var key = jyBindData.rowData._row_key;
+                var key = jyBindData.rowData._jy_row_key;
                 var col = jyBindData.col;
                 var $td = $(td);
                 var fValue = _getValue(td);
@@ -910,7 +910,7 @@
                     var data = jyBindData.colData;
                     var originTdHeight = that.ellipsis ? 41 : td.offsetHeight;
                     var rowData = jyBindData.rowData;
-                    var key = jyBindData.rowData._row_key;
+                    var key = jyBindData.rowData._jy_row_key;
                     var $cell = $(td.children[0]);
                     var $edit = $('<div class="' + classNames.editCell + '"></div>');
                     var height = td.clientHeight - 2;
@@ -1153,13 +1153,13 @@
                     return;
                 }
                 rowData[field] = data;
-                this.setDataMap(data, rowData._row_key, col._col_key);
+                this.setDataMap(data, rowData._jy_row_key, col._col_key);
             } else {
                 data = Common.deepAssign({}, data);
-                data._row_key = key;
+                data._jy_row_key = key;
                 data.id = rowData.id;
                 rowData = data;
-                if (this.selectedData && this.selectedData._row_key == key) {
+                if (this.selectedData && this.selectedData._jy_row_key == key) {
                     this.selectedData = data;
                 }
                 _setData(this.addedData, data);
@@ -1208,7 +1208,7 @@
 
             function _setData(dataList, data) {
                 for (var i = 0; i < dataList.length; i++) {
-                    if (dataList[i]._row_key == key) {
+                    if (dataList[i]._jy_row_key == key) {
                         dataList.splice(i, 1, data);
                         break;
                     }
@@ -1684,8 +1684,8 @@
             if (data) {
                 if (data.id !== undefined) {
                     this.idKeyMap[data.id] = this.idKeyMap[data.id] || [];
-                    if (this.idKeyMap[data.id].indexOf(data._row_key) == -1) {
-                        this.idKeyMap[data.id].push(data._row_key);
+                    if (this.idKeyMap[data.id].indexOf(data._jy_row_key) == -1) {
+                        this.idKeyMap[data.id].push(data._jy_row_key);
                     }
                 }
                 // 只更新某一个单元格的值
@@ -1693,11 +1693,11 @@
                     that.dataMap[rowKey + '-' + colKey].colData = data;
                     return;
                 }
-                this.dataMap[data._row_key] = {
+                this.dataMap[data._jy_row_key] = {
                     rowData: data
                 };
                 cols.map(function (col) {
-                    that.dataMap[data._row_key + '-' + col._col_key] = {
+                    that.dataMap[data._jy_row_key + '-' + col._col_key] = {
                         colData: data[col.field],
                         rowData: data,
                         col: col
@@ -1998,7 +1998,7 @@
                     }
                 }
                 that.sortedData = that.renderedData.map(function (item, index) {
-                    item._row_index = index;
+                    item._jy_row_index = index;
                     return item;
                 });
                 cols.map(function (col) {
@@ -2104,12 +2104,12 @@
          */
         Class.prototype.createTr = function (data) {
             var cols = this.cols;
-            var key = data._row_key;
+            var key = data._jy_row_key;
             if (key === undefined) {
                 key = this.idCount++;
             }
             var tr = '<tr data-key="' + key + '">';
-            data._row_key = key;
+            data._jy_row_key = key;
             for (var col_i = 0; col_i < cols.length; col_i++) {
                 var col = cols[col_i];
                 tr += this.createTd(col, data);
@@ -2125,16 +2125,16 @@
          * @param {Object} data 
          */
         Class.prototype.createTd = function (col, data) {
-            var key = data._row_key;
+            var key = data._jy_row_key;
             var td = '';
             var cell = '';
             var content = '';
             if (col.type == 'numbers') { //序号
-                content = data._row_index + (this.nowPage - 1) * this.limit + 1;
+                content = data._jy_row_index + (this.nowPage - 1) * this.limit + 1;
             } else if (col.type == 'text') { //文本列
                 content = this.getCellHtml(data, col);
             } else if (col.type == 'radio') { // 单选列
-                var checked = this.selectedData && this.selectedData._row_key == key;
+                var checked = this.selectedData && this.selectedData._jy_row_key == key;
                 content = Common.htmlTemplate(tpl.radio, {
                     checked: checked,
                     key: key
@@ -2142,7 +2142,7 @@
             } else if (col.type == 'checkbox') { // 多选列
                 var checked = false;
                 for (var i = 0; i < this.checkedData.length; i++) {
-                    if (this.checkedData[i]._row_key == key) {
+                    if (this.checkedData[i]._jy_row_key == key) {
                         checked = true;
                         break;
                     }
@@ -2511,9 +2511,9 @@
             rowData = Common.delInnerProperty(rowData);
             col = Common.delInnerProperty(col);
             if (other !== undefined) {
-                return cb(other, rowData[col.field], rowData, rowData._row_index, col);
+                return cb(other, rowData[col.field], rowData, rowData._jy_row_index, col);
             } else {
-                return cb(rowData[col.field], rowData, rowData._row_index, col);
+                return cb(rowData[col.field], rowData, rowData._jy_row_index, col);
             }
         }
 
@@ -2689,7 +2689,7 @@
                         var $td = $(e.target).parents('td');
                         if ($td.length && e.keyCode == 13) {
                             var jyBindData = that.getBindData($td[0]);
-                            that.save(jyBindData.rowData._row_key);
+                            that.save(jyBindData.rowData._jy_row_key);
                         }
                     }
                 });
@@ -2704,7 +2704,7 @@
                         return;
                     }
                     var jyBindData = that.getBindData($td[0]);
-                    var key = jyBindData.rowData._row_key;
+                    var key = jyBindData.rowData._jy_row_key;
                     var pass = true;
                     var editable = that.getEditAble(jyBindData);
                     if (!jyBindData.editing) {
@@ -2729,7 +2729,7 @@
                 }
                 that.$view.delegate('tbody tr', 'mousemove', function (e) {
                     var jyBindData = that.getBindData(this);
-                    var key = jyBindData.rowData._row_key;
+                    var key = jyBindData.rowData._jy_row_key;
                     Common.cancelNextFrame(that.timers.hoverInTimer);
                     that.timers.hoverInTimer = Common.nextFrame(function () {
                         _delHover(that.tempData.hoverTrs);
@@ -3162,7 +3162,7 @@
                     },
                     save: function (id, field) {
                         var key = table.getKeyById(id);
-                        table.save(key, field);
+                        return table.save(key, field);
                     },
                     cancel: function (id, field) {
                         var key = table.getKeyById(id);

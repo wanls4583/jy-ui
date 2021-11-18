@@ -858,12 +858,12 @@ select {
 .jy-layer-content {
   position: relative;
   line-height: 24px;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
   overflow: auto;
 }
 
 .jy-layer-footer {
-  padding: 0 20px 10px 0;
+  padding: 10px 20px 10px 0;
   text-align: center;
   white-space: nowrap;
 }

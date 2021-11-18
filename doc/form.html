@@ -87,7 +87,7 @@
                     </div>
                 </form>
                 <div class="pad-10">下面是【小睹为快】对应的代码</div>
-                <pre><code id="code1" class="language-html"></code></pre>
+                <pre><code id="code0" class="language-html"></code></pre>
                 <blockquote>
                     <div>渲染<em> radio </em>、<em> checkbox </em>、<em> select </em>等元素时，需要引入<em> form </em>模块，然后执行<em> render </em>操作。</div>
                 </blockquote>
@@ -98,7 +98,7 @@
             <div class="jy-field-box">
                 <input type="text" class="jy-input" jy-verify="required">
                 <div class="pad-10">代码：</div>
-                <pre><code id="code2"></code></pre>
+                <pre><code id="code1"></code></pre>
                 <blockquote>
                     <div><em>class="jy-input"</em>：jy.css提供的通用css类</div>
                     <div><em>jy-verify</em>：注册form模块需要验证的类型</div>
@@ -118,7 +118,7 @@
                     </select>
                 </div>
                 <div class="pad-10">代码：</div>
-                <pre><code id="code3"></code></pre>
+                <pre><code id="code2"></code></pre>
                 <blockquote>
                     <div><em>jy-verify</em>：注册form模块需要验证的类型</div>
                     <div><em>jy-search</em>：是否开启搜索</div>
@@ -136,7 +136,7 @@
                 <input type="checkbox" name="like" title="看书" value="看书" disabled>
                 <input type="checkbox" name="like" title="唱歌" value="唱歌">
                 <div class="pad-10">代码：</div>
-                <pre><code id="code4"></code></pre>
+                <pre><code id="code3"></code></pre>
                 <blockquote>
                     <div><em>checked</em>：默认选中的项</div>
                     <div><em>disabled</em>：开启禁用</div>
@@ -149,7 +149,7 @@
                 <input type="radio" name="sex" title="男" value="男" checked>
                 <input type="radio" name="sex" title="女" value="女">
                 <div class="pad-10">代码：</div>
-                <pre><code id="code5"></code></pre>
+                <pre><code id="code4"></code></pre>
                 <blockquote>
                     <div><em>checked</em>：默认选中的项</div>
                     <div><em>disabled</em>：开启禁用</div>
@@ -163,7 +163,7 @@
                 <input type="checkbox" name="adult" jy-skin="switch" checked>
                 <span>否</span>
                 <div class="pad-10">代码：</div>
-                <pre><code id="code6"></code></pre>
+                <pre><code id="code5"></code></pre>
                 <blockquote>
                     <div><em>jy-skin="switch"</em>：声明为开关样式</div>
                     <div><em>checked</em>：默认开启</div>
@@ -176,7 +176,7 @@
             <div class="jy-field-box">
                 <textarea name="sign" class="jy-textarea" style="width:500px;" jy-verify="required"></textarea>
                 <div class="pad-10">代码：</div>
-                <pre><code id="code7"></code></pre>
+                <pre><code id="code6"></code></pre>
                 <blockquote>
                     <div><em>class="jy-textarea"</em>：jy.css提供的通用css类</div>
                     <div><em>jy-verify</em>：注册form模块需要验证的类型</div>
@@ -223,22 +223,22 @@
                     </tr>
                 </table>
                 <div class="pad-10">除此之外，还可以通过<em> Form </em>对象，添加自定义验证规则：</div>
-                <pre><code id="code8" class="language-javascript"></code></pre>
+                <pre><code id="code7" class="language-javascript"></code></pre>
             </div>
         </fieldset>
         <fieldset class="jy-field">
             <legend>表单事件</legend>
             <div class="jy-field-box">
                 <div class="pad-10">1、<em>raido </em>事件：</div>
-                <pre><code id="code9" class="language-javascript"></code></pre>
+                <pre><code id="code8" class="language-javascript"></code></pre>
                 <div class="pad-10">2、<em>checkbox </em>事件：</div>
-                <pre><code id="code10" class="language-javascript"></code></pre>
+                <pre><code id="code9" class="language-javascript"></code></pre>
                 <div class="pad-10">3、<em>select </em>事件：</div>
-                <pre><code id="code11" class="language-javascript"></code></pre>
+                <pre><code id="code10" class="language-javascript"></code></pre>
                 <div class="pad-10">4、<em>switch </em>事件：</div>
-                <pre><code id="code12" class="language-javascript"></code></pre>
+                <pre><code id="code11" class="language-javascript"></code></pre>
                 <div class="pad-10">5、<em>submit </em>事件：</div>
-                <pre><code id="code13" class="language-javascript"></code></pre>
+                <pre><code id="code12" class="language-javascript"></code></pre>
             </div>
         </fieldset>
         <fieldset class="jy-field">
@@ -258,9 +258,7 @@
                             <div>参数：(string：监听类型[(过滤器)]，function：回调函数)</div>
                             <div>监听类型：<em> submit </em><em> raido </em><em> checkbox </em><em> select </em><em> switch </em>，多个监听类型可以用空格分隔</div>
                             <div>过滤器为可选参数</div>
-                            <div>回调函数的参数结构为：</div>
-                            <div class="code14" style="display:none;"> { data: value值, dom: 触发事件的元素 } </div>
-                            <pre><code id="code14" class="language-javascript"></code></pre>
+                            <div>回调函数的参数结构为：{ data: value值, dom: 触发事件的元素 }</div>
                         </td>
                         <td></td>
                     </tr>

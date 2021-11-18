@@ -570,7 +570,7 @@
             function _setHeight() {
                 var height = area.height || (ieVersion <= 6 ? $layer[0].offsetHeight : $layer[0].clientHeight);
                 var titleHeight = $layer.find('div.' + layerClass.title).length ? 51 : 0;
-                var footerHeight = $layer.find('div.' + layerClass.footer).length ? ($layer.hasClass('jy-layer-dialog') ? 48 : 38) : 0;
+                var footerHeight = $layer.find('div.' + layerClass.footer).length ? ($layer.hasClass('jy-layer-dialog') ? 58 : 48) : 0;
                 var rect = Common.getMarginPadding($content[0]);
                 if (height > winHeight) {
                     height = winHeight;
