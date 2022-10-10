@@ -35,6 +35,7 @@
         var ieVersion = Common.getIeVersion();
         var store = {};
         var layerCount = 0;
+        var startIndex = 20000000;
 
         // 打开弹框
         function open(option) {
@@ -46,8 +47,8 @@
             option.animation = option.animation !== false ? (option.animation || 'stretch') : '';
             var layerIndex = ++layerCount;
             var $container = $(option.container || docBody);
-            var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + 99) + '"></div>');
-            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" jy-index="' + layerIndex + '" style="z-index:' + (layerIndex + 100) + '"></div>');
+            var $shadow = $('<div class="' + [layerClass.shadow, layerClass.layer + layerIndex].join(' ') + '" style="z-index:' + (layerIndex + startIndex - 1) + '"></div>');
+            var $layer = $('<div class="' + [layerClass.layer, layerClass.layer + '-' + option.type, layerClass.layer + layerIndex].join(' ') + '" jy-index="' + layerIndex + '" style="z-index:' + (layerIndex + startIndex) + '"></div>');
             var $title = $(
                 '<div ' + (option.move ? 'onselectstart="return false;"' : '') + ' class="' + layerClass.title + '">\
                     <span>' + option.title + '</span>\
@@ -171,11 +172,12 @@
 
             function _bindEvent() {
                 $layer.children('.jy-layer-title').on('click', function () {
-                    var zIndex = ++layerCount + 100;
+                    var zIndex = ++layerCount + startIndex;
                     $(this).css('z-index', zIndex);
                 });
                 // 关闭
                 $title.find('i.jy-op-close').on('click', function () {
+                    typeof option.beforeClose === 'function' && option.beforeClose();
                     close(layerIndex);
                     return false;
                 });
@@ -291,6 +293,7 @@
                                 }
                             } else if (i == 1) {
                                 if ('function' == typeof option.cancel) {
+                                    typeof option.beforeClose === 'function' && option.beforeClose();
                                     option.cancel($layer, layerIndex);
                                 } else {
                                     'function' == typeof option['btn' + i] && typeof option['btn' + i]($layer, layerIndex);

@@ -209,7 +209,15 @@
                 if (value === undefined || value === null) {
                     return true;
                 };
-                value += '';
+                if (dom.type !== 'checkbox') {
+                    value += '';
+                } else if (value instanceof Array) {
+                    value = value.map(function (item) {
+                        return item + '';
+                    });
+                } else {
+                    value = [value + ''];
+                }
                 if (tagName === 'select') {
                     $dom.val(value).find('option:selected').attr('selected', true);
                 } else if (tagName === 'textarea') {

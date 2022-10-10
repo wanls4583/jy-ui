@@ -263,7 +263,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        z-index: 999999;
+        z-index: 20010000;
         line-height: 22px;
         padding: 9px $pd15;
         margin-right: 13px;
@@ -393,7 +393,7 @@
     // 调整线
     &-resize-line {
         position: absolute;
-        z-index: 999999;
+        z-index: 20010000;
         border-left: 1px solid $border-color;
     }
 

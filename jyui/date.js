@@ -255,7 +255,7 @@
         // 渲染日期选择器
         Class.prototype.renderDate = function () {
             if (typeof this.data.value === 'string' && this.data.value) {
-                this.data.value = Date.prototype.parseDateTime(this.data.value);
+                this.data.value = Common.parseDateTime(this.data.value);
             } else if (typeof this.data.value === 'number') {
                 this.data.value = new Date(this.data.value);
             } else if (!(this.data.value instanceof Date)) {
@@ -359,7 +359,7 @@
         Class.prototype.renderTime = function () {
             this.data.format = this.option.format || 'hh:mm:ss';
             if (typeof this.data.value === 'string' && this.data.value) {
-                this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
+                this.data.value = Common.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
                 this.data.value = new Date(this.data.value);
             } else if (!(this.data.value instanceof Date)) {
@@ -437,7 +437,7 @@
         Class.prototype.renderYear = function () {
             this.data.format = this.option.format || 'yyyy';
             if (typeof this.data.value === 'string' && this.data.value) {
-                this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
+                this.data.value = Common.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
                 this.data.value = new Date(this.data.value);
             } else if (!(this.data.value instanceof Date)) {
@@ -485,7 +485,7 @@
         Class.prototype.renderMonth = function () {
             this.data.format = this.option.format || (this.data.type === 'yearmonth' ? 'yyyy-MM' : 'MM');
             if (typeof this.data.value === 'string' && this.data.value) {
-                this.data.value = Date.prototype.parseDateTime(this.data.value, this.data.format);;
+                this.data.value = Common.parseDateTime(this.data.value, this.data.format);;
             } else if (typeof this.data.value === 'number') {
                 this.data.value = new Date(this.data.value);
             } else if (!(this.data.value instanceof Date)) {
@@ -958,7 +958,7 @@
                 };
             }
         }
-        
+
         return JyDate;
     }
     if ("function" == typeof define && define.amd) {

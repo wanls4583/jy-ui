@@ -389,6 +389,7 @@
                     clearInterval(this.timers[key]);
                     Common.cancelNextFrame(this.timers[key]);
                 }
+                this.removeAllDetails();
                 return;
             }
             Common.nextFrame(function () {
@@ -2517,6 +2518,20 @@
             }
         }
 
+        // 移除所有的溢出详情弹框
+        Class.prototype.removeAllDetails = function () {
+            if (this.$details.length) {
+                this.$details.map(function ($detail) {
+                    $detail.remove();
+                });
+                for (var key in this.dataMap) {
+                    if (this.dataMap[key].$detail) {
+                        this.dataMap[key].$detail = undefined;
+                    }
+                }
+            }
+        }
+
         // 绑定容器的事件
         Class.prototype.bindEvent = function () {
             var that = this;
@@ -2778,16 +2793,7 @@
                     if (that.$rightMain) {
                         that.$rightMain[0].scrollTop = that.$main[0].scrollTop;
                     }
-                    if (that.$details.length) {
-                        var tds = that.$view.find('td');
-                        that.$details.map(function ($detail) {
-                            $detail.remove();
-                        });
-                        tds.each(function (i, td) {
-                            var jyBindData = that.getBindData(td);
-                            jyBindData.$detail = undefined;
-                        });
-                    }
+                    that.removeAllDetails();
                 });
             }
 

@@ -22,6 +22,7 @@
             deepAssign: deepAssign,
             delInnerProperty: delInnerProperty,
             stopPropagation: stopPropagation,
+            parseDateTime: parseDateTime,
             showMsg: showMsg
         }
 
@@ -392,6 +393,84 @@
             }, 1500);
         }
 
+        function parseDateTime(str, formatStr) {
+            formatStr = formatStr || 'yyyy-MM-dd hh:mm:ss';
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth();
+            var year = now.getMonth();
+            var date = now.getDate();
+            var hours = now.getHours();
+            var minute = now.getMinutes();
+            var second = now.getSeconds();
+            for (var i = 0; i < formatStr.length && str.length; i++) {
+                if (formatStr.slice(i, i + 4) == 'yyyy') {
+                    year = _getNum();
+                    if (!year) {
+                        break;
+                    } else {
+                        year = Number(year);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'MM') {
+                    month = _getNum();
+                    if (!month) {
+                        break;
+                    } else {
+                        month = Number(month) - 1;
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'dd') {
+                    date = _getNum();
+                    if (!date) {
+                        break;
+                    } else {
+                        date = Number(date);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'hh') {
+                    hours = _getNum();
+                    if (!hours) {
+                        break;
+                    } else {
+                        hours = Number(hours);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'mm') {
+                    minute = _getNum();
+                    if (!minute) {
+                        break;
+                    } else {
+                        minute = Number(minute);
+                    }
+                } else if (formatStr.slice(i, i + 2) === 'ss') {
+                    second = _getNum();
+                    if (!second) {
+                        break;
+                    } else {
+                        second = Number(second);
+                    }
+                }
+            }
+
+            return new Date(year, month, date, hours, minute, second)
+
+            function _getNum() {
+                var num = '';
+                var start = /\d/.exec(str);
+                if (start) {
+                    start = start.index;
+                } else {
+                    start = Infinity;
+                }
+                for (var i = start; i < str.length; i++) {
+                    if (str.charAt(i).match(/\d/)) {
+                        num += str.charAt(i);
+                    } else {
+                        break;
+                    }
+                }
+                str = str.slice(i + 1);
+                return num;
+            }
+        }
+
         if (!Function.prototype.bind) {
             Function.prototype.bind = function (context) {
                 var self = this;
@@ -475,84 +554,6 @@
             formatStr = formatStr.replace(/ss/i, ('0' + second).slice(-2));
             return formatStr;
         };
-
-        Date.prototype.parseDateTime = function (str, formatStr) {
-            formatStr = formatStr || 'yyyy-MM-dd hh:mm:ss';
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = now.getMonth();
-            var year = now.getMonth();
-            var date = now.getDate();
-            var hours = now.getHours();
-            var minute = now.getMinutes();
-            var second = now.getSeconds();
-            for (var i = 0; i < formatStr.length && str.length; i++) {
-                if (formatStr.slice(i, i + 4) == 'yyyy') {
-                    year = _getNum();
-                    if (!year) {
-                        break;
-                    } else {
-                        year = Number(year);
-                    }
-                } else if (formatStr.slice(i, i + 2) === 'MM') {
-                    month = _getNum();
-                    if (!month) {
-                        break;
-                    } else {
-                        month = Number(month) - 1;
-                    }
-                } else if (formatStr.slice(i, i + 2) === 'dd') {
-                    date = _getNum();
-                    if (!date) {
-                        break;
-                    } else {
-                        date = Number(date);
-                    }
-                } else if (formatStr.slice(i, i + 2) === 'hh') {
-                    hours = _getNum();
-                    if (!hours) {
-                        break;
-                    } else {
-                        hours = Number(hours);
-                    }
-                } else if (formatStr.slice(i, i + 2) === 'mm') {
-                    minute = _getNum();
-                    if (!minute) {
-                        break;
-                    } else {
-                        minute = Number(minute);
-                    }
-                } else if (formatStr.slice(i, i + 2) === 'ss') {
-                    second = _getNum();
-                    if (!second) {
-                        break;
-                    } else {
-                        second = Number(second);
-                    }
-                }
-            }
-
-            return new Date(year, month, date, hours, minute, second)
-
-            function _getNum() {
-                var num = '';
-                var start = /\d/.exec(str);
-                if (start) {
-                    start = start.index;
-                } else {
-                    start = Infinity;
-                }
-                for (var i = start; i < str.length; i++) {
-                    if (str.charAt(i).match(/\d/)) {
-                        num += str.charAt(i);
-                    } else {
-                        break;
-                    }
-                }
-                str = str.slice(i + 1);
-                return num;
-            }
-        }
 
         var _parseInt = window.parseInt;
         //ie8 默认会将前面有0的字符串以8进制来解析
